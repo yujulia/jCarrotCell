@@ -5,7 +5,6 @@ $(document).ready(function(){
 		// only handles 1 of some carousel
 		
 		$('#kittenheaven').carrotCell({ next: ".notnext"});
-		
 		$('#kittenhell').carrotCell({ next: ".notnext"});
 	}
 	

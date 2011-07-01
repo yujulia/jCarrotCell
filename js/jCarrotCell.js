@@ -22,6 +22,18 @@
 				options.scope = this;
 				options.name = $(options.scope).attr("id") || "defaultCarrot";
 				console.log("new carrot " + options.name);
+				
+				var $this = $(this),
+					data = $this.data('carrotCell');
+					
+				if (!data) {
+					$(this).data('carrotCell', {
+						target : $this,
+						tip : "hello"
+					});
+				}
+				
+				console.log($this.data('carrotCell'));
 
 				// set up 
 				$(options.scope).css("overflow", "hidden");
@@ -34,15 +46,29 @@
 					visible = Math.floor(allWidth / singleWidth);
 
 				$("#debug").html(singleWidth + " " + singleHeight + " " + single.css("width"));
+				
+				$(".prev", this).bind('click.carrotCell', function(){ methods.prev(options); });
+				$(".next", this).bind('click.carrotCell', function(){ methods.next(options); });
+				
+				$(".prev", this).bind('click.carrotCell', methods.test);
 			});
 
 		},
-	    show : function( ) {   
 		
+		test : function(){
+			console.log(this);
+
 		},
-	    hide : function( ) { 
 		
+	    prev : function(options) {   
+			
+			console.log("previous " + options.name);
 		},
+		
+	    next : function(options) { 
+			console.log("next " + options.name);
+		},
+		
 	    update : function( content ) { 
 		
 		}
