@@ -10,13 +10,12 @@
 	};
 	
 	var methods = {
-	    init : function( options ) { 
-		
+	    init : function( options ) { 		
 			// add options to over ride defaults, if any
 			if ( options ) { 
 				$.extend( defaults, options );
 			}
-		
+
 			// for each instance of this type of carousel
 			return this.each(function(){
 				
