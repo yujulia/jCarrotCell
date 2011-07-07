@@ -126,15 +126,18 @@ hgroup {
 */
 
 .carrotCell {
-	background: #ccc;
-	padding: 10px;
+	background: #333;
 	width: 520px;
 	margin: 20px auto;
 	position: relative;
 }
 
 .carrotCell ol {
-
+	background: #ccc;
+	display: block;
+	position: absolute;
+	top: 0;
+	left: 0;
 }
 
 .carrotCell li {
@@ -142,9 +145,18 @@ hgroup {
 	height: 100px;
 	overflow: hidden;
 	border: solid 5px #000;
-	margin: 5px;
+	margin: 10px;
 	float: left;
 	display: block;
+	position: relative;
+}
+
+.carrotCell li span {
+	font-size: 26px;
+	position: absolute;
+	top: 0;
+	left: 0;
+	color: #ffcc00;
 }
 
 .carrotCell li img {
@@ -165,7 +177,7 @@ hgroup {
 }
 
 .carrotCell .next {
-	right: 0;
+	right: 0px;
 }
 
 .carrotCell .prev {
