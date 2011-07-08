@@ -132,12 +132,16 @@ hgroup {
 	position: relative;
 }
 
+.carrotCellView {
+	width: 520px;
+	position: absolute;
+	top: 0;
+	overflow: auto;
+}
+
 .carrotCell ol {
 	background: #ccc;
 	display: block;
-	position: absolute;
-	top: 0;
-	left: 0;
 }
 
 .carrotCell li {
@@ -149,6 +153,10 @@ hgroup {
 	float: left;
 	display: block;
 	position: relative;
+}
+
+.carrotCell li.cloned {
+	border-color: #ffcc00;
 }
 
 .carrotCell li span {
@@ -171,9 +179,9 @@ hgroup {
 	font-family: arial;
 	color: #000;
 	background: #fff;
-	display: block;
 	padding: 3px;
 	font-size: 10px;
+	display: none;
 }
 
 .carrotCell .next {

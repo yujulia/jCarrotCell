@@ -4,7 +4,7 @@ $(document).ready(function(){
 	var setup = function(){
 		// only handles 1 of some carousel
 		
-		$('#kittenheaven').carrotCell({ next: ".notnext"});
+		$('#kittenheaven').carrotCell({ infinite: true });
 		//$('#kittenhell').carrotCell({ next: ".notnext"});
 	}
 	

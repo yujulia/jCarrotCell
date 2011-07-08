@@ -33,87 +33,88 @@
 		*/
 		makeCarrot : function() {
 			var $this = null,
-				options = {};
+				options = {},
+				slideWidth = 0,
+				rightMost = false,
+				leftMost = true,
+				currentPos = 0,
+				currentPage = 1,
+				view, slider, items, single, 
+				singleWidth, singleHeight, viewWidth,
+				visible, pages, slideBy, prev, next;
 				
+			var gotoPage = function(page) {
+				var dir = page < currentPage ? -1 : 1,
+	                n = Math.abs(currentPage - page),
+	                left = singleWidth * dir * visible * n;
+
+	            view.filter(':not(:animated)').animate({
+	                scrollLeft : '+=' + left
+	            }, 500, function () {
+	                if (page == 0) {
+	                    view.scrollLeft(singleWidth * visible * pages);
+	                    page = pages;
+	                } else if (page > pages) {
+	                    view.scrollLeft(singleWidth * visible);
+	                    // reset back to start position
+	                    page = 1;
+	                } 
+
+	                currentPage = page;
+	            });                
+
+			};
 			
+				
 			var setupCarrot = function(){
-			
-				var slider = $this.find('> ol'),
-					items = slider.find('> li'),
-					single = items.filter(':first'),
-					singleWidth = single.outerWidth(true),
-					singleHeight = single.outerHeight(true),
-					allWidth = $this.innerWidth(),
-					visible = Math.floor(allWidth / singleWidth),
-					currentPage = 1,
-					pages = Math.ceil(items.length / visible),
-					slideBy = singleWidth * visible;
+				view = $this.find(".carrotCellView");
+				slider = view.find('> ol'); // OR ul if !options.ordered
+				items = slider.find('> li'); // OR whatever child element in options
+				single = items.filter(':first');
+				singleWidth = single.outerWidth(true);
+				singleHeight = single.outerHeight(true);
+				viewWidth = $this.innerWidth();
+				visible = Math.floor(viewWidth / singleWidth);
+				pages = Math.ceil(items.length / visible);
+				slideBy = singleWidth * visible;
+				prev = $this.find(".prev"); // OR selector specified in options
+				next = $this.find(".next"); // OR selector specified in options
 					
-				var slideWidth = 0;
-				var rightMost = false;
-				var leftMost = true;
-				
-				if (options.circular) {
-					slideWidth = singleWidth * items.length + visible * 2 * singleWidth;
-				} else {
-					slideWidth = singleWidth * items.length;
+				if (options.infinite) {
+					// clone a visible amount on the begin and end
+					items.filter(':first').before(items.slice(-visible).clone().addClass('cloned'));
+					items.filter(':last').after(items.slice(0, visible).clone().addClass('cloned'));
+					items = slider.find('> li'); // reselect
 				}
-
-				$this.css("overflow", "hidden"); // clip extra items
+					
+				slideWidth = singleWidth * items.length; // find real length
 				slider.css("width",  slideWidth + "px"); // set length of slider
-					
-				// clone a visible amount on the begin and end
-				 // items.filter(':first').before(items.slice(-visible).clone().addClass('cloned'));
-				 // 			items.filter(':last').after(items.slice(0, visible).clone().addClass('cloned'));
-				 // 			items = slider.find('> li'); // reselect
-
-				$this.css("height", singleHeight+"px"); // set container height according to element
+				view.css("overflow", "hidden"); // clip extra items	
 				
-				var currentPos = 0;
-				//var currentPos = -1 * slideBy;
-				//slider.css("left", currentPos +"px"); // hide cloned first items
+				if (options.infinite) {
+					view.scrollLeft(singleWidth * visible);
+				}
 				
-				$this.find(".prev").bind("click", function(){
-					if (currentPos == 0) {
-						leftMost = true;
-						return false;
-					}
-					leftMost = false;
-					currentPos = currentPos + slideBy;
-					
-					slider.animate({
-					    left: currentPos
-					  }, 500, function() {
-					    // Animation complete.
-					  });
-					
-					slider.css("left", currentPos  +"px");
-					//console.log("prev " + currentPos);
-				});
+				// previous
+				prev.bind("click", function(e){
+					e.preventDefault();
+					gotoPage(currentPage - 1); 
+				}).show();
 				
-				$this.find(".next").bind("click", function(){
-					var limit = Math.abs(currentPos - slideBy);
-					if (limit > slideWidth) {
-						rightMost = true;
-						return false;
-					}
-					rightMost = false;
-					currentPos = currentPos - slideBy;
-					slider.animate({
-					    left: currentPos
-					  }, 500, function() {
-					    // Animation complete.
-					  });
-					//console.log("next " + currentPos);
-				});
+				// next
+				next.bind("click", function(e){
+					e.preventDefault();
+					gotoPage(currentPage + 1); 
+				}).show();
 			}
 			
 			return {
 				init : function(opt) {
 					console.log("make carrot init " + opt.name);
 					options = opt;
-
-					$this = $(opt.scope);
+					
+					// set up the data
+					$this = $(options.scope);
 					var data = $this.data('carrotCell');
 					if (!data) {
 						$(this).data('carrotCell', {
@@ -125,14 +126,6 @@
 					setupCarrot();
 				}
 			}
-		}, 
-		
-	    prev : function(options) {   
-			console.log("previous " + options.name);
-		},
-		
-	    next : function(options) { 
-			console.log("next " + options.name);
 		}
 	};
 	
