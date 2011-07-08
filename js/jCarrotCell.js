@@ -37,12 +37,13 @@
 				slideWidth = 0,
 				rightMost = false,
 				leftMost = true,
-				currentPos = 0,
 				currentPage = 1,
 				view, slider, items, single, 
 				singleWidth, singleHeight, viewWidth,
 				visible, pages, slideBy, prev, next;
-				
+			
+			/** scroll the carousel
+			*/
 			var gotoPage = function(page) {
 				var dir = page < currentPage ? -1 : 1,
 	                n = Math.abs(currentPage - page),
@@ -62,10 +63,10 @@
 
 	                currentPage = page;
 	            });                
-
 			};
-			
 				
+			/** find elements
+			*/
 			var setupCarrot = function(){
 				view = $this.find(".carrotCellView");
 				slider = view.find('> ol'); // OR ul if !options.ordered
@@ -90,9 +91,10 @@
 				slideWidth = singleWidth * items.length; // find real length
 				slider.css("width",  slideWidth + "px"); // set length of slider
 				view.css("overflow", "hidden"); // clip extra items	
+				$this.css("height", singleHeight); // set height of external wrap
 				
 				if (options.infinite) {
-					view.scrollLeft(singleWidth * visible);
+					view.scrollLeft(singleWidth * visible); // move cloned items out of sight
 				}
 				
 				// previous
