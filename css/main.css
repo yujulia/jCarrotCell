@@ -124,7 +124,6 @@ hgroup {
 
 /**
 */
-
 .carrotCell {
 	background: #333;
 	width: 520px;
@@ -190,4 +189,11 @@ hgroup {
 
 .carrotCell .prev {
 	left: 0;
+}
+
+/**
+*/
+#kittenhell .carrotCell,
+#kittenhell .carrotCellView {
+	width: 130px;
 }

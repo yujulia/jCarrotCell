@@ -7,8 +7,8 @@
 		   	next: ".next",
 			prev: ".prev",
 			step: 1,
-			dir: "vertical",
-			circular: false,
+			sideways: true,
+			infinite: false,
 			auto: false
 		},
 		
@@ -16,6 +16,8 @@
 			// add options to over ride defaults, if any
 			if ( options ) { 
 				$.extend( methods.defaults, options );
+			} else {
+				options = methods.defaults;
 			}
 
 			// for each instance of this type of carousel
@@ -39,7 +41,7 @@
 				leftMost = true,
 				currentPage = 1,
 				view, slider, items, single, 
-				singleWidth, singleHeight, viewWidth,
+				singleWidth, singleHeight, viewWidth, viewHeight, viewSize,
 				visible, pages, slideBy, prev, next;
 			
 			/** scroll the carousel
@@ -64,6 +66,24 @@
 	                currentPage = page;
 	            });                
 			};
+			
+			/** move carousel back
+			*/
+			var moveBack = function() {
+				if (!options.infinite && (currentPage == 1)) {
+					return false; // we are at the left most page
+				}
+				gotoPage(currentPage - 1);
+			};
+			
+			/** move carousel forward
+			*/
+			var moveForward = function() {
+				if (!options.infinite && (currentPage >= pages)) {
+					return false; // we are at the right most page
+				}
+				gotoPage(currentPage + 1);
+			};
 				
 			/** find elements
 			*/
@@ -72,50 +92,56 @@
 				slider = view.find('> ol'); // OR ul if !options.ordered
 				items = slider.find('> li'); // OR whatever child element in options
 				single = items.filter(':first');
+				prev = $this.find(".prev"); // OR selector specified in options
+				next = $this.find(".next"); // OR selector specified in options
+				
 				singleWidth = single.outerWidth(true);
 				singleHeight = single.outerHeight(true);
-				viewWidth = $this.innerWidth();
+				
+				if (sideways) {
+					viewSize = $this.innerWidth();
+				} else {
+					viewSize = $this.innerHeight();
+				}
+
 				visible = Math.floor(viewWidth / singleWidth);
 				pages = Math.ceil(items.length / visible);
 				slideBy = singleWidth * visible;
-				prev = $this.find(".prev"); // OR selector specified in options
-				next = $this.find(".next"); // OR selector specified in options
-					
+				
 				if (options.infinite) {
 					// clone a visible amount on the begin and end
 					items.filter(':first').before(items.slice(-visible).clone().addClass('cloned'));
 					items.filter(':last').after(items.slice(0, visible).clone().addClass('cloned'));
-					items = slider.find('> li'); // reselect
+					items = slider.find('> li'); // reselect new li
 				}
-					
+				
 				slideWidth = singleWidth * items.length; // find real length
 				slider.css("width",  slideWidth + "px"); // set length of slider
 				view.css("overflow", "hidden"); // clip extra items	
 				$this.css("height", singleHeight); // set height of external wrap
 				
 				if (options.infinite) {
+					// move clone items out of site
 					view.scrollLeft(singleWidth * visible); // move cloned items out of sight
 				}
 				
 				// previous
 				prev.bind("click", function(e){
 					e.preventDefault();
-					gotoPage(currentPage - 1); 
+					moveBack();
 				}).show();
 				
 				// next
 				next.bind("click", function(e){
 					e.preventDefault();
-					gotoPage(currentPage + 1); 
+					moveForward();
 				}).show();
 			}
 			
 			return {
 				init : function(opt) {
-					console.log("make carrot init " + opt.name);
+					//console.log("make carrot init " + opt.name);
 					options = opt;
-					
-					// set up the data
 					$this = $(options.scope);
 					var data = $this.data('carrotCell');
 					if (!data) {
@@ -124,7 +150,6 @@
 							options: opt
 						});
 					}
-					
 					setupCarrot();
 				}
 			}
@@ -134,7 +159,6 @@
 	/** plugin function
 	*/
 	$.fn.carrotCell = function (method) {
-		
 		// Method calling logic
 	    if ( methods[method] ) {
 	      return methods[ method ].apply( this, Array.prototype.slice.call( arguments, 1 ));
@@ -143,7 +167,6 @@
 	    } else {
 	      $.error( 'Method ' +  method + ' does not exist on jQuery.tooltip' );
 	    }
-	
 	};
 })(jQuery);
 

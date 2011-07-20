@@ -3,9 +3,9 @@ $(document).ready(function(){
 	// should probably be calling the app init
 	var setup = function(){
 		// only handles 1 of some carousel
-		
+		//$('#kittenheaven').carrotCell();
 		$('#kittenheaven').carrotCell({ infinite: true });
-		//$('#kittenhell').carrotCell({ next: ".notnext"});
+		$('#kittenhell').carrotCell({ infinite: true, sideways: false });
 	}
 	
 	// chrome can not calculate the width correctly because it is foolish
