@@ -1,7 +1,9 @@
+
+
 (function($){
 	
 	var methods = {
-		carrots : [],
+		carrots : {},
 		
 		defaults : {  
 		   	next: ".next",
@@ -12,148 +14,171 @@
 			auto: false
 		},
 		
-	    init : function( options ) { 		
-			// add options to over ride defaults, if any
-			if ( options ) { 
-				$.extend( methods.defaults, options );
-			} else {
-				options = methods.defaults;
-			}
-
-			// for each instance of this type of carousel
-			return this.each(function(){
-				options.scope = this;
-				options.name = $(options.scope).attr("id") || "defaultCarrot";
-			
-				var thisCarrot = new methods.makeCarrot();
-				thisCarrot.init(options);
-				methods.carrots.push(thisCarrot);
-			});
-		},
+		count : 0,
 		
-		/* make a carrot, make it celery
-		*/
-		makeCarrot : function() {
+		makeCarrot : function(){
 			var $this = null,
-				options = {},
+				settings = {},
 				slideWidth = 0,
 				rightMost = false,
 				leftMost = true,
 				currentPage = 1,
 				view, slider, items, single, 
-				singleWidth, singleHeight, viewWidth, viewHeight, viewSize,
+				frameSize, singleSize, viewSize,
 				visible, pages, slideBy, prev, next;
-			
+
 			/** scroll the carousel
 			*/
 			var gotoPage = function(page) {
 				var dir = page < currentPage ? -1 : 1,
-	                n = Math.abs(currentPage - page),
-	                left = singleWidth * dir * visible * n;
+		            n = Math.abs(currentPage - page),
+		            scrollTo = singleSize * dir * visible * n;
 
-	            view.filter(':not(:animated)').animate({
-	                scrollLeft : '+=' + left
-	            }, 500, function () {
-	                if (page == 0) {
-	                    view.scrollLeft(singleWidth * visible * pages);
-	                    page = pages;
-	                } else if (page > pages) {
-	                    view.scrollLeft(singleWidth * visible);
-	                    // reset back to start position
-	                    page = 1;
-	                } 
+				// after the animation scrolls, set the pages appropriately
+				var scrollHandler = function(){
+					if (page == 0) {
+						if (settings.sideways) {
+							slider.scrollLeft(singleSize * visible * pages);
+						} else {
+							slider.scrollTop(singleSize * visible * pages);
+						}
+						page = pages;
+					} else if (page > pages) {
+						if (settings.sideways) {
+							slider.scrollLeft(singleSize * visible);
+						} else {
+							slider.scrollTop(singleSize * visible);
+						}
+						page = 1; // reset back to start position
+					}         						                
+					currentPage = page;
+				};
 
-	                currentPage = page;
-	            });                
+				// set up the animation
+
+				if (settings.sideways) {
+					console.log("scroll sideways");
+					view.filter(':not(:animated)').animate({
+							scrollLeft : '+=' + scrollTo
+					}, 500, scrollHandler);
+				} else {
+					console.log("scroll top");
+					view.filter(':not(:animated)').animate({
+							scrollTop : '+=' + scrollTo
+					}, 500, scrollHandler);
+				}
+
 			};
-			
+
 			/** move carousel back
 			*/
 			var moveBack = function() {
-				if (!options.infinite && (currentPage == 1)) {
+				console.log("backward " + settings.name + " " + settings.sideways);
+				if (!settings.infinite && (currentPage == 1)) {
 					return false; // we are at the left most page
 				}
 				gotoPage(currentPage - 1);
 			};
-			
+
 			/** move carousel forward
 			*/
 			var moveForward = function() {
-				if (!options.infinite && (currentPage >= pages)) {
+				console.log("forward " + settings.name + " " + settings.sideways);
+				if (!settings.infinite && (currentPage >= pages)) {
 					return false; // we are at the right most page
 				}
 				gotoPage(currentPage + 1);
 			};
-				
+
 			/** find elements
 			*/
 			var setupCarrot = function(){
+
 				view = $this.find(".carrotCellView");
 				slider = view.find('> ol'); // OR ul if !options.ordered
 				items = slider.find('> li'); // OR whatever child element in options
 				single = items.filter(':first');
 				prev = $this.find(".prev"); // OR selector specified in options
 				next = $this.find(".next"); // OR selector specified in options
-				
-				singleWidth = single.outerWidth(true);
-				singleHeight = single.outerHeight(true);
-				
-				if (sideways) {
+
+				if (settings.sideways) {
 					viewSize = $this.innerWidth();
+					singleSize = single.outerWidth(true);
 				} else {
 					viewSize = $this.innerHeight();
+					singleSize = single.outerHeight(true);
 				}
 
-				visible = Math.floor(viewWidth / singleWidth);
+				visible = Math.floor(viewSize / singleSize);
 				pages = Math.ceil(items.length / visible);
-				slideBy = singleWidth * visible;
-				
-				if (options.infinite) {
+				slideBy = singleSize * visible;
+
+				if (settings.infinite) {
 					// clone a visible amount on the begin and end
 					items.filter(':first').before(items.slice(-visible).clone().addClass('cloned'));
 					items.filter(':last').after(items.slice(0, visible).clone().addClass('cloned'));
 					items = slider.find('> li'); // reselect new li
 				}
-				
-				slideWidth = singleWidth * items.length; // find real length
-				slider.css("width",  slideWidth + "px"); // set length of slider
+
+				var slideSize = singleSize * items.length; // find size of all items
+
+				// set length of slider
+				if (settings.sideways) { 
+					slider.css("width",  slideSize + "px"); 
+				} else {
+					slider.css("height",  slideSize + "px"); 
+				}
 				view.css("overflow", "hidden"); // clip extra items	
-				$this.css("height", singleHeight); // set height of external wrap
-				
-				if (options.infinite) {
+
+				if (settings.infinite) {
 					// move clone items out of site
-					view.scrollLeft(singleWidth * visible); // move cloned items out of sight
+					slider.scrollLeft(singleSize * visible); // move cloned items out of sight
 				}
 				
 				// previous
 				prev.bind("click", function(e){
 					e.preventDefault();
+					console.log(settings.name);
 					moveBack();
 				}).show();
-				
+
 				// next
 				next.bind("click", function(e){
 					e.preventDefault();
+					console.log(settings.name);
 					moveForward();
 				}).show();
-			}
-			
+			};
+
 			return {
 				init : function(opt) {
 					//console.log("make carrot init " + opt.name);
-					options = opt;
-					$this = $(options.scope);
-					var data = $this.data('carrotCell');
-					if (!data) {
-						$(this).data('carrotCell', {
-							target : $this,
-							options: opt
-						});
-					}
+					settings = opt;
+					$this = $(opt.scope);
 					setupCarrot();
 				}
 			}
-		}
+		},
+		
+	    init : function( options ) { 		
+
+			if ( options ) { 
+				 $.extend(methods.defaults, options);
+	 		} 
+
+			// for each instance of this type of carousel
+			return this.each(function(){
+				methods.count++;
+				var thisOptions = methods.defaults;
+				thisOptions.scope = this;
+				thisOptions.name = $(thisOptions.scope).attr("id") || ("defaultCarrot"+methods.count);
+				
+				methods.carrots[thisOptions.name] = new methods.makeCarrot();
+				methods.carrots[thisOptions.name].init(thisOptions);
+			});
+			
+		},
+		
 	};
 	
 	/** plugin function
@@ -169,5 +194,3 @@
 	    }
 	};
 })(jQuery);
-
-

@@ -122,6 +122,10 @@ hgroup {
   overflow: hidden;
 }
 
+body {
+	padding: 50px 0;
+}
+
 /**
 */
 .carrotCell {
@@ -133,8 +137,6 @@ hgroup {
 
 .carrotCellView {
 	width: 520px;
-	position: absolute;
-	top: 0;
 	overflow: auto;
 }
 
@@ -181,6 +183,7 @@ hgroup {
 	padding: 3px;
 	font-size: 10px;
 	display: none;
+	z-index: 1;
 }
 
 .carrotCell .next {
@@ -193,7 +196,28 @@ hgroup {
 
 /**
 */
-#kittenhell .carrotCell,
+#kittenhell,
 #kittenhell .carrotCellView {
 	width: 130px;
+	height: 520px;
+}
+
+#kittenhell ol {
+	background: #000;
+}
+
+#kittenhell .next {
+	top: auto;
+	bottom: 0;
+}
+
+#kittenhell  .prev {
+	top: 0;
+}
+
+/**
+*/
+.wrap {
+	width: 100%;
+	overflow: hidden;
 }
