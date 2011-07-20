@@ -1,24 +1,24 @@
-
-
 (function($){
 	
 	var methods = {
 		carrots : {},
 		
 		defaults : {  
-		   	next: ".next",
-			prev: ".prev",
-			step: 1,
-			sideways: true,
-			infinite: false,
-			auto: false
+		   	test : true
 		},
 		
 		count : 0,
 		
 		makeCarrot : function(){
 			var $this = null,
-				settings = {},
+				settings = {
+					next: ".next",
+					prev: ".prev",
+					step: 1,
+					sideways: true,
+					infinite: false,
+					auto: false
+				},
 				slideWidth = 0,
 				rightMost = false,
 				leftMost = true,
@@ -94,6 +94,7 @@
 			*/
 			var setupCarrot = function(){
 
+				
 				view = $this.find(".carrotCellView");
 				slider = view.find('> ol'); // OR ul if !options.ordered
 				items = slider.find('> li'); // OR whatever child element in options
@@ -152,32 +153,33 @@
 
 			return {
 				init : function(opt) {
-					//console.log("make carrot init " + opt.name);
-					settings = opt;
+					$.extend(settings, opt);
 					$this = $(opt.scope);
 					setupCarrot();
 				}
 			}
 		},
 		
-	    init : function( options ) { 		
-
+		/** initialize jcarousel object
+		*/
+	    init : function( options ) { 	
+			
 			if ( options ) { 
-				 $.extend(methods.defaults, options);
-	 		} 
-
+				 $.extend(options, methods.defaults);
+			}
+	
 			// for each instance of this type of carousel
 			return this.each(function(){
 				methods.count++;
-				var thisOptions = methods.defaults;
-				thisOptions.scope = this;
-				thisOptions.name = $(thisOptions.scope).attr("id") || ("defaultCarrot"+methods.count);
 				
-				methods.carrots[thisOptions.name] = new methods.makeCarrot();
-				methods.carrots[thisOptions.name].init(thisOptions);
+				var opt = options || {};
+				opt.scope = this;
+				opt.name = $(opt.scope).attr("id") || ("defaultCarrot"+methods.count);
+				methods.carrots[opt.name] = new methods.makeCarrot();
+				methods.carrots[opt.name].init(opt);
 			});
 			
-		},
+		}
 		
 	};
 	
