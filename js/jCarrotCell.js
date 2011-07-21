@@ -40,7 +40,11 @@
 					var scrollThis = 0;
 					if (page == 0) {
 						scrollThis = singleSize * advanceBy * pages + extras * singleSize;
-						//scrollThis = singleSize * visible * pages;
+						// weird hack
+						if (visible == advanceBy ) {
+							scrollThis = singleSize * advanceBy * pages - extras * singleSize;
+						}			
+						
 						if (settings.sideways) {					
 							view.scrollLeft(scrollThis);	
 						} else {
