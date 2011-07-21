@@ -160,6 +160,10 @@ body {
 	border-color: #ffcc00;
 }
 
+.carrotCell li.extra {
+	border-color: #ff0000;
+}
+
 .carrotCell li span {
 	font-size: 26px;
 	position: absolute;
@@ -203,7 +207,7 @@ body {
 }
 
 #kittenhell ol {
-	background: #000;
+	background: #666;
 }
 
 #kittenhell .next {
