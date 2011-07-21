@@ -10,7 +10,7 @@
 				settings = {
 					next: ".next",
 					prev: ".prev",
-					step: 1,
+					step: 0,
 					sideways: true,
 					infinite: false,
 					auto: false
@@ -33,6 +33,7 @@
 				var dir = page < currentPage ? -1 : 1,
 		            n = Math.abs(currentPage - page),
 		            scrollTo = singleSize * dir * visible * n;
+				
 
 				// after the animation scrolls, set the pages appropriately
 				var scrollHandler = function(){
@@ -50,6 +51,7 @@
 						
 					} else if (page > pages) {
 						var scrollThis = singleSize * visible;
+
 						if (settings.sideways) {
 							view.scrollLeft(scrollThis);
 						} else {
@@ -96,7 +98,6 @@
 			/** find elements
 			*/
 			var setupCarrot = function(){
-
 				view = $this.find(".carrotCellView");
 				slider = view.find('> ol'); // OR ul if !options.ordered
 				items = slider.find('> li'); // OR whatever child element in options
@@ -112,17 +113,28 @@
 					viewSize = $this.innerHeight();
 					singleSize = single.outerHeight(true);
 				}
+				
 				visible = Math.floor(viewSize / singleSize);
-				pages = Math.ceil(totalItems / visible);
-				slideBy = singleSize * visible;
-
+				
+				if (settings.step) {
+					pages = Math.ceil(totalItems / settings.step);
+					slideBy = singleSize * settings.step;
+				} else {
+					pages = Math.ceil(totalItems / visible);
+					slideBy = singleSize * visible;
+				}
+				
 				if (settings.infinite) {
-					// pad the last page with first items
-					if (totalItems % visible) {
-						var extras = pages*visible - totalItems;
-						items.filter(':last').after(items.slice(0, extras).clone().addClass('extra'));
-						items = slider.find('> li'); // reselect new li
+					
+					// add empty elements
+					if (settings.pad) {
+						var hasExtra = totalItems % visible
+						if (hasExtra != 0) {
+							slider.append(repeat('<li class="empty" />', visible - (totalItems % visible)));
+							items = slider.find('> li');
+						}
 					}
+					
 					// clone a visible amount on the begin and end
 					items.filter(':first').before(items.slice(-visible).clone().addClass('cloned'));
 					items.filter(':last').after(items.slice(0, visible).clone().addClass('cloned'));

@@ -160,8 +160,8 @@ body {
 	border-color: #ffcc00;
 }
 
-.carrotCell li.extra {
-	border-color: #ff0000;
+.carrotCell li.empty {
+	border-color: #aaa;
 }
 
 .carrotCell li span {
@@ -215,7 +215,7 @@ body {
 	bottom: 0;
 }
 
-#kittenhell  .prev {
+#kittenhell .prev {
 	top: 0;
 }
 
