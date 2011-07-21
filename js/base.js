@@ -3,7 +3,7 @@ $(document).ready(function(){
 	// should probably be calling the app init
 	var setup = function(){
 		
-		$('#kittenheaven').carrotCell({infinite: true, step: 1});
+		$('#kittenheaven').carrotCell({step: 1, infinite: true, pad: false});
 		//$('#kittenheaven').carrotCell({infinite: true, pad: true});
 		$('#kittenhell').carrotCell({sideways: false});
 

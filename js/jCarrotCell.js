@@ -19,9 +19,9 @@
 				rightMost = false,
 				leftMost = true,
 				currentPage = 1,
-				view, slider, items, single, totalItems,
+				view, slider, items, single, totalItems, extras,
 				frameSize, singleSize, viewSize,
-				visible, pages, slideBy, prev, next;
+				visible, advanceBy, pages, slideBy, prev, next;
 				
 			var repeat = function(str, num) {
 				return new Array( num + 1 ).join( str );
@@ -32,17 +32,16 @@
 			var gotoPage = function(page) {
 				var dir = page < currentPage ? -1 : 1,
 		            n = Math.abs(currentPage - page),
-		            scrollTo = singleSize * dir * visible * n;
+		            //scrollTo = singleSize * dir * visible * n;
+					scrollTo = singleSize * dir * advanceBy * n;
 				
-
 				// after the animation scrolls, set the pages appropriately
 				var scrollHandler = function(){
-					
 					var scrollThis = 0;
-					
 					if (page == 0) {
+						scrollThis = singleSize * advanceBy * pages + extras * singleSize;
+						//scrollThis = singleSize * visible * pages;
 						if (settings.sideways) {					
-							scrollThis = singleSize * visible * pages;
 							view.scrollLeft(scrollThis);	
 						} else {
 							view.scrollTop(scrollThis);
@@ -50,7 +49,7 @@
 						page = pages;
 						
 					} else if (page > pages) {
-						var scrollThis = singleSize * visible;
+						scrollThis = singleSize * visible;
 
 						if (settings.sideways) {
 							view.scrollLeft(scrollThis);
@@ -60,7 +59,6 @@
 						page = 1; // reset back to start position
 					}         						                
 					currentPage = page;
-					
 				};
 
 				// set up the animation
@@ -114,18 +112,25 @@
 					singleSize = single.outerHeight(true);
 				}
 				
+				// visible is everything in frame unless a step is set
 				visible = Math.floor(viewSize / singleSize);
 				
 				if (settings.step) {
-					pages = Math.ceil(totalItems / settings.step);
-					slideBy = singleSize * settings.step;
+					advanceBy = settings.step;
 				} else {
-					pages = Math.ceil(totalItems / visible);
-					slideBy = singleSize * visible;
+					advanceBy = visible;
+				}
+				
+				pages = Math.ceil(totalItems / advanceBy);
+				slideBy = singleSize * advanceBy;
+				
+				if ((totalItems % visible) != 0) {
+					extras = visible * Math.ceil(totalItems / visible) - totalItems;
+				} else {
+					extras = 0;
 				}
 				
 				if (settings.infinite) {
-					
 					// add empty elements
 					if (settings.pad) {
 						var hasExtra = totalItems % visible
