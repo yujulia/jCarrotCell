@@ -157,6 +157,7 @@
 				} else {
 					slider.css("height",  slideSize + "px"); 
 				}
+				
 				view.css("overflow", "hidden"); // clip extra items	
 
 				// move clone items out of site

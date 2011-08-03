@@ -138,6 +138,7 @@ body {
 .carrotCellView {
 	width: 520px;
 	overflow: auto;
+	position: relative;
 }
 
 .carrotCell ol {
