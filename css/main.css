@@ -199,6 +199,8 @@ body {
 	left: 0;
 }
 
+
+
 /**
 */
 #kittenhell,
@@ -218,6 +220,10 @@ body {
 
 #kittenhell .prev {
 	top: 0;
+}
+
+.carrotCell .disabled {
+	display: none!important;
 }
 
 /**

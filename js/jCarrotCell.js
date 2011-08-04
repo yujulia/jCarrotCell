@@ -13,14 +13,19 @@
 					step: 0,
 					sideways: true,
 					infinite: false,
-					auto: false
+					auto: false,
+					speed: 500,
+					off: "disabled",
+					auto: false, 
+					delay: 5000 // ms
 				},
 				slideWidth = 0,
-				rightMost = false,
-				leftMost = true,
+				haveBack = false,
+				haveForward = true,
 				currentPage = 1,
 				view, slider, items, single, totalItems, extras,
 				frameSize, singleSize, viewSize,
+				autoScroll,
 				visible, advanceBy, pages, slideBy, prev, next;
 				
 			var repeat = function(str, num) {
@@ -70,13 +75,44 @@
 				if (settings.sideways) {
 					view.filter(':not(:animated)').animate({
 							scrollLeft : '+=' + scrollTo
-					}, 500, scrollHandler);
+					}, settings.speed, scrollHandler);
 				} else {
 					view.filter(':not(:animated)').animate({
 							scrollTop : '+=' + scrollTo
-					}, 500, scrollHandler);
+					}, settings.speed, scrollHandler);
 				}
 
+			};
+			
+			/** determine the prev and next
+			*/
+			var moveNext = function(nextPage) {
+				if (settings.infinite) {
+					return false; // do nothing if its infinite
+				}
+				if (nextPage <= 1) {
+					haveBack = false;
+				} else {
+					haveBack = true;
+				};
+				
+				if (nextPage >= pages) {
+					haveForward = false;
+				} else {
+					haveForward = true;
+				};
+				
+				if (haveBack) {
+					prev.removeClass(settings.off);
+				} else {
+					prev.addClass(settings.off);
+				}
+				
+				if (haveForward) {
+					next.removeClass(settings.off);
+				} else {
+					next.addClass(settings.off);
+				}
 			};
 
 			/** move carousel back
@@ -86,6 +122,8 @@
 					return false; // we are at the left most page
 				}
 				gotoPage(currentPage - 1);
+				var nextPage = currentPage - 1;
+				moveNext(nextPage);
 			};
 
 			/** move carousel forward
@@ -95,6 +133,8 @@
 					return false; // we are at the right most page
 				}
 				gotoPage(currentPage + 1);
+				var nextPage = currentPage + 1;
+				moveNext(nextPage);
 			};
 
 			/** find elements
@@ -107,6 +147,10 @@
 				prev = $this.find(".prev"); // OR selector specified in options
 				next = $this.find(".next"); // OR selector specified in options
 				totalItems = items.length;
+				
+				if (settings.auto) {
+					settings.infinite = true; // if auto infinite hast o be true
+				}
 
 				if (settings.sideways) {
 					viewSize = $this.innerWidth();
@@ -148,6 +192,8 @@
 					items.filter(':first').before(items.slice(-visible).clone().addClass('cloned'));
 					items.filter(':last').after(items.slice(0, visible).clone().addClass('cloned'));
 					items = slider.find('> li'); // reselect new li
+				} else {
+					prev.addClass(settings.off);
 				}
 				var slideSize = singleSize * items.length; // find size of all items including cloned
 
@@ -180,6 +226,13 @@
 					e.preventDefault();
 					moveForward();
 				}).show();
+				
+				// auto
+				if (settings.auto) {
+					autoScroll = this.setInterval(function(){
+						moveForward();
+					}, settings.delay);
+				}
 			};
 
 			return {

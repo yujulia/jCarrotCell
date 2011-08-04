@@ -2,9 +2,17 @@ $(document).ready(function(){
 	
 	// should probably be calling the app init
 	var setup = function(){		
-		$('#kittenheaven').carrotCell({infinite: true, pad: false});
-		//$('#kittenheaven').carrotCell({infinite: true, pad: true});
-		$('#kittenhell').carrotCell({sideways: false});
+		$('#kittenheaven').carrotCell({
+			infinite: false, 
+			pad: false,
+			speed: 1000,
+			delay: 10000,
+			auto: true // if auto is true so is infinite
+		});
+
+		$('#kittenhell').carrotCell({
+			sideways: false
+		});
 	}
 	
 	// chrome can not calculate the width correctly because it is foolish
