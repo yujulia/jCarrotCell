@@ -6,7 +6,8 @@ $(document).ready(function(){
 			infinite: false, 
 			pad: false,
 			speed: 1000,
-			delay: 10000,
+			delay: 3000,
+			step:1,
 			auto: true // if auto is true so is infinite
 		});
 

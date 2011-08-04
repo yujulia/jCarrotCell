@@ -23,11 +23,14 @@
 				haveBack = false,
 				haveForward = true,
 				currentPage = 1,
+				paused = false,
 				view, slider, items, single, totalItems, extras,
 				frameSize, singleSize, viewSize,
-				autoScroll,
+				autoScroll, pause, play, stop, 
 				visible, advanceBy, pages, slideBy, prev, next;
 				
+			/** helper for concat string
+			*/
 			var repeat = function(str, num) {
 				return new Array( num + 1 ).join( str );
 			}
@@ -37,9 +40,7 @@
 			var gotoPage = function(page) {
 				var dir = page < currentPage ? -1 : 1,
 		            n = Math.abs(currentPage - page),
-		            //scrollTo = singleSize * dir * visible * n;
 					scrollTo = singleSize * dir * advanceBy * n;
-				
 				// after the animation scrolls, set the pages appropriately
 				var scrollHandler = function(){
 					var scrollThis = 0;
@@ -49,17 +50,14 @@
 						if (visible == advanceBy ) {
 							scrollThis = singleSize * advanceBy * pages - extras * singleSize;
 						}			
-						
 						if (settings.sideways) {					
 							view.scrollLeft(scrollThis);	
 						} else {
 							view.scrollTop(scrollThis);
 						}
 						page = pages;
-						
 					} else if (page > pages) {
 						scrollThis = singleSize * visible;
-
 						if (settings.sideways) {
 							view.scrollLeft(scrollThis);
 						} else {
@@ -69,9 +67,7 @@
 					}         						                
 					currentPage = page;
 				};
-
 				// set up the animation
-
 				if (settings.sideways) {
 					view.filter(':not(:animated)').animate({
 							scrollLeft : '+=' + scrollTo
@@ -81,7 +77,6 @@
 							scrollTop : '+=' + scrollTo
 					}, settings.speed, scrollHandler);
 				}
-
 			};
 			
 			/** determine the prev and next
@@ -95,19 +90,16 @@
 				} else {
 					haveBack = true;
 				};
-				
 				if (nextPage >= pages) {
 					haveForward = false;
 				} else {
 					haveForward = true;
 				};
-				
 				if (haveBack) {
 					prev.removeClass(settings.off);
 				} else {
 					prev.addClass(settings.off);
 				}
-				
 				if (haveForward) {
 					next.removeClass(settings.off);
 				} else {
@@ -136,6 +128,47 @@
 				var nextPage = currentPage + 1;
 				moveNext(nextPage);
 			};
+			
+			/** set up the interval
+			*/
+			var goScroll = function(){
+				window.clearInterval(autoScroll);
+				autoScroll = this.setInterval(function(){
+					if (!paused) {
+						moveForward();
+					}
+				}, settings.delay);
+			};
+			
+			/** auto advance the rotator
+			*/
+			var setupAutoAdvance = function(){
+				play.hide();
+				pause.bind("click", function(e){
+					e.preventDefault();
+					paused = true;
+					pause.hide();
+					play.show();
+				});
+				play.bind("click", function(e){
+					e.preventDefault();
+					
+					if (paused) {
+						paused = false;
+					} else {
+						goScroll();
+					}
+					play.hide();
+					pause.show();
+				});
+				stop.bind("click", function(e){
+					e.preventDefault();
+					window.clearInterval(autoScroll);
+					play.show();
+					pause.hide();
+				});
+				goScroll();
+			}
 
 			/** find elements
 			*/
@@ -146,6 +179,9 @@
 				single = items.filter(':first');
 				prev = $this.find(".prev"); // OR selector specified in options
 				next = $this.find(".next"); // OR selector specified in options
+				pause = $this.find(".pause");
+				play = $this.find(".play");
+				stop = $this.find(".stop");
 				totalItems = items.length;
 				
 				if (settings.auto) {
@@ -187,7 +223,6 @@
 							items = slider.find('> li');
 						}
 					}
-					
 					// clone a visible amount on the begin and end
 					items.filter(':first').before(items.slice(-visible).clone().addClass('cloned'));
 					items.filter(':last').after(items.slice(0, visible).clone().addClass('cloned'));
@@ -227,11 +262,10 @@
 					moveForward();
 				}).show();
 				
-				// auto
+				// auto				
 				if (settings.auto) {
-					autoScroll = this.setInterval(function(){
-						moveForward();
-					}, settings.delay);
+					setupAutoAdvance();
+					
 				}
 			};
 

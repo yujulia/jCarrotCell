@@ -124,12 +124,14 @@ hgroup {
 
 body {
 	padding: 50px 0;
+	font-family: helvetica, arial;
+	font-size: 11px;
 }
 
 /**
 */
 .carrotCell {
-	background: #333;
+	overflow: hidden;
 	width: 520px;
 	margin: 20px auto;
 	position: relative;
@@ -189,6 +191,7 @@ body {
 	font-size: 10px;
 	display: none;
 	z-index: 1;
+	cursor: pointer;
 }
 
 .carrotCell .next {
@@ -199,7 +202,15 @@ body {
 	left: 0;
 }
 
-
+.carrotCell .pause,
+.carrotCell .play,
+.carrotCell .stop {
+	margin: 10px 5px;
+	float: left;
+	border: solid 1px #ccc;
+	padding: 3px 5px;
+	cursor: pointer;
+}
 
 /**
 */
