@@ -265,7 +265,6 @@
 				// auto				
 				if (settings.auto) {
 					setupAutoAdvance();
-					
 				}
 			};
 
@@ -274,6 +273,10 @@
 					$.extend(settings, opt); // options over ride settings
 					$this = $(opt.scope);
 					setupCarrot();
+				},
+				move : function() {
+					console.log(settings.name + " move");
+					moveForward();
 				}
 			}
 		},
@@ -291,6 +294,13 @@
 				opt.name = $(opt.scope).attr("id") || ("defaultCarrot"+methods.count);
 				methods.carrots[opt.name] = new methods.makeCarrot();
 				methods.carrots[opt.name].init(opt);
+				
+				// set up the data to access the object
+				var data = $(this).data('carrotCell');
+				if (!data) {
+					$(this).data('carrotCell', methods.carrots[opt.name]);
+				}
+				
 			});
 		}
 	};
