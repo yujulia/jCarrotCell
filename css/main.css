@@ -214,19 +214,23 @@ body {
 
 /**
 */
-#kittenhell,
-#kittenhell .carrotCellView {
+#kittenhell {
 	width: 130px;
+	height: 620px;
+}
+
+#kittenhell  .carrotCellView {
 	height: 520px;
 }
 
 #kittenhell ol {
+	width: 130px;
 	background: #666;
 }
 
 #kittenhell .next {
-	top: auto;
-	bottom: 0;
+	top: 0;
+	right: 0;
 }
 
 #kittenhell .prev {

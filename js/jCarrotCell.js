@@ -16,13 +16,13 @@
 					auto: false,
 					speed: 500,
 					off: "disabled",
-					auto: false, 
 					delay: 5000 // ms
 				},
 				slideWidth = 0,
 				haveBack = false,
 				haveForward = true,
 				currentPage = 1,
+				currentItem = 1,
 				paused = false,
 				view, slider, items, single, totalItems, extras,
 				frameSize, singleSize, viewSize,
@@ -42,6 +42,16 @@
 		            n = Math.abs(currentPage - page),
 					scrollTo = singleSize * dir * advanceBy * n;
 				// after the animation scrolls, set the pages appropriately
+				
+				var thisPage = currentPage;
+				if (dir < 0) {
+					thisPage--;
+				} else {
+					thisPage++;
+				}
+				currentItem = advanceBy * thisPage + dir;
+				//console.log("advance: " + advanceBy + " page: " + thisPage + " dir: " + dir + " n: " + n + " current:" +currentItem);
+				 
 				var scrollHandler = function(){
 					var scrollThis = 0;
 					if (page == 0) {
@@ -66,6 +76,7 @@
 						page = 1; // reset back to start position
 					}         						                
 					currentPage = page;
+					
 				};
 				// set up the animation
 				if (settings.sideways) {
@@ -134,9 +145,7 @@
 			var goScroll = function(){
 				window.clearInterval(autoScroll);
 				autoScroll = this.setInterval(function(){
-					if (!paused) {
-						moveForward();
-					}
+					if (!paused) { moveForward(); }
 				}, settings.delay);
 			};
 			
@@ -152,7 +161,6 @@
 				});
 				play.bind("click", function(e){
 					e.preventDefault();
-					
 					if (paused) {
 						paused = false;
 					} else {
@@ -169,24 +177,11 @@
 				});
 				goScroll();
 			}
-
-			/** find elements
+			
+			/** calculate the settings of the carrot
 			*/
-			var setupCarrot = function(){
-				view = $this.find(".carrotCellView");
-				slider = view.find('> ol'); // OR ul if !options.ordered
-				items = slider.find('> li'); // OR whatever child element in options
-				single = items.filter(':first');
-				prev = $this.find(".prev"); // OR selector specified in options
-				next = $this.find(".next"); // OR selector specified in options
-				pause = $this.find(".pause");
-				play = $this.find(".play");
-				stop = $this.find(".stop");
-				totalItems = items.length;
-				
-				if (settings.auto) {
-					settings.infinite = true; // if auto infinite hast o be true
-				}
+			var initCarrot = function(){
+				if (settings.auto) { settings.infinite = true;  } // if auto infinite hast o be true
 
 				if (settings.sideways) {
 					viewSize = $this.innerWidth();
@@ -238,10 +233,9 @@
 				} else {
 					slider.css("height",  slideSize + "px"); 
 				}
-				
 				view.css("overflow", "hidden"); // clip extra items	
 
-				// move clone items out of site
+				// move clone items out of sight
 				if (settings.infinite) {
 					if (settings.sideways) {
 						view.scrollLeft(singleSize * visible); 
@@ -249,34 +243,56 @@
 						view.scrollTop(singleSize * visible); 
 					}
 				}
-				
-				// previous
+			}
+			
+			/** assign handlers
+			*/
+			var assignCarrot = function(){
 				prev.bind("click", function(e){
 					e.preventDefault();
 					moveBack();
 				}).show();
 
-				// next
 				next.bind("click", function(e){
 					e.preventDefault();
 					moveForward();
 				}).show();
 				
-				// auto				
-				if (settings.auto) {
-					setupAutoAdvance();
-				}
+				if (settings.auto) { setupAutoAdvance(); } 
+			}
+			
+			/** find elements
+			*/
+			var findCarrot = function(){
+				view = $this.find(".carrotCellView");
+				slider = view.find('> ol'); // OR ul if !options.ordered
+				items = slider.find('> li'); // OR whatever child element in options
+				single = items.filter(':first');
+				prev = $this.find(".prev"); // OR selector specified in options
+				next = $this.find(".next"); // OR selector specified in options
+				pause = $this.find(".pause");
+				play = $this.find(".play");
+				stop = $this.find(".stop");
+				totalItems = items.length;
+				
+				initCarrot();
+				assignCarrot();
 			};
 
 			return {
 				init : function(opt) {
 					$.extend(settings, opt); // options over ride settings
 					$this = $(opt.scope);
-					setupCarrot();
+					findCarrot();
 				},
-				move : function() {
-					console.log(settings.name + " move");
-					moveForward();
+				
+				/** move the current page
+				*/
+				move : function(movePage) {
+					if (!movePage) { movePage = currentPage + 1; } 
+					if (movePage < 1) { movePage = 1; }
+					if (movePage > pages) { movePage = pages; }
+					gotoPage(movePage); // move
 				}
 			}
 		},
@@ -295,17 +311,17 @@
 				methods.carrots[opt.name] = new methods.makeCarrot();
 				methods.carrots[opt.name].init(opt);
 				
-				// set up the data to access the object
+				// set up the api data to access the object
 				var data = $(this).data('carrotCell');
 				if (!data) {
 					$(this).data('carrotCell', methods.carrots[opt.name]);
 				}
-				
 			});
 		}
 	};
 	
-	/** plugin function
+	/** invoke methods of this plugin  
+		send it to the init if appropriate
 	*/
 	$.fn.carrotCell = function (method) {
 		// Method calling logic
@@ -314,7 +330,7 @@
 	    } else if ( typeof method === 'object' || ! method ) {
 	      return methods.init.apply( this, arguments );
 	    } else {
-	      $.error( 'Method ' +  method + ' does not exist on jQuery.tooltip' );
+	      $.error( 'Method ' +  method + ' does not exist on jCarrotCell' );
 	    }
 	};
 })(jQuery);

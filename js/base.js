@@ -6,21 +6,25 @@ $(document).ready(function(){
 			infinite: false, 
 			pad: false,
 			speed: 1000,
-			delay: 3000,
-			auto: true // if auto is true so is infinite
+			delay: 3000
+			// auto: true // if auto is true so is infinite
 		});
 		
-		var api = $(t).data('carrotCell');
-		api.move();
-	
+
 		
 		var h = $('#kittenhell').carrotCell({
 			sideways: false,
-			delay: 3000
+			delay: 3000,
+			step:1
+			// auto: true
 		});
 		
 		var apih = $(h).data('carrotCell');
-		apih.move();
+		//apih.move();
+		
+		var api = $(t).data('carrotCell');
+		api.move(3);
+		
 	}
 	
 	// chrome can not calculate the width correctly because it is foolish
