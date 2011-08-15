@@ -235,7 +235,7 @@ body {
 */
 #kittenhell {
 	width: 130px;
-	height: 620px;
+	height: 700px;
 }
 
 #kittenhell  .carrotCellView {
@@ -248,12 +248,12 @@ body {
 }
 
 #kittenhell .next {
-	top: 0;
+	top: 50px;
 	right: 0;
 }
 
 #kittenhell .prev {
-	top: 0;
+	top: 50px;
 }
 
 .carrotCell .disabled {

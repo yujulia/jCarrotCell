@@ -16,6 +16,7 @@ $(document).ready(function(){
 			sideways: false,
 			delay: 3000,
 			key: true,
+			navi: true,
 			step:1
 			// auto: true
 		});
