@@ -7,11 +7,10 @@ $(document).ready(function(){
 			pad: false,
 			speed: 1000,
 			delay: 3000,
+			navi: true,
 			key: true // reads the entire doc so can only do 1 carousel
 			// auto: true // if auto is true so is infinite
 		});
-		
-
 		
 		var h = $('#kittenhell').carrotCell({
 			sideways: false,

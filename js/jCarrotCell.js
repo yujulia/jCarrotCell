@@ -17,6 +17,7 @@
 					auto: false,
 					speed: 500,
 					off: "disabled",
+					navi: false,
 					delay: 5000 // ms
 				},
 				slideWidth = 0,
@@ -28,7 +29,7 @@
 				view, slider, items, single, totalItems, extras,
 				frameSize, singleSize, viewSize,
 				autoScroll, pause, play, stop, 
-				visible, advanceBy, pages, slideBy, prev, next;
+				visible, advanceBy, pages, slideBy, prev, next, navi;
 				
 			/** helper for concat string
 			*/
@@ -246,6 +247,8 @@
 				}
 			};
 			
+			/** up down for vertical, left right for horizonal
+			*/
 			var setupKeyAdvance = function() {
 				$(document).keydown(function(e){
 					if (settings.sideways) { 
@@ -256,6 +259,20 @@
 						if (e.keyCode == 40) {  moveForward(); } // down
 					}
 					return false;
+				});
+			};
+			
+			/** set up navigation, only works on pages
+			*/
+			var setupNavi = function() {
+				navi.each(function(iNav){
+					var thisNavi = this;
+					var navIndex = iNav + 1;
+					$(thisNavi).bind("click", function(){
+						if (navIndex <= pages) {
+							gotoPage(navIndex);
+						}
+					});
 				});
 			};
 			
@@ -272,6 +289,7 @@
 					moveForward();
 				}).show();
 				
+				if (settings.navi) { setupNavi(); }
 				if (settings.key) { setupKeyAdvance(); }
 				if (settings.auto) { setupAutoAdvance(); } 
 			};
@@ -288,6 +306,7 @@
 				pause = $this.find(".pause");
 				play = $this.find(".play");
 				stop = $this.find(".stop");
+				navi = $this.find(".navi li");
 				totalItems = items.length;
 				
 				initCarrot();

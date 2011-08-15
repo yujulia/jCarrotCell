@@ -143,12 +143,12 @@ body {
 	position: relative;
 }
 
-.carrotCell ol {
+.carrotCellView ol {
 	background: #ccc;
 	display: block;
 }
 
-.carrotCell li {
+.carrotCellView li {
 	width: 100px;
 	height: 100px;
 	overflow: hidden;
@@ -159,15 +159,15 @@ body {
 	position: relative;
 }
 
-.carrotCell li.cloned {
+.carrotCellView li.cloned {
 	border-color: #ffcc00;
 }
 
-.carrotCell li.empty {
+.carrotCellView li.empty {
 	border-color: #aaa;
 }
 
-.carrotCell li span {
+.carrotCellView li span {
 	font-size: 26px;
 	position: absolute;
 	top: 0;
@@ -175,10 +175,12 @@ body {
 	color: #ffcc00;
 }
 
-.carrotCell li img {
+.carrotCellView li img {
 	height: 100px;
 }
 
+/** carrotcell buttons
+*/
 .carrotCell .next,
 .carrotCell .prev {
 	position: absolute;
@@ -212,7 +214,24 @@ body {
 	cursor: pointer;
 }
 
-/**
+/** navi
+*/
+.carrotCell .navi {
+	margin: 0 auto;
+	display: block;
+	text-align: center;
+}
+
+.carrotCell .navi li {
+	display: inline-block;
+	padding: 3px 6px;
+	margin: 3px;
+	cursor: pointer;
+	background: #000;
+	color: #fff;
+}
+
+/** specific carousel things
 */
 #kittenhell {
 	width: 130px;
