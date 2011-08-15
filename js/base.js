@@ -6,7 +6,8 @@ $(document).ready(function(){
 			infinite: false, 
 			pad: false,
 			speed: 1000,
-			delay: 3000
+			delay: 3000,
+			key: true // reads the entire doc so can only do 1 carousel
 			// auto: true // if auto is true so is infinite
 		});
 		
@@ -15,6 +16,7 @@ $(document).ready(function(){
 		var h = $('#kittenhell').carrotCell({
 			sideways: false,
 			delay: 3000,
+			key: true,
 			step:1
 			// auto: true
 		});
@@ -23,8 +25,8 @@ $(document).ready(function(){
 		//apih.move();
 		
 		var api = $(t).data('carrotCell');
-		api.move(3);
-		
+		// api.move(3);
+		// 
 	}
 	
 	// chrome can not calculate the width correctly because it is foolish

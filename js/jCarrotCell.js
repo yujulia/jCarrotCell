@@ -11,6 +11,7 @@
 					next: ".next",
 					prev: ".prev",
 					step: 0,
+					key: false,
 					sideways: true,
 					infinite: false,
 					auto: false,
@@ -33,7 +34,7 @@
 			*/
 			var repeat = function(str, num) {
 				return new Array( num + 1 ).join( str );
-			}
+			};
 
 			/** scroll the carousel
 			*/
@@ -176,7 +177,7 @@
 					pause.hide();
 				});
 				goScroll();
-			}
+			};
 			
 			/** calculate the settings of the carrot
 			*/
@@ -243,7 +244,20 @@
 						view.scrollTop(singleSize * visible); 
 					}
 				}
-			}
+			};
+			
+			var setupKeyAdvance = function() {
+				$(document).keydown(function(e){
+					if (settings.sideways) { 
+				    	if (e.keyCode == 37) {  moveBack(); } // left
+						if (e.keyCode == 39) {  moveForward(); } // right
+					} else {
+						if (e.keyCode == 38) {  moveBack(); } // up
+						if (e.keyCode == 40) {  moveForward(); } // down
+					}
+					return false;
+				});
+			};
 			
 			/** assign handlers
 			*/
@@ -258,8 +272,9 @@
 					moveForward();
 				}).show();
 				
+				if (settings.key) { setupKeyAdvance(); }
 				if (settings.auto) { setupAutoAdvance(); } 
-			}
+			};
 			
 			/** find elements
 			*/
