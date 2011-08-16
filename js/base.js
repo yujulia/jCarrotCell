@@ -22,11 +22,10 @@ $(document).ready(function(){
 		});
 		
 		var apih = $(h).data('carrotCell');
-		//apih.move();
-		
 		var api = $(t).data('carrotCell');
-		// api.move(3);
-		// 
+		var item = '<li><span>10</span><img src="images/dog01.png" /></li>';
+		api.insert(item);
+
 	}
 	
 	// chrome can not calculate the width correctly because it is foolish

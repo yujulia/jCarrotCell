@@ -31,12 +31,6 @@
 				autoScroll, pause, play, stop, 
 				visible, advanceBy, pages, slideBy, prev, next, navi;
 				
-			/** helper for concat string
-			*/
-			var repeat = function(str, num) {
-				return new Array( num + 1 ).join( str );
-			};
-
 			/** scroll the carousel
 			*/
 			var gotoPage = function(page) {
@@ -52,8 +46,7 @@
 					thisPage++;
 				}
 				currentItem = advanceBy * thisPage + dir;
-				//console.log("advance: " + advanceBy + " page: " + thisPage + " dir: " + dir + " n: " + n + " current:" +currentItem);
-				 
+
 				var scrollHandler = function(){
 					var scrollThis = 0;
 					if (page == 0) {
@@ -146,9 +139,7 @@
 			*/
 			var goScroll = function(){
 				window.clearInterval(autoScroll);
-				autoScroll = this.setInterval(function(){
-					if (!paused) { moveForward(); }
-				}, settings.delay);
+				autoScroll = this.setInterval(function(){ if (!paused) { moveForward(); } }, settings.delay);
 			};
 			
 			/** auto advance the rotator
@@ -179,74 +170,7 @@
 				});
 				goScroll();
 			};
-			
-			/** calculate the settings of the carrot
-			*/
-			var initCarrot = function(){
-				if (settings.auto) { settings.infinite = true;  } // if auto infinite hast o be true
 
-				if (settings.sideways) {
-					viewSize = $this.innerWidth();
-					singleSize = single.outerWidth(true);
-				} else {
-					viewSize = $this.innerHeight();
-					singleSize = single.outerHeight(true);
-				}
-				
-				// visible is everything in frame unless a step is set
-				visible = Math.floor(viewSize / singleSize);
-				
-				if (settings.step) {
-					advanceBy = settings.step;
-				} else {
-					advanceBy = visible;
-				}
-				
-				pages = Math.ceil(totalItems / advanceBy);
-				slideBy = singleSize * advanceBy;
-				
-				if ((totalItems % visible) != 0) {
-					extras = visible * Math.ceil(totalItems / visible) - totalItems;
-				} else {
-					extras = 0;
-				}
-				
-				if (settings.infinite) {
-					// add empty elements
-					if (settings.pad) {
-						var hasExtra = totalItems % visible
-						if (hasExtra != 0) {
-							slider.append(repeat('<li class="empty" />', visible - (totalItems % visible)));
-							items = slider.find('> li');
-						}
-					}
-					// clone a visible amount on the begin and end
-					items.filter(':first').before(items.slice(-visible).clone().addClass('cloned'));
-					items.filter(':last').after(items.slice(0, visible).clone().addClass('cloned'));
-					items = slider.find('> li'); // reselect new li
-				} else {
-					prev.addClass(settings.off);
-				}
-				var slideSize = singleSize * items.length; // find size of all items including cloned
-
-				// set length of slider
-				if (settings.sideways) { 
-					slider.css("width",  slideSize + "px"); 
-				} else {
-					slider.css("height",  slideSize + "px"); 
-				}
-				view.css("overflow", "hidden"); // clip extra items	
-
-				// move clone items out of sight
-				if (settings.infinite) {
-					if (settings.sideways) {
-						view.scrollLeft(singleSize * visible); 
-					} else {
-						view.scrollTop(singleSize * visible); 
-					}
-				}
-			};
-			
 			/** up down for vertical, left right for horizonal
 			*/
 			var setupKeyAdvance = function() {
@@ -294,39 +218,146 @@
 				if (settings.auto) { setupAutoAdvance(); } 
 			};
 			
+			var adjustSlideSize = function(){
+				var slideSize = singleSize * items.length; // find size of all items including cloned
+				// set length of slider
+				if (settings.sideways) { 
+					slider.css("width",  slideSize + "px"); 
+				} else {
+					slider.css("height",  slideSize + "px"); 
+				}
+			};
+			
+			var findPages = function(){
+				pages = Math.ceil(totalItems / advanceBy);
+				if ((totalItems % visible) != 0) {
+					extras = visible * Math.ceil(totalItems / visible) - totalItems;
+				} else {
+					extras = 0;
+				}
+			};
+			
+			var findItems = function(){
+				items = slider.find('> li'); 
+				totalItems = items.length;
+			}
+			
+			/** calculate the settings of the carrot
+			*/
+			var initCarrot = function(){
+				if (settings.auto) { settings.infinite = true;  } // if auto infinite hast o be true
+				if (settings.sideways) {
+					viewSize = $this.innerWidth();
+					singleSize = single.outerWidth(true);
+				} else {
+					viewSize = $this.innerHeight();
+					singleSize = single.outerHeight(true);
+				}
+				// visible is everything in frame unless a step is set
+				visible = Math.floor(viewSize / singleSize);
+				if (settings.step) {
+					advanceBy = settings.step;
+				} else {
+					advanceBy = visible;
+				}
+				
+				findPages();
+				
+				slideBy = singleSize * advanceBy;
+				if (settings.infinite) {
+					// clone a visible amount on the begin and end
+					items.filter(':first').before(items.slice(-visible).clone().addClass('cloned'));
+					items.filter(':last').after(items.slice(0, visible).clone().addClass('cloned'));
+					items = slider.find('> li'); // reselect new li
+				} else {
+					prev.addClass(settings.off);
+				}
+				
+				adjustSlideSize();
+				view.css("overflow", "hidden"); // clip extra items	
+				// move clone items out of sight
+				if (settings.infinite) {
+					if (settings.sideways) {
+						view.scrollLeft(singleSize * visible); 
+					} else {
+						view.scrollTop(singleSize * visible); 
+					}
+				}
+			};
+
 			/** find elements
 			*/
 			var findCarrot = function(){
 				view = $this.find(".carrotCellView");
-				slider = view.find('> ol'); // OR ul if !options.ordered
-				items = slider.find('> li'); // OR whatever child element in options
+				slider = view.find('> ol'); 
+				findItems();
 				single = items.filter(':first');
-				prev = $this.find(".prev"); // OR selector specified in options
-				next = $this.find(".next"); // OR selector specified in options
+				prev = $this.find(".prev"); 
+				next = $this.find(".next"); 
 				pause = $this.find(".pause");
 				play = $this.find(".play");
 				stop = $this.find(".stop");
 				navi = $this.find(".navi li");
-				totalItems = items.length;
-				
+
 				initCarrot();
 				assignCarrot();
 			};
 
 			return {
+				/** initialize this carrot instance
+				*/
 				init : function(opt) {
 					$.extend(settings, opt); // options over ride settings
 					$this = $(opt.scope);
 					findCarrot();
 				},
 				
-				/** move the current page
+				/** move to the page passed in if its a number
 				*/
 				move : function(movePage) {
-					if (!movePage) { movePage = currentPage + 1; } 
-					if (movePage < 1) { movePage = 1; }
-					if (movePage > pages) { movePage = pages; }
+					movePage = parseInt(movePage);
+					if (isNaN(movePage)) {
+						console.log(movePage + " is not a number can not move to this page");
+						return false;
+					}
+					if (!movePage) { movePage = currentPage + 1; } // move 1 forward default
+					if (movePage < 1) { movePage = 1; } // range check
+					if (movePage > pages) { movePage = pages; } // range check
 					gotoPage(movePage); // move
+				},
+				
+				/** add a new item to the carousel (at index or at end)
+				*/
+				insert : function(item, index) {
+					if (!item) {
+						console.log("nothing to add");
+						return false;
+					}
+					index = parseInt(index);
+					if (isNaN(index)) { index = items.length; }
+					if (index < 0 ) { index = 1; } // range check
+					if (index > items.length ) { index = items.length; } // rang check
+					
+					slider.append(item);
+					findItems();
+					findPages();
+					adjustSlideSize();
+					
+					console.log("inserting at " + index);
+				},
+				
+				/** remove an item from the carousel (by index)
+					index starts at 1, if no index, remove last
+				*/
+				remove : function(index) {
+					index = parseInt(index);
+					if (isNaN(index)) { index = items.length; }
+					if (index < 0 ) { index = 1; } // range check
+					if (index > items.length ) { index = items.length; } // rang check
+					$(items[index-1]).remove();
+					findItems();
+					findPages();
+					adjustSlideSize();
 				}
 			}
 		},
@@ -334,9 +365,7 @@
 		/** initialize jcarousel object
 		*/
 	    init : function( options ) { 	
-			if ( options ) { 
-				 $.extend(options, methods.defaults);
-			}
+			if ( options ) { $.extend(options, methods.defaults); }
 			return this.each(function(){
 				methods.count++;
 				var opt = options || {};
