@@ -329,21 +329,24 @@
 				/** add a new item to the carousel (at index or at end)
 				*/
 				insert : function(item, index) {
-					if (!item) {
-						console.log("nothing to add");
-						return false;
-					}
+					if (!item) { return false; }
 					index = parseInt(index);
 					if (isNaN(index)) { index = items.length; }
-					if (index < 0 ) { index = 1; } // range check
+					if (index < 1 ) { index = 1; } // range check
 					if (index > items.length ) { index = items.length; } // rang check
 					
-					slider.append(item);
+					if (index == items.length) {
+						slider.append(item); // append at end
+					} else if (index <= 1){
+						$('li:first', slider).before(item); // append at start
+					} else {
+						$("li", slider).eq(index-1).before(item); // insert at index
+					}
+					
+					
 					findItems();
 					findPages();
 					adjustSlideSize();
-					
-					console.log("inserting at " + index);
 				},
 				
 				/** remove an item from the carousel (by index)
@@ -352,7 +355,7 @@
 				remove : function(index) {
 					index = parseInt(index);
 					if (isNaN(index)) { index = items.length; }
-					if (index < 0 ) { index = 1; } // range check
+					if (index < 1 ) { index = 1; } // range check
 					if (index > items.length ) { index = items.length; } // rang check
 					$(items[index-1]).remove();
 					findItems();

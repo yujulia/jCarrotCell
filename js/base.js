@@ -24,7 +24,11 @@ $(document).ready(function(){
 		var apih = $(h).data('carrotCell');
 		var api = $(t).data('carrotCell');
 		var item = '<li><span>10</span><img src="images/dog01.png" /></li>';
-		api.insert(item);
+		api.insert(item, 4);
+		// item = '<li><span>11</span><img src="images/dog02.png" /></li>';
+		// api.insert(item);
+		// item = '<li><span>12</span><img src="images/dog03.png" /></li>';
+		// api.insert(item);
 
 	}
 	
