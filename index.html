@@ -9,10 +9,10 @@
 	<![endif]-->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js" type="text/javascript" charset="utf-8"></script>
 	<script src="js/jCarrotCell.js" type="text/javascript" charset="utf-8"></script>
-	<script src="js/base.js" type="text/javascript" charset="utf-8"></script>
 	
 	<link type="text/css" href="css/main.css" rel="stylesheet" /> 
 	<link type="text/css" href="css/carrotcell.css" rel="stylesheet" /> 
+	
 </head>
 
 <body>
@@ -24,7 +24,18 @@
 			<p>"Perhaps these miserable humans would appreciate a carousel. "</p>
 			<cite>&ndash; carrotCell</cite>
 		</blockquote>
+		
+		<p><strong>by:</strong> Julia Yu</p>
+		<p><strong>version:</strong> 1.0</p>
+		<p><strong>source:</strong> <a href="https://github.com/jyuya/jCarrotCell">https://github.com/jyuya/jCarrotCell</a></p>
+		<p><strong>last updated:</strong> 8/17/2011</p>
 	</head>
+	
+	<nav>
+		<a href="doc.html">Documentation</a> 
+		<a href="demo.html">Demos</a> 
+		<a href="faq.html">FAQ</a> 
+	</nav>
 	
 	<article>
 		<h2>What Is It?</h2>
@@ -35,26 +46,70 @@
 			<li>Circular / infinite scrolling with speed control</li>
 			<li>Auto advance on a custom timer</li>
 			<li>Play, pause, and stop in auto advance mode</li>
-			<li>Append to / remove from list at the indexed spot</li>
+			<li>Append to / remove from list at specific spot</li>
 			<li>External navigation support</li>
-			<li>Exposed carousel api methods</li>
-			<li>Can pass in jQuery selectors for all the controls if they are outside the .carrotCell container</li>
+			<li>Exposed API methods</li>
+			<li>jQuery selectors as custom controls</li>
 			<li>kittens</li>
-			<li>puppies</li>
 		</ul>
-		
+	</article>
+
+	<article>
 		<h2>Where Is It?</h2>
 		<p>You can get it on github <a href="https://github.com/jyuya/jCarrotCell">https://github.com/jyuya/jCarrotCell.</a></p>
+	</article>
+	
+	<article id="howTLDR">
+		<h2>How Do I Use It? (TL,DR Version)</h2>
+		<p><span>1.</span> Set up your carousel content in HTML. Here is an example of a basic layout.</p>
+		<code>
+			&lt;div id="myCarousel" class="carrotCell"&gt;<br />
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;div class="carrotCellView"&gt;<br />
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;ol&gt;<br />
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;li&gt;...&lt;/li&gt;<br />
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;li&gt;...&lt;/li&gt;<br />
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;...<br />
+			        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/ol&gt;<br />
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/div&gt;<br />
+				
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;div class="prev"&gt;prev&lt;/div&gt;<br />
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;div class="next"&gt;next&lt;/div&gt;<br />
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;...<br />
+			&lt;/div&gt;<br />
+		</code>
 		
-		<h2>How Do I Use It?</h2>
-		<p>Firstly you must include jQuery in the header of your HTML document, jCarrotCell was developed on jQuery v1.5.2 but 1.6.2 seems to work as well... for now.</p>
+		<p><span>2.</span> Include the carrotcell.css or import the styles into your own style sheet.</p>
+		<code>
+			&lt;link type="text/css" href="css/carrotcell.css" rel="stylesheet"&gt;
+		</code>
+		
+		<p><span>3.</span> Include jQuery, jCarrotCell was developed on jQuery v1.5.2 but 1.6.2 seems to work as well... for now.</p>
 		<code>
 			&lt;script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js" type="text/javascript" charset="utf-8"&gt;&lt;/script&gt;
 		</code>
-		<p>Then include the path to the jCarrotCell file on your build</p>
+		
+		<p><span>4.</span> Now include the jCarrotCell.js file</p>
 		<code>
 			&lt;script src="jCarrotCell.js" type="text/javascript" type="text/javascript" charset="utf-8"&gt;&lt;/script&gt;
 		</code>
+		
+		<p><span>5.</span> Finally, call the jCarrotCell function on the element that is of class ".carrotCell"</p>
+		<code>
+			&lt;script type="text/javascript"&gt;<br/>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$(document).ready(function(){<br />
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$('.carrotCell').carrotCell();<br />
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;});<br />
+			&lt;/script&gt;
+		</code>
+	</article>
+	
+	<article>
+		<h2>Where Can I Get More Info?</h2>
+		<nav>
+			<a href="doc.html">Documentation</a> 
+			<a href="demo.html">Demos</a> 
+			<a href="faq.html">FAQ</a> 
+		</nav>
 	</article>
 
 </body>
