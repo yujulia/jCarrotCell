@@ -343,7 +343,6 @@
 						$("li", slider).eq(index-1).before(item); // insert at index
 					}
 					
-					
 					findItems();
 					findPages();
 					adjustSlideSize();

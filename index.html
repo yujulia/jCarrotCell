@@ -4,79 +4,58 @@
 <head> 
     <meta charset="utf-8" /> 
 	<title>jCarrotCell</title>
-	<script src="js/jquery.js" type="text/javascript" charset="utf-8"></script>
+	<!--[if lt IE 9]>
+	<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js" type="text/javascript" charset="utf-8"></script>
 	<script src="js/jCarrotCell.js" type="text/javascript" charset="utf-8"></script>
 	<script src="js/base.js" type="text/javascript" charset="utf-8"></script>
 	
 	<link type="text/css" href="css/main.css" rel="stylesheet" /> 
+	<link type="text/css" href="css/carrotcell.css" rel="stylesheet" /> 
 </head>
 
 <body>
+	<head>
+		<h1>j<span>Carrot</span><em>Cell</em></h1>
 	
-	<div class="wrap">
-		<div id="kittenheaven" class="carrotCell">
-			<ol class="navi">
-				<li>1</li>
-				<li>2</li>
-				<li>3</li>
-			</ol>
-			<div class="prev">a prev</div>
-			<div class="carrotCellView">
-				<ol>
-					<li><span>1</span><img src="images/cat01.png"></li>
-					<li><span>2</span><img src="images/cat02.png"></li>
-					<li><span>3</span><img src="images/cat03.png"></li>
-					<li><span>4</span><img src="images/cat04.png"></li>
-					<li><span>5</span><img src="images/cat05.png"></li>
-					<li><span>6</span><img src="images/cat06.png"></li>
-					<li><span>7</span><img src="images/cat07.png"></li>
-					<li><span>8</span><img src="images/cat08.png"></li>
-					<li><span>9</span><img src="images/cat09.png"></li>
+		<blockquote>
+			<p>"You fool! Don't you realize yet you're up against the perfect carousel?!"</p>
+			<p>"Perhaps these miserable humans would appreciate a carousel. "</p>
+			<cite>&ndash; carrotCell</cite>
+		</blockquote>
+	</head>
+	
+	<article>
+		<h2>What Is It?</h2>
+		<p>jCarrotCell is yet another jQuery carousel plugin, because there isn't enough of them out there. </p>
+		<p>Features include:</p>
+		<ul id="features">
+			<li>Vertical / horizontal scrolling</li>
+			<li>Circular / infinite scrolling with speed control</li>
+			<li>Auto advance on a custom timer</li>
+			<li>Play, pause, and stop in auto advance mode</li>
+			<li>Append to / remove from list at the indexed spot</li>
+			<li>External navigation support</li>
+			<li>Exposed carousel api methods</li>
+			<li>Can pass in jQuery selectors for all the controls if they are outside the .carrotCell container</li>
+			<li>kittens</li>
+			<li>puppies</li>
+		</ul>
+		
+		<h2>Where Is It?</h2>
+		<p>You can get it on github <a href="https://github.com/jyuya/jCarrotCell">https://github.com/jyuya/jCarrotCell.</a></p>
+		
+		<h2>How Do I Use It?</h2>
+		<p>Firstly you must include jQuery in the header of your HTML document, jCarrotCell was developed on jQuery v1.5.2 but 1.6.2 seems to work as well... for now.</p>
+		<code>
+			&lt;script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js" type="text/javascript" charset="utf-8"&gt;&lt;/script&gt;
+		</code>
+		<p>Then include the path to the jCarrotCell file on your build</p>
+		<code>
+			&lt;script src="jCarrotCell.js" type="text/javascript" type="text/javascript" charset="utf-8"&gt;&lt;/script&gt;
+		</code>
+	</article>
 
-		        </ol>       
-			</div>
-			<div class="next">a next</div> 
-			<div class="pause">pause</div>
-			<div class="play">play</div>
-			<div class="stop">stop</div>
-		</div>
-	</div>
-	
-	
-	<div id="kittenhell" class="carrotCell">
-		<ol class="navi">
-			<li>1</li>
-			<li>2</li>
-			<li>3</li>
-			<li>4</li>
-			<li>5</li>
-			<li>6</li>
-			<li>7</li>
-			<li>8</li>
-			<li>9</li>
-		</ol>
-		<div class="carrotCellView">
-			<ol>
-				<li><span>1</span><img src="images/cat01.png"></li>
-				<li><span>2</span><img src="images/cat02.png"></li>
-				<li><span>3</span><img src="images/cat03.png"></li>
-				<li><span>4</span><img src="images/cat04.png"></li>
-				<li><span>5</span><img src="images/cat05.png"></li>
-				<li><span>6</span><img src="images/cat06.png"></li>
-				<li><span>7</span><img src="images/cat07.png"></li>
-				<li><span>8</span><img src="images/cat08.png"></li>
-				<li><span>9</span><img src="images/cat09.png"></li>
-
-	        </ol>     
-		</div>
-		<a href="#" class="prev">a prev</a>
-		<a href="#" class="next">a next</a> 
-		<div class="pause">pause</div>
-		<div class="play">play</div>
-		<div class="stop">stop</div>
-	</div>
-	
-
-	<div id="debug"></div>
 </body>
 </html>

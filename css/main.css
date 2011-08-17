@@ -1,7 +1,7 @@
 /**
 Reset
 */
-/* line 15, ../sass/_reset.scss */
+
 html, body, div, span, object, iframe,
 h1, h3, h3, h4, h5, h6, p, blockquote, pre,
 abbr, address, cite, code,
@@ -23,35 +23,29 @@ time, mark, audio, video {
   background: transparent;
 }
 
-/* line 25, ../sass/_reset.scss */
 body {
   line-height: 1;
 }
 
-/* line 30, ../sass/_reset.scss */
 article, aside, details, figcaption, figure,
 footer, header, hgroup, menu, nav, section {
   display: block;
 }
 
-/* line 34, ../sass/_reset.scss */
 nav ul {
   list-style: none;
 }
 
-/* line 38, ../sass/_reset.scss */
 blockquote, q {
   quotes: none;
 }
 
-/* line 43, ../sass/_reset.scss */
 blockquote:before, blockquote:after,
 q:before, q:after {
   content: '';
   content: none;
 }
 
-/* line 48, ../sass/_reset.scss */
 a {
   margin: 0;
   padding: 0;
@@ -60,14 +54,12 @@ a {
   background: transparent;
 }
 
-/* line 56, ../sass/_reset.scss */
 ins {
   background-color: #ff9;
   color: #000;
   text-decoration: none;
 }
 
-/* line 62, ../sass/_reset.scss */
 mark {
   background-color: #ff9;
   color: #000;
@@ -75,24 +67,20 @@ mark {
   font-weight: bold;
 }
 
-/* line 69, ../sass/_reset.scss */
 del {
   text-decoration: line-through;
 }
 
-/* line 73, ../sass/_reset.scss */
 abbr[title], dfn[title] {
   border-bottom: 1px dotted;
   cursor: help;
 }
 
-/* line 78, ../sass/_reset.scss */
 table {
   border-collapse: collapse;
   border-spacing: 0;
 }
 
-/* line 83, ../sass/_reset.scss */
 hr {
   display: block;
   height: 1px;
@@ -102,18 +90,15 @@ hr {
   padding: 0;
 }
 
-/* line 92, ../sass/_reset.scss */
 input, select {
   vertical-align: middle;
 }
 
-/* line 96, ../sass/_reset.scss */
 ol, ul, li {
   list-style: none;
   overflow: hidden;
 }
 
-/* line 105, ../sass/_reset.scss */
 article,
 header,
 footer,
@@ -123,48 +108,96 @@ hgroup {
 }
 
 body {
-	padding: 50px 0;
 	font-family: helvetica, arial;
-	font-size: 11px;
+	font-size: 12px;
+	color: #666;
+	padding: 20px;
 }
 
 /**
 */
-.carrotCell {
+a {
+	color: #666;
+}
+
+h1, h2 {
+	font-family: georgia, times;
+	font-weight: normal;
+}
+
+h1 {
+	font-size: 40px;
+	padding: 10px 0;
+}
+
+h1 span {
+	
+	color: #ff9900;
+}
+
+h1 em {
+	color: #99cc33;
+	font-style: normal;
+}
+
+h2 {
+	font-size: 30px;
+}
+
+.wrap {
+	width: 100%;
 	overflow: hidden;
-	width: 520px;
-	margin: 20px auto;
-	position: relative;
+}
+
+p {
+	line-height: 1.2em;
+	margin: 5px 0;
+}
+
+li {
+	line-height: 1.2em;
+}
+
+blockquote {
+	font-style: italic;
+}
+
+code {
+	background: #efefef;
+	margin: 10px 0;
+	padding: 10px;
+	display: block;
+}
+
+#features li {
+	margin: 10px;
+	list-style: disc inside none;
+	padding-left: 10px;
+}
+
+/** demo carrotcell styles
+*/
+.carrotCell {
+	margin: 20px 0;
 }
 
 .carrotCellView {
-	width: 520px;
-	overflow: auto;
-	position: relative;
+	margin: 20px;
 }
 
 .carrotCellView ol {
-	background: #ccc;
-	display: block;
+	background: #efefef;
 }
 
 .carrotCellView li {
 	width: 100px;
 	height: 100px;
-	overflow: hidden;
-	border: solid 5px #000;
+	border: solid 5px #666;
 	margin: 10px;
-	float: left;
-	display: block;
-	position: relative;
 }
 
 .carrotCellView li.cloned {
 	border-color: #ffcc00;
-}
-
-.carrotCellView li.empty {
-	border-color: #aaa;
 }
 
 .carrotCellView li span {
@@ -173,6 +206,7 @@ body {
 	top: 0;
 	left: 0;
 	color: #ffcc00;
+	line-height: 1em;
 }
 
 .carrotCellView li img {
@@ -184,16 +218,18 @@ body {
 .carrotCell .next,
 .carrotCell .prev {
 	position: absolute;
-	top: 50%;
+	top: 100px;
 	text-decoration: none;
 	font-family: arial;
-	color: #000;
+	color: #666;
 	background: #fff;
 	padding: 3px;
 	font-size: 10px;
 	display: none;
 	z-index: 1;
 	cursor: pointer;
+	text-transform: uppercase;
+	border: solid 1px #ccc;
 }
 
 .carrotCell .next {
@@ -214,37 +250,39 @@ body {
 	cursor: pointer;
 }
 
-/** navi
-*/
-.carrotCell .navi {
-	margin: 0 auto;
-	display: block;
-	text-align: center;
-}
-
 .carrotCell .navi li {
 	display: inline-block;
-	padding: 3px 6px;
+	padding: 4px 6px 2px 6px;
 	margin: 3px;
 	cursor: pointer;
-	background: #000;
+	background: #ccc;
 	color: #fff;
+	font-weight: bold;
 }
 
 /** specific carousel things
 */
+
+#kittenheaven {
+	width: 550px;
+}
+
+#kittenheaven .carrotCellView {
+	width: 520px;
+}
+
 #kittenhell {
-	width: 130px;
+	width: 180px;
 	height: 700px;
 }
 
-#kittenhell  .carrotCellView {
+#kittenhell .carrotCellView {
 	height: 520px;
 }
 
-#kittenhell ol {
+#kittenhell .carrotCellView ol {
 	width: 130px;
-	background: #666;
+	background: #efefef;
 }
 
 #kittenhell .next {
@@ -254,15 +292,4 @@ body {
 
 #kittenhell .prev {
 	top: 50px;
-}
-
-.carrotCell .disabled {
-	display: none!important;
-}
-
-/**
-*/
-.wrap {
-	width: 100%;
-	overflow: hidden;
 }

@@ -1,0 +1,57 @@
+/** CARROT CELL styles
+	by Julia Yu
+*/
+
+/** make sure to specify a width and/or a height
+	for this parent element
+*/
+.carrotCell {
+	display: block;
+	overflow: hidden;
+	position: relative;
+}
+
+/** this is the clip pane
+	make sure to specify a width and/or a height
+*/
+.carrotCellView {
+	overflow: auto;
+	position: relative;
+}
+
+.carrotCellView ol {
+	display: block;
+}
+
+.carrotCellView li {
+	overflow: hidden;
+	float: left;
+	display: block;
+	position: relative;
+}
+
+/** carrotcell buttons
+*/
+.carrotCell .next,
+.carrotCell .prev {
+	display: none;
+	z-index: 1;
+	cursor: pointer;
+}
+
+/** navi
+*/
+.carrotCell .navi {
+	display: block;
+}
+
+.carrotCell .navi li {
+	display: inline-block;
+	cursor: pointer;
+}
+
+/** may need to be more specific in your css to over ride this
+*/
+.carrotCell .disabled {
+	display: none!important;
+}
