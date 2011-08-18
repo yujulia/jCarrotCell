@@ -11,8 +11,10 @@
 	<script src="js/jCarrotCell.js" type="text/javascript" charset="utf-8"></script>
 	<script type="text/javascript" charset="utf-8">
 	$(document).ready(function(){
-		var k1 = $('#kitten1').carrotCell();
-
+		$('#kitten1').carrotCell();
+		$('#kitten3').carrotCell({ sideways: false });
+		$('#kitten5').carrotCell({ auto: true, step: 1 });
+		$('#kitten6').carrotCell({ key: true,  navi: true });
 	});
 	</script>
 	
@@ -36,12 +38,10 @@
 	</nav>
 	
 	<article>
-		<h2>Default Horizontal Carousel</h2>
+		<h2>Default Horizontal</h2>
 		<p>This version takes no options and uses all of the default settings of carrotCell.</p>
 		<code>
-			$(document).ready(function(){<br/ >
-				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$('#kitten1').carrotCell();<br/ >
-			});
+		$('#kitten1').carrotCell();<br/ >
 		</code>
 		
 		<div id="kitten1" class="carrotCell">
@@ -65,11 +65,11 @@
 	</article>
 	
 	<article>
-		<h2>Default Horizontal Carousel (No Javascrip)</h2>
+		<h2>Default Horizontal (No Javascript)</h2>
 		<p>This is what a horizontal carousel look like without Javascript. The function buttons are by default hidden.</p>
 
-		<div id="kitten2">
-			<div class="carrotCellView" class=".carrotCell">
+		<div id="kitten2" class="carrotCell">
+			<div class="carrotCellView" >
 				<ol>
 					<li><span>1</span><img src="images/cat01.png"></li>
 					<li><span>2</span><img src="images/cat02.png"></li>
@@ -82,42 +82,129 @@
 					<li><span>9</span><img src="images/cat09.png"></li>
 		        </ol>       
 			</div>
+			
+			<a href="#" class="prev">prev</a>
+			<a href="#" class="next">next</a>
+			
+			<div class="pause">pause</div>
+			<div class="play">play</div>
+			<div class="stop">stop</div>
 		</div>
 	</article>
 	
 	<article>
-	<div id="kittenhell" class="carrotCell">
-		<ol class="navi">
-			<li>1</li>
-			<li>2</li>
-			<li>3</li>
-			<li>4</li>
-			<li>5</li>
-			<li>6</li>
-			<li>7</li>
-			<li>8</li>
-			<li>9</li>
-		</ol>
-		<div class="carrotCellView">
-			<ol>
-				<li><span>1</span><img src="images/cat01.png"></li>
-				<li><span>2</span><img src="images/cat02.png"></li>
-				<li><span>3</span><img src="images/cat03.png"></li>
-				<li><span>4</span><img src="images/cat04.png"></li>
-				<li><span>5</span><img src="images/cat05.png"></li>
-				<li><span>6</span><img src="images/cat06.png"></li>
-				<li><span>7</span><img src="images/cat07.png"></li>
-				<li><span>8</span><img src="images/cat08.png"></li>
-				<li><span>9</span><img src="images/cat09.png"></li>
-
-	        </ol>     
+		<h2>Default Vertical</h2>
+		<p>This carrotCell scrolls vertically instead of horizontally. Note some amount of restyling to make the .carrotCellView clip correctly is required and to position the previous and next buttons.</p>
+		<code>
+			$('#kitten3').carrotCell({<br/ >
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sideways: true<br/ >
+			});
+		</code>
+		<div id="kitten3" class="carrotCell">
+			<div class="carrotCellView">
+				<ol>
+					<li><span>1</span><img src="images/cat01.png"></li>
+					<li><span>2</span><img src="images/cat02.png"></li>
+					<li><span>3</span><img src="images/cat03.png"></li>
+					<li><span>4</span><img src="images/cat04.png"></li>
+					<li><span>5</span><img src="images/cat05.png"></li>
+					<li><span>6</span><img src="images/cat06.png"></li>
+					<li><span>7</span><img src="images/cat07.png"></li>
+					<li><span>8</span><img src="images/cat08.png"></li>
+					<li><span>9</span><img src="images/cat09.png"></li>
+		        </ol>     
+			</div>
+			<a href="#" class="prev">prev</a>
+			<a href="#" class="next">next</a> 
 		</div>
-		<a href="#" class="prev">a prev</a>
-		<a href="#" class="next">a next</a> 
-		<div class="pause">pause</div>
-		<div class="play">play</div>
-		<div class="stop">stop</div>
-	</div>
+	</article>
+	
+	<article>
+		<h2>Default Vertical (No Javascript)</h2>
+		<p>This version uses the overflow:auto property of the .carrotCellView container when Javascript is not available.</p>
+		<div id="kitten4" class="carrotCell">
+			<div class="carrotCellView">
+				<ol>
+					<li><span>1</span><img src="images/cat01.png"></li>
+					<li><span>2</span><img src="images/cat02.png"></li>
+					<li><span>3</span><img src="images/cat03.png"></li>
+					<li><span>4</span><img src="images/cat04.png"></li>
+					<li><span>5</span><img src="images/cat05.png"></li>
+					<li><span>6</span><img src="images/cat06.png"></li>
+					<li><span>7</span><img src="images/cat07.png"></li>
+					<li><span>8</span><img src="images/cat08.png"></li>
+					<li><span>9</span><img src="images/cat09.png"></li>
+		        </ol>     
+			</div>
+			<a href="#" class="prev">prev</a>
+			<a href="#" class="next">next</a> 
+		</div>
+	</article>
+	
+	<article>
+		<h2>Circular Auto Advance 1 Item Per Page</h2>
+		<p>By setting auto to true, the carousel automatically becomes circular. The cloned elements are set with a yellow border to be more easily identified. The page size of this is set to be 1 item per page.</p>
+		<code>
+			$('#kitten5').carrotCell({ <br />
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;auto: true, <br />
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;step: 1 <br />
+			});
+		</code>
+		<div id="kitten5" class="carrotCell">
+			<div class="carrotCellView">
+				<ol>
+					<li><span>1</span><img src="images/cat01.png"></li>
+					<li><span>2</span><img src="images/cat02.png"></li>
+					<li><span>3</span><img src="images/cat03.png"></li>
+					<li><span>4</span><img src="images/cat04.png"></li>
+					<li><span>5</span><img src="images/cat05.png"></li>
+					<li><span>6</span><img src="images/cat06.png"></li>
+					<li><span>7</span><img src="images/cat07.png"></li>
+					<li><span>8</span><img src="images/cat08.png"></li>
+					<li><span>9</span><img src="images/cat09.png"></li>
+		        </ol>     
+			</div>
+			<a href="#" class="prev">prev</a>
+			<a href="#" class="next">next</a> 
+			
+			<div class="pause">pause</div>
+			<div class="play">play</div>
+			<div class="stop">stop</div>
+		</div>
+	</article>
+	
+	<article>
+		<h2>Arrow Key Advance and Navi</h2>
+		<p>Using the left and right arrow keys to navigate should be reserved for pages with 1 carrotCell object with key set to true since it is a document wide event. Vertical carrotCells use the up and down arrow keys. The external .navi is still enclosed in .carrotCell but can bet set to whatever element you wish through the configuration.</p>
+		<code>
+			$('#kitten6').carrotCell({ <br/>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;key: true,  <br/>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;navi: true <br/>
+			});
+		</code>
+		<div id="kitten6" class="carrotCell">
+			<div class="carrotCellView">
+				<ol>
+					<li><span>1</span><img src="images/cat01.png"></li>
+					<li><span>2</span><img src="images/cat02.png"></li>
+					<li><span>3</span><img src="images/cat03.png"></li>
+					<li><span>4</span><img src="images/cat04.png"></li>
+					<li><span>5</span><img src="images/cat05.png"></li>
+					<li><span>6</span><img src="images/cat06.png"></li>
+					<li><span>7</span><img src="images/cat07.png"></li>
+					<li><span>8</span><img src="images/cat08.png"></li>
+					<li><span>9</span><img src="images/cat09.png"></li>
+		        </ol>     
+			</div>
+			<a href="#" class="prev">prev</a>
+			<a href="#" class="next">next</a> 
+			
+			<ol class="navi">
+				<li>1</li>
+				<li>2</li>
+				<li>3</li>
+			</ol>
+		</div>
 	</article>
 
 </body>

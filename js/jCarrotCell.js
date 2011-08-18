@@ -15,7 +15,7 @@
 					sideways: true,
 					infinite: false,
 					auto: false,
-					speed: 500,
+					speed: 1000,
 					off: "disabled",
 					navi: false,
 					delay: 5000 // ms
@@ -146,6 +146,9 @@
 			*/
 			var setupAutoAdvance = function(){
 				play.hide();
+				stop.show();
+				pause.show();
+				
 				pause.bind("click", function(e){
 					e.preventDefault();
 					paused = true;

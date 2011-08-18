@@ -33,7 +33,11 @@
 /** carrotcell buttons
 */
 .carrotCell .next,
-.carrotCell .prev {
+.carrotCell .prev,
+.carrotCell .pause,
+.carrotCell .play,
+.carrotCell .stop
+{
 	display: none;
 	z-index: 1;
 	cursor: pointer;

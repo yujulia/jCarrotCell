@@ -109,7 +109,7 @@ hgroup {
 
 body {
 	font-family: helvetica, arial;
-	font-size: 12px;
+	font-size: 13px;
 	color: #666;
 	padding: 20px;
 }
@@ -308,6 +308,10 @@ tr {
 	cursor: pointer;
 }
 
+.carrotCell .navi {
+	margin: 10px 0 0 20px;
+}
+
 .carrotCell .navi li {
 	display: inline-block;
 	padding: 4px 6px 2px 6px;
@@ -321,33 +325,41 @@ tr {
 /** specific carousel things
 */
 
-#kitten1, #kitten2 {
+#kitten1, 
+#kitten2, 
+#kitten5,
+#kitten6 
+{
 	width: 560px;
 }
 
-#kitten1 .carrotCellView {
+#kitten1 .carrotCellView,
+#kitten5 .carrotCellView,
+#kitten6 .carrotCellView  
+{
 	width: 520px;
 }
 
-#kittenhell {
+#kitten3, 
+#kitten4 {
 	width: 180px;
-	height: 700px;
 }
 
-#kittenhell .carrotCellView {
-	height: 520px;
+#kitten3 .carrotCellView,
+#kitten4 .carrotCellView {
+	height: 260px;
 }
 
-#kittenhell .carrotCellView ol {
+#kitten3 .carrotCellView ol {
 	width: 130px;
 	background: #efefef;
 }
 
-#kittenhell .next {
+#kitten3 .next {
 	top: 50px;
 	right: 0;
 }
 
-#kittenhell .prev {
+#kitten3 .prev {
 	top: 50px;
 }
