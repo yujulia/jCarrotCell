@@ -3,29 +3,49 @@
 
 <head> 
     <meta charset="utf-8" /> 
-	<title>jCarrotCell</title>
+	<title>jCarrotCell Demos</title>
 	<!--[if lt IE 9]>
 	<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
 	<![endif]-->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js" type="text/javascript" charset="utf-8"></script>
 	<script src="js/jCarrotCell.js" type="text/javascript" charset="utf-8"></script>
-	<script src="js/base.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript" charset="utf-8">
+	$(document).ready(function(){
+		var k1 = $('#kitten1').carrotCell();
+
+	});
+	</script>
 	
 	<link type="text/css" href="css/main.css" rel="stylesheet" /> 
 	<link type="text/css" href="css/carrotcell.css" rel="stylesheet" /> 
 </head>
 
 <body>
-	<h1>jCarrotCell</h1>
+	<head>
+		<h1>j<span>Carrot</span><em>Cell</em> Demos</h1>
+		
+		<p><strong>by:</strong> Julia Yu</p>
+		<p><strong>version:</strong> 1.0</p>
+		<p><strong>source:</strong> <a href="https://github.com/jyuya/jCarrotCell">https://github.com/jyuya/jCarrotCell</a></p>
+		<p><strong>last updated:</strong> 8/17/2011</p>
+	</head>
 	
-	<div class="wrap">
-		<div id="kittenheaven" class="carrotCell">
-			<ol class="navi">
-				<li>1</li>
-				<li>2</li>
-				<li>3</li>
-			</ol>
-			<div class="prev">a prev</div>
+	<nav>
+		<a href="index.html">Home</a> 
+		<a href="doc.html">Documentation</a> 
+	</nav>
+	
+	<article>
+		<h2>Default Horizontal Carousel</h2>
+		<p>This version takes no options and uses all of the default settings of carrotCell.</p>
+		<code>
+			$(document).ready(function(){<br/ >
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$('#kitten1').carrotCell();<br/ >
+			});
+		</code>
+		
+		<div id="kitten1" class="carrotCell">
+			<div class="prev">prev</div>
 			<div class="carrotCellView">
 				<ol>
 					<li><span>1</span><img src="images/cat01.png"></li>
@@ -40,14 +60,32 @@
 
 		        </ol>       
 			</div>
-			<div class="next">a next</div> 
-			<div class="pause">pause</div>
-			<div class="play">play</div>
-			<div class="stop">stop</div>
+			<div class="next">next</div> 
 		</div>
-	</div>
+	</article>
 	
+	<article>
+		<h2>Default Horizontal Carousel (No Javascrip)</h2>
+		<p>This is what a horizontal carousel look like without Javascript. The function buttons are by default hidden.</p>
+
+		<div id="kitten2">
+			<div class="carrotCellView" class=".carrotCell">
+				<ol>
+					<li><span>1</span><img src="images/cat01.png"></li>
+					<li><span>2</span><img src="images/cat02.png"></li>
+					<li><span>3</span><img src="images/cat03.png"></li>
+					<li><span>4</span><img src="images/cat04.png"></li>
+					<li><span>5</span><img src="images/cat05.png"></li>
+					<li><span>6</span><img src="images/cat06.png"></li>
+					<li><span>7</span><img src="images/cat07.png"></li>
+					<li><span>8</span><img src="images/cat08.png"></li>
+					<li><span>9</span><img src="images/cat09.png"></li>
+		        </ol>       
+			</div>
+		</div>
+	</article>
 	
+	<article>
 	<div id="kittenhell" class="carrotCell">
 		<ol class="navi">
 			<li>1</li>
@@ -80,8 +118,7 @@
 		<div class="play">play</div>
 		<div class="stop">stop</div>
 	</div>
-	
+	</article>
 
-	<div id="debug"></div>
 </body>
 </html>

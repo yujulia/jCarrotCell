@@ -2,15 +2,7 @@ $(document).ready(function(){
 	
 	// should probably be calling the app init
 	var setup = function(){		
-		var t = $('#kittenheaven').carrotCell({
-			infinite: false, 
-			pad: false,
-			speed: 1000,
-			delay: 3000,
-			navi: true,
-			key: true // reads the entire doc so can only do 1 carousel
-			// auto: true // if auto is true so is infinite
-		});
+		var k1 = $('#kitten1').carrotCell();
 		
 		var h = $('#kittenhell').carrotCell({
 			sideways: false,
@@ -21,10 +13,10 @@ $(document).ready(function(){
 			// auto: true
 		});
 		
-		var apih = $(h).data('carrotCell');
-		var api = $(t).data('carrotCell');
-		var item = '<li><span>10</span><img src="images/dog01.png" /></li>';
-		api.insert(item, 4);
+		// var apih = $(h).data('carrotCell');
+		// var api = $(t).data('carrotCell');
+		// var item = '<li><span>10</span><img src="images/dog01.png" /></li>';
+		// api.insert(item, 4);
 		// item = '<li><span>11</span><img src="images/dog02.png" /></li>';
 		// api.insert(item);
 		// item = '<li><span>12</span><img src="images/dog03.png" /></li>';

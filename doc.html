@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head> 
+    <meta charset="utf-8" /> 
+	<title>jCarrotCell Documentation</title>
+	<!--[if lt IE 9]>
+	<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+	
+	<link type="text/css" href="css/main.css" rel="stylesheet" /> 
+	
+</head>
+
+<body>
+	<head>
+		<h1>j<span>Carrot</span><em>Cell</em> Documentation</h1>
+		
+		<p><strong>by:</strong> Julia Yu</p>
+		<p><strong>version:</strong> 1.0</p>
+		<p><strong>source:</strong> <a href="https://github.com/jyuya/jCarrotCell">https://github.com/jyuya/jCarrotCell</a></p>
+		<p><strong>last updated:</strong> 8/17/2011</p>
+	</head>
+	
+	<nav>
+		<a href="index.html">Home</a> 
+		<a href="demo.html">Demos</a> 
+	</nav>
+	
+	<article>
+		<h2>Configurations</h2>
+		<p>Example of a carrotCell object with configurations:</p>
+		<code>
+			$('#myCarousel').carrotCell({<br />
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sideways: false,<br />
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;delay: 3000,<br />
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;key: true,<br />
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;navi: true,<br />
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;step:1,<br />
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;auto: true<br />
+			});
+		</code>
+		
+		<p>The configuration options are passed into the carrotCell as an object on creation.</p>
+		
+		<table>
+			<thead>
+				<tr>
+					<th>Property Name</th>
+					<th>Property Type</th>
+					<th>Example</th>
+					<th>Description</th>
+					<th>Default</th>
+				</tr>
+			</thead>
+			<tr>
+				<td>next</td>
+				<td>string</td>
+				<td>"#nextThing"</td>
+				<td>
+					<p>Control to advance the carousel to the next page.</p>
+					<p>It can be a class or an id or some other kind of jQuery string selector.</p> 
+					<p>This element must be contained in the ".carrotCell" container.</p>
+				</td>
+				<td>".next"</td>
+			</tr> 
+			<tr>
+				<td>prev</td>
+				<td>string</td>
+				<td>"#previousThing"</td>
+				<td>
+					<p>Control to advance the carousel to the previous page.</p>
+					<p>It can be a class or an id or some other kind of jQuery string selector.</p> 
+					<p>This element must be contained in the ".carrotCell" container.</p>
+				</td>
+				<td>".prev"</td>
+			</tr>
+			<tr>
+				<td>off</td>
+				<td>string (class name)</td>
+				<td>".off"</td>
+				<td>
+					<p>The class added to previous and next when no action is possible.</p> 
+					<p>This is added to the controls when the end of the list of items is reached.</p>
+				</td>
+				<td>".disabled"</td>
+			</tr>
+			<tr>
+				<td>step</td>
+				<td>integer</td>
+				<td>5</td>
+				<td>
+					<p>How many items to advance by or how many items a "page" contains</p>
+					<p>If nothing is set for step, the page is assumed to be all visible elements in the container.</p> 
+					<p>This number should be smaller than the number of total items.</p>
+				</td>
+				<td>Number of items visible</td>
+			</tr>
+			<tr>
+				<td>sideways</td>
+				<td>boolean</td>
+				<td>true</td>
+				<td>
+					<p>Make the carousel orientation horizontal if set to true.</p> 
+				</td>
+				<td>false</td>
+			</tr>
+			<tr>
+				<td>infinite</td>
+				<td>boolean</td>
+				<td>true</td>
+				<td>
+					<p>Make the carousel scroll in circular, never ending motion when set to true.</p> 
+				</td>
+				<td>false</td>
+			</tr>
+			<tr>
+				<td>delay</td>
+				<td>integer (milisecs)</td>
+				<td>9000</td>
+				<td>
+					<p>The time delay between auto scrolling of each page.</p> 
+				</td>
+				<td>3000</td>
+			</tr>
+			<tr>
+				<td>speed</td>
+				<td>integer (milisecs)</td>
+				<td>9000</td>
+				<td>
+					<p>The speed at which the carousel  scrolls.</p> 
+				</td>
+				<td>500</td>
+			</tr>
+			<tr>
+				<td>navi</td>
+				<td>boolean</td>
+				<td>true</td>
+				<td>
+					<p>Indicate external navigation is included.</p> 
+					<p>The number of navi items must correspond to the number of pages used.</p> 
+				</td>
+				<td>false</td>
+			</tr>
+			<tr>
+				<td>key</td>
+				<td>boolean</td>
+				<td>true</td>
+				<td>
+					<p>Turn on or off arrow key navigation for carousel.</p> 
+					<p>Up and Down arrows work for vertical carousels, and Left and Right arrows for horizontal.</p>
+					<p>Note that since key events are document based all carousels would recognize the event.</p> 
+				</td>
+				<td>false</td>
+			</tr>
+		</table>
+
+	</article>
+	
+	<article>
+		<h2>API Methods</h2>
+		<p>First retrieve the carrotCell API from the carousel created</p>
+		<code>
+			var myCarrot = $('#someCarrotCell').carrotCell(); <span>// save the created carrotCell</span><br />
+			var myAPI = $(myCarrot).data('carrotCell'); <span>//retrieve the API</span><br />
+			myAPI.move(4); <span>// call a method of the API</span>
+		</code>
+		
+		<p>The configuration options are passed into the carrotCell as an object on creation.</p>
+		
+		<table>
+			<thead>
+				<tr>
+					<th>Method Name</th>
+					<th>Parameters</th>
+					<th>Example</th>
+					<th>Description</th>
+				</tr>
+			</thead>
+			<tr>
+				<td>init</td>
+				<td>options (object)</td>
+				<td>	
+					api.init(options);
+				</td>
+				<td>
+					<p>Initialize the carrotCell with the configuration options object</p>
+				</td>
+			</tr> 
+			<tr>
+				<td>move</td>
+				<td>pageNumber (integer)</td>
+				<td>	
+					api.move(2);
+				</td>
+				<td>
+					<p>Move to page n of the carousel</p>
+				</td>
+			</tr>
+			<tr>
+				<td>insert</td>
+				<td>item (string), index (integer)</td>
+				<td>	
+					api.insert('&lt;li&gt;item&lt;/li&gt;', 4);
+				</td>
+				<td>
+					<p>Insert the new carousel element at a certain index.</p>
+					<p>If the index option is left out, the element is added at the end.</p>
+				</td>
+			</tr>
+			<tr>
+				<td>remove</td>
+				<td>index (integer)</td>
+				<td>	
+					api.remove(4);
+				</td>
+				<td>
+					<p>Remove the carousel item at position 4</p>
+				</td>
+			</tr>
+			
+		</table>
+	</article>
+	
+	<article>
+		<h2>HTML &amp; CSS</h2>
+		<img src="/images/html.png" alt="html diagram"/>
+		<p><span>1.</span> .carrotCell contains a single carrotCell and all its components.</p>
+		<p><span>2.</span> .carrotCellView class is the view area of the carousel, clipping the extra elements of the content list from being seen.</p>
+		<p><span>3.</span> Parent container of the content list, usually an OL or UL.</p>
+		<p><span>4.</span> Individual container of the content list, usually a LI.</p>
+		<p><span>5.</span> The previous and next buttons are inside .carrotCell but not .carrotCellView, assign styles to .disabled to hide the buttons when they are not operational. By default they are positioned absolutely relative to .carrotCell.</p>
+		<p><span>6.</span> Play, Pause, Stop buttons of the auto advance.</p>
+		<p><span>7.</span> .navi element contains items corresponding to the pages of the carrotCell.</p>
+	</article>
+
+
+</body>
+</html>
