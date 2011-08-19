@@ -26,6 +26,7 @@
 				currentPage = 1,
 				currentItem = 1,
 				paused = false,
+				scrolling = false,
 				view, slider, items, single, totalItems, extras,
 				frameSize, singleSize, viewSize,
 				autoScroll, pause, play, stop, 
@@ -71,8 +72,10 @@
 						page = 1; // reset back to start position
 					}         						                
 					currentPage = page;
-					
+					scrolling = false;
 				};
+				
+				scrolling = true;
 				// set up the animation
 				if (settings.sideways) {
 					view.filter(':not(:animated)').animate({
@@ -178,9 +181,10 @@
 			*/
 			var setupKeyAdvance = function() {
 				$(document).keydown(function(e){
+					if (scrolling) { return false; }
 					if (settings.sideways) { 
-				    	if (e.keyCode == 37) {  moveBack(); } // left
-						if (e.keyCode == 39) {  moveForward(); } // right
+				    	if (e.keyCode == 37) { moveBack(); } // left
+						if (e.keyCode == 39) { moveForward(); } // right
 					} else {
 						if (e.keyCode == 38) {  moveBack(); } // up
 						if (e.keyCode == 40) {  moveForward(); } // down

@@ -100,7 +100,7 @@
 			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;});<br />
 			&lt;/script&gt;
 		</code>
-		<p><span>Optional.</span> There is sometimes a bug in Chrome where document ready would fire before the elements are rendered with the correct height, here is an alternate version of 5:</p>
+		<p><span>Of Note.</span> There is sometimes a bug in Chrome where document ready would fire before the elements are rendered with the correct height, here is an alternate version of 5 that fixes the problem. </p>
 		<code>
 			$(document).ready(function(){<br />
 				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;window.someNameSpace = window.someNameSpace || {};<br />
@@ -124,6 +124,11 @@
 			<a href="doc.html">Documentation</a> 
 			<a href="demo.html">Demos</a> 
 		</nav>
+	</article>
+	
+	<article>
+		<h2>Credits</h2>
+		<p>Based on <a href="http://jqueryfordesigners.com/jquery-infinite-carousel/">http://jqueryfordesigners.com/jquery-infinite-carousel/</a></p>
 	</article>
 
 </body>
