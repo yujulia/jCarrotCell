@@ -17,6 +17,8 @@
 					auto: false,
 					speed: 1000,
 					off: "disabled",
+					unseen: "invisible",
+					current: "current",
 					navi: false,
 					delay: 5000 // ms
 				},
@@ -148,15 +150,17 @@
 			/** auto advance the rotator
 			*/
 			var setupAutoAdvance = function(){
-				play.hide();
-				stop.show();
-				pause.show();
+
+				play.addClass(settings.unseen);
+				stop.removeClass(settings.unseen);
+				pause.removeClass(settings.unseen);
 				
 				pause.bind("click", function(e){
 					e.preventDefault();
 					paused = true;
-					pause.hide();
-					play.show();
+					
+					pause.addClass(settings.unseen);
+					play.removeClass(settings.unseen);
 				});
 				play.bind("click", function(e){
 					e.preventDefault();
@@ -165,14 +169,15 @@
 					} else {
 						goScroll();
 					}
-					play.hide();
-					pause.show();
+					pause.removeClass(settings.unseen);
+					play.addClass(settings.unseen);
 				});
 				stop.bind("click", function(e){
 					e.preventDefault();
 					window.clearInterval(autoScroll);
-					play.show();
-					pause.hide();
+					
+					pause.addClass(settings.unseen);
+					play.removeClass(settings.unseen);
 				});
 				goScroll();
 			};
@@ -196,12 +201,18 @@
 			/** set up navigation, only works on pages
 			*/
 			var setupNavi = function() {
+				$(navi).first().addClass("on");
 				navi.each(function(iNav){
 					var thisNavi = this;
 					var navIndex = iNav + 1;
 					$(thisNavi).bind("click", function(){
+						$(this).siblings().removeClass(settings.current);
+						$(this).addClass(settings.current);
+						
+						if (scrolling) { return false; }
 						if (navIndex <= pages) {
 							gotoPage(navIndex);
+							moveNext(navIndex);
 						}
 					});
 				});
@@ -244,15 +255,26 @@
 				}
 			};
 			
+			/** check if content is too short
+			*/
+			var testSize = function(){
+				// not  enough content to scroll
+				if (totalItems <= visible) {
+					prev.addClass(settings.off);
+					next.addClass(settings.off);
+				}	
+			};
+			
+			/** find child elements of slider
+			*/
 			var findItems = function(){
 				items = slider.find('> li'); 
 				totalItems = items.length;
-			}
+				single = items.filter(':first');
+				testSize();
+			};
 			
-			/** calculate the settings of the carrot
-			*/
-			var initCarrot = function(){
-				if (settings.auto) { settings.infinite = true;  } // if auto infinite hast o be true
+			var findViewsize = function(){
 				if (settings.sideways) {
 					viewSize = $this.innerWidth();
 					singleSize = single.outerWidth(true);
@@ -260,16 +282,22 @@
 					viewSize = $this.innerHeight();
 					singleSize = single.outerHeight(true);
 				}
+
 				// visible is everything in frame unless a step is set
 				visible = Math.floor(viewSize / singleSize);
+			}
+			
+			/** calculate the settings of the carrot
+			*/
+			var processCarrot = function(){
+				if (settings.auto) { settings.infinite = true;  } // if auto infinite hast o be true
+				findViewsize();
 				if (settings.step) {
 					advanceBy = settings.step;
 				} else {
 					advanceBy = visible;
 				}
-				
 				findPages();
-				
 				slideBy = singleSize * advanceBy;
 				if (settings.infinite) {
 					// clone a visible amount on the begin and end
@@ -279,7 +307,6 @@
 				} else {
 					prev.addClass(settings.off);
 				}
-				
 				adjustSlideSize();
 				view.css("overflow", "hidden"); // clip extra items	
 				// move clone items out of sight
@@ -298,16 +325,15 @@
 				view = $this.find(".carrotCellView");
 				slider = view.find('> ol'); 
 				findItems();
-				single = items.filter(':first');
 				prev = $this.find(".prev"); 
 				next = $this.find(".next"); 
 				pause = $this.find(".pause");
 				play = $this.find(".play");
 				stop = $this.find(".stop");
 				navi = $this.find(".navi li");
-
-				initCarrot();
+				processCarrot();
 				assignCarrot();
+				testSize();
 			};
 
 			return {
@@ -317,6 +343,17 @@
 					$.extend(settings, opt); // options over ride settings
 					$this = $(opt.scope);
 					findCarrot();
+					
+					// call done callback pass it the api
+					if ((typeof settings.carrotDone) == "function") {
+						settings.carrotDone(this);
+					}
+				},
+				
+				/** find out which carrot
+				*/
+				whichCarrot : function(){
+					console.log("hi this is carrotCell " + settings.name);
 				},
 				
 				/** move to the page passed in if its a number
@@ -342,6 +379,7 @@
 					if (index < 1 ) { index = 1; } // range check
 					if (index > items.length ) { index = items.length; } // rang check
 					
+					// calculate size on append?
 					if (index == items.length) {
 						slider.append(item); // append at end
 					} else if (index <= 1){
@@ -364,6 +402,22 @@
 					if (index < 1 ) { index = 1; } // range check
 					if (index > items.length ) { index = items.length; } // rang check
 					$(items[index-1]).remove();
+					findItems();
+					findPages();
+					adjustSlideSize();
+				},
+				
+				/** clear all elements
+				*/
+				empty : function() {
+					$(items).remove();
+				},
+				
+				/** add a bunch of item to the carousel
+				*/
+				load : function(items) {
+					if (!items) { return false; }		
+					slider.append(items); // append at end
 					findItems();
 					findPages();
 					adjustSlideSize();

@@ -54,38 +54,7 @@
 					<th>Default</th>
 				</tr>
 			</thead>
-			<tr>
-				<td>next</td>
-				<td>string</td>
-				<td>"#nextThing"</td>
-				<td>
-					<p>Control to advance the carousel to the next page.</p>
-					<p>It can be a class or an id or some other kind of jQuery string selector.</p> 
-					<p>This element must be contained in the ".carrotCell" container.</p>
-				</td>
-				<td>".next"</td>
-			</tr> 
-			<tr>
-				<td>prev</td>
-				<td>string</td>
-				<td>"#previousThing"</td>
-				<td>
-					<p>Control to advance the carousel to the previous page.</p>
-					<p>It can be a class or an id or some other kind of jQuery string selector.</p> 
-					<p>This element must be contained in the ".carrotCell" container.</p>
-				</td>
-				<td>".prev"</td>
-			</tr>
-			<tr>
-				<td>off</td>
-				<td>string (class name)</td>
-				<td>".off"</td>
-				<td>
-					<p>The class added to previous and next when no action is possible.</p> 
-					<p>This is added to the controls when the end of the list of items is reached.</p>
-				</td>
-				<td>".disabled"</td>
-			</tr>
+
 			<tr>
 				<td>step</td>
 				<td>integer</td>
@@ -154,6 +123,74 @@
 				</td>
 				<td>false</td>
 			</tr>
+			<tr>
+				<td>carrotDone</td>
+				<td>function</td>
+				<td>
+					<code>
+					carrotDone: function(api){  <br />
+						&nbsp;&nbsp;&nbsp;api.whichCarrot()<br />
+					} 
+					</code>
+				</td>
+				<td>
+					<p>A custom call back after the carrotCell has been initialized.</p> 
+					<p>By default it is passed the API object of the carrotCell.</p> 
+				</td>
+				<td>&nbsp;</td>
+			</tr>
+			
+			<tr>
+				<td>next</td>
+				<td>string (selector)</td>
+				<td>"#nextThing"</td>
+				<td>
+					<p>Control to advance the carousel to the next page.</p>
+					<p>It can be a class or an id or some other kind of jQuery string selector.</p> 
+					<p>This element must be contained in the ".carrotCell" container.</p>
+				</td>
+				<td>".next"</td>
+			</tr> 
+			<tr>
+				<td>prev</td>
+				<td>string (selector)</td>
+				<td>"#previousThing"</td>
+				<td>
+					<p>Control to advance the carousel to the previous page.</p>
+					<p>It can be a class or an id or some other kind of jQuery string selector.</p> 
+					<p>This element must be contained in the ".carrotCell" container.</p>
+				</td>
+				<td>".prev"</td>
+			</tr>
+			<tr>
+				<td>off</td>
+				<td>string (class name)</td>
+				<td>"off"</td>
+				<td>
+					<p>The class added to previous and next when no action is possible.</p> 
+					<p>This is added to the controls when the end of the list of items is reached.</p>
+				</td>
+				<td>"disabled"</td>
+			</tr>
+			<tr>
+				<td>unseen</td>
+				<td>string (classname)</td>
+				<td>"unseeable"</td>
+				<td>
+					<p>The classname for the invisible Stop, Play, Pause buttons.</p> 
+					<p>By default it is currently set to display none.</p> 
+				</td>
+				<td>"invisible"</td>
+			</tr>
+			<tr>
+				<td>current</td>
+				<td>string (classname)</td>
+				<td>"on"</td>
+				<td>
+					<p>The classname for the currently selected state of the navi.</p> 
+				</td>
+				<td>"current"</td>
+			</tr>
 		</table>
 
 	</article>
@@ -216,10 +253,19 @@
 					api.remove(4);
 				</td>
 				<td>
-					<p>Remove the carousel item at position 4</p>
+					<p>Remove a carousel item at position 4</p>
 				</td>
 			</tr>
-			
+			<tr>
+				<td>empty</td>
+				<td>&nbsp;</td>
+				<td>	
+					api.empty();
+				</td>
+				<td>
+					<p>Remove all carousel items</p>
+				</td>
+			</tr>
 		</table>
 	</article>
 	
@@ -238,8 +284,7 @@
 	<article>
 		<h2>Known Issues</h2>
 		<ul>
-			<li>Chrome does not measure the carousel size correctly.</li>
-			<li>The arrow keys some times do not advance the carousel, no idea why.</li>
+			<li>Chrome does not measure the carousel size correctly on document ready, use window.load for the constructors.</li>
 		</ul>
 	</article>
 

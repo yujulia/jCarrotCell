@@ -233,6 +233,14 @@ tr {
 	border-bottom: solid 1px #fff;
 }
 
+td code {
+	margin: 0;
+	padding: 0;
+	background: none;
+	font-size: 12px;
+	font-family: helvetica, arial;
+}
+
 /** demo carrotcell styles
 */
 .carrotCell {
@@ -320,6 +328,10 @@ tr {
 	background: #666;
 	color: #fff;
 	font-weight: bold;
+}
+
+.carrotCell .navi li.current {
+	background: #000;
 }
 
 /** specific carousel things

@@ -33,14 +33,15 @@
 /** carrotcell buttons
 */
 .carrotCell .next,
-.carrotCell .prev,
-.carrotCell .pause,
-.carrotCell .play,
-.carrotCell .stop
+.carrotCell .prev
 {
 	display: none;
 	z-index: 1;
 	cursor: pointer;
+}
+
+.carrotCell .invisible {
+	display: none;
 }
 
 /** navi
