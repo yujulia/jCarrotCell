@@ -100,6 +100,22 @@
 			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;});<br />
 			&lt;/script&gt;
 		</code>
+		<p><span>Optional.</span> There is sometimes a bug in Chrome where document ready would fire before the elements are rendered with the correct height, here is an alternate version of 5:</p>
+		<code>
+			$(document).ready(function(){<br />
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;window.someNameSpace = window.someNameSpace || {};<br />
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;someNameSpace.setup = function() {<br />
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$('.carrotCell').carrotCell();<br />
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br />
+
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;var is_chrome = navigator.userAgent.toLowerCase().indexOf('chrome') > -1;<br />
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (is_chrome) {<br />
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$(window).load(function(){ someNameSpace.setup(); });<br />
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;} else {<br />
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;someNameSpace.setup();<br />
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br />
+			});
+		</code>
 	</article>
 	
 	<article>

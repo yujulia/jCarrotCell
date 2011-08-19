@@ -11,10 +11,22 @@
 	<script src="js/jCarrotCell.js" type="text/javascript" charset="utf-8"></script>
 	<script type="text/javascript" charset="utf-8">
 	$(document).ready(function(){
-		$('#kitten1').carrotCell();
-		$('#kitten3').carrotCell({ sideways: false });
-		$('#kitten5').carrotCell({ auto: true, step: 1 });
-		$('#kitten6').carrotCell({ key: true,  navi: true });
+		window.carrotDemos = window.carrotDemos || {};
+		carrotDemos.setup = function() {
+			$('#kitten1').carrotCell();
+			$('#kitten3').carrotCell({ sideways: false });
+			$('#kitten5').carrotCell({ auto: true, step: 1 });
+			$('#kitten6').carrotCell({ key: true,  navi: true });
+		}
+		
+		// chrome can not calculate the width correctly because it is foolish
+		var is_chrome = navigator.userAgent.toLowerCase().indexOf('chrome') > -1;
+		if (is_chrome) {
+			$(window).load(function(){ carrotDemos.setup(); });
+		} else {
+			carrotDemos.setup();
+		}
+		
 	});
 	</script>
 	
@@ -103,10 +115,10 @@
 		<div id="kitten3" class="carrotCell">
 			<div class="carrotCellView">
 				<ol>
-					<li><span>1</span><img src="images/cat01.png"></li>
-					<li><span>2</span><img src="images/cat02.png"></li>
-					<li><span>3</span><img src="images/cat03.png"></li>
-					<li><span>4</span><img src="images/cat04.png"></li>
+					<li><span>1</span><img src="images/dog01.png"></li>
+					<li><span>3</span><img src="images/dog03.png"></li>
+					<li><span>2</span><img src="images/dog02.png"></li>
+					<li><span>4</span><img src="images/dog04.png"></li>
 					<li><span>5</span><img src="images/cat05.png"></li>
 					<li><span>6</span><img src="images/cat06.png"></li>
 					<li><span>7</span><img src="images/cat07.png"></li>
@@ -125,10 +137,10 @@
 		<div id="kitten4" class="carrotCell">
 			<div class="carrotCellView">
 				<ol>
-					<li><span>1</span><img src="images/cat01.png"></li>
-					<li><span>2</span><img src="images/cat02.png"></li>
-					<li><span>3</span><img src="images/cat03.png"></li>
-					<li><span>4</span><img src="images/cat04.png"></li>
+					<li><span>1</span><img src="images/dog01.png"></li>
+					<li><span>3</span><img src="images/dog03.png"></li>
+					<li><span>2</span><img src="images/dog02.png"></li>
+					<li><span>4</span><img src="images/dog04.png"></li>
 					<li><span>5</span><img src="images/cat05.png"></li>
 					<li><span>6</span><img src="images/cat06.png"></li>
 					<li><span>7</span><img src="images/cat07.png"></li>
