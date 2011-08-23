@@ -42,6 +42,15 @@
 					scrollTo = singleSize * dir * advanceBy * n;
 				// after the animation scrolls, set the pages appropriately
 				
+				// if there is an navi on auto advance the navi
+				if (settings.navi && settings.auto) {
+					var thisNavi = page;
+					if (page > pages) { thisNavi = 1; } // rewind
+					thisNavi--;
+					navi.removeClass(settings.current);
+					$(navi[thisNavi]).addClass(settings.current);
+				}
+				
 				var thisPage = currentPage;
 				if (dir < 0) {
 					thisPage--;
@@ -135,6 +144,7 @@
 				if (!settings.infinite && (currentPage >= pages)) {
 					return false; // we are at the right most page
 				}
+								
 				gotoPage(currentPage + 1);
 				var nextPage = currentPage + 1;
 				moveNext(nextPage);
@@ -201,7 +211,7 @@
 			/** set up navigation, only works on pages
 			*/
 			var setupNavi = function() {
-				$(navi).first().addClass("on");
+				$(navi).first().addClass(settings.current);
 				navi.each(function(iNav){
 					var thisNavi = this;
 					var navIndex = iNav + 1;
@@ -330,7 +340,8 @@
 				pause = $this.find(".pause");
 				play = $this.find(".play");
 				stop = $this.find(".stop");
-				navi = $this.find(".navi li");
+				navi = $this.find(".navi > *");
+				
 				processCarrot();
 				assignCarrot();
 				testSize();
