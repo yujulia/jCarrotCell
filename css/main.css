@@ -126,8 +126,8 @@ h1, h2 {
 }
 
 h1 {
-	font-size: 40px;
-	padding: 10px 0;
+	font-size: 75px;
+	padding: 0;
 }
 
 h1 span {
@@ -142,6 +142,11 @@ h1 em {
 
 h2 {
 	font-size: 30px;
+}
+
+blockquote {
+	font-family: georgia, times;
+	padding: 0 5px;
 }
 
 article {
