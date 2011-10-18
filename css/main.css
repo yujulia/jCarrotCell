@@ -120,7 +120,7 @@ a {
 	color: #666;
 }
 
-h1, h2 {
+h1, h2, h3 {
 	font-family: georgia, times;
 	font-weight: normal;
 }
@@ -130,8 +130,7 @@ h1 {
 	padding: 0;
 }
 
-h1 span {
-	
+h1 span {	
 	color: #ff9900;
 }
 
@@ -142,6 +141,11 @@ h1 em {
 
 h2 {
 	font-size: 30px;
+}
+
+h3 {
+	margin: 10px 0 0 0;
+	font-size: 20px;
 }
 
 blockquote {
@@ -216,6 +220,10 @@ p span{
 
 /** property tables
 */
+
+table {
+	margin: 10px 0;
+}
 
 th {
 	background: #666;

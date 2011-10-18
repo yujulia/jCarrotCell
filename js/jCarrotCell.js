@@ -7,32 +7,51 @@
 		
 		makeCarrot : function(){
 			var $this = null,
+			
+				// populate default settings
 				settings = {
-					next: ".next",
-					prev: ".prev",
 					step: 0,
 					key: false,
 					sideways: true,
 					infinite: false,
 					auto: false,
 					speed: 1000,
+					navi: false,
+					delay: 5000,
 					off: "disabled",
 					unseen: "invisible",
 					current: "current",
-					navi: false,
-					delay: 5000 // ms
+					
+					sliderSelect : "ol",
+					sliderChildSelect : "li",
+					
+					prevSelect : ".prev",
+					nextSelect : ".next",
+					pauseSelect :  ".pause",
+					playSelect : ".play",
+					stopSelect : ".stop",
+					naviSelect : ".navi > *",
+					
+					containsControl : true,
+					controlScope : ""
 				},
+				
+				// properties of this carrotCell
 				slideWidth = 0,
 				haveBack = false,
 				haveForward = true,
 				currentPage = 1,
 				currentItem = 1,
+				playing = false,
 				paused = false,
+				stopped = false,
 				scrolling = false,
 				view, slider, items, single, totalItems, extras,
 				frameSize, singleSize, viewSize,
 				autoScroll, pause, play, stop, 
-				visible, advanceBy, pages, slideBy, prev, next, navi;
+				visible, advanceBy, pages, slideBy, prev, next, navi,
+				sliderSelect, sliderChildSelect, prevSelect, nextSelect,
+				pauseSelect, playSelect, stopSelect, naviSelect;
 				
 			/** scroll the carousel
 			*/
@@ -87,6 +106,7 @@
 				};
 				
 				scrolling = true;
+				
 				// set up the animation
 				if (settings.sideways) {
 					view.filter(':not(:animated)').animate({
@@ -144,7 +164,6 @@
 				if (!settings.infinite && (currentPage >= pages)) {
 					return false; // we are at the right most page
 				}
-								
 				gotoPage(currentPage + 1);
 				var nextPage = currentPage + 1;
 				moveNext(nextPage);
@@ -157,39 +176,57 @@
 				autoScroll = this.setInterval(function(){ if (!paused) { moveForward(); } }, settings.delay);
 			};
 			
-			/** auto advance the rotator
+			/** pause the auto play
 			*/
-			var setupAutoAdvance = function(){
-
+			var pauseCell = function() {
+				paused = true;
+				playing = false;
+				stopped = false;
+				pause.addClass(settings.unseen);
+				play.removeClass(settings.unseen);
+				stop.removeClass(settings.unseen);
+			};
+			
+			/** resume the auto play
+			*/
+			var playCell = function() {
+				paused = false;
+				stopped = false;
+				playing = true;
 				play.addClass(settings.unseen);
 				stop.removeClass(settings.unseen);
 				pause.removeClass(settings.unseen);
-				
+				goScroll();
+			};
+			
+			/** resume the auto play
+			*/
+			var stopCell = function() {
+				paused = false;
+				stopped = true;
+				playing = false;
+				stop.addClass(settings.unseen);
+				play.removeClass(settings.unseen);
+				pause.removeClass(settings.unseen);
+				window.clearInterval(autoScroll);
+			};
+			
+			/** set up the controls if any, then auto scroll
+			*/
+			var setupAutoAdvance = function(){
 				pause.bind("click", function(e){
 					e.preventDefault();
-					paused = true;
-					
-					pause.addClass(settings.unseen);
-					play.removeClass(settings.unseen);
+					pauseCell();
 				});
 				play.bind("click", function(e){
 					e.preventDefault();
-					if (paused) {
-						paused = false;
-					} else {
-						goScroll();
-					}
-					pause.removeClass(settings.unseen);
-					play.addClass(settings.unseen);
+					playCell();
 				});
 				stop.bind("click", function(e){
 					e.preventDefault();
-					window.clearInterval(autoScroll);
-					
-					pause.addClass(settings.unseen);
-					play.removeClass(settings.unseen);
+					stopCell();
 				});
-				goScroll();
+				playCell();
 			};
 
 			/** up down for vertical, left right for horizonal
@@ -274,16 +311,7 @@
 					next.addClass(settings.off);
 				}	
 			};
-			
-			/** find child elements of slider
-			*/
-			var findItems = function(){
-				items = slider.find('> li'); 
-				totalItems = items.length;
-				single = items.filter(':first');
-				testSize();
-			};
-			
+
 			var findViewsize = function(){
 				if (settings.sideways) {
 					viewSize = $this.innerWidth();
@@ -313,7 +341,7 @@
 					// clone a visible amount on the begin and end
 					items.filter(':first').before(items.slice(-visible).clone().addClass('cloned'));
 					items.filter(':last').after(items.slice(0, visible).clone().addClass('cloned'));
-					items = slider.find('> li'); // reselect new li
+					items = slider.find('> ' + settings.sliderChildSelect); // reselect new li
 				} else {
 					prev.addClass(settings.off);
 				}
@@ -328,19 +356,39 @@
 					}
 				}
 			};
+			
+			/** find child elements of slider
+			*/
+			var findItems = function(){
+				items = slider.find('> ' + settings.sliderChildSelect); 
+				totalItems = items.length;
+				single = items.filter(':first');
+				testSize();
+			};
 
 			/** find elements
 			*/
 			var findCarrot = function(){
 				view = $this.find(".carrotCellView");
-				slider = view.find('> ol'); 
+				slider = view.find('> ' + settings.sliderSelect + ":first"); 
 				findItems();
-				prev = $this.find(".prev"); 
-				next = $this.find(".next"); 
-				pause = $this.find(".pause");
-				play = $this.find(".play");
-				stop = $this.find(".stop");
-				navi = $this.find(".navi > *");
+				
+				if (settings.containsControl) {
+					settings.controlScope = $this; // everything is self contained
+				} else {
+					if (settings.controlScope != "") {
+						settings.controlScope = $(settings.controlScope); // use selector
+					} else {
+						settings.controlScope = $("body"); // default to document
+					}	
+				}
+				
+				prev = settings.controlScope.find(settings.prevSelect); 
+				next = settings.controlScope.find(settings.nextSelect); 
+				pause = settings.controlScope.find(settings.pauseSelect);
+				play = settings.controlScope.find(settings.playSelect);
+				stop = settings.controlScope.find(settings.stopSelect);
+				navi = settings.controlScope.find(settings.naviSelect);
 				
 				processCarrot();
 				assignCarrot();
@@ -354,7 +402,7 @@
 					$.extend(settings, opt); // options over ride settings
 					$this = $(opt.scope);
 					findCarrot();
-					
+			
 					// call done callback pass it the api
 					if ((typeof settings.carrotDone) == "function") {
 						settings.carrotDone(this);
@@ -371,38 +419,29 @@
 				*/
 				move : function(movePage) {
 					movePage = parseInt(movePage);
-					if (isNaN(movePage)) {
-						console.log(movePage + " is not a number can not move to this page");
-						return false;
+					if (isNaN(movePage)) { return false; }
+					if (!movePage) { movePage = currentPage + 1; } // move 1 forward by default
+					if (settings.infinite) {
+						if (movePage < 1) { movePage = pages; } // circular check
+						if (movePage > pages) { movePage = 1; } // circular check
+					} else {
+						if (movePage < 1) { movePage = 1; } // range check
+						if (movePage > pages) { movePage = pages; } // range check
 					}
-					if (!movePage) { movePage = currentPage + 1; } // move 1 forward default
-					if (movePage < 1) { movePage = 1; } // range check
-					if (movePage > pages) { movePage = pages; } // range check
 					gotoPage(movePage); // move
 				},
+
+				advance : function() { moveForward(); },
 				
-				/** add a new item to the carousel (at index or at end)
-				*/
-				insert : function(item, index) {
-					if (!item) { return false; }
-					index = parseInt(index);
-					if (isNaN(index)) { index = items.length; }
-					if (index < 1 ) { index = 1; } // range check
-					if (index > items.length ) { index = items.length; } // rang check
-					
-					// calculate size on append?
-					if (index == items.length) {
-						slider.append(item); // append at end
-					} else if (index <= 1){
-						$('li:first', slider).before(item); // append at start
-					} else {
-						$("li", slider).eq(index-1).before(item); // insert at index
-					}
-					
-					findItems();
-					findPages();
-					adjustSlideSize();
-				},
+				rewind : function() { moveBack(); },
+
+				stop : function() { stopCell() },
+				
+				play : function() { playCell() },
+				
+				pause : function() { pauseCell() },
+				
+				empty : function() { $(items).remove(); },
 				
 				/** remove an item from the carousel (by index)
 					index starts at 1, if no index, remove last
@@ -411,24 +450,42 @@
 					index = parseInt(index);
 					if (isNaN(index)) { index = items.length; }
 					if (index < 1 ) { index = 1; } // range check
-					if (index > items.length ) { index = items.length; } // rang check
+					if (index > items.length ) { index = items.length; } // range check
 					$(items[index-1]).remove();
 					findItems();
 					findPages();
 					adjustSlideSize();
 				},
 				
-				/** clear all elements
+				/** add a new item to the carousel (at index or at end)
 				*/
-				empty : function() {
-					$(items).remove();
+				insert : function(newItem, index) {
+					if (!newItem) { return false; }
+					index = parseInt(index);
+					if (isNaN(index)) { index = items.length; }
+					if (index < 1 ) { index = 1; } // range check
+					if (index > items.length ) { index = items.length; } // rang check
+					
+					// calculate size on append?
+					if (index == items.length) {
+						slider.append(newItem); // append at end
+					} else if (index <= 1){
+						$(settings.sliderChildSelect + ':first', slider).before(newItem); // append at start
+					} else {
+						$(settings.sliderChildSelect, slider).eq(index-1).before(newItem); // insert at index
+					}
+					
+					findItems();
+					findPages();
+					adjustSlideSize();
 				},
-				
-				/** add a bunch of item to the carousel
+
+				/** add a bunch of new item to the carousel
 				*/
-				load : function(items) {
+				load : function(newItems) {
 					if (!items) { return false; }		
-					slider.append(items); // append at end
+					$(items).remove(); 
+					slider.append(newItems); // append at end
 					findItems();
 					findPages();
 					adjustSlideSize();

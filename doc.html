@@ -32,7 +32,7 @@
 		<h2>Configurations</h2>
 		<p>Example of a carrotCell object with configurations:</p>
 		<code>
-			$('#myCarousel').carrotCell({<br />
+			var myCarouselAPI = $('#myCarousel').carrotCell({<br />
 				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sideways: false,<br />
 				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;delay: 3000,<br />
 				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;key: true,<br />
@@ -42,12 +42,12 @@
 			});
 		</code>
 		
+		<h3>Basic Configuration</h3>
 		<p>The configuration options are passed into the carrotCell as an object on creation.</p>
-		
 		<table>
 			<thead>
 				<tr>
-					<th>Property Name</th>
+					<th>Config Property</th>
 					<th>Property Type</th>
 					<th>Example</th>
 					<th>Description</th>
@@ -85,6 +85,16 @@
 				<td>false</td>
 			</tr>
 			<tr>
+				<td>auto</td>
+				<td>boolean</td>
+				<td>true</td>
+				<td>
+					<p>Make the carousel auto scroll forward.</p> 
+					<p>This will make the carousel infinite by default.</p> 
+				</td>
+				<td>false</td>
+			</tr>
+			<tr>
 				<td>delay</td>
 				<td>integer (milisecs)</td>
 				<td>9000</td>
@@ -107,7 +117,7 @@
 				<td>boolean</td>
 				<td>true</td>
 				<td>
-					<p>Indicate external navigation is included.</p> 
+					<p>Indicate that an external navigation is included.</p> 
 					<p>The number of navi items must correspond to the number of pages used.</p> 
 				</td>
 				<td>false</td>
@@ -141,30 +151,35 @@
 			</tr>
 			
 			<tr>
-				<td>next</td>
-				<td>string (selector)</td>
-				<td>"#nextThing"</td>
+				<td>containsControl</td>
+				<td>boolean</td>
 				<td>
-					<p>Control to advance the carousel to the next page.</p>
-					<p>It can be a class or an id or some other kind of jQuery string selector.</p> 
-					<p>This element must be contained in the ".carrotCell" container.</p>
+					false
 				</td>
-				<td>".next"</td>
-			</tr> 
-			<tr>
-				<td>prev</td>
-				<td>string (selector)</td>
-				<td>"#previousThing"</td>
 				<td>
-					<p>Control to advance the carousel to the previous page.</p>
-					<p>It can be a class or an id or some other kind of jQuery string selector.</p> 
-					<p>This element must be contained in the ".carrotCell" container.</p>
+					<p>Indicates wether the carrotCell controls are contained inside .carrotCell or elsewhere in the DOM.</p> 
+					<p>Set the property controlScope to designate a new scope</p>		
+					<p>If there is no controlScope set, the body is assumed to be the new scope of controls.</p> 
 				</td>
-				<td>".prev"</td>
+				<td>true</td>
 			</tr>
+		</table>
+		
+		<h3>Class Configuration</h3>
+		<p>Some default utility class names can be changed by passing in a new class name.</p> 
+		<p>This property does not accept selectors, only string class names.</p>
+		<table>
+			<thead>
+				<tr>
+					<th>Config Property</th>
+					<th>Example</th>
+					<th>Description</th>
+					<th>Default</th>
+				</tr>
+			</thead>
+
 			<tr>
 				<td>off</td>
-				<td>string (class name)</td>
 				<td>"off"</td>
 				<td>
 					<p>The class added to previous and next when no action is possible.</p> 
@@ -174,7 +189,6 @@
 			</tr>
 			<tr>
 				<td>unseen</td>
-				<td>string (classname)</td>
 				<td>"unseeable"</td>
 				<td>
 					<p>The classname for the invisible Stop, Play, Pause buttons.</p> 
@@ -184,12 +198,116 @@
 			</tr>
 			<tr>
 				<td>current</td>
-				<td>string (classname)</td>
 				<td>"on"</td>
 				<td>
 					<p>The classname for the currently selected state of the navi.</p> 
 				</td>
 				<td>"current"</td>
+			</tr>
+		</table>
+		
+		<h3>Selector Configuration</h3>
+		<p>Some default selectors can be over-ridden by passing in a new jQuery selector string.</p>
+		<p>Note that most selectors operate inside .carrotCell unless you over ride the scope with controlScope and the containsControl property. </p>
+		<table>
+			<thead>
+				<tr>
+					<th>Config Property</th>
+					<th>Scope</th>
+					<th>Example</th>
+					<th>Description</th>
+					<th>Default</th>
+				</tr>
+			</thead>
+
+			<tr>
+				<td>sliderSelect</td>
+				<td>.carrotCellView</td>
+				<td>"div"</td>
+				<td>
+					<p>This contains all the slides and is inside .carrotCellView.</p>
+					<p>This selector selects the first encountered selection</p>
+					<p>Only the first div inside .carrotCellView is selected in the example case.</p>
+				</td>
+				<td>"ol"</td>
+			</tr> 
+			<tr>
+				<td>sliderChildSelect</td>
+				<td>sliderSelect</td>
+				<td>"div"</td>
+				<td>
+					<p>This is the child slide of Slider and is contained in sliderSelect</p>
+					<p>This selector selects all children of this type inside sliderSelect</p>
+				</td>
+				<td>"li"</td>
+			</tr>
+			<tr>
+				<td>controlScope</td>
+				<td>"body" or custom</td>
+				<td>"#controlUnit"</td>
+				<td>
+					<p>This is the scope where the carrotCell controls live.</p>
+					<p>It will only be used if containsControl is set to TRUE.</p>
+					<p>If containsControl is set to TRUE and no controlScope is provided, the default is "body"</p>
+				</td>
+				<td>this ".carrotCell"</td>
+			</tr>
+			<tr>
+				<td>prevSelect</td>
+				<td>controlScope</td>
+				<td>"#controlUnit .previously"</td>
+				<td>
+					<p>Advance the carrotCell backward if applicable</p>
+				</td>
+				<td>".prev"</td>
+			</tr>
+			<tr>
+				<td>nextSelect</td>
+				<td>controlScope</td>
+				<td>"article .nextly"</td>
+				<td>
+					<p>Advance the carrotCell forward if applicable</p>
+				</td>
+				<td>".next"</td>
+			</tr>
+			<tr>
+				<td>pauseSelect</td>
+				<td>controlScope</td>
+				<td>"#controlUnit .pause"</td>
+				<td>
+					<p>Pause the autoplay.</p>
+				</td>
+				<td>".pause"</td>
+			</tr>	
+			<tr>
+				<td>playSelect</td>
+				<td>controlScope</td>
+				<td>"#play"</td>
+				<td>
+					<p>Resume the autoplay.</p>
+				</td>
+				<td>".play"</td>
+			</tr>
+			<tr>
+				<td>stopSelect</td>
+				<td>controlScope</td>
+				<td>"section .stop"</td>
+				<td>
+					<p>Stop the autoplay.</p>
+				</td>
+				<td>".stop"</td>
+			</tr>
+			
+			<tr>
+				<td>naviSelect</td>
+				<td>controlScope</td>
+				<td>"#navigation li.naviThing"</td>
+				<td>
+					<p>The per page navigation controls.</p>
+					<p>Note this selects each individual node inside naviSelect</p> 
+					<p>It should return the same number of elements as the total pages of the carrotCell.</p>
+				</td>
+				<td>".navi > *"</td>
 			</tr>
 		</table>
 
@@ -215,16 +333,7 @@
 					<th>Description</th>
 				</tr>
 			</thead>
-			<tr>
-				<td>init</td>
-				<td>options (object)</td>
-				<td>	
-					api.init(options);
-				</td>
-				<td>
-					<p>Initialize the carrotCell with the configuration options object</p>
-				</td>
-			</tr> 
+
 			<tr>
 				<td>move</td>
 				<td>pageNumber (integer)</td>
@@ -232,7 +341,28 @@
 					api.move(2);
 				</td>
 				<td>
-					<p>Move to page n of the carousel</p>
+					<p>Move to page n of the carousel.</p>
+					<p>If the page number is out of range, it moves either to the first or the last page.</p>
+				</td>
+			</tr>
+			<tr>
+				<td>advance</td>
+				<td></td>
+				<td>	
+					api.advance();
+				</td>
+				<td>
+					<p>Move the carousel forward by 1 page</p>
+				</td>
+			</tr>
+			<tr>
+				<td>rewind</td>
+				<td></td>
+				<td>	
+					api.rewind();
+				</td>
+				<td>
+					<p>Move the carousel backward by 1 page</p>
 				</td>
 			</tr>
 			<tr>
@@ -244,6 +374,16 @@
 				<td>
 					<p>Insert the new carousel element at a certain index.</p>
 					<p>If the index option is left out, the element is added at the end.</p>
+				</td>
+			</tr>
+			<tr>
+				<td>load</td>
+				<td>newItems (string)</td>
+				<td>
+					api.load('&lt;li&gt;item 1&lt;/li&gt; &lt;li&gt;item 2&lt;/li&gt;');
+				</td>
+				<td>
+					<p>Load multiple slides into the carousel after clearing existing content.</p>
 				</td>
 			</tr>
 			<tr>
@@ -266,6 +406,39 @@
 					<p>Remove all carousel items</p>
 				</td>
 			</tr>
+			
+			<tr>
+				<td>play</td>
+				<td>&nbsp;</td>
+				<td>	
+					api.play();
+				</td>
+				<td>
+					<p>Auto advance the carousel in auto scroll.</p>
+				</td>
+			</tr>
+			<tr>
+				<td>pause</td>
+				<td>&nbsp;</td>
+				<td>	
+					api.pause();
+				</td>
+				<td>
+					<p>Pause the carousel during auto scroll.</p>
+				</td>
+			</tr>
+			<tr>
+				<td>stop</td>
+				<td>&nbsp;</td>
+				<td>	
+					api.stop();
+				</td>
+				<td>
+					<p>Stop the carousel from auto scrolling.</p>
+				</td>
+			</tr>
+			
+
 		</table>
 	</article>
 	
