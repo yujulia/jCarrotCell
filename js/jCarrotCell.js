@@ -18,6 +18,11 @@
 					speed: 1000,
 					navi: false,
 					delay: 5000,
+					containsControl : true,
+					controlScope : "",
+					stopOnClick : false,
+					pauseOnHover : false,
+					
 					off: "disabled",
 					unseen: "invisible",
 					current: "current",
@@ -30,10 +35,7 @@
 					pauseSelect :  ".pause",
 					playSelect : ".play",
 					stopSelect : ".stop",
-					naviSelect : ".navi > *",
-					
-					containsControl : true,
-					controlScope : ""
+					naviSelect : ".navi > *"
 				},
 				
 				// properties of this carrotCell
@@ -105,8 +107,10 @@
 					scrolling = false;
 				};
 				
+				// broadcast event that carousel is moving
+				settings.controlScope.trigger("moving", [settings.name, page]);
 				scrolling = true;
-				
+
 				// set up the animation
 				if (settings.sideways) {
 					view.filter(':not(:animated)').animate({
@@ -179,6 +183,7 @@
 			/** pause the auto play
 			*/
 			var pauseCell = function() {
+				if (paused) { return false; }
 				paused = true;
 				playing = false;
 				stopped = false;
@@ -190,6 +195,7 @@
 			/** resume the auto play
 			*/
 			var playCell = function() {
+				if (playing) { return false; }
 				paused = false;
 				stopped = false;
 				playing = true;
@@ -202,6 +208,7 @@
 			/** resume the auto play
 			*/
 			var stopCell = function() {
+				if (stopped) { return false; }
 				paused = false;
 				stopped = true;
 				playing = false;
@@ -253,15 +260,29 @@
 					var thisNavi = this;
 					var navIndex = iNav + 1;
 					$(thisNavi).bind("click", function(){
+						
+						if (playing && settings.stopOnClick) { 
+							stopCell();
+						}
+						
 						$(this).siblings().removeClass(settings.current);
 						$(this).addClass(settings.current);
 						
-						if (scrolling) { return false; }
+						if (scrolling) { return false; } // no queue ups on rapid clicking
 						if (navIndex <= pages) {
 							gotoPage(navIndex);
 							moveNext(navIndex);
 						}
 					});
+				});
+				
+				// subscribe to moving and make sure it is our thing that's moving
+				settings.controlScope.bind("moving", function(e, cell, pageNum) {
+					if (cell == settings.name) {
+						$(navi).removeClass(settings.current);
+						var thisNavi = $(navi)[parseInt(pageNum)-1];
+						$(thisNavi).addClass(settings.current);
+					}
 				});
 			};
 			
@@ -278,6 +299,18 @@
 					moveForward();
 				}).show();
 				
+				if (settings.pauseOnHover && settings.auto) {
+					
+					view.bind({
+						mouseenter : function() {
+							pauseCell();
+						},
+						mouseleave: function(){
+							playCell();
+						}
+					})
+				}
+				 
 				if (settings.navi) { setupNavi(); }
 				if (settings.key) { setupKeyAdvance(); }
 				if (settings.auto) { setupAutoAdvance(); } 

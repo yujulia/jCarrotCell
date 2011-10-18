@@ -15,7 +15,7 @@
 		carrotDemos.setup = function() {
 			$('#kitten1').carrotCell();
 			$('#kitten3').carrotCell({ sideways: false });
-			$('#kitten5').carrotCell({ auto: true, step: 1 });
+			$('#kitten5').carrotCell({ auto: true, step: 1, pauseOnHover: true, delay: 1000 });
 			var t = $('#kitten6').carrotCell({ key: true,  navi: true, carrotDone: function(te){ te.whichCarrot(); } });
 			
 			//var api = $(t).data('carrotCell');
@@ -159,10 +159,12 @@
 	
 	<article>
 		<h2>Circular Auto Advance 1 Item Per Page</h2>
-		<p>By setting auto to true, the carousel automatically becomes circular. The cloned elements are set with a yellow border to be more easily identified. The page size of this is set to be 1 item per page.</p>
+		<p>By setting auto to true, the carousel automatically becomes circular. The cloned elements are set with a yellow border to be more easily identified. The page size of this is set to be 1 item per page and the auto advance pauses when you hover over the carousel.</p>
 		<code>
 			$('#kitten5').carrotCell({ <br />
 				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;auto: true, <br />
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pauseOnHover: true, <br />
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;delay: 1000, <br />
 				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;step: 1 <br />
 			});
 		</code>
@@ -192,6 +194,7 @@
 	<article>
 		<h2>Arrow Key Advance and Navi</h2>
 		<p>Using the left and right arrow keys to navigate should be reserved for pages with 1 carrotCell object with key set to true since it is a document wide event. Vertical carrotCells use the up and down arrow keys. The external .navi is still enclosed in .carrotCell but can bet set to whatever element you wish through the configuration.</p>
+		<p>Note that if you click the navi buttons quickly, the carousel will not recognize the event until the scrolling animation is done.</p>
 		<code>
 			$('#kitten6').carrotCell({ <br/>
 				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;key: true,  <br/>
