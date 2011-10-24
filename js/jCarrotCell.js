@@ -7,7 +7,6 @@
 		
 		makeCarrot : function(){
 			var $this = null,
-			
 				// populate default settings
 				settings = {
 					step: 0,
@@ -22,14 +21,11 @@
 					controlScope : "",
 					stopOnClick : false,
 					pauseOnHover : false,
-					
 					off: "disabled",
 					unseen: "invisible",
 					current: "current",
-					
 					sliderSelect : "ol",
 					sliderChildSelect : "li",
-					
 					prevSelect : ".prev",
 					nextSelect : ".next",
 					pauseSelect :  ".pause",
@@ -299,16 +295,11 @@
 					moveForward();
 				}).show();
 				
-				if (settings.pauseOnHover && settings.auto) {
-					
+				if (settings.pauseOnHover && settings.auto) {	
 					view.bind({
-						mouseenter : function() {
-							pauseCell();
-						},
-						mouseleave: function(){
-							playCell();
-						}
-					})
+						mouseenter : function() { pauseCell(); },
+						mouseleave: function(){ playCell(); }
+					});
 				}
 				 
 				if (settings.navi) { setupNavi(); }
@@ -511,6 +502,15 @@
 					findItems();
 					findPages();
 					adjustSlideSize();
+					
+					if ((currentItem > totalItems) && currentPage == pages) {
+						pages++;
+					}
+					if (currentPage < pages) {
+						moveNext();
+					}
+					
+					//console.log("total " + totalItems + " current item: " + currentItem + " pages: " + pages + " current: " + currentPage);
 				},
 
 				/** add a bunch of new item to the carousel

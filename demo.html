@@ -16,7 +16,16 @@
 			$('#kitten1').carrotCell();
 			$('#kitten3').carrotCell({ sideways: false });
 			$('#kitten5').carrotCell({ auto: true, step: 1, pauseOnHover: true, delay: 1000 });
-			var t = $('#kitten6').carrotCell({ key: true,  navi: true, carrotDone: function(te){ te.whichCarrot(); } });
+			$('#kitten6').carrotCell({ key: true,  navi: true });
+		
+			var kitten7 = $('#kitten7').carrotCell({ step: 2 });
+			var kitten7Api = $(kitten7).data('carrotCell');
+			$('#kitten7insert').click(function(){
+				kitten7Api.insert('<li><span>insert 7</span><img src="images/cat07.png" /></li>'); 
+			});
+			$('#kitten7load').click(function(){
+				kitten7Api.load('<li><span>load 1</span><img src="images/cat07.png" /></li> <li><span>load 2</span><img src="images/cat08.png" /></li> <li><span>load 3</span><img src="images/cat09.png" /></li>'); 
+			});
 			
 			//var api = $(t).data('carrotCell');
 			//api.empty();
@@ -224,6 +233,51 @@
 				<li>3</li>
 			</ol>
 		</div>
+	</article>
+	
+	
+	<article>
+		<h2>Insert and Load</h2>
+		<p>something.</p>
+		
+		<code>
+			var kitten7 = $('#kitten7').carrotCell({ <br/>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;navi: true <br/>
+			});<br />
+			var kitten7Api = $(kitten7).data('carrotCell'); 
+		</code>
+		<div id="kitten7" class="carrotCell">
+			<div class="carrotCellView">
+				<ol>
+					<li><span>1</span><img src="images/cat01.png"></li>
+					<li><span>2</span><img src="images/cat02.png"></li>
+					<li><span>3</span><img src="images/cat03.png"></li>
+					<li><span>4</span><img src="images/cat04.png"></li>
+					<li><span>5</span><img src="images/cat05.png"></li>
+					<li><span>6</span><img src="images/cat06.png"></li>
+		        </ol>     
+			</div>
+			<a href="#" class="prev">prev</a>
+			<a href="#" class="next">next</a> 
+			
+			<ol class="navi">
+				<li>1</li>
+				<li>2</li>
+				<li>3</li>
+			</ol>
+		</div>
+		
+		<div id="kitten7test">
+			<code> 
+				kitten7Api.insert('&lt;li&gt;&lt;span&gt;insert 7&lt;/span&gt;&lt;img src="images/cat07.png" /&gt;&lt;/li&gt;'); 
+				<div id="kitten7insert" class="button">test insert</div>
+			</code>
+			<code> 
+				kitten7Api.load('&lt;li&gt;&lt;span&gt;load 1&lt;/span&gt;&lt;img src="images/cat07.png" /&gt;&lt;/li&gt; &lt;li&gt;&lt;span&gt;load 2&lt;/span&gt;&lt;img src="images/cat08.png" /&gt;&lt;/li&gt; &lt;li&gt;&lt;span&gt;load 3&lt;/span&gt;&lt;img src="images/cat09.png" /&gt;&lt;/li&gt;'); 
+				<div id="kitten7load" class="button">test load</div>
+			</code>
+		</div>
+		
 	</article>
 
 </body>

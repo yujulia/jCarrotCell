@@ -353,14 +353,16 @@ td code {
 #kitten1, 
 #kitten2, 
 #kitten5,
-#kitten6 
+#kitten6,
+#kitten7
 {
 	width: 560px;
 }
 
 #kitten1 .carrotCellView,
 #kitten5 .carrotCellView,
-#kitten6 .carrotCellView  
+#kitten6 .carrotCellView,
+#kitten7 .carrotCellView  
 {
 	width: 520px;
 }
@@ -387,4 +389,33 @@ td code {
 
 #kitten3 .prev {
 	top: 50px;
+}
+
+.button {
+	border: solid 1px #aaa;
+	padding: 3px 5px;
+	background: #ccc;
+	font-weight: bold;
+	color: #000;
+	text-decoration: none;
+	font-family: arial;
+	display: block;
+	margin: 5px 0;
+	width: 100px;
+	text-align: center;
+	cursor: pointer;
+}
+
+#kitten7test {
+	width: 100%;
+	overflow: hidden;
+	background: #efefef;
+	margin-left: -5px;
+}
+
+#kitten7test code {
+	width: 47%;
+	float: left;
+	margin: 0;
+	border-left: solid 5px #fff;
 }
