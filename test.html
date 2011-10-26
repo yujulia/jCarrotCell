@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head> 
+    <meta charset="utf-8" /> 
+	<title>jCarrotCell Demos</title>
+	<!--[if lt IE 9]>
+	<script src="http//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	<script src="js/jquery.js" type="text/javascript" charset="utf-8"></script>
+	<script src="js/jCarrotCell.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript" charset="utf-8">
+	$(document).ready(function(){
+		window.carrotDemos = window.carrotDemos || {};
+		carrotDemos.setup = function() {
+			var count = 0;
+		
+			var kitten7 = $('#kitten7').carrotCell({step: 3});
+			var kitten7Api = $(kitten7).data('carrotCell');
+			$('#kitten7insert').click(function(){
+				count++;
+				kitten7Api.insert('<li><span>insert ' + count + '</span><img src="images/cat07.png" /></li>'); 	
+				console.log("inserting " + count);
+			});
+			$('#kitten7load').click(function(){
+				kitten7Api.load('<li><span>load 1</span><img src="images/cat07.png" /></li> <li><span>load 2</span><img src="images/cat08.png" /></li> <li><span>load 3</span><img src="images/cat09.png" /></li>'); 
+			});
+		
+		}
+		
+		// chrome can not calculate the width correctly because it is foolish
+		var is_chrome = navigator.userAgent.toLowerCase().indexOf('chrome') > -1;
+		if (is_chrome) {
+			$(window).load(function(){ carrotDemos.setup(); });
+		} else {
+			carrotDemos.setup();
+		}
+		
+	});
+	</script>
+	
+	<link type="text/css" href="css/main.css" rel="stylesheet" /> 
+	<link type="text/css" href="css/carrotcell.css" rel="stylesheet" /> 
+</head>
+
+<body>
+
+	<article>
+
+		<div id="kitten7" class="carrotCell">
+			<div class="carrotCellView">
+				<ol>
+					<li><span>1</span><img src="images/cat01.png"></li>
+					<li><span>2</span><img src="images/cat02.png"></li>
+					<li><span>3</span><img src="images/cat03.png"></li>
+					<li><span>4</span><img src="images/cat04.png"></li>
+					<li><span>5</span><img src="images/cat05.png"></li>
+					<li><span>6</span><img src="images/cat06.png"></li>
+		        </ol>     
+			</div>
+			<a href="#" class="prev">prev</a>
+			<a href="#" class="next">next</a> 
+			
+			<ol class="navi">
+				<li>1</li>
+				<li>2</li>
+				<li>3</li>
+			</ol>
+		</div>
+		
+		<div id="kitten7test">
+			<code> 
+				kitten7Api.insert('&lt;li&gt;&lt;span&gt;insert 7&lt;/span&gt;&lt;img src="images/cat07.png" /&gt;&lt;/li&gt;'); 
+				<div id="kitten7insert" class="button">test insert</div>
+			</code>
+			<code> 
+				kitten7Api.load('&lt;li&gt;&lt;span&gt;load 1&lt;/span&gt;&lt;img src="images/cat07.png" /&gt;&lt;/li&gt; &lt;li&gt;&lt;span&gt;load 2&lt;/span&gt;&lt;img src="images/cat08.png" /&gt;&lt;/li&gt; &lt;li&gt;&lt;span&gt;load 3&lt;/span&gt;&lt;img src="images/cat09.png" /&gt;&lt;/li&gt;'); 
+				<div id="kitten7load" class="button">test load</div>
+			</code>
+		</div>
+		
+	</article>
+
+</body>
+</html>

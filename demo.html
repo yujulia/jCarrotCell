@@ -13,12 +13,12 @@
 	$(document).ready(function(){
 		window.carrotDemos = window.carrotDemos || {};
 		carrotDemos.setup = function() {
-			$('#kitten1').carrotCell();
-			$('#kitten3').carrotCell({ sideways: false });
-			$('#kitten5').carrotCell({ auto: true, step: 1, pauseOnHover: true, delay: 1000 });
-			$('#kitten6').carrotCell({ key: true,  navi: true });
+		//	$('#kitten1').carrotCell();
+		//	$('#kitten3').carrotCell({ sideways: false });
+			// $('#kitten5').carrotCell({ auto: true, step: 1, pauseOnHover: true, delay: 1000 });
+	//		$('#kitten6').carrotCell({ key: true,  navi: true });
 		
-			var kitten7 = $('#kitten7').carrotCell({ step: 2 });
+			var kitten7 = $('#kitten7').carrotCell();
 			var kitten7Api = $(kitten7).data('carrotCell');
 			$('#kitten7insert').click(function(){
 				kitten7Api.insert('<li><span>insert 7</span><img src="images/cat07.png" /></li>'); 
