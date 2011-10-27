@@ -47,7 +47,7 @@
 				visibleDifference = 0,
 				leftover = 0,
 				inpage = 0,
-				view, slider, items, single, totalItems, extras,
+				api, view, slider, items, single, totalItems, extras,
 				frameSize, singleSize, viewSize,
 				autoScroll, pause, play, stop, 
 				visible, advanceBy, pages, slideBy, prev, next, navi,
@@ -122,7 +122,7 @@
 				}
 			}
 			
-			/** show previous and next depending on boolean set in enablePrevNext
+			/** show previous and next depending on boolean set in determinePrevNext
 			*/
 			var showPrevNext = function() {
 				if (haveBack) { prev.removeClass(settings.off); } else { prev.addClass(settings.off); }
@@ -131,15 +131,21 @@
 			
 			/** determine the prev and next
 			*/
-			var enablePrevNext = function(nextPage) {
+			var determinePrevNext = function(nextPage) {
 				if (settings.infinite) { return false; } // do nothing if its infinite
 				
 				if (nextPage <= 1) { haveBack = false; } else { haveBack = true; };
 				if (nextPage >= pages) { haveForward = false; } else { haveForward = true; };
+				if (!nextPage) { 
+					if (currentPage == 1) {
+						haveBack = false; 
+					}
+				}
 				
 				var currentSlide = nextPage * settings.step; // the last slide out of view
 				var endSlide = currentSlide + visibleDifference; // the last slide in view
 				if (endSlide >= totalItems) { haveForward = false; }
+				
 				showPrevNext();
 			};
 
@@ -149,7 +155,7 @@
 				if (!settings.infinite && (currentPage == 1)) { return false; } // we are at the left most page or its circular
 				var nextPage = currentPage - 1;
 				gotoPage(nextPage);
-				enablePrevNext(nextPage);
+				determinePrevNext(nextPage);
 			};
 
 			/** move carousel forward
@@ -158,7 +164,7 @@
 				if (!settings.infinite && (currentPage >= pages)) { return false; } // we are at the right most page
 				var nextPage = currentPage + 1;
 				gotoPage(nextPage);
-				enablePrevNext(nextPage);
+				determinePrevNext(nextPage);
 			};
 			
 			/** set up the interval
@@ -257,7 +263,7 @@
 						if (scrolling) { return false; } // no queue ups on rapid clicking
 						if (navIndex <= pages) {
 							gotoPage(navIndex);
-							enablePrevNext(navIndex);
+							determinePrevNext(navIndex);
 						}
 					});
 				});
@@ -310,7 +316,7 @@
 			
 			/** find how many pages there are
 			*/
-			var findPages = function(){
+			var calculatePages = function(){
 				pages = Math.ceil(totalItems / advanceBy);
 				if ((totalItems % visible) != 0) {
 					extras = visible * Math.ceil(totalItems / visible) - totalItems;
@@ -321,7 +327,7 @@
 			
 			/** check if content is too short to scroll
 			*/
-			var testSize = function(){
+			var notEnoughToScroll = function(){
 				if (totalItems <= visible) {
 					prev.addClass(settings.off);
 					next.addClass(settings.off);
@@ -347,7 +353,7 @@
 				if (settings.auto) { settings.infinite = true;  } // if auto infinite hast o be true
 				findViewsize();
 				if (settings.step) { advanceBy = settings.step; } else { advanceBy = visible; }
-				findPages();
+				calculatePages();
 				slideBy = singleSize * advanceBy;
 				if (settings.infinite) {
 					// clone a visible amount on the begin and end
@@ -375,7 +381,7 @@
 				items = slider.find('> ' + settings.sliderChildSelect); 
 				totalItems = items.length;
 				single = items.filter(':first');
-				testSize();
+				notEnoughToScroll();
 			};
 
 			/** find elements
@@ -404,7 +410,7 @@
 				
 				processCarrot();
 				assignCarrot();
-				testSize();
+				notEnoughToScroll();
 				
 				if (visible > settings.step) {
 					visibleDifference = visible - settings.step;
@@ -468,7 +474,7 @@
 					if (index > items.length ) { index = items.length; } // range check
 					$(items[index-1]).remove();
 					findItems();
-					findPages();
+					calculatePages();
 					adjustSlideSize();
 				},
 				
@@ -490,23 +496,9 @@
 					}
 					
 					findItems();
-					findPages();
-					adjustSlideSize();
-					moveOnInsert();
-					
-					inpage = inpage - leftover -1; // find the new items position in the new page
-					var pageindex = settings.step - inpage;
-					
-					console.log("in the page index " + pageindex);
-					if (pageindex == 1) {
-						console.log("increasing page count");
-						currentPage++; // advance the page if a new page has happened
-					}
+					processCarrot();
+					determinePrevNext();
 
-					leftover--;
-					if (leftover <0 ) { leftover = 0; }
-					if (inpage <=0 ) { inpage = settings.step; }
-					
 				},
 
 				/** add a bunch of new item to the carousel
@@ -516,8 +508,12 @@
 					$(items).remove(); 
 					slider.append(newItems); // append at end
 					findItems();
-					findPages();
+					calculatePages();
 					adjustSlideSize();
+				},
+				
+				setAPI : function(newAPI) {
+					api = newAPI;
 				}
 			}
 		},
@@ -531,12 +527,15 @@
 				var opt = options || {};
 				opt.scope = this;
 				opt.name = $(opt.scope).attr("id") || ("defaultCarrot"+methods.count);
+				
 				methods.carrots[opt.name] = new methods.makeCarrot();
 				methods.carrots[opt.name].init(opt);
-				
+				methods.carrots[opt.name].setAPI(methods.carrots[opt.name]);
+
 				// set up the api data to access the object
 				var data = $(this).data('carrotCell');
 				if (!data) { $(this).data('carrotCell', methods.carrots[opt.name]); }
+				
 			});
 		}
 	};
