@@ -13,23 +13,21 @@
 	$(document).ready(function(){
 		window.carrotDemos = window.carrotDemos || {};
 		carrotDemos.setup = function() {
-		//	$('#kitten1').carrotCell();
-		//	$('#kitten3').carrotCell({ sideways: false });
-			// $('#kitten5').carrotCell({ auto: true, step: 1, pauseOnHover: true, delay: 1000 });
-	//		$('#kitten6').carrotCell({ key: true,  navi: true });
+			$('#kitten1').carrotCell();
+			$('#kitten3').carrotCell({ sideways: false });
+			$('#kitten5').carrotCell({ auto: true, step: 1, pauseOnHover: true, delay: 1000 });
+			$('#kitten6').carrotCell({ key: true,  navi: true });
 		
-			var kitten7 = $('#kitten7').carrotCell();
+			var kittenCount = 0;
+			var kitten7 = $('#kitten7').carrotCell({step: 2});
 			var kitten7Api = $(kitten7).data('carrotCell');
 			$('#kitten7insert').click(function(){
-				kitten7Api.insert('<li><span>insert 7</span><img src="images/cat07.png" /></li>'); 
+				kittenCount++;
+				kitten7Api.insert('<li><span>insert ' + kittenCount + '</span><img src="images/cat07.png" /></li>'); 	
 			});
 			$('#kitten7load').click(function(){
-				kitten7Api.load('<li><span>load 1</span><img src="images/cat07.png" /></li> <li><span>load 2</span><img src="images/cat08.png" /></li> <li><span>load 3</span><img src="images/cat09.png" /></li>'); 
+				kitten7Api.load('<li><span>load 1</span><img src="images/cat07.png" /></li> <li><span>load 2</span><img src="images/cat08.png" /></li> <li><span>load 3</span><img src="images/cat09.png" /></li><li><span>load 1</span><img src="images/cat07.png" /></li> <li><span>load 2</span><img src="images/cat08.png" /></li> <li><span>load 3</span><img src="images/cat09.png" /></li>'); 
 			});
-			
-			//var api = $(t).data('carrotCell');
-			//api.empty();
-			//api.load('<li><span>1</span><img src="images/dog01.png" /><li><span>2</span><img src="images/dog02.png" /></li><li><span>3</span><img src="images/dog03.png" /></li><li><span>4</span><img src="images/dog04.png" /><li><span>5</span><img src="images/dog04.png" /></li>');
 		}
 		
 		// chrome can not calculate the width correctly because it is foolish
@@ -50,7 +48,6 @@
 <body>
 	<header>
 		<h1>j<span>Carrot</span><em>Cell</em> Demos</h1>
-		
 		<p><strong>by:</strong> Julia Yu</p>
 		<p><strong>version:</strong> 1.0</p>
 		<p><strong>source:</strong> <a href="https://github.com/jyuya/jCarrotCell">https://github.com/jyuya/jCarrotCell</a></p>
@@ -66,7 +63,7 @@
 		<h2>Default Horizontal</h2>
 		<p>This version takes no options and uses all of the default settings of carrotCell.</p>
 		<code>
-		$('#kitten1').carrotCell();<br/ >
+			$('#kitten1').carrotCell();<br/ >
 		</code>
 		
 		<div id="kitten1" class="carrotCell">
@@ -235,16 +232,15 @@
 		</div>
 	</article>
 	
-	
 	<article>
 		<h2>Insert and Load</h2>
 		<p>something.</p>
 		
 		<code>
-			var kitten7 = $('#kitten7').carrotCell({ <br/>
-				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;navi: true <br/>
-			});<br />
-			var kitten7Api = $(kitten7).data('carrotCell'); 
+			var kitten7 = $('#kitten7').carrotCell({<br/>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;step: 2<br/>
+			});<br/>
+			var kitten7Api = $(kitten7).data('carrotCell');
 		</code>
 		<div id="kitten7" class="carrotCell">
 			<div class="carrotCellView">
@@ -260,20 +256,15 @@
 			<a href="#" class="prev">prev</a>
 			<a href="#" class="next">next</a> 
 			
-			<ol class="navi">
-				<li>1</li>
-				<li>2</li>
-				<li>3</li>
-			</ol>
 		</div>
 		
 		<div id="kitten7test">
 			<code> 
-				kitten7Api.insert('&lt;li&gt;&lt;span&gt;insert 7&lt;/span&gt;&lt;img src="images/cat07.png" /&gt;&lt;/li&gt;'); 
+				kitten7Api.insert('&lt;li&gt;&lt;span&gt;insert&lt;/span&gt;&lt;img src="images/cat07.png" /&gt;&lt;/li&gt;'); 
 				<div id="kitten7insert" class="button">test insert</div>
 			</code>
 			<code> 
-				kitten7Api.load('&lt;li&gt;&lt;span&gt;load 1&lt;/span&gt;&lt;img src="images/cat07.png" /&gt;&lt;/li&gt; &lt;li&gt;&lt;span&gt;load 2&lt;/span&gt;&lt;img src="images/cat08.png" /&gt;&lt;/li&gt; &lt;li&gt;&lt;span&gt;load 3&lt;/span&gt;&lt;img src="images/cat09.png" /&gt;&lt;/li&gt;'); 
+				kitten7Api.load('&lt;li&gt;&lt;span&gt;load 1&lt;/span&gt;&lt;img src="images/cat07.png" /&gt;&lt;/li&gt; &lt;li&gt;&lt;span&gt;load 2&lt;/span&gt;&lt;img src="images/cat08.png" /&gt;&lt;/li&gt; &lt;li&gt;&lt;span&gt;load 3&lt;/span&gt;&lt;img src="images/cat09.png" /&gt;&lt;/li&gt;&lt;li&gt;&lt;span&gt;load 1&lt;/span&gt;&lt;img src="images/cat07.png" /&gt;&lt;/li&gt; &lt;li&gt;&lt;span&gt;load 2&lt;/span&gt;&lt;img src="images/cat08.png" /&gt;&lt;/li&gt; &lt;li&gt;&lt;span&gt;load 3&lt;/span&gt;&lt;img src="images/cat09.png" /&gt;&lt;/li&gt;'); 
 				<div id="kitten7load" class="button">test load</div>
 			</code>
 		</div>

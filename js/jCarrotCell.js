@@ -510,6 +510,7 @@
 					findItems();
 					calculatePages();
 					adjustSlideSize();
+					gotoPage(1);
 				},
 				
 				setAPI : function(newAPI) {
