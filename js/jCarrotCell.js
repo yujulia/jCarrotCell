@@ -242,7 +242,6 @@
 						if (e.keyCode == 38) {  moveBack(); } // up
 						if (e.keyCode == 40) {  moveForward(); } // down
 					}
-					return false;
 				});
 			};
 			
