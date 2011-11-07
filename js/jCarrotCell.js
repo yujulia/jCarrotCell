@@ -510,6 +510,8 @@
 					calculatePages();
 					adjustSlideSize();
 					gotoPage(1);
+					currentPage = 1;
+					determinePrevNext();
 				},
 				
 				setAPI : function(newAPI) {
