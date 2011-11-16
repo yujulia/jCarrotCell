@@ -162,6 +162,7 @@
 			*/
 			var moveForward = function() {
 				if (!settings.infinite && (currentPage >= pages)) { return false; } // we are at the right most page
+				
 				var nextPage = currentPage + 1;
 				gotoPage(nextPage);
 				determinePrevNext(nextPage);
@@ -282,6 +283,7 @@
 			var assignCarrot = function(){
 				prev.bind("click", function(e){
 					e.preventDefault();
+					
 					moveBack();
 				}).show();
 
@@ -315,7 +317,7 @@
 			
 			/** find how many pages there are
 			*/
-			var calculatePages = function(){
+			var calculatePages = function(){				
 				pages = Math.ceil(totalItems / advanceBy);
 				if ((totalItems % visible) != 0) {
 					extras = visible * Math.ceil(totalItems / visible) - totalItems;
@@ -343,6 +345,7 @@
 					viewSize = $this.innerHeight();
 					singleSize = single.outerHeight(true);
 				}
+				
 				visible = Math.floor(viewSize / singleSize); // visible is everything in frame unless a step is set
 			}
 			
@@ -509,11 +512,15 @@
 					findItems();
 					calculatePages();
 					adjustSlideSize();
+					
+					// rewind to beginning on load
 					gotoPage(1);
 					currentPage = 1;
 					determinePrevNext();
 				},
 				
+				/** self api, not ever used... maybe in the future
+				*/
 				setAPI : function(newAPI) {
 					api = newAPI;
 				}

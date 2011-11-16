@@ -13,16 +13,14 @@
 	$(document).ready(function(){
 		window.carrotDemos = window.carrotDemos || {};
 		carrotDemos.setup = function() {
-			var count = 0;
-		
-			var kitten7 = $('#kitten7').carrotCell({step: 2});
-			var kitten7Api = $(kitten7).data('carrotCell');
-			$('#kitten7insert').click(function(){
-				count++;
-				kitten7Api.insert('<li><span>insert ' + count + '</span><img src="images/cat07.png" /></li>'); 	
-			});
-			$('#kitten7load').click(function(){
-				kitten7Api.load('<li><span>load 1</span><img src="images/cat07.png" /></li> <li><span>load 2</span><img src="images/cat08.png" /></li> <li><span>load 3</span><img src="images/cat09.png" /></li><li><span>load 1</span><img src="images/cat07.png" /></li> <li><span>load 2</span><img src="images/cat08.png" /></li> <li><span>load 3</span><img src="images/cat09.png" /></li>'); 
+			$('#kitten8').carrotCell({
+				sliderSelect : "div",
+				sliderChildSelect : "div",
+				containsControl : false,
+				navi : true,
+				controlScope : "#kitten8Nav",
+				prevSelect : "#goBack",
+				nextSelect : "#goForward"
 			});
 		
 		}
@@ -45,38 +43,38 @@
 <body>
 
 	<article>
-
-		<div id="kitten7" class="carrotCell">
-			<div class="carrotCellView">
-				<ol>
-					<li><span>1</span><img src="images/cat01.png"></li>
-					<li><span>2</span><img src="images/cat02.png"></li>
-					<li><span>3</span><img src="images/cat03.png"></li>
-					<li><span>4</span><img src="images/cat04.png"></li>
-					<li><span>5</span><img src="images/cat05.png"></li>
-					<li><span>6</span><img src="images/cat06.png"></li>
-		        </ol>     
+		<h2>Using Different HTML Elements as Wrappers</h2>
+		<p>Something.</p>
+		<code>
+			$('#kitten8').carrotCell();
+		</code>
+		
+		<div id="kitten8Nav">
+			<div id="goBack" class="btn">prev</div>
+			<div class="navi">
+				<div>1</div>
+				<div>2</div>
+				<div>3</div>
 			</div>
-			<a href="#" class="prev">prev</a>
-			<a href="#" class="next">next</a> 
-			
-			<ol class="navi">
-				<li>1</li>
-				<li>2</li>
-				<li>3</li>
-			</ol>
+			<div id="goForward" class="btn">next</div>
 		</div>
 		
-		<div id="kitten7test">
-			<code> 
-				kitten7Api.insert('&lt;li&gt;&lt;span&gt;insert 7&lt;/span&gt;&lt;img src="images/cat07.png" /&gt;&lt;/li&gt;'); 
-				<div id="kitten7insert" class="button">test insert</div>
-			</code>
-			<code> 
-				kitten7Api.load('&lt;li&gt;&lt;span&gt;load 1&lt;/span&gt;&lt;img src="images/cat07.png" /&gt;&lt;/li&gt; &lt;li&gt;&lt;span&gt;load 2&lt;/span&gt;&lt;img src="images/cat08.png" /&gt;&lt;/li&gt; &lt;li&gt;&lt;span&gt;load 3&lt;/span&gt;&lt;img src="images/cat09.png" /&gt;&lt;/li&gt;'); 
-				<div id="kitten7load" class="button">test load</div>
-			</code>
+		<div id="kitten8" class="carrotCell">
+			<div class="carrotCellView">
+				<div>
+					<div><span>1</span><img src="images/cat01.png"></div>
+					<div><span>2</span><img src="images/cat02.png"></div>
+					<div><span>3</span><img src="images/cat03.png"></div>
+					<div><span>4</span><img src="images/cat04.png"></div>
+					<div><span>5</span><img src="images/cat05.png"></div>
+					<div><span>6</span><img src="images/cat06.png"></div>
+					<div><span>7</span><img src="images/cat07.png"></div>
+					<div><span>8</span><img src="images/cat08.png"></div>
+					<div><span>9</span><img src="images/cat09.png"></div>
+		        </div>     
+			</div>
 		</div>
+		
 		
 	</article>
 

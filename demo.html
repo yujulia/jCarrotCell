@@ -28,6 +28,16 @@
 			$('#kitten7load').click(function(){
 				kitten7Api.load('<li><span>load 1</span><img src="images/cat07.png" /></li> <li><span>load 2</span><img src="images/cat08.png" /></li> <li><span>load 3</span><img src="images/cat09.png" /></li><li><span>load 1</span><img src="images/cat07.png" /></li> <li><span>load 2</span><img src="images/cat08.png" /></li> <li><span>load 3</span><img src="images/cat09.png" /></li>'); 
 			});
+			
+			$('#kitten8').carrotCell({
+				sliderSelect : "div",
+				sliderChildSelect : "div",
+				containsControl : false,
+				navi : true,
+				controlScope : "#kitten8Nav",
+				prevSelect : "#goBack",
+				nextSelect : "#goForward"
+			});
 		}
 		
 		// chrome can not calculate the width correctly because it is foolish
@@ -51,7 +61,7 @@
 		<p><strong>by:</strong> Julia Yu</p>
 		<p><strong>version:</strong> 1.0</p>
 		<p><strong>source:</strong> <a href="https://github.com/jyuya/jCarrotCell">https://github.com/jyuya/jCarrotCell</a></p>
-		<p><strong>last updated:</strong> 8/17/2011</p>
+		<p><strong>last updated:</strong> 11/16/2011</p>
 	</header>
 	
 	<nav>
@@ -234,7 +244,7 @@
 	
 	<article>
 		<h2>Insert and Load</h2>
-		<p>something.</p>
+		<p>Use API methods to insert a single new element or load an entirely new list.</p>
 		
 		<code>
 			var kitten7 = $('#kitten7').carrotCell({<br/>
@@ -269,6 +279,74 @@
 			</code>
 		</div>
 		
+	</article>
+	
+	<article>
+		<h2>Using Different HTML Elements as Wrappers</h2>
+		<p>Instead of the standard list structure, you can also use DIVs or any other HTML element to structure the carousel. However, the hierarchal structure of the elments must be keep in tact inside the actual carousel. For example, carrotCellView must be inside the carrotCell, and another element must wrap the individual slides in place of the UL. The slides must also be direct children of the UL replacement, etc.</p>
+		<p>Below the code uses DIVs for everything instead of semantic tags, the scope of the controls are inside #kitten8Nav while the carrotCell is #kitten8, a different container.</p>
+		
+		<code>
+			&lt;div id="kitten8Nav"&gt;<br />
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;div id="goBack" class="prev"&gt;prev&lt;/div&gt;<br />
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;div class="navi"&gt;<br />
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;div&gt;1&lt;/div&gt;<br />
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;div&gt;2&lt;/div&gt;<br />
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;div&gt;3&lt;/div&gt;<br />
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/div&gt;<br />
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;div id="goForward" class="next"&gt;next&lt;/div&gt;<br />
+			&lt;/div&gt;<br />
+
+			&lt;div id="kitten8" class="carrotCell"&gt;<br />
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;div class="carrotCellView"&gt;<br />
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;div&gt;<br />
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;div&gt;&lt;span&gt;1&lt;/span&gt;&lt;img src="images/cat01.png"&gt;&lt;/div&gt;<br />
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;div&gt;&lt;span&gt;2&lt;/span&gt;&lt;img src="images/cat02.png"&gt;&lt;/div&gt;<br />
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;...<br />
+
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/div&gt;<br />
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/div&gt;<br />
+			&lt;/div&gt;
+		</code>
+		
+		<p>The controls for the carousel can exist in a different container than carrotCell but you must specifically pass it containsControl boolean and the controlScope. If no controlScope is specified, the search is conducted on the root BODY element.</p>
+		<code>
+			$('#kitten8').carrotCell({<br />
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sliderSelect : "div",<br />
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sliderChildSelect : "div",<br />
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;containsControl : false,<br />
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;navi : true,<br />
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;controlScope : "#kitten8Nav",<br />
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;prevSelect : "#goBack",<br />
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nextSelect : "#goForward"<br />
+			});
+		</code>
+		
+		<div id="kitten8Nav">
+			<div id="goBack" class="btn">prev</div>
+			<div class="navi">
+				<div>1</div>
+				<div>2</div>
+				<div>3</div>
+			</div>
+			<div id="goForward" class="btn">next</div>
+		</div>
+		
+		<div id="kitten8" class="carrotCell">
+			<div class="carrotCellView">
+				<div>
+					<div><span>1</span><img src="images/cat01.png"></div>
+					<div><span>2</span><img src="images/cat02.png"></div>
+					<div><span>3</span><img src="images/cat03.png"></div>
+					<div><span>4</span><img src="images/cat04.png"></div>
+					<div><span>5</span><img src="images/cat05.png"></div>
+					<div><span>6</span><img src="images/cat06.png"></div>
+					<div><span>7</span><img src="images/cat07.png"></div>
+					<div><span>8</span><img src="images/cat08.png"></div>
+					<div><span>9</span><img src="images/cat09.png"></div>
+		        </div>     
+			</div>
+		</div>
 	</article>
 
 </body>

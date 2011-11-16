@@ -362,7 +362,7 @@ td code {
 #kitten1 .carrotCellView,
 #kitten5 .carrotCellView,
 #kitten6 .carrotCellView,
-#kitten7 .carrotCellView  
+#kitten7 .carrotCellView
 {
 	width: 520px;
 }
@@ -418,4 +418,63 @@ td code {
 	float: left;
 	margin: 0;
 	border-left: solid 5px #fff;
+}
+
+#kitten8Nav {
+	padding: 0 20px;
+	text-align: center;
+	width: 480px;
+}
+
+#kitten8Nav .navi {
+	display: inline;
+	cursor: pointer;
+	margin: 0 10px;
+}
+
+#kitten8Nav .navi div {
+	padding: 3px 7px;
+	display: inline;
+}
+
+#kitten8Nav .navi .current {
+	background: #efefef;
+}
+
+#kitten8Nav .btn {
+	display: inline;
+	cursor: pointer;
+}
+
+#kitten8Nav .disabled {
+	color: #ccc;
+}
+
+#kitten8 {
+		width: 500px;
+}
+
+#kitten8 .carrotCellView {
+	width: 480px;
+	background: #ff9900;
+}
+
+#kitten8 div div div{
+	float: left;
+	border: solid 3px #cc6600;
+	margin: 7px;
+	position: relative;
+	overflow: hidden;
+}
+
+#kitten8 img {
+	display: block;
+}
+
+#kitten8 div div div span {
+	position: absolute;
+	background: #000;
+	color: #fff;
+	padding: 5px 10px;
+	font-weight: bold;
 }
