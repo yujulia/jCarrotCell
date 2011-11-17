@@ -9,6 +9,7 @@
 	<![endif]-->
 	<script src="js/jquery.js" type="text/javascript" charset="utf-8"></script>
 	<script src="js/jCarrotCell.js" type="text/javascript" charset="utf-8"></script>
+	
 	<script type="text/javascript" charset="utf-8">
 	$(document).ready(function(){
 		window.carrotDemos = window.carrotDemos || {};
@@ -67,7 +68,7 @@
 		<p><strong>by:</strong> Julia Yu</p>
 		<p><strong>version:</strong> 1.0</p>
 		<p><strong>source:</strong> <a href="https://github.com/jyuya/jCarrotCell">https://github.com/jyuya/jCarrotCell</a></p>
-		<p><strong>last updated:</strong> 11/16/2011</p>
+		<p><strong>last updated:</strong> 11/17/2011</p>
 	</header>
 	
 	<nav>
@@ -75,8 +76,20 @@
 		<a href="doc.html">Documentation</a> 
 	</nav>
 	
-	<article>
-		<h2>Default Horizontal</h2>
+	<h2>Demos Index</h2>
+	<ol class="index">
+		<li><a href="#one">Default Horizontal Scroller</a></li>
+		<li><a href="#three">Default Vertical Scroller</a></li>
+		<li><a href="#five">Circular Auto Advance Scrolling by <em>n</em> Slides Per Page</a></li>
+		<li><a href="#six">Arrow Key Advance Scrolling and External Page Navigation</a></li>
+		<li><a href="#seven">Insert Slide and Load Slides</a></li>
+		<li><a href="#eight">Remove Slide</a></li>
+		<li><a href="#nine">Using Different HTML Containers</a></li>
+	</ol>
+	
+	
+	<article id="one">
+		<h2>Default Horizontal Scroller</h2>
 		<p>This version takes no options and uses all of the default settings of carrotCell.</p>
 		<code>
 			$('#kitten1').carrotCell();<br/ >
@@ -100,11 +113,9 @@
 			</div>
 			<div class="next">next</div> 
 		</div>
-	</article>
-	
-	<article>
-		<h2>Default Horizontal (No Javascript)</h2>
-		<p>This is what a horizontal carousel look like without Javascript. The function buttons are by default hidden.</p>
+
+		<h3>Default Horizontal (No Javascript State)</h3>
+		<p>This is what the horizontal carousel look like without Javascript. The function buttons are by default hidden.</p>
 
 		<div id="kitten2" class="carrotCell">
 			<div class="carrotCellView" >
@@ -130,8 +141,8 @@
 		</div>
 	</article>
 	
-	<article>
-		<h2>Default Vertical</h2>
+	<article id="three">
+		<h2>Default Vertical Scroller</h2>
 		<p>This carrotCell scrolls vertically instead of horizontally. Note some amount of restyling to make the .carrotCellView clip correctly is required and to position the previous and next buttons.</p>
 		<code>
 			$('#kitten3').carrotCell({<br/ >
@@ -155,10 +166,8 @@
 			<a href="#" class="prev">prev</a>
 			<a href="#" class="next">next</a> 
 		</div>
-	</article>
-	
-	<article>
-		<h2>Default Vertical (No Javascript)</h2>
+
+		<h3>Default Vertical Scroller (No Javascript)</h3>
 		<p>This version uses the overflow:auto property of the .carrotCellView container when Javascript is not available.</p>
 		<div id="kitten4" class="carrotCell">
 			<div class="carrotCellView">
@@ -179,8 +188,8 @@
 		</div>
 	</article>
 	
-	<article>
-		<h2>Circular Auto Advance 1 Item Per Page</h2>
+	<article id="five">
+		<h2>Circular Auto Advance Scrolling by <em>n</em> Slides Per Page</h2>
 		<p>By setting auto to true, the carousel automatically becomes circular. The cloned elements are set with a yellow border to be more easily identified. The page size of this is set to be 1 item per page and the auto advance pauses when you hover over the carousel.</p>
 		<code>
 			$('#kitten5').carrotCell({ <br />
@@ -213,8 +222,8 @@
 		</div>
 	</article>
 	
-	<article>
-		<h2>Arrow Key Advance and Navi</h2>
+	<article id="six">
+		<h2>Arrow Key Advance Scrolling and External Page Navigation</h2>
 		<p>Using the left and right arrow keys to navigate should be reserved for pages with 1 carrotCell object with key set to true since it is a document wide event. Vertical carrotCells use the up and down arrow keys. The external .navi is still enclosed in .carrotCell but can bet set to whatever element you wish through the configuration.</p>
 		<p>Note that if you click the navi buttons quickly, the carousel will not recognize the event until the scrolling animation is done.</p>
 		<code>
@@ -248,7 +257,7 @@
 		</div>
 	</article>
 	
-	<article>
+	<article id="seven">
 		<h2>Insert Slide and Load Slides</h2>
 		<p>Use API methods to insert a single new element or load an entirely new list.</p>
 		
@@ -288,7 +297,7 @@
 	</article>
 	
 	
-	<article>
+	<article id="eight">
 		<h2>Remove Slide</h2>
 		<p>Use the API to remove a slide from the slider. In the example below, the slide at position 2 is removed when the button remove slide is clicked</p>
 		
@@ -323,10 +332,11 @@
 		</div>
 	</article>
 	
-	<article>
-		<h2>Using Different HTML Elements as Wrappers</h2>
-		<p>Instead of the standard list structure, you can also use DIVs or any other HTML element to structure the carousel. However, the hierarchal structure of the elments must be keep in tact inside the actual carousel. For example, carrotCellView must be inside the carrotCell, and another element must wrap the individual slides in place of the UL. The slides must also be direct children of the UL replacement, etc.</p>
-		<p>Below the code uses DIVs for everything instead of semantic tags, the scope of the controls are inside #kitten8Nav while the carrotCell is #kitten8, a different container.</p>
+	<article id="nine">
+		<h2>Using Different HTML Containers</h2>
+		<p>Some of the default HTML containers can be changed to the user's preference. Please consult the <a href="/doc.html">documentation</a> for more information.</p>
+		
+		<p>Note that parent-child hierarchy inside carrotCell must be observed other wise the default javascript selectors will fail. For instance: .carrotCellView must be inside the .carrotCell, and another element must wrap the individual slides in place of the UL. The slides must also be direct children of the UL replacement</p>
 		
 		<code>
 			&lt;div id="kitten8Nav"&gt;<br />
@@ -342,8 +352,8 @@
 			&lt;div id="kitten8" class="carrotCell"&gt;<br />
 			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;div class="carrotCellView"&gt;<br />
 			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;div&gt;<br />
-			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;div&gt;&lt;span&gt;1&lt;/span&gt;&lt;img src="images/cat01.png"&gt;&lt;/div&gt;<br />
-			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;div&gt;&lt;span&gt;2&lt;/span&gt;&lt;img src="images/cat02.png"&gt;&lt;/div&gt;<br />
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;div&gt;&lt;div&gt;1&lt;/div&gt;&lt;img src="images/cat01.png"&gt;&lt;/div&gt;<br />
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;div&gt;&lt;div&gt;2&lt;/div&gt;&lt;img src="images/cat02.png"&gt;&lt;/div&gt;<br />
 			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;...<br />
 
 			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/div&gt;<br />
@@ -377,15 +387,15 @@
 		<div id="kitten8" class="carrotCell">
 			<div class="carrotCellView">
 				<div>
-					<div><span>1</span><img src="images/cat01.png"></div>
-					<div><span>2</span><img src="images/cat02.png"></div>
-					<div><span>3</span><img src="images/cat03.png"></div>
-					<div><span>4</span><img src="images/cat04.png"></div>
-					<div><span>5</span><img src="images/cat05.png"></div>
-					<div><span>6</span><img src="images/cat06.png"></div>
-					<div><span>7</span><img src="images/cat07.png"></div>
-					<div><span>8</span><img src="images/cat08.png"></div>
-					<div><span>9</span><img src="images/cat09.png"></div>
+					<div><div>1</div><img src="images/cat01.png"></div>
+					<div><div>2</div><img src="images/cat02.png"></div>
+					<div><div>3</div><img src="images/cat03.png"></div>
+					<div><div>4</div><img src="images/cat04.png"></div>
+					<div><div>5</div><img src="images/cat05.png"></div>
+					<div><div>6</div><img src="images/cat06.png"></div>
+					<div><div>7</div><img src="images/cat07.png"></div>
+					<div><div>8</div><img src="images/cat08.png"></div>
+					<div><div>9</div><img src="images/cat09.png"></div>
 		        </div>     
 			</div>
 		</div>

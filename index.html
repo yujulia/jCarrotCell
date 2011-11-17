@@ -90,7 +90,7 @@
 		
 		<p><span>4.</span> Now include the jCarrotCell.js file</p>
 		<code>
-			&lt;script src="jCarrotCell.js" type="text/javascript" type="text/javascript" charset="utf-8"&gt;&lt;/script&gt;
+			&lt;script src="jCarrotCell.js" type="text/javascript" charset="utf-8"&gt;&lt;/script&gt;
 		</code>
 		
 		<p><span>5.</span> Finally, call the jCarrotCell function on the element that is of class ".carrotCell"</p>
@@ -101,7 +101,7 @@
 			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;});<br />
 			&lt;/script&gt;
 		</code>
-		<p><span>Of Note.</span> There is sometimes a bug in Chrome where document ready would fire before the elements are rendered with the correct height, here is an alternate version of 5 that fixes the problem. </p>
+		<p><span>Note.</span> There is sometimes a bug in Chrome where document ready would fire before the elements are rendered with the correct height, here is an alternate version of step 5 that fixes the problem. </p>
 		<code>
 			$(document).ready(function(){<br />
 				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;window.someNameSpace = window.someNameSpace || {};<br />

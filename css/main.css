@@ -254,10 +254,36 @@ td code {
 	font-family: helvetica, arial;
 }
 
+/** index
+*/
+.index {
+	list-style-type: decimal;
+	padding: 20px;
+	font-family: georgia;
+	font-size: 16px;
+	margin: -30px 0 0 50px;
+}
+
+.index li {
+	list-style-type: decimal;
+	padding: 3px 10px;
+	margin: 0 10px;
+	overflow: visible;
+}
+
+.index li a {
+	text-decoration: none;
+}
+
+.index li a:hover {
+	text-decoration: underline;
+}
+
 /** demo carrotcell styles
 */
 .carrotCell {
 	margin: 20px 0;
+	border: dashed 1px #ccc;
 }
 
 .carrotCellView {
@@ -385,12 +411,12 @@ td code {
 }
 
 #kitten3 .next {
-	top: 50px;
+	top: 47%;
 	right: 0;
 }
 
 #kitten3 .prev {
-	top: 50px;
+	top: 47%;
 }
 
 .button {
@@ -459,6 +485,7 @@ td code {
 #kitten8 .carrotCellView {
 	width: 480px;
 	background: #ff9900;
+	margin: 10px;
 }
 
 #kitten8 div div div{
@@ -473,12 +500,14 @@ td code {
 	display: block;
 }
 
-#kitten8 div div div span {
+#kitten8 div div div div {
 	position: absolute;
 	background: #000;
 	color: #fff;
 	padding: 5px 10px;
 	font-weight: bold;
+	border: none;
+	margin: 0;
 }
 
 #kitten9test {
