@@ -1,3 +1,7 @@
+/** jCarrotCell
+		Julia Yu
+		11/17/2011
+*/
 (function($){
 	
 	var methods = {
@@ -254,9 +258,7 @@
 					var thisNavi = this;
 					var navIndex = iNav + 1;
 					$(thisNavi).bind("click", function(){
-						if (playing && settings.stopOnClick) { 
-							stopCell();
-						}	
+						if (playing && settings.stopOnClick) {  stopCell(); }	
 						$(this).siblings().removeClass(settings.current);
 						$(this).addClass(settings.current);
 						
@@ -283,7 +285,6 @@
 			var assignCarrot = function(){
 				prev.bind("click", function(e){
 					e.preventDefault();
-					
 					moveBack();
 				}).show();
 
