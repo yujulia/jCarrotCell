@@ -38,6 +38,12 @@
 				prevSelect : "#goBack",
 				nextSelect : "#goForward"
 			});
+			
+			var kitten9 =$('#kitten9').carrotCell();
+			var kitten9Api = $(kitten9).data('carrotCell');
+			$("#kitten9remove").bind("click", function(){
+				kitten9Api.remove(2);
+			});
 		}
 		
 		// chrome can not calculate the width correctly because it is foolish
@@ -243,7 +249,7 @@
 	</article>
 	
 	<article>
-		<h2>Insert and Load</h2>
+		<h2>Insert Slide and Load Slides</h2>
 		<p>Use API methods to insert a single new element or load an entirely new list.</p>
 		
 		<code>
@@ -279,6 +285,42 @@
 			</code>
 		</div>
 		
+	</article>
+	
+	
+	<article>
+		<h2>Remove Slide</h2>
+		<p>Use the API to remove a slide from the slider. In the example below, the slide at position 2 is removed when the button remove slide is clicked</p>
+		
+		<div id="kitten9" class="carrotCell">
+			<div class="carrotCellView">
+				<ol>
+					<li><span>1</span><img src="images/cat01.png"></li>
+					<li><span>2</span><img src="images/cat02.png"></li>
+					<li><span>3</span><img src="images/cat03.png"></li>
+					<li><span>4</span><img src="images/cat04.png"></li>
+					<li><span>5</span><img src="images/cat05.png"></li>
+					<li><span>6</span><img src="images/cat06.png"></li>
+					<li><span>7</span><img src="images/cat07.png"></li>
+					<li><span>8</span><img src="images/cat08.png"></li>
+					<li><span>9</span><img src="images/cat09.png"></li>
+		        </ol>     
+			</div>
+			<a href="#" class="prev">prev</a>
+			<a href="#" class="next">next</a> 
+
+		</div>
+		
+		<div id="kitten9test">
+			<code>
+				var kitten9 =$('#kitten9').carrotCell();<br/>
+				var kitten9Api = $(kitten9).data('carrotCell');<br/>
+				$("#kitten9remove").bind("click", function(){<br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;kitten9Api.remove(2);<br/>
+				});
+			</code>
+			<div id="kitten9remove" class="button">remove slide</div>
+		</div>
 	</article>
 	
 	<article>
@@ -348,6 +390,10 @@
 			</div>
 		</div>
 	</article>
+
+
+
+
 
 </body>
 </html>

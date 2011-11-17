@@ -354,7 +354,8 @@ td code {
 #kitten2, 
 #kitten5,
 #kitten6,
-#kitten7
+#kitten7,
+#kitten9
 {
 	width: 560px;
 }
@@ -362,7 +363,8 @@ td code {
 #kitten1 .carrotCellView,
 #kitten5 .carrotCellView,
 #kitten6 .carrotCellView,
-#kitten7 .carrotCellView
+#kitten7 .carrotCellView,
+#kitten9 .carrotCellView
 {
 	width: 520px;
 }
@@ -478,3 +480,14 @@ td code {
 	padding: 5px 10px;
 	font-weight: bold;
 }
+
+#kitten9test {
+	background: #efefef;
+	padding: 10px;
+	overflow: hidden;
+}
+
+#kitten9test code {
+	margin: 0;
+}
+

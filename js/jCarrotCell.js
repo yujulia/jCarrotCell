@@ -471,9 +471,9 @@
 				*/
 				remove : function(index) {
 					index = parseInt(index);
-					if (isNaN(index)) { index = items.length; }
-					if (index < 1 ) { index = 1; } // range check
-					if (index > items.length ) { index = items.length; } // range check
+					if (isNaN(index)) { index = items.length; } // nothing passed, default to last
+					if ((index > items.length ) ||  (index < 1 )) {  return false; } // out of range position to remove do nothing
+					
 					$(items[index-1]).remove();
 					findItems();
 					calculatePages();
