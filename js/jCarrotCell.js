@@ -283,6 +283,8 @@
 			/** assign handlers
 			*/
 			var assignCarrot = function(){
+				
+				// show the buttons as well as bind click handler
 				prev.bind("click", function(e){
 					e.preventDefault();
 					moveBack();
@@ -293,6 +295,22 @@
 					moveForward();
 				}).show();
 				
+				// if touch wipe exists... decide orientation
+				if(jQuery().touchwipe) {					
+					if (settings.sideways) {
+						$($this).touchwipe({
+						    wipeLeft: function() {  moveForward(); },
+						    wipeRight: function() {  moveBack(); }
+						});
+					} else {
+						$($this).touchwipe({
+						    wipeDown: function() {  moveForward(); },
+						    wipeUp: function() {  moveBack(); }
+						});
+					}			
+				}
+				
+				// add pause on hover
 				if (settings.pauseOnHover && settings.auto) {	
 					view.bind({
 						mouseenter : function() { pauseCell(); },

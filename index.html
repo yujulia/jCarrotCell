@@ -9,7 +9,6 @@
 	<![endif]-->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js" type="text/javascript" charset="utf-8"></script>
 	<script src="js/rainbow-custom.min.js" type="text/javascript" charset="utf-8"></script>
-	<script src="js/jCarrotCell.js" type="text/javascript" charset="utf-8"></script>
 	
 	<link type="text/css" href="css/main.css" rel="stylesheet" /> 
 	<link type="text/css" href="css/carrotcell.css" rel="stylesheet" /> 
@@ -32,6 +31,7 @@
 		<p><strong>source:</strong> <a href="https://github.com/jyuya/jCarrotCell">https://github.com/jyuya/jCarrotCell</a></p>
 		<p><strong>started:</strong> 11/10/2011</p>
 		<p><strong>last updated:</strong> 5/10/2012</p>
+		<p><strong>tested with jQuery version:</strong> 1.7.2</p>
 	</header>
 	
 	<nav>
@@ -52,8 +52,10 @@
 			<li>Reload an entirely new bunch of slides</li>
 			<li>External navigation support</li>
 			<li>Exposed API methods</li>
-			<li>Flexible HTML tags / layout</li>		
+			<li>Flexible HTML tags / layout</li>	
+			<li>Recognizes swipe events on touch devices such as iPad, iPhone</li>	
 			<li>kittens, puppies</li>
+			
 		</ul>
 	</article>
 
@@ -96,12 +98,12 @@
 		<p><span>4.</span> Now include the jCarrotCell.js file</p>
 		
 <pre><code data-language="html">
-&lt;script src="jCarrotCell.js" type="text/javascript" charset="utf-8"&gt;&lt;/script&gt;
+&lt;script src="js/jCarrotCell.js" type="text/javascript" charset="utf-8"&gt;&lt;/script&gt;
 </code></pre>
 		
 		<p><span>5.</span> Finally, call the jCarrotCell function on the element that is of class ".carrotCell"</p>
 
-<pre><code data-language="javascript">
+<pre><code data-language="html">
 &lt;script type="text/javascript"&gt;
 $(document).ready(function(){
 	$('.carrotCell').carrotCell();
@@ -109,23 +111,12 @@ $(document).ready(function(){
 &lt;/script&gt;
 </code></pre>
 
-		<p><span>Note.</span> There is sometimes a bug in Chrome where document ready would fire before the elements are rendered with the correct height, here is an alternate version of step 5 that fixes the problem. </p>
+		<p><span>Optional.</span> You can also enable swipe support for the carousel on touch devices (iPhone, iPad) simply by including the jquery-touchwipe.js by <a href="http://www.netcu.de/jquery-touchwipe-iphone-ipad-library" target="_blank">Andreas Waltl</a>. This enables you to swipe on the carousel to advance forward or back.</p>
 
-<pre><code data-language="javascript">
-$(document).ready(function(){
-	window.someNameSpace = window.someNameSpace || {};
-	someNameSpace.setup = function() {
-		$('.carrotCell').carrotCell();
-	}
-
-	var is_chrome = navigator.userAgent.toLowerCase().indexOf('chrome') > -1;
-	if (is_chrome) {
-		$(window).load(function(){ someNameSpace.setup(); });
-	} else {
-		someNameSpace.setup();
-	}
-});
+<pre><code data-language="html">
+&lt;script src="js/jquery-touchwipe.js" type="text/javascript" charset="utf-8"&gt;&lt;/script&gt;
 </code></pre>
+
 
 	</article>
 	

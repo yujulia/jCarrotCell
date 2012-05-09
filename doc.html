@@ -21,7 +21,9 @@
 		<p><strong>by:</strong> Julia Yu</p>
 		<p><strong>version:</strong> 1.0</p>
 		<p><strong>source:</strong> <a href="https://github.com/jyuya/jCarrotCell">https://github.com/jyuya/jCarrotCell</a></p>
-		<p><strong>last updated:</strong> 11/16/2011</p>
+		<p><strong>started:</strong> 11/10/2011</p>
+		<p><strong>last updated:</strong> 5/10/2012</p>
+		<p><strong>tested with jQuery version:</strong> 1.7.2</p>
 	</header>
 	
 	<nav>
@@ -476,11 +478,30 @@ var myCarouselAPI = $('#myCarousel').carrotCell({
 	
 	<article>
 		<h2>Known Issues</h2>
-		<ul>
-			<li>Chrome does not measure the carousel size correctly on document ready, use window.load for the constructors.</li>
-		</ul>
-	</article>
 
+		<p><span>Note.</span> There is sometimes a bug in Chrome where document ready would fire before the elements are rendered with the correct height, here is an alternate version of step 5 that fixes the problem. </p>
+
+<pre><code data-language="javascript">
+$(document).ready(function(){
+	window.someNameSpace = window.someNameSpace || {};
+	someNameSpace.setup = function() {
+		$('.carrotCell').carrotCell();
+	}
+
+	var is_chrome = navigator.userAgent.toLowerCase().indexOf('chrome') > -1;
+	if (is_chrome) {
+		$(window).load(function(){ someNameSpace.setup(); });
+	} else {
+		someNameSpace.setup();
+	}
+});
+</code></pre>
+	</article>
+	
+	<nav>
+		<a href="index.html">Home</a> 
+		<a href="demo.html">Demos</a> 
+	</nav>
 
 </body>
 </html>
