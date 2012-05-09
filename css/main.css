@@ -191,13 +191,18 @@ nav a:hover {
 code {
 	background: #efefef;
 	margin: 20px 0;
-	padding: 10px;
+	padding: 10px 10px 25px 10px;
 	display: block;
 	line-height: 1.2em;
+	overflow-x: auto;
 }
 
 code span {
 	color: #99cc33;
+}
+
+pre {
+    word-wrap: break-word;
 }
 
 .realList li {
@@ -520,3 +525,46 @@ td code {
 	margin: 0;
 }
 
+.comment {
+        color: #ccc;
+}
+
+.javascript .comment {
+    color: #535353;
+}
+
+.meta, .entity {
+    color: #f03200;
+}
+
+.support {
+    color: #006dcf;
+}
+
+.string {
+    color: #ff9900;
+}
+
+.string.regexp {
+    color: #fff;
+}
+
+.support.attribute, .support.css-property, .support.regex.modifier {
+    color: #0087ff;
+}
+
+.support.value {
+    color: #1bbbcf;
+}
+
+.integer, .constant {
+    color: #669900;
+}
+
+.keyword, .selector, .storage {
+    color: #006600;
+}
+
+.constant.regex.escape {
+    color: #d8fa3c;
+}

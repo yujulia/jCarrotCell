@@ -8,6 +8,7 @@
 	<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
 	<![endif]-->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="js/rainbow-custom.min.js" type="text/javascript" charset="utf-8"></script>
 	<script src="js/jCarrotCell.js" type="text/javascript" charset="utf-8"></script>
 	
 	<link type="text/css" href="css/main.css" rel="stylesheet" /> 
@@ -29,7 +30,8 @@
 		<p><strong>by:</strong> Julia Yu</p>
 		<p><strong>version:</strong> 1.0</p>
 		<p><strong>source:</strong> <a href="https://github.com/jyuya/jCarrotCell">https://github.com/jyuya/jCarrotCell</a></p>
-		<p><strong>last updated:</strong> 11/16/2011</p>
+		<p><strong>started:</strong> 11/10/2011</p>
+		<p><strong>last updated:</strong> 5/10/2012</p>
 	</header>
 	
 	<nav>
@@ -63,61 +65,68 @@
 	<article id="howTLDR">
 		<h2>How Do I Use It? (TL,DR Version)</h2>
 		<p><span>1.</span> Set up your carousel content in HTML. Here is an example of a basic layout.</p>
-		<code>
-			&lt;div id="myCarousel" class="carrotCell"&gt;<br />
-				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;div class="carrotCellView"&gt;<br />
-					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;ol&gt;<br />
-						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;li&gt;...&lt;/li&gt;<br />
-						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;li&gt;...&lt;/li&gt;<br />
-						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;...<br />
-			        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/ol&gt;<br />
-				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/div&gt;<br />
-				
-				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;div class="prev"&gt;prev&lt;/div&gt;<br />
-				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;div class="next"&gt;next&lt;/div&gt;<br />
-				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;...<br />
-			&lt;/div&gt;<br />
-		</code>
+<pre><code data-language="html">
+&lt;div id="myCarousel" class="carrotCell"&gt;
+	&lt;div class="carrotCellView"&gt;
+		&lt;ol&gt;
+			&lt;li&gt;...&lt;/li&gt;
+			&lt;li&gt;...&lt;/li&gt;
+			...
+        &lt;/ol&gt;
+	&lt;/div&gt;
+	
+	&lt;div class="prev"&gt;prev&lt;/div&gt;
+	&lt;div class="next"&gt;next&lt;/div&gt;
+	...
+&lt;/div&gt;
+</code></pre>
 		
 		<p><span>2.</span> Include the carrotcell.css or import the styles into your own style sheet.</p>
-		<code>
-			&lt;link type="text/css" href="css/carrotcell.css" rel="stylesheet"&gt;
-		</code>
+		
+<pre><code data-language="html">
+&lt;link type="text/css" href="css/carrotcell.css" rel="stylesheet"&gt;
+</code></pre>
 		
 		<p><span>3.</span> Include jQuery, jCarrotCell was developed on jQuery v1.5.2 but 1.6.2 seems to work as well... for now.</p>
-		<code>
-			&lt;script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js" type="text/javascript" charset="utf-8"&gt;&lt;/script&gt;
-		</code>
+		
+<pre><code data-language="html">
+&lt;script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js" type="text/javascript" charset="utf-8"&gt;&lt;/script&gt;
+</code></pre>
 		
 		<p><span>4.</span> Now include the jCarrotCell.js file</p>
-		<code>
-			&lt;script src="jCarrotCell.js" type="text/javascript" charset="utf-8"&gt;&lt;/script&gt;
-		</code>
+		
+<pre><code data-language="html">
+&lt;script src="jCarrotCell.js" type="text/javascript" charset="utf-8"&gt;&lt;/script&gt;
+</code></pre>
 		
 		<p><span>5.</span> Finally, call the jCarrotCell function on the element that is of class ".carrotCell"</p>
-		<code>
-			&lt;script type="text/javascript"&gt;<br/>
-			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$(document).ready(function(){<br />
-			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$('.carrotCell').carrotCell();<br />
-			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;});<br />
-			&lt;/script&gt;
-		</code>
-		<p><span>Note.</span> There is sometimes a bug in Chrome where document ready would fire before the elements are rendered with the correct height, here is an alternate version of step 5 that fixes the problem. </p>
-		<code>
-			$(document).ready(function(){<br />
-				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;window.someNameSpace = window.someNameSpace || {};<br />
-				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;someNameSpace.setup = function() {<br />
-					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$('.carrotCell').carrotCell();<br />
-				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br />
 
-				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;var is_chrome = navigator.userAgent.toLowerCase().indexOf('chrome') > -1;<br />
-				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (is_chrome) {<br />
-					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$(window).load(function(){ someNameSpace.setup(); });<br />
-				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;} else {<br />
-					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;someNameSpace.setup();<br />
-				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br />
-			});
-		</code>
+<pre><code data-language="javascript">
+&lt;script type="text/javascript"&gt;
+$(document).ready(function(){
+	$('.carrotCell').carrotCell();
+});
+&lt;/script&gt;
+</code></pre>
+
+		<p><span>Note.</span> There is sometimes a bug in Chrome where document ready would fire before the elements are rendered with the correct height, here is an alternate version of step 5 that fixes the problem. </p>
+
+<pre><code data-language="javascript">
+$(document).ready(function(){
+	window.someNameSpace = window.someNameSpace || {};
+	someNameSpace.setup = function() {
+		$('.carrotCell').carrotCell();
+	}
+
+	var is_chrome = navigator.userAgent.toLowerCase().indexOf('chrome') > -1;
+	if (is_chrome) {
+		$(window).load(function(){ someNameSpace.setup(); });
+	} else {
+		someNameSpace.setup();
+	}
+});
+</code></pre>
+
 	</article>
 	
 	<article>

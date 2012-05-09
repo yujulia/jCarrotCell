@@ -9,6 +9,7 @@
 	<![endif]-->
 	<script src="js/jquery.js" type="text/javascript" charset="utf-8"></script>
 	<script src="js/jCarrotCell.js" type="text/javascript" charset="utf-8"></script>
+	<script src="js/rainbow-custom.min.js" type="text/javascript" charset="utf-8"></script>
 	
 	<script type="text/javascript" charset="utf-8">
 	$(document).ready(function(){
@@ -91,10 +92,10 @@
 	<article id="one">
 		<h2>Default Horizontal Scroller</h2>
 		<p>This version takes no options and uses all of the default settings of carrotCell.</p>
-		<code>
-			$('#kitten1').carrotCell();<br/ >
-		</code>
 		
+<pre><code data-language="javascript">
+$('#kitten1').carrotCell();
+</code></pre>
 		<div id="kitten1" class="carrotCell">
 			<div class="prev">prev</div>
 			<div class="carrotCellView">
@@ -144,11 +145,11 @@
 	<article id="three">
 		<h2>Default Vertical Scroller</h2>
 		<p>This carrotCell scrolls vertically instead of horizontally. Note some amount of restyling to make the .carrotCellView clip correctly is required and to position the previous and next buttons.</p>
-		<code>
-			$('#kitten3').carrotCell({<br/ >
-				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sideways: false<br/ >
-			});
-		</code>
+<pre><code data-language="javascript">
+$('#kitten3').carrotCell({
+	sideways: false
+});
+</code></pre>
 		<div id="kitten3" class="carrotCell">
 			<div class="carrotCellView">
 				<ol>
@@ -191,14 +192,14 @@
 	<article id="five">
 		<h2>Circular Auto Advance Scrolling by 1 Slide Per Page</h2>
 		<p>By setting auto to true, the carousel automatically becomes circular. The cloned elements are set with a yellow border to be more easily identified. The page size of this is set to be 1 item per page and the auto advance pauses when you hover over the carousel.</p>
-		<code>
-			$('#kitten5').carrotCell({ <br />
-				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;auto: true, <br />
-				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pauseOnHover: true, <br />
-				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;delay: 1000, <br />
-				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;step: 1 <br />
-			});
-		</code>
+<pre><code data-language="javascript">
+$('#kitten5').carrotCell({ 
+	auto: true, 
+	pauseOnHover: true, 
+	delay: 1000, 
+	step: 1 
+});
+</code></pre>
 		<div id="kitten5" class="carrotCell">
 			<div class="carrotCellView">
 				<ol>
@@ -226,12 +227,12 @@
 		<h2>Arrow Key Advance Scrolling and External Page Navigation</h2>
 		<p>Using the left and right arrow keys to navigate should be reserved for pages with 1 carrotCell object with key set to true since it is a document wide event. Vertical carrotCells use the up and down arrow keys. The external .navi is still enclosed in .carrotCell but can bet set to whatever element you wish through the configuration.</p>
 		<p>Note that if you click the navi buttons quickly, the carousel will not recognize the event until the scrolling animation is done.</p>
-		<code>
-			$('#kitten6').carrotCell({ <br/>
-				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;key: true,  <br/>
-				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;navi: true <br/>
-			});
-		</code>
+<pre><code data-language="javascript">
+$('#kitten6').carrotCell({ 
+	key: true,  
+	navi: true 
+});
+</code></pre>
 		<div id="kitten6" class="carrotCell">
 			<div class="carrotCellView">
 				<ol>
@@ -261,12 +262,12 @@
 		<h2>Insert Slide and Load Slides</h2>
 		<p>Use API methods to insert a single new element or load an entirely new list.</p>
 		
-		<code>
-			var kitten7 = $('#kitten7').carrotCell({<br/>
-				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;step: 2<br/>
-			});<br/>
-			var kitten7Api = $(kitten7).data('carrotCell');
-		</code>
+<pre><code data-language="javascript">
+var kitten7 = $('#kitten7').carrotCell({
+	step: 2
+});
+var kitten7Api = $(kitten7).data('carrotCell');
+</code></pre>
 		<div id="kitten7" class="carrotCell">
 			<div class="carrotCellView">
 				<ol>
@@ -284,14 +285,16 @@
 		</div>
 		
 		<div id="kitten7test">
-			<code> 
-				kitten7Api.insert('&lt;li&gt;&lt;span&gt;insert&lt;/span&gt;&lt;img src="images/cat07.png" /&gt;&lt;/li&gt;'); 
-				<div id="kitten7insert" class="button">test insert</div>
-			</code>
-			<code> 
-				kitten7Api.load('&lt;li&gt;&lt;span&gt;load 1&lt;/span&gt;&lt;img src="images/cat07.png" /&gt;&lt;/li&gt; &lt;li&gt;&lt;span&gt;load 2&lt;/span&gt;&lt;img src="images/cat08.png" /&gt;&lt;/li&gt; &lt;li&gt;&lt;span&gt;load 3&lt;/span&gt;&lt;img src="images/cat09.png" /&gt;&lt;/li&gt;&lt;li&gt;&lt;span&gt;load 1&lt;/span&gt;&lt;img src="images/cat07.png" /&gt;&lt;/li&gt; &lt;li&gt;&lt;span&gt;load 2&lt;/span&gt;&lt;img src="images/cat08.png" /&gt;&lt;/li&gt; &lt;li&gt;&lt;span&gt;load 3&lt;/span&gt;&lt;img src="images/cat09.png" /&gt;&lt;/li&gt;'); 
-				<div id="kitten7load" class="button">test load</div>
-			</code>
+<pre><code data-language="javascript"> 
+kitten7Api.insert('&lt;li&gt;&lt;span&gt;insert&lt;/span&gt;&lt;img src="images/cat07.png" /&gt;&lt;/li&gt;'); 
+
+<div id="kitten7insert" class="button">test insert</div>
+</code></pre>
+<pre><code data-language="javascript"> 
+kitten7Api.load('&lt;li&gt;&lt;span&gt;load 1&lt;/span&gt;&lt;img src="images/cat07.png" /&gt;&lt;/li&gt; &lt;li&gt;&lt;span&gt;load 2&lt;/span&gt;&lt;img src="images/cat08.png" /&gt;&lt;/li&gt; &lt;li&gt;&lt;span&gt;load 3&lt;/span&gt;&lt;img src="images/cat09.png" /&gt;&lt;/li&gt;&lt;li&gt;&lt;span&gt;load 1&lt;/span&gt;&lt;img src="images/cat07.png" /&gt;&lt;/li&gt; &lt;li&gt;&lt;span&gt;load 2&lt;/span&gt;&lt;img src="images/cat08.png" /&gt;&lt;/li&gt; &lt;li&gt;&lt;span&gt;load 3&lt;/span&gt;&lt;img src="images/cat09.png" /&gt;&lt;/li&gt;'); 
+
+<div id="kitten7load" class="button">test load</div>
+</code></pre>
 		</div>
 		
 	</article>
@@ -321,13 +324,14 @@
 		</div>
 		
 		<div id="kitten9test">
-			<code>
-				var kitten9 =$('#kitten9').carrotCell();<br/>
-				var kitten9Api = $(kitten9).data('carrotCell');<br/>
-				$("#kitten9remove").bind("click", function(){<br/>
-					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;kitten9Api.remove(2);<br/>
-				});
-			</code>
+<pre><code data-language="javascript">
+var kitten9 =$('#kitten9').carrotCell();
+var kitten9Api = $(kitten9).data('carrotCell');
+
+$("#kitten9remove").bind("click", function(){
+	kitten9Api.remove(2);
+});
+</code></pre>
 			<div id="kitten9remove" class="button">remove slide</div>
 		</div>
 	</article>
@@ -338,41 +342,41 @@
 		
 		<p>Note that parent-child hierarchy inside carrotCell must be observed other wise the default javascript selectors will fail. For instance: .carrotCellView must be inside the .carrotCell, and another element must wrap the individual slides in place of the UL. The slides must also be direct children of the UL replacement</p>
 		
-		<code>
-			&lt;div id="kitten8Nav"&gt;<br />
-			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;div id="goBack" class="prev"&gt;prev&lt;/div&gt;<br />
-			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;div class="navi"&gt;<br />
-			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;div&gt;1&lt;/div&gt;<br />
-			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;div&gt;2&lt;/div&gt;<br />
-			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;div&gt;3&lt;/div&gt;<br />
-			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/div&gt;<br />
-			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;div id="goForward" class="next"&gt;next&lt;/div&gt;<br />
-			&lt;/div&gt;<br />
+<pre><code data-language="html">
+&lt;div id="kitten8Nav"&gt;
+	&lt;div id="goBack" class="prev"&gt;prev&lt;/div&gt;
+	&lt;div class="navi"&gt;
+		&lt;div&gt;1&lt;/div&gt;
+		&lt;div&gt;2&lt;/div&gt;
+		&lt;div&gt;3&lt;/div&gt;
+	&lt;/div&gt;
+	&lt;div id="goForward" class="next"&gt;next&lt;/div&gt;
+&lt;/div&gt;
 
-			&lt;div id="kitten8" class="carrotCell"&gt;<br />
-			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;div class="carrotCellView"&gt;<br />
-			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;div&gt;<br />
-			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;div&gt;&lt;div&gt;1&lt;/div&gt;&lt;img src="images/cat01.png"&gt;&lt;/div&gt;<br />
-			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;div&gt;&lt;div&gt;2&lt;/div&gt;&lt;img src="images/cat02.png"&gt;&lt;/div&gt;<br />
-			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;...<br />
+&lt;div id="kitten8" class="carrotCell"&gt;
+	&lt;div class="carrotCellView"&gt;
+		&lt;div&gt;
+			&lt;div&gt;&lt;div&gt;1&lt;/div&gt;&lt;img src="images/cat01.png"&gt;&lt;/div&gt;
+			&lt;div&gt;&lt;div&gt;2&lt;/div&gt;&lt;img src="images/cat02.png"&gt;&lt;/div&gt;
+			...
 
-			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/div&gt;<br />
-			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/div&gt;<br />
-			&lt;/div&gt;
-		</code>
+		&lt;/div&gt;
+	&lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
 		
 		<p>The controls for the carousel can exist in a different container than carrotCell but you must specifically pass it containsControl boolean and the controlScope. If no controlScope is specified, the search is conducted on the root BODY element.</p>
-		<code>
-			$('#kitten8').carrotCell({<br />
-				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sliderSelect : "div",<br />
-				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sliderChildSelect : "div",<br />
-				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;containsControl : false,<br />
-				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;navi : true,<br />
-				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;controlScope : "#kitten8Nav",<br />
-				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;prevSelect : "#goBack",<br />
-				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nextSelect : "#goForward"<br />
-			});
-		</code>
+<pre><code data-language="javascript">
+$('#kitten8').carrotCell({
+	sliderSelect : "div",
+	sliderChildSelect : "div",
+	containsControl : false,
+	navi : true,
+	controlScope : "#kitten8Nav",
+	prevSelect : "#goBack",
+	nextSelect : "#goForward"
+});
+</code></pre>
 		
 		<div id="kitten8Nav">
 			<div id="goBack" class="btn">prev</div>
@@ -401,7 +405,10 @@
 		</div>
 	</article>
 
-
+	<nav>
+		<a href="index.html">Home</a> 
+		<a href="doc.html">Documentation</a> 
+	</nav>
 
 
 

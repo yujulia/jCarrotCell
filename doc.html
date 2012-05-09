@@ -8,6 +8,7 @@
 	<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
 	<![endif]-->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="js/rainbow-custom.min.js" type="text/javascript" charset="utf-8"></script>
 	
 	<link type="text/css" href="css/main.css" rel="stylesheet" /> 
 	
@@ -31,16 +32,17 @@
 	<article>
 		<h2>Configurations</h2>
 		<p>Example of a carrotCell object with configurations:</p>
-		<code>
-			var myCarouselAPI = $('#myCarousel').carrotCell({<br />
-				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sideways: false,<br />
-				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;delay: 3000,<br />
-				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;key: true,<br />
-				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;navi: true,<br />
-				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;step:1,<br />
-				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;auto: true<br />
-			});
-		</code>
+		
+<pre><code data-language="javascript">
+var myCarouselAPI = $('#myCarousel').carrotCell({
+	sideways: false,
+	delay: 3000,
+	key: true,
+	navi: true,
+	step:1,
+	auto: true
+});
+</code></pre>
 		
 		<h3>Basic Configuration</h3>
 		<p>The configuration options are passed into the carrotCell as an object on creation.</p>
