@@ -253,6 +253,10 @@
 			/** set up navigation, only works on pages
 			*/
 			var setupNavi = function() {
+				if (pages <= 1) {
+					$(navi).hide();	
+					return false;
+				}
 				$(navi).first().addClass(settings.current);
 				navi.each(function(iNav){
 					var thisNavi = this;
