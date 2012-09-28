@@ -384,7 +384,7 @@
 					// clone a visible amount on the begin and end
 					items.filter(':first').before(items.slice(-visible).clone().addClass('cloned'));
 					items.filter(':last').after(items.slice(0, visible).clone().addClass('cloned'));
-					items = slider.find('> ' + settings.sliderChildSelect); // reselect new li
+					items = slider.children(settings.sliderChildSelect); // reselect new li
 				} else {
 					prev.addClass(settings.off);
 				}
@@ -403,7 +403,7 @@
 			/** find child elements of slider
 			*/
 			var findItems = function(){
-				items = slider.find('> ' + settings.sliderChildSelect); 
+				items = slider.children(settings.sliderChildSelect); 
 				totalItems = items.length;
 				single = items.filter(':first');
 				notEnoughToScroll();
@@ -412,8 +412,8 @@
 			/** find elements
 			*/
 			var findCarrot = function(){
-				view = $this.find(".carrotCellView");
-				slider = view.find('> ' + settings.sliderSelect + ":first"); 
+				view = $this.children(".carrotCellView");
+				slider = view.children(settings.sliderSelect); 
 				findItems();
 				
 				if (settings.containsControl) {
