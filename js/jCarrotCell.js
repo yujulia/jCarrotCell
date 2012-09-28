@@ -412,7 +412,7 @@
 			/** find elements
 			*/
 			var findCarrot = function(){
-				view = $this.children(".carrotCellView");
+				view = $this.children(".carrotCellView:first");	// find first carrotcellview	
 				slider = view.children(settings.sliderSelect); 
 				findItems();
 				
