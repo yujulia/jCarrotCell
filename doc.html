@@ -498,6 +498,12 @@ $(document).ready(function(){
 </code></pre>
 	</article>
 	
+	<article>
+		<h2>Implementation Notes</h2>
+		<p><span>Nested Carousels - </span> It is possible to nest one carousel inside another, you will have to specify the navi, previous and next selectors with a specific selector so it does not retrieve the parent's controls along with the nested carousel's controls.</p>
+		<p><span>Global Key Events - </span> If you allow keyboard control of a carousel, note the event listener is bound on the document. If you have multiple carousels on the page, there is no good way to distinguish which carousel the key event was intended for and will trigger all of them if they have key enabled.</p>
+	</article>
+	
 	<nav>
 		<a href="index.html">Home</a> 
 		<a href="demo.html">Demos</a> 

@@ -10,7 +10,7 @@
 		count : 0,
 		
 		makeCarrot : function(){
-			var $this = null,
+			var $this = null, // this carrot cell
 				// populate default settings
 				settings = {
 					step: 0,
@@ -68,7 +68,7 @@
 				// if there is an navi on auto advance the navi
 				if (settings.navi && settings.auto) {
 					var thisNavi = page;
-					if (page > pages) { thisNavi = 1; } // rewind
+					if (page > pages) { thisNavi = 1; } // rewind if we passed the page limit
 					thisNavi--;
 					navi.removeClass(settings.current);
 					$(navi[thisNavi]).addClass(settings.current);
