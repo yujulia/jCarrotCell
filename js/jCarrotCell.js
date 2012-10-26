@@ -95,6 +95,7 @@
 					}         				                
 					currentPage = page;
 					scrolling = false;
+					settings.controlScope.trigger("movingDone", [settings.name, page]);
 				};
 				
 				// broadcast event that carousel is moving
