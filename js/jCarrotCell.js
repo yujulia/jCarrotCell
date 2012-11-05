@@ -341,8 +341,10 @@
 			
 			/** find how many pages there are
 			*/
-			var calculatePages = function(){				
+			var calculatePages = function(){							
 				pages = Math.ceil(totalItems / advanceBy);
+				console.log(settings.name + "has total items " + totalItems + " advance by " + advanceBy + " =thispages " + pages )	;
+				
 				if ((totalItems % visible) != 0) {
 					extras = visible * Math.ceil(totalItems / visible) - totalItems;
 				} else {
@@ -460,14 +462,25 @@
 				*/
 				whichCarrot : function(){
 					console.log("hi this is carrotCell " + settings.name);
+					return settings.name;
+				},
+				
+				getPageCount : function(){
+					console.log(settings.name + " has pages " + pages);
+					return pages;
 				},
 				
 				/** move to the page passed in if its a number
 				*/
 				move : function(movePage) {
+
 					movePage = parseInt(movePage);
-					if (isNaN(movePage)) { return false; }
+					if (isNaN(movePage)) { 
+						movePage = currentPage;
+						console.log(pages);
+					}
 					if (!movePage) { movePage = currentPage + 1; } // move 1 forward by default
+					
 					if (settings.infinite) {
 						if (movePage < 1) { movePage = pages; } // circular check
 						if (movePage > pages) { movePage = 1; } // circular check

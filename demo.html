@@ -19,15 +19,24 @@
 			$('#kitten1').carrotCell();
 			$('#kitten3').carrotCell({ sideways: false });
 			$('#kitten5').carrotCell({ auto: true, step: 1, pauseOnHover: true, delay: 1000 });
-			$('#kitten6').carrotCell({ key: true,  navi: true });
+			
+			var kitten6 = $('#kitten6').carrotCell({ key: true,  navi: true });
+			var kitten6Api = $(kitten6).data('carrotCell');
 		
 			var kittenCount = 0;
 			var kitten7 = $('#kitten7').carrotCell({step: 2});
 			var kitten7Api = $(kitten7).data('carrotCell');
+
+			
 			$('#kitten7insert').click(function(){
 				kittenCount++;
 				kitten7Api.insert('<li><span>insert ' + kittenCount + '</span><img src="images/cat07.png" /></li>'); 	
+				var lastpage = kitten7Api.getPageCount();
+				console.log(lastpage);
+				kitten7Api.move(lastpage); 					
 			});
+			
+			
 			$('#kitten7load').click(function(){
 				kitten7Api.load('<li><span>load 1</span><img src="images/cat07.png" /></li> <li><span>load 2</span><img src="images/cat08.png" /></li> <li><span>load 3</span><img src="images/cat09.png" /></li><li><span>load 1</span><img src="images/cat07.png" /></li> <li><span>load 2</span><img src="images/cat08.png" /></li> <li><span>load 3</span><img src="images/cat09.png" /></li>'); 
 			});
@@ -289,16 +298,21 @@ var kitten7Api = $(kitten7).data('carrotCell');
 		</div>
 		
 		<div id="kitten7test">
+			<div id="kitten7testinsert">
 <pre><code data-language="javascript"> 
 kitten7Api.insert('&lt;li&gt;&lt;span&gt;insert&lt;/span&gt;&lt;img src="images/cat07.png" /&gt;&lt;/li&gt;'); 
-
-<div id="kitten7insert" class="button">test insert</div>
+kitten7Api.move(); 
 </code></pre>
+				<div id="kitten7insert" class="button">test insert</div>
+			</div>
+
+			<div id="kitten7testload">
 <pre><code data-language="javascript"> 
 kitten7Api.load('&lt;li&gt;&lt;span&gt;load 1&lt;/span&gt;&lt;img src="images/cat07.png" /&gt;&lt;/li&gt; &lt;li&gt;&lt;span&gt;load 2&lt;/span&gt;&lt;img src="images/cat08.png" /&gt;&lt;/li&gt; &lt;li&gt;&lt;span&gt;load 3&lt;/span&gt;&lt;img src="images/cat09.png" /&gt;&lt;/li&gt;&lt;li&gt;&lt;span&gt;load 1&lt;/span&gt;&lt;img src="images/cat07.png" /&gt;&lt;/li&gt; &lt;li&gt;&lt;span&gt;load 2&lt;/span&gt;&lt;img src="images/cat08.png" /&gt;&lt;/li&gt; &lt;li&gt;&lt;span&gt;load 3&lt;/span&gt;&lt;img src="images/cat09.png" /&gt;&lt;/li&gt;'); 
-
-<div id="kitten7load" class="button">test load</div>
 </code></pre>
+				<div id="kitten7load" class="button">test load</div>
+			</div>
+
 		</div>
 		
 	</article>

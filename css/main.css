@@ -386,7 +386,8 @@ td code {
 #kitten5,
 #kitten6,
 #kitten7,
-#kitten9
+#kitten9,
+#kittenx
 {
 	width: 560px;
 }
@@ -395,7 +396,8 @@ td code {
 #kitten5 .carrotCellView,
 #kitten6 .carrotCellView,
 #kitten7 .carrotCellView,
-#kitten9 .carrotCellView
+#kitten9 .carrotCellView,
+#kittenx .carrotCellView
 {
 	width: 520px;
 }
@@ -442,15 +444,19 @@ td code {
 #kitten7test {
 	width: 100%;
 	overflow: hidden;
-	background: #efefef;
 	margin-left: -5px;
 }
 
+#kitten7testinsert, #kitten7testload {
+	width: 100%;
+	padding: 20px;
+	margin-bottom: 10px;
+	background: #efefef;
+}
+
 #kitten7test code {
-	width: 47%;
-	float: left;
+
 	margin: 0;
-	border-left: solid 5px #fff;
 }
 
 #kitten8Nav {
@@ -567,4 +573,69 @@ td code {
 
 .constant.regex.escape {
     color: #d8fa3c;
+}
+
+/*** ----------------- kittenx
+**/
+
+#kittenxNav {
+	padding: 0 20px;
+	text-align: center;
+	width: 480px;
+}
+
+#kittenxNav .navi {
+	display: inline;
+	cursor: pointer;
+	margin: 0 10px;
+}
+
+#kittenxNav .navi div {
+	padding: 3px 7px;
+	display: inline;
+}
+
+#kittenxNav .navi .current {
+	background: #efefef;
+}
+
+#kittenxNav .btn {
+	display: inline;
+	cursor: pointer;
+}
+
+#kittenxNav .disabled {
+	color: #ccc;
+}
+
+#kittenx {
+		width: 500px;
+}
+
+#kittenx .carrotCellView {
+	width: 480px;
+	background: #ff9900;
+	margin: 10px;
+}
+
+#kittenx div div div{
+	float: left;
+	border: solid 3px #cc6600;
+	margin: 7px;
+	position: relative;
+	overflow: hidden;
+}
+
+#kittenx img {
+	display: block;
+}
+
+#kittenx div div div div {
+	position: absolute;
+	background: #000;
+	color: #fff;
+	padding: 5px 10px;
+	font-weight: bold;
+	border: none;
+	margin: 0;
 }
