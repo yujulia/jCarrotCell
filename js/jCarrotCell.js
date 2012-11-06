@@ -51,7 +51,8 @@
 				visibleDifference = 0,
 				leftover = 0,
 				inpage = 0,
-				api, view, slider, items, single, totalItems, extras,
+				extras = 0,
+				api, view, slider, items, single, totalItems,
 				frameSize, singleSize, viewSize,
 				autoScroll, pause, play, stop, 
 				visible, advanceBy, pages, slideBy, prev, next, navi,
@@ -341,15 +342,27 @@
 			
 			/** find how many pages there are
 			*/
-			var calculatePages = function(){							
-				pages = Math.ceil(totalItems / advanceBy);
-				console.log(settings.name + "has total items " + totalItems + " advance by " + advanceBy + " =thispages " + pages )	;
+			var calculatePages = function(){		
+				// console.log("there are " + visible + " items visible but advance by is set to " + advanceBy);
 				
+				if (visible !== advanceBy) {
+					pages = Math.ceil((totalItems - (visible - advanceBy)) / advanceBy);				
+				} else {
+					pages = Math.ceil(totalItems / advanceBy);																
+				}
+				
+				// console.log("pages is " + pages);
+				
+				// mysteriously this seems to work @_@
 				if ((totalItems % visible) != 0) {
 					extras = visible * Math.ceil(totalItems / visible) - totalItems;
 				} else {
 					extras = 0;
 				}
+									
+				// console.log("extras " + extras); // this is how much is left over in the actual view		
+				// console.log(settings.name + "has total items " + totalItems + " advance by " + advanceBy + " total pages " + pages )	;
+				
 			};
 			
 			/** check if content is too short to scroll

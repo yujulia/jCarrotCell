@@ -609,11 +609,13 @@ td code {
 }
 
 #kittenx {
-		width: 500px;
+		width: 502px;
+/*		width: 260px;*/
 }
 
 #kittenx .carrotCellView {
-	width: 480px;
+	width: 482px;
+/*	width: 240px;*/
 	background: #ff9900;
 	margin: 10px;
 }
