@@ -20,6 +20,7 @@
 					auto: false,
 					speed: 1000,
 					navi: false,
+					makeNavi: false,
 					delay: 5000,
 					containsControl : true,
 					controlScope : "",
@@ -35,7 +36,9 @@
 					pauseSelect :  ".pause",
 					playSelect : ".play",
 					stopSelect : ".stop",
-					naviSelect : ".navi > *"
+					naviContainer : ".navi",
+					naviSelect : "> *",
+					naviClass : "naviItem"
 				},
 				
 				// properties of this carrotCell
@@ -57,7 +60,7 @@
 				autoScroll, pause, play, stop, 
 				visible, advanceBy, pages, slideBy, prev, next, navi,
 				sliderSelect, sliderChildSelect, prevSelect, nextSelect,
-				pauseSelect, playSelect, stopSelect, naviSelect;
+				pauseSelect, playSelect, stopSelect, naviContainer, naviSelect;
 				
 			/** scroll the carousel
 			*/
@@ -252,6 +255,36 @@
 				});
 			};
 			
+			/** if set on auto create 
+			*/
+			var creatNavi = function(){
+				$(naviContainer).empty(); // clear the navi container
+				
+				// create the navi item names list, default is numbers
+				var itemNames = {};
+				for (var j = 1; j <= pages; j++) {
+					itemNames[j] = j;
+				}
+				
+				var nameList = $(naviContainer).data("navi");
+				if ((nameList !== undefined) && (nameList.length !== 0) ) {					
+					$(nameList).each(function(n){
+						itemNames[n+1] = nameList[n]; // add the names into itemnames
+					});								
+				} 
+				
+				var pre = '<div class="' + settings.naviClass +'">'; // default is div
+				var post = '</div>';
+				if ($(naviContainer).is("ul") || $(naviContainer).is("ol")) {
+					pre = '<li class="' + settings.naviClass +'">';
+					post = '</li>';				
+				} 
+				for (var i = 1; i <= pages; i++) {
+					$(naviContainer).append(pre + itemNames[i] + post);
+				}			
+				navi = $(naviContainer).find("> *"); // find all the things we just added
+			};
+			
 			/** set up navigation, only works on pages
 			*/
 			var setupNavi = function() {
@@ -259,6 +292,11 @@
 					$(navi).hide();	
 					return false;
 				}
+				
+				if (settings.makeNavi) {
+					creatNavi();
+				}
+				
 				$(navi).first().addClass(settings.current);
 				navi.each(function(iNav){
 					var thisNavi = this;
@@ -343,26 +381,20 @@
 			/** find how many pages there are
 			*/
 			var calculatePages = function(){		
-				// console.log("there are " + visible + " items visible but advance by is set to " + advanceBy);
-				
+				// console.log("there are " + visible + " items visible but advance by is set to " + advanceBy);				
 				if (visible !== advanceBy) {
 					pages = Math.ceil((totalItems - (visible - advanceBy)) / advanceBy);				
 				} else {
 					pages = Math.ceil(totalItems / advanceBy);																
 				}
-				
-				// console.log("pages is " + pages);
-				
-				// mysteriously this seems to work @_@
+				// console.log("pages: " + pages);
 				if ((totalItems % visible) != 0) {
 					extras = visible * Math.ceil(totalItems / visible) - totalItems;
 				} else {
 					extras = 0;
-				}
-									
+				}									
 				// console.log("extras " + extras); // this is how much is left over in the actual view		
-				// console.log(settings.name + "has total items " + totalItems + " advance by " + advanceBy + " total pages " + pages )	;
-				
+				// console.log(settings.name + "has total items " + totalItems + " advance by " + advanceBy + " total pages " + pages )	;				
 			};
 			
 			/** check if content is too short to scroll
@@ -447,7 +479,8 @@
 				pause = settings.controlScope.find(settings.pauseSelect);
 				play = settings.controlScope.find(settings.playSelect);
 				stop = settings.controlScope.find(settings.stopSelect);
-				navi = settings.controlScope.find(settings.naviSelect);
+				naviContainer = settings.controlScope.find(settings.naviContainer);
+				navi = naviContainer.find(settings.naviSelect);
 				
 				processCarrot();
 				assignCarrot();

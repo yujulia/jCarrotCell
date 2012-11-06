@@ -62,3 +62,7 @@
 .carrotCell .disabled {
 	display: none!important;
 }
+
+.naviItem {
+	display: inline;
+}

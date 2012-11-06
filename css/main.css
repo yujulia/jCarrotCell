@@ -227,7 +227,7 @@ p span{
 */
 
 table {
-	margin: 10px 0;
+	margin: 10px 0 50px 0;
 }
 
 th {
@@ -640,4 +640,8 @@ td code {
 	font-weight: bold;
 	border: none;
 	margin: 0;
+}
+
+.naviItem {
+	padding: 0 10px;
 }

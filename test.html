@@ -13,15 +13,18 @@
 	$(document).ready(function(){
 		window.carrotDemos = window.carrotDemos || {};
 		carrotDemos.setup = function() {
+			
 			$('#kittenx').carrotCell({
 				sliderSelect : "div",
 				sliderChildSelect : "div",
 				containsControl : false,
 				navi : true,
+				// makeNavi : true,
 				controlScope : "#kittenxNav",
 				prevSelect : "#goBack",
 				nextSelect : "#goForward",
-				step: 2
+				step: 2,
+				naviClass: "kittenItem"
 			});
 		
 		}
@@ -47,12 +50,12 @@
 		
 		<div id="kittenxNav">
 			<div id="goBack" class="btn">prev</div>
+			<!-- <div class="navi" data-navi='["item 1", "item 2"]'></div> -->
+			
 			<div class="navi">
-				<div>1</div>
+				<div>x<div>1</div></div>
 				<div>2</div>
 				<div>3</div>
-				<div>4</div>
-				<div>5</div>
 			</div>
 			<div id="goForward" class="btn">next</div>
 		</div>

@@ -64,27 +64,26 @@ var myCarouselAPI = $('#myCarousel').carrotCell({
 				<td>integer</td>
 				<td>5</td>
 				<td>
-					<p>How many items to advance by or how many items a "page" contains</p>
-					<p>If nothing is set for step, the page is assumed to be all visible elements in the container.</p> 
-					<p>This number should be smaller than the number of total items.</p>
+					<p>How many items to advance by, if not set, the items to advance by is assumed to be all current visible elements in the container.</p> 
+					<p>Step should be smaller than the number of total items and smaller than or equal to all visible elements in the container.</p>
 				</td>
-				<td>Number of items visible</td>
+				<td>Number of visible items</td>
 			</tr>
 			<tr>
 				<td>sideways</td>
 				<td>boolean</td>
-				<td>true</td>
-				<td>
-					<p>Make the carousel orientation horizontal if set to true.</p> 
-				</td>
 				<td>false</td>
+				<td>
+					<p>By default makes a horizontal scroller. Set to false to create a vertical or up and down scroller. Note your CSS must support this layout.</p> 
+				</td>
+				<td>true</td>
 			</tr>
 			<tr>
 				<td>infinite</td>
 				<td>boolean</td>
 				<td>true</td>
 				<td>
-					<p>Make the carousel scroll in circular, never ending motion when set to true.</p> 
+					<p>On reaching the end of the carousel, show from start again without rewinding.</p> 
 				</td>
 				<td>false</td>
 			</tr>
@@ -93,7 +92,7 @@ var myCarouselAPI = $('#myCarousel').carrotCell({
 				<td>boolean</td>
 				<td>true</td>
 				<td>
-					<p>Make the carousel auto scroll forward.</p> 
+					<p>Make the carousel automatically scroll forward on a timer.</p> 
 					<p>This will make the carousel infinite by default.</p> 
 				</td>
 				<td>false</td>
@@ -112,7 +111,7 @@ var myCarouselAPI = $('#myCarousel').carrotCell({
 				<td>integer (milisecs)</td>
 				<td>9000</td>
 				<td>
-					<p>The speed at which the carousel  scrolls.</p> 
+					<p>The speed at which the carousel does its scroll animation.</p> 
 				</td>
 				<td>1000</td>
 			</tr>
@@ -122,7 +121,18 @@ var myCarouselAPI = $('#myCarousel').carrotCell({
 				<td>true</td>
 				<td>
 					<p>Indicate that an external navigation is included.</p> 
-					<p>The number of navi items must correspond to the number of pages used.</p> 
+					<p>The number of navi items created must correspond to the number of pages used if not using makeNavi.</p> 
+					<p>There must be an element of class .navi in the HTML with direct descendent children used as each navigation item inside.</p>
+				</td>
+				<td>false</td>
+			</tr>
+			<tr>
+				<td>makeNavi</td>
+				<td>boolean</td>
+				<td>false</td>
+				<td>
+					<p>Generate the paging navigation automatically.</p> 
+					<p>The container for navi must already exist and have the .navi class.</p> 
 				</td>
 				<td>false</td>
 			</tr>
@@ -140,7 +150,7 @@ var myCarouselAPI = $('#myCarousel').carrotCell({
 				<td>boolean</td>
 				<td>true</td>
 				<td>
-					<p>Stop auto advance when the mouse is inside the carousel.</p> 
+					<p>Stop auto advance when the mouse is hovering over the carousel.</p> 
 				</td>
 				<td>false</td>
 			</tr>
@@ -180,7 +190,7 @@ var myCarouselAPI = $('#myCarousel').carrotCell({
 				</td>
 				<td>
 					<p>Indicates wether the carrotCell controls are contained inside .carrotCell or elsewhere in the DOM.</p> 
-					<p>Set the property controlScope to designate a new scope</p>		
+					<p>Set the property controlScope (see below for Selector Configurations) to designate a new scope</p>		
 					<p>If there is no controlScope set, the body is assumed to be the new scope of controls.</p> 
 				</td>
 				<td>true</td>
@@ -219,6 +229,14 @@ var myCarouselAPI = $('#myCarousel').carrotCell({
 				<td>"invisible"</td>
 			</tr>
 			<tr>
+				<td>naviClass</td>
+				<td>"dot"</td>
+				<td>
+					<p>The classname for the individual navi page items.</p> 
+				</td>
+				<td>"naviItem"</td>
+			</tr>
+			<tr>
 				<td>current</td>
 				<td>"on"</td>
 				<td>
@@ -226,6 +244,7 @@ var myCarouselAPI = $('#myCarousel').carrotCell({
 				</td>
 				<td>"current"</td>
 			</tr>
+						
 		</table>
 		
 		<h3>Selector Configuration</h3>
@@ -272,7 +291,7 @@ var myCarouselAPI = $('#myCarousel').carrotCell({
 					<p>It will only be used if containsControl is set to TRUE.</p>
 					<p>If containsControl is set to TRUE and no controlScope is provided, the default is "body"</p>
 				</td>
-				<td>this ".carrotCell"</td>
+				<td>current ".carrotCell"</td>
 			</tr>
 			<tr>
 				<td>prevSelect</td>
@@ -318,18 +337,24 @@ var myCarouselAPI = $('#myCarousel').carrotCell({
 					<p>Stop the autoplay.</p>
 				</td>
 				<td>".stop"</td>
-			</tr>
-			
+			</tr>			
 			<tr>
 				<td>naviSelect</td>
 				<td>controlScope</td>
 				<td>"#navigation li.naviThing"</td>
 				<td>
-					<p>The per page navigation controls.</p>
-					<p>Note this selects each individual node inside naviSelect</p> 
-					<p>It should return the same number of elements as the total pages of the carrotCell.</p>
+					<p>The selection of individual clickable items inside the navi that advances the pages as determined by step parameter of the carousel.</p>
 				</td>
-				<td>".navi > *"</td>
+				<td>"> *"</td>
+			</tr>
+			<tr>
+				<td>naviContainer</td>
+				<td>controlScope</td>
+				<td>".myspecialnavi"</td>
+				<td>
+					<p>The container that houses the navi.</p>
+				</td>
+				<td>".navi"</td>
 			</tr>
 		</table>
 
