@@ -64,5 +64,5 @@
 }
 
 .naviItem {
-	display: inline;
+	display: inline-block;
 }

@@ -357,6 +357,29 @@ var myCarouselAPI = $('#myCarousel').carrotCell({
 				<td>".navi"</td>
 			</tr>
 		</table>
+		
+		<h3>Inline Configuration</h3>
+		<table>
+			<thead>
+				<tr>
+					<th>Config Property</th>
+					<th>Example</th>
+					<th>Description</th>
+					<th>Default</th>
+				</tr>
+			</thead>
+
+			<tr>
+				<td>naming the navi items in makeNavi mode</td>
+				<td>&lt;div class="navi" data-navi='["item 1", "item 2"]'&gt;&lt;/div&gt;</td>
+				<td>
+					<p>Instead of the default 1...n add names to the navi individual items by passing it as a data attribute.</p> 
+					<p>If you only pass 2 names and there are 4 pages, you will see "item 1, item 2, 3, 4, 5" etc with the passed in transposed over the default</p>
+				</td>
+				<td>1,2,3...n</td>
+			</tr>						
+		</table>
+		
 
 	</article>
 	
