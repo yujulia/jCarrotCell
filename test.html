@@ -23,6 +23,8 @@
 				controlScope : "#kittenxNav",
 				prevSelect : "#goBack",
 				nextSelect : "#goForward",
+				delay: 1000,
+				// auto: true,
 				step: 1
 			});
 			
@@ -30,8 +32,8 @@
 			
 			$("#moveThis").bind("click", function(e){
 				e.preventDefault();
-				console.log("move");
-				api.advance();
+				var insertedAt = api.insert('<div><div>strange cat</div><img src="images/cat07.png" /></div>'); 
+				api.moveToPage(insertedAt);
 			});
 		
 		}
@@ -78,7 +80,7 @@
 			</div>
 		</div>
 		
-		<a href="#" id="moveThis">move</a>		
+		<a href="#" id="moveThis">insert</a>		
 		
 	</article>
 

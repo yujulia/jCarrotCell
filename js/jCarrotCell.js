@@ -512,8 +512,9 @@
 				*/
 				moveToPage : function(movePage) {
 					movePage = parseInt(movePage);
-					if (isNaN(movePage)) {  return false; }					
-					if ((movePage < 1) || (movePage > pages)) { return false; }
+					if (isNaN(movePage)) {  return false; }		
+					if (movePage < 1) { movePage = 1; }
+					if (movePage > pages) { movePage = pages; }
 					gotoPage(movePage); // move
 				},
 				
@@ -560,22 +561,28 @@
 				insert : function(newItem, index) {
 					if (!newItem) { return false; }
 					index = parseInt(index);
-					if (isNaN(index)) { index = items.length; } // if no index add at end -- how to account for clones???
-					if (index < 1 ) { index = 1; } // range check
+					if (isNaN(index)) { index = items.length; } // if no index add at end 		
+					if (index < 1 ) { index = 1; } // range reset if for some reason its negative...					
 					if (index > items.length ) { index = items.length; } // rang check
 					
-					if (index == items.length) {
-						slider.append(newItem); // append at end
-					} else if (index <= 1){
-						$(settings.sliderChildSelect + ':first', slider).before(newItem); // append at start
+					// if auto
+					if (settings.infinite || settings.auto) {
+						
 					} else {
-						$(settings.sliderChildSelect, slider).eq(index-1).before(newItem); // insert at index
+						// a normal insert
+						if (index == items.length) {
+							slider.append(newItem); // append at end
+						} else if (index == 1){
+							$(settings.sliderChildSelect + ':first', slider).before(newItem); // append at start
+						} else {
+							$(settings.sliderChildSelect, slider).eq(index-1).before(newItem); // insert at index
+						}					
+						findItems();
+						processCarrot();
+						determinePrevNext();
 					}
-					
-					findItems();
-					processCarrot();
-					determinePrevNext();
-
+						
+					return index; // return the position we inserted at
 				},
 
 				/** load an entire new set of slides
