@@ -70,13 +70,13 @@
 					scrollTo = singleSize * dir * advanceBy * n;
 				
 				// if there is an navi on auto advance the navi
-				if (settings.navi && settings.auto) {
-					var thisNavi = page;
-					if (page > pages) { thisNavi = 1; } // rewind if we passed the page limit
-					thisNavi--;
-					navi.removeClass(settings.current);
-					$(navi[thisNavi]).addClass(settings.current);
-				}
+				// if (settings.navi && settings.auto) {
+				// 	var thisNavi = page;
+				// 	if (page > pages) { thisNavi = 1; } // rewind if we passed the page limit
+				// 	thisNavi--;
+				// 	navi.removeClass(settings.current);
+				// 	$(navi[thisNavi]).addClass(settings.current);
+				// }
 				
 				// set the current page we are to be on after this
 				var thisPage = currentPage;
@@ -302,7 +302,7 @@
 					var thisNavi = this;
 					var navIndex = iNav + 1;
 					$(thisNavi).bind("click", function(){
-						if (playing && settings.stopOnClick) {  stopCell(); }	
+						if (playing && settings.stopOnClick) {  stopCell(); }
 						$(this).siblings().removeClass(settings.current);
 						$(this).addClass(settings.current);
 						
@@ -312,16 +312,20 @@
 							determinePrevNext(navIndex);
 						}
 					});
-				});
+				});		
 				
 				// subscribe to moving and make sure it is our thing that's moving
 				settings.controlScope.bind("moving", function(e, cell, pageNum) {
 					if (cell == settings.name) {
 						$(navi).removeClass(settings.current);
+						if (pageNum > pages) {
+							pageNum = 1;
+						}
 						var thisNavi = $(navi)[parseInt(pageNum)-1];
 						$(thisNavi).addClass(settings.current);
 					}
-				});
+				});		
+				
 			};
 			
 			/** assign handlers
@@ -382,11 +386,12 @@
 			*/
 			var calculatePages = function(){		
 				// console.log("there are " + visible + " items visible but advance by is set to " + advanceBy);				
-				if (visible !== advanceBy) {
+				if ((visible !== advanceBy) && (!settings.auto)) {
 					pages = Math.ceil((totalItems - (visible - advanceBy)) / advanceBy);				
 				} else {
 					pages = Math.ceil(totalItems / advanceBy);																
 				}
+				
 				// console.log("pages: " + pages);
 				if ((totalItems % visible) != 0) {
 					extras = visible * Math.ceil(totalItems / visible) - totalItems;
