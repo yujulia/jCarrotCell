@@ -69,15 +69,6 @@
 		            n = Math.abs(currentPage - page),
 					scrollTo = singleSize * dir * advanceBy * n;
 				
-				// if there is an navi on auto advance the navi
-				// if (settings.navi && settings.auto) {
-				// 	var thisNavi = page;
-				// 	if (page > pages) { thisNavi = 1; } // rewind if we passed the page limit
-				// 	thisNavi--;
-				// 	navi.removeClass(settings.current);
-				// 	$(navi[thisNavi]).addClass(settings.current);
-				// }
-				
 				// set the current page we are to be on after this
 				var thisPage = currentPage;
 				if (dir < 0) { thisPage--; } else { thisPage++; }
@@ -285,6 +276,21 @@
 				navi = $(naviContainer).find("> *"); // find all the things we just added
 			};
 			
+			/** subscribe to moving and make sure it is our thing that's moving
+			*/
+			var updateMovingNavi = function() {
+				settings.controlScope.bind("moving", function(e, movingThing, pageNum) {
+					if (movingThing == settings.name) {
+						$(navi).removeClass(settings.current);
+						if (pageNum > pages) {
+							pageNum = 1;
+						}
+						var thisNavi = $(navi)[parseInt(pageNum)-1];
+						$(thisNavi).addClass(settings.current);
+					}
+				});
+			};
+			
 			/** set up navigation, only works on pages
 			*/
 			var setupNavi = function() {
@@ -314,18 +320,8 @@
 					});
 				});		
 				
-				// subscribe to moving and make sure it is our thing that's moving
-				settings.controlScope.bind("moving", function(e, cell, pageNum) {
-					if (cell == settings.name) {
-						$(navi).removeClass(settings.current);
-						if (pageNum > pages) {
-							pageNum = 1;
-						}
-						var thisNavi = $(navi)[parseInt(pageNum)-1];
-						$(thisNavi).addClass(settings.current);
-					}
-				});		
-				
+				updateMovingNavi();
+					
 			};
 			
 			/** assign handlers
@@ -384,22 +380,17 @@
 			
 			/** find how many pages there are
 			*/
-			var calculatePages = function(){		
-				// console.log("there are " + visible + " items visible but advance by is set to " + advanceBy);				
+			var calculatePages = function(){						
 				if ((visible !== advanceBy) && (!settings.auto)) {
 					pages = Math.ceil((totalItems - (visible - advanceBy)) / advanceBy);				
 				} else {
 					pages = Math.ceil(totalItems / advanceBy);																
-				}
-				
-				// console.log("pages: " + pages);
+				}				
 				if ((totalItems % visible) != 0) {
 					extras = visible * Math.ceil(totalItems / visible) - totalItems;
 				} else {
 					extras = 0;
-				}									
-				// console.log("extras " + extras); // this is how much is left over in the actual view		
-				// console.log(settings.name + "has total items " + totalItems + " advance by " + advanceBy + " total pages " + pages )	;				
+				}												
 			};
 			
 			/** check if content is too short to scroll
@@ -631,8 +622,7 @@
 
 				// set up the api data to access the object
 				var data = $(this).data('carrotCell');
-				if (!data) { $(this).data('carrotCell', methods.carrots[opt.name]); }
-				
+				if (!data) { $(this).data('carrotCell', methods.carrots[opt.name]); }				
 			});
 		}
 	};
