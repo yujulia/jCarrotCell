@@ -500,49 +500,45 @@
 					if ((typeof settings.carrotDone) == "function") { settings.carrotDone(this); }
 				},
 				
-				/** find out which carrot
+				/** find out this carrot instance's name
 				*/
-				whichCarrot : function(){
-					console.log("hi this is carrotCell " + settings.name);
-					return settings.name;
-				},
+				whichCarrot : function(){ return settings.name; },
 				
-				getPageCount : function(){
-					console.log(settings.name + " has pages " + pages);
-					return pages;
-				},
-				
-				/** move to the page passed in if its a number
+				/** find out how many pages this carrot has
 				*/
-				move : function(movePage) {
-
+				getPageCount : function(){ return pages; },
+				
+				/** move to the page passed in if its a number in range
+				*/
+				moveToPage : function(movePage) {
 					movePage = parseInt(movePage);
-					if (isNaN(movePage)) { 
-						movePage = currentPage;
-						console.log(pages);
-					}
-					if (!movePage) { movePage = currentPage + 1; } // move 1 forward by default
-					
-					if (settings.infinite) {
-						if (movePage < 1) { movePage = pages; } // circular check
-						if (movePage > pages) { movePage = 1; } // circular check
-					} else {
-						if (movePage < 1) { movePage = 1; } // range check
-						if (movePage > pages) { movePage = pages; } // range check
-					}
+					if (isNaN(movePage)) {  return false; }					
+					if ((movePage < 1) || (movePage > pages)) { return false; }
 					gotoPage(movePage); // move
 				},
-
+				
+				/** move forward by one
+				*/
 				advance : function() { moveForward(); },
 				
+				/** move backward by one
+				*/
 				rewind : function() { moveBack(); },
 
+				/** stop auto
+				*/
 				stop : function() { stopCell() },
 				
+				/** resume auto play
+				*/
 				play : function() { playCell() },
 				
+				/** pause auto play
+				*/
 				pause : function() { pauseCell() },
 				
+				/** remove all carrot items
+				*/
 				empty : function() { $(items).remove(); },
 				
 				/** remove an item from the carousel (by index)
@@ -564,7 +560,7 @@
 				insert : function(newItem, index) {
 					if (!newItem) { return false; }
 					index = parseInt(index);
-					if (isNaN(index)) { index = items.length; }
+					if (isNaN(index)) { index = items.length; } // if no index add at end -- how to account for clones???
 					if (index < 1 ) { index = 1; } // range check
 					if (index > items.length ) { index = items.length; } // rang check
 					
@@ -582,27 +578,23 @@
 
 				},
 
-				/** add a bunch of new item to the carousel
+				/** load an entire new set of slides
 				*/
-				load : function(newItems) {
+				reloadWith : function(newItems) {
 					if (!items) { return false; }		
 					$(items).remove(); 
 					slider.append(newItems); // append at end
 					findItems();
 					calculatePages();
 					adjustSlideSize();
-					
-					// rewind to beginning on load
-					gotoPage(1);
+					gotoPage(1); // rewind to beginning on load
 					currentPage = 1;
 					determinePrevNext();
 				},
 				
-				/** self api, not ever used... maybe in the future
+				/** set api for internal access for whatever reason
 				*/
-				setAPI : function(newAPI) {
-					api = newAPI;
-				}
+				setAPI : function(newAPI) { api = newAPI; }
 			}
 		},
 		

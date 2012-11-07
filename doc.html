@@ -389,7 +389,7 @@ var myCarouselAPI = $('#myCarousel').carrotCell({
 		<code>
 			var myCarrot = $('#someCarrotCell').carrotCell(); <span>// save the created carrotCell</span><br />
 			var myAPI = $(myCarrot).data('carrotCell'); <span>//retrieve the API</span><br />
-			myAPI.move(4); <span>// call a method of the API</span>
+			myAPI.moveToPage(4); <span>// call a method of the API to move to page 4</span>
 		</code>
 		
 		<p>The configuration options are passed into the carrotCell as an object on creation.</p>
@@ -405,14 +405,13 @@ var myCarouselAPI = $('#myCarousel').carrotCell({
 			</thead>
 
 			<tr>
-				<td>move</td>
+				<td>moveToPage</td>
 				<td>pageNumber (integer)</td>
 				<td>	
-					api.move(2);
+					api.moveToPage(2);
 				</td>
 				<td>
-					<p>Move to page n of the carousel.</p>
-					<p>If the page number is out of range, it moves either to the first or the last page.</p>
+					<p>Move to page n of the carousel. Does nothing if the page number is out of range or no number is passed in.</p>
 				</td>
 			</tr>
 			<tr>
@@ -447,13 +446,13 @@ var myCarouselAPI = $('#myCarousel').carrotCell({
 				</td>
 			</tr>
 			<tr>
-				<td>load</td>
+				<td>reloadWith</td>
 				<td>newItems (string)</td>
 				<td>
-					api.load('&lt;li&gt;item 1&lt;/li&gt; &lt;li&gt;item 2&lt;/li&gt;');
+					api.reloadWith('&lt;li&gt;item 1&lt;/li&gt; &lt;li&gt;item 2&lt;/li&gt;');
 				</td>
 				<td>
-					<p>Load multiple slides into the carousel after clearing existing content.</p>
+					<p>Load a new set of slides into the carousel, completely removing previous content.</p>
 				</td>
 			</tr>
 			<tr>

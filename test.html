@@ -14,7 +14,7 @@
 		window.carrotDemos = window.carrotDemos || {};
 		carrotDemos.setup = function() {
 			
-			$('#kittenx').carrotCell({
+			var test = $('#kittenx').carrotCell({
 				sliderSelect : "div",
 				sliderChildSelect : "div",
 				containsControl : false,
@@ -23,8 +23,15 @@
 				controlScope : "#kittenxNav",
 				prevSelect : "#goBack",
 				nextSelect : "#goForward",
-				step: 2,
-				auto: true
+				step: 1
+			});
+			
+			var api = $(test).data('carrotCell');
+			
+			$("#moveThis").bind("click", function(e){
+				e.preventDefault();
+				console.log("move");
+				api.advance();
 			});
 		
 		}
@@ -69,7 +76,9 @@
 					<div><div>9</div><img src="images/cat09.png"></div>
 		        </div>     
 			</div>
-		</div>		
+		</div>
+		
+		<a href="#" id="moveThis">move</a>		
 		
 	</article>
 
