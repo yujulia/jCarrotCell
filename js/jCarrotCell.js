@@ -52,12 +52,13 @@
 				stopped = false,
 				scrolling = false,
 				visibleDifference = 0,
-				emptySlots = 0,
+				extraMoves = 0,
 				enoughToScroll = false,
 				api, view, slider, items, single, totalItems,
 				frameSize, singleSize, viewSize,
 				autoScroll, pause, play, stop, 
-				visible, advanceBy, pages, prev, next, navi,
+				visible, advanceBy, pages, realPages,
+				prev, next, navi,
 				sliderSelect, sliderChildSelect, prevSelect, nextSelect,
 				pauseSelect, playSelect, stopSelect, naviContainer, naviSelect;
 				
@@ -83,108 +84,69 @@
 				// }
 			};
 				
-			/** scroll the carousel
+			/** scroll the carousel by advancing to the next page
 			*/
 			var gotoPage = function(page) {
-				// figure out the direction we are scrolling and how much to scroll by
-				var dir = page < currentPage ? -1 : 1,
-		            n = Math.abs(currentPage - page),
-					scrollTo = singleSize * dir * advanceBy * n;								
-
-				// this function is called after the animation stops
-				var scrollHandler = function(){
-					var scrollThis = 0;	
+				if (!page) { page = currentPage; }
+				
+				if (settings.infinite) { 
 					
-					// this case is for going backwards in an infinite scroll
+				} 
+				
+				// should do bounds check for non infinite
+				
+				var dir = page < currentPage ? -1 : 1, // what direction are we going
+		            n = Math.abs(currentPage - page), // how many pages to scroll
+					scrollTo = singleSize * dir * advanceBy * n; // how far in pixels		
 					
-					console.log("right now page is " + page);
-					if (page < 0) {
-						
-						if (visible == advanceBy ) { 	
-								
-							scrollThis = singleSize * advanceBy * pages - emptySlots * singleSize;			
-							console.log(" visible is advanced by " + scrollThis);	
-						}  else {
+					// this function is called after the animation stops
+					var scrollHandler = function(){
+						var scrollThis = 0;
+						// console.log(" scroll handler page is " + page);
+						// we are exceeding page numbers!
+						if (page > pages) {
+							console.log("page is bigger than pages");
+	
+							scrollThis = singleSize * visible;
+							// console.log("scroll this " + scrollThis);
+							if (settings.sideways) { 
+								// view.scrollLeft(scrollThis); 
+								view.animate({ scrollLeft :  '+=' + scrollThis }, settings.speed/2);
+								page = 1;
+							} else { 
+								view.scrollTop(scrollThis); 
+							}
 							
-							scrollThis = singleSize * advanceBy * pages + emptySlots * singleSize;
-							console.log(" visible is not equal to advanced by " + scrollThis);	
-						}
+											
+						} 
+	
+						currentPage = page;
+						settings.controlScope.trigger("carrotScrollEnd", [settings.name, currentPage, currentItem]);
+						scrolling = false;
+
 						
-						if (settings.sideways) { view.scrollLeft(scrollThis); } else { view.scrollTop(scrollThis); }
-						page = pages;
-					}
-					
-					if (page > pages) {
-						scrollThis = singleSize * visible; // scroll to the start again
-						if (settings.sideways) { view.scrollLeft(scrollThis); } else { view.scrollTop(scrollThis); }
-						page = 1; // reset back to start position
-					}      				
-														                
-					currentPage = page;
-					scrolling = false;
-					
-					// if current page is 0 we are in the weird place
-										
-					findCurrentItem(); // figure out the current first visible item	
-					settings.controlScope.trigger("carrotScrollEnd", [settings.name, page, currentItem]);
-					
-					console.log("current page set to " + currentPage + " total pages " + pages)
-				};
+					};
 				
 				// broadcast event that carousel is moving as we start the animation
-				settings.controlScope.trigger("carrotScrollStart", [settings.name, page, currentItem]);
+				settings.controlScope.trigger("carrotScrollStart", [settings.name, currentPage, currentItem]);
 				scrolling = true;
+				
 				if (settings.sideways) {
 					view.filter(':not(:animated)').animate({ scrollLeft : '+=' + scrollTo }, settings.speed, scrollHandler);
 				} else {
 					view.filter(':not(:animated)').animate({ scrollTop : '+=' + scrollTo }, settings.speed, scrollHandler);
 				}
 			};
-			
-			/** this only goes forward by 1, note a page forward
-				only for insert
-			*/
-			var moveOnInsert = function() {
-				var scrollTo = singleSize * advanceBy;
-				var moveScrollHandler = function(){
-					var scrollThis = singleSize * advanceBy * pages + emptySlots * singleSize;
-					if (settings.sideways) { view.scrollLeft(scrollThis); } else { view.scrollTop(scrollThis); }
-					scrolling = false;
-				};
 
-				scrolling = true;
-				if (settings.sideways) {
-					view.filter(':not(:animated)').animate({ scrollLeft : '+=' + scrollTo }, settings.speed, moveScrollHandler);
-				} else {
-					view.filter(':not(:animated)').animate({ scrollTop : '+=' + scrollTo }, settings.speed, moveScrollHandler);
-				}
-			}
-			
-			/** show previous and next depending on boolean set in determinePrevNext
-			*/
-			var showPrevNext = function() {
-				if (haveBack) { prev.removeClass(settings.off); } else { prev.addClass(settings.off); }
-				if (haveForward) { next.removeClass(settings.off); } else { next.addClass(settings.off); }
-			};
-			
-			/** determine the prev and next
+			/** determine if the previous and next buttons should be active based on the next page they will be linking to
 			*/
 			var determinePrevNext = function(nextPage) {
-				if (settings.infinite) { return false; } // do nothing if its infinite
-				
+				if (settings.infinite) { return false; } // do nothing if its infinite	
+							
 				if (nextPage <= 1) { haveBack = false; } else { haveBack = true; };
-				if (nextPage >= pages) { haveForward = false; } else { haveForward = true; };
-				if (!nextPage) { 
-					if (currentPage == 1) {
-						haveBack = false; 
-					}
-				}
-				
-				var currentSlide = nextPage * settings.step; // the last slide out of view
-				var endSlide = currentSlide + visibleDifference; // the last slide in view
-				if (endSlide >= totalItems) { haveForward = false; }
-				
-				showPrevNext();
+				if (nextPage >= pages) { haveForward = false; } else { haveForward = true; };								
+				if (haveBack) { prev.removeClass(settings.off); } else { prev.addClass(settings.off); }
+				if (haveForward) { next.removeClass(settings.off); } else { next.addClass(settings.off); }
 			};
 
 			/** move carousel back
@@ -199,8 +161,7 @@
 			/** move carousel forward
 			*/
 			var moveForward = function() {
-				if (!settings.infinite && (currentPage >= pages)) { return false; } // we are at the right most page
-				
+				if (!settings.infinite && (currentPage >= pages)) { return false; } // we are at the right most page				
 				var nextPage = currentPage + 1;
 				gotoPage(nextPage);
 				determinePrevNext(nextPage);
@@ -208,7 +169,7 @@
 			
 			/** set up the interval
 			*/
-			var goScroll = function(){
+			var startAutoAdvance = function(){
 				window.clearInterval(autoScroll);
 				autoScroll = this.setInterval(function(){ if (!paused) { moveForward(); } }, settings.delay);
 			};
@@ -235,7 +196,7 @@
 				play.addClass(settings.unseen);
 				stop.removeClass(settings.unseen);
 				pause.removeClass(settings.unseen);
-				goScroll();
+				startAutoAdvance();
 			};
 			
 			/** resume the auto play
@@ -315,10 +276,9 @@
 			var handleNaviAutoscroll = function() {
 				settings.controlScope.bind("carrotScrollStart", function(e, movingThing, pageNum) {
 					if (movingThing == settings.name) {
-						// update the navi to select the appropriate page
 						$(navi).removeClass(settings.current);
 						if (pageNum > pages) { pageNum = 1; } // rewind if at end
-						var thisNavi = $(navi)[parseInt(pageNum)-1];
+						var thisNavi = $(navi)[parseInt(pageNum)];
 						$(thisNavi).addClass(settings.current);
 					}
 				});
@@ -426,13 +386,23 @@
 			
 			/** find out if we have any weird empty spots in a page
 			*/
-			var howManyEmptySlots = function(){	
-				if ((totalItems % visible) != 0) {
-					emptySlots = visible * Math.ceil(totalItems / visible) - totalItems;
+			var howManyExtraMoves = function(){	
+				if (advanceBy == visible) {
+					extraMoves = 0; // no worries
 				} else {
-					emptySlots = 0;
-				}			
-				console.log(emptySlots + " emptySlots");
+					var lastPageStartingNum = (pages-1) * advanceBy + 1;
+					console.log("starting last page slide at " + lastPageStartingNum);
+					
+					var lastThingAt = totalItems - lastPageStartingNum + 1;
+					console.log(lastThingAt +" last thing at");
+
+					extraMoves = visible - lastThingAt; 			
+					if (extraMoves == 0) {
+						extraMoves = visible; 
+					}
+				}
+								
+				console.log(extraMoves + " extraMoves");
 			};
 			
 			/** clone a slider worth of clones at beginning and end
@@ -461,7 +431,7 @@
 				if (settings.makeNavi) { settings.navi = true; }
 				
 				howManyPages();
-				howManyEmptySlots();
+				howManyExtraMoves();
 
 				if (settings.infinite) {		
 					padWithClones();						
@@ -648,7 +618,7 @@
 						}					
 						findSlides();
 						setupCarrot();
-						determinePrevNext();
+					//	determinePrevNext(); // ??? basically this needs to reset next
 					}
 						
 					return index; // return the position we inserted at
