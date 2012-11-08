@@ -24,8 +24,9 @@
 				prevSelect : "#goBack",
 				nextSelect : "#goForward",
 				delay: 1000,
+				infinite: true,
 				// auto: true,
-				step: 1
+				step: 2
 			});
 			
 			var api = $(test).data('carrotCell');
@@ -33,7 +34,7 @@
 			$("#moveThis").bind("click", function(e){
 				e.preventDefault();
 				var insertedAt = api.insert('<div><div>strange cat</div><img src="images/cat07.png" /></div>'); 
-				api.moveToPage(insertedAt);
+				api.moveToPage(0);
 			});
 		
 		}

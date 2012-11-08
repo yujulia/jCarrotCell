@@ -52,49 +52,87 @@
 				stopped = false,
 				scrolling = false,
 				visibleDifference = 0,
-				leftover = 0,
-				inpage = 0,
-				extras = 0,
+				emptySlots = 0,
+				enoughToScroll = false,
 				api, view, slider, items, single, totalItems,
 				frameSize, singleSize, viewSize,
 				autoScroll, pause, play, stop, 
-				visible, advanceBy, pages, slideBy, prev, next, navi,
+				visible, advanceBy, pages, prev, next, navi,
 				sliderSelect, sliderChildSelect, prevSelect, nextSelect,
 				pauseSelect, playSelect, stopSelect, naviContainer, naviSelect;
+				
+				
+			/** find the current item in the leftmost or top of the carousel
+			*/
+			var findCurrentItem = function(){
+				
+				// we know the current page but we dont know what the left most item is
+				
+				// console.log("current page " +currentPage);
+				// var thisPage = currentPage -1;
+				// if (dir < 0) { thisPage--; } else { thisPage++; }
+				// 
+				// currentItem = advanceBy * thisPage + dir;
+				// 			
+				// if (currentItem > totalItems) { 
+				// 	currentItem = 1; // rewind back to beginning
+				// }
+				// if (currentItem < 1) {
+				// 	var what = totalItems + currentItem;
+				// 	console.log("what " + what);
+				// }
+			};
 				
 			/** scroll the carousel
 			*/
 			var gotoPage = function(page) {
+				// figure out the direction we are scrolling and how much to scroll by
 				var dir = page < currentPage ? -1 : 1,
 		            n = Math.abs(currentPage - page),
-					scrollTo = singleSize * dir * advanceBy * n;
-				
-				// set the current page we are to be on after this
-				var thisPage = currentPage;
-				if (dir < 0) { thisPage--; } else { thisPage++; }
-				currentItem = advanceBy * thisPage + dir;
+					scrollTo = singleSize * dir * advanceBy * n;								
 
 				// this function is called after the animation stops
 				var scrollHandler = function(){
-					var scrollThis = 0;
-					if (page == 0) {
-						scrollThis = singleSize * advanceBy * pages + extras * singleSize;
-						// weird hack
-						if (visible == advanceBy ) { scrollThis = singleSize * advanceBy * pages - extras * singleSize; }			
+					var scrollThis = 0;	
+					
+					// this case is for going backwards in an infinite scroll
+					
+					console.log("right now page is " + page);
+					if (page < 0) {
+						
+						if (visible == advanceBy ) { 	
+								
+							scrollThis = singleSize * advanceBy * pages - emptySlots * singleSize;			
+							console.log(" visible is advanced by " + scrollThis);	
+						}  else {
+							
+							scrollThis = singleSize * advanceBy * pages + emptySlots * singleSize;
+							console.log(" visible is not equal to advanced by " + scrollThis);	
+						}
+						
 						if (settings.sideways) { view.scrollLeft(scrollThis); } else { view.scrollTop(scrollThis); }
 						page = pages;
-					} else if (page > pages) {
-						scrollThis = singleSize * visible;
+					}
+					
+					if (page > pages) {
+						scrollThis = singleSize * visible; // scroll to the start again
 						if (settings.sideways) { view.scrollLeft(scrollThis); } else { view.scrollTop(scrollThis); }
 						page = 1; // reset back to start position
-					}         				                
+					}      				
+														                
 					currentPage = page;
 					scrolling = false;
-					settings.controlScope.trigger("movingDone", [settings.name, page]);
+					
+					// if current page is 0 we are in the weird place
+										
+					findCurrentItem(); // figure out the current first visible item	
+					settings.controlScope.trigger("carrotScrollEnd", [settings.name, page, currentItem]);
+					
+					console.log("current page set to " + currentPage + " total pages " + pages)
 				};
 				
-				// broadcast event that carousel is moving
-				settings.controlScope.trigger("moving", [settings.name, page]);
+				// broadcast event that carousel is moving as we start the animation
+				settings.controlScope.trigger("carrotScrollStart", [settings.name, page, currentItem]);
 				scrolling = true;
 				if (settings.sideways) {
 					view.filter(':not(:animated)').animate({ scrollLeft : '+=' + scrollTo }, settings.speed, scrollHandler);
@@ -109,7 +147,7 @@
 			var moveOnInsert = function() {
 				var scrollTo = singleSize * advanceBy;
 				var moveScrollHandler = function(){
-					var scrollThis = singleSize * advanceBy * pages + extras * singleSize;
+					var scrollThis = singleSize * advanceBy * pages + emptySlots * singleSize;
 					if (settings.sideways) { view.scrollLeft(scrollThis); } else { view.scrollTop(scrollThis); }
 					scrolling = false;
 				};
@@ -177,7 +215,7 @@
 			
 			/** pause the auto play
 			*/
-			var pauseCell = function() {
+			var pauseCarrotCell = function() {
 				if (paused) { return false; }
 				paused = true;
 				playing = false;
@@ -189,7 +227,7 @@
 			
 			/** resume the auto play
 			*/
-			var playCell = function() {
+			var playCarrotCell = function() {
 				if (playing) { return false; }
 				paused = false;
 				stopped = false;
@@ -202,7 +240,7 @@
 			
 			/** resume the auto play
 			*/
-			var stopCell = function() {
+			var stopCarrotCell = function() {
 				if (stopped) { return false; }
 				paused = false;
 				stopped = true;
@@ -218,20 +256,20 @@
 			var setupAutoAdvance = function(){
 				pause.bind("click", function(e){
 					e.preventDefault();
-					pauseCell();
+					pauseCarrotCell();
 				});
 				play.bind("click", function(e){
 					e.preventDefault();
-					playCell();
+					playCarrotCell();
 				});
 				stop.bind("click", function(e){
 					e.preventDefault();
-					stopCell();
+					stopCarrotCell();
 				});
-				playCell();
+				playCarrotCell();
 			};
 
-			/** up down for vertical, left right for horizonal
+			/** up down for vertical, left right for horizonal arrow key movement
 			*/
 			var setupKeyAdvance = function() {
 				$(document).keydown(function(e){
@@ -246,21 +284,17 @@
 				});
 			};
 			
-			/** if set on auto create 
+			/** auto create navi 
 			*/
 			var creatNavi = function(){
 				$(naviContainer).empty(); // clear the navi container
-				
-				// create the navi item names list, default is numbers
 				var itemNames = {};
-				for (var j = 1; j <= pages; j++) {
-					itemNames[j] = j;
-				}
+				for (var j = 1; j <= pages; j++) { itemNames[j] = j; }
 				
 				var nameList = $(naviContainer).data("navi");
 				if ((nameList !== undefined) && (nameList.length !== 0) ) {					
 					$(nameList).each(function(n){
-						itemNames[n+1] = nameList[n]; // add the names into itemnames
+						itemNames[n+1] = nameList[n]; // add the names into item names if they exist
 					});								
 				} 
 				
@@ -276,15 +310,14 @@
 				navi = $(naviContainer).find("> *"); // find all the things we just added
 			};
 			
-			/** subscribe to moving and make sure it is our thing that's moving
+			/** subscribe to scrolling and make sure it is our thing that's moving
 			*/
-			var updateMovingNavi = function() {
-				settings.controlScope.bind("moving", function(e, movingThing, pageNum) {
+			var handleNaviAutoscroll = function() {
+				settings.controlScope.bind("carrotScrollStart", function(e, movingThing, pageNum) {
 					if (movingThing == settings.name) {
+						// update the navi to select the appropriate page
 						$(navi).removeClass(settings.current);
-						if (pageNum > pages) {
-							pageNum = 1;
-						}
+						if (pageNum > pages) { pageNum = 1; } // rewind if at end
 						var thisNavi = $(navi)[parseInt(pageNum)-1];
 						$(thisNavi).addClass(settings.current);
 					}
@@ -293,42 +326,31 @@
 			
 			/** set up navigation, only works on pages
 			*/
-			var setupNavi = function() {
-				if (pages <= 1) {
-					$(navi).hide();	
-					return false;
-				}
-				
-				if (settings.makeNavi) {
-					creatNavi();
-				}
-				
+			var setupNavi = function() {			
+				if (settings.makeNavi) { creatNavi(); }				
 				$(navi).first().addClass(settings.current);
 				navi.each(function(iNav){
-					var thisNavi = this;
+					var thisNavi = this; // an item of this nav
 					var navIndex = iNav + 1;
 					$(thisNavi).bind("click", function(){
-						if (playing && settings.stopOnClick) {  stopCell(); }
+						if (playing && settings.stopOnClick) {  stopCarrotCell(); }
+						if (scrolling) { return false; } // no queue ups on rapid clicking
+						
 						$(this).siblings().removeClass(settings.current);
 						$(this).addClass(settings.current);
-						
-						if (scrolling) { return false; } // no queue ups on rapid clicking
-						if (navIndex <= pages) {
+						if ((navIndex <= pages) && (navIndex > 0)) {
 							gotoPage(navIndex);
 							determinePrevNext(navIndex);
 						}
 					});
-				});		
-				
-				updateMovingNavi();
-					
+				});					
+				handleNaviAutoscroll();					
 			};
 			
-			/** assign handlers
+			/** set up clickin on previous and next
+				show the buttons as well as bind click handler
 			*/
-			var assignCarrot = function(){
-				
-				// show the buttons as well as bind click handler
+			var setupPrevNextAdvance = function(){
 				prev.bind("click", function(e){
 					e.preventDefault();
 					moveBack();
@@ -338,8 +360,11 @@
 					e.preventDefault();
 					moveForward();
 				}).show();
-				
-				// if touch wipe exists... decide orientation
+			};
+			
+			/** if touchwipe is included add gesture support
+			*/
+			var setupTouchSupport = function(){
 				if(jQuery().touchwipe) {					
 					if (settings.sideways) {
 						$($this).touchwipe({
@@ -353,21 +378,31 @@
 						});
 					}			
 				}
-				
-				// add pause on hover
+			};
+			
+			/** if pause on hover is set, do that
+			*/
+			var setupPauseOnHover = function(){
 				if (settings.pauseOnHover && settings.auto) {	
 					view.bind({
-						mouseenter : function() { pauseCell(); },
-						mouseleave: function(){ playCell(); }
+						mouseenter : function() { pauseCarrotCell(); },
+						mouseleave: function(){ playCarrotCell(); }
 					});
 				}
-				 
+			}
+			
+			/** assign handlers
+			*/
+			var handleCarrotEvents = function(){	
+				setupPrevNextAdvance();
+				setupTouchSupport();
+				setupPauseOnHover();
 				if (settings.navi) { setupNavi(); }
 				if (settings.key) { setupKeyAdvance(); }
 				if (settings.auto) { setupAutoAdvance(); } 
 			};
 			
-			/** fix the width of the slide container when things are added 
+			/** fix the slider so it fits all the items perfectly
 			*/
 			var adjustSlideSize = function(){
 				var slideSize = singleSize * items.length; // find size of all items including cloned
@@ -380,86 +415,108 @@
 			
 			/** find how many pages there are
 			*/
-			var calculatePages = function(){						
+			var howManyPages = function(){						
 				if ((visible !== advanceBy) && (!settings.auto)) {
 					pages = Math.ceil((totalItems - (visible - advanceBy)) / advanceBy);				
 				} else {
 					pages = Math.ceil(totalItems / advanceBy);																
-				}				
-				if ((totalItems % visible) != 0) {
-					extras = visible * Math.ceil(totalItems / visible) - totalItems;
-				} else {
-					extras = 0;
-				}												
+				}	
+				console.log(pages + " pages");									
 			};
 			
-			/** check if content is too short to scroll
+			/** find out if we have any weird empty spots in a page
 			*/
-			var notEnoughToScroll = function(){
+			var howManyEmptySlots = function(){	
+				if ((totalItems % visible) != 0) {
+					emptySlots = visible * Math.ceil(totalItems / visible) - totalItems;
+				} else {
+					emptySlots = 0;
+				}			
+				console.log(emptySlots + " emptySlots");
+			};
+			
+			/** clone a slider worth of clones at beginning and end
+			*/
+			var padWithClones = function(){
+				items.filter(':first').before(items.slice(-visible).clone().addClass('cloned'));
+				items.filter(':last').after(items.slice(0, visible).clone().addClass('cloned'));
+				items = slider.children(settings.sliderChildSelect); // reselect everything including clones
+			};
+			
+			/** move the clones added at the beginning out of sight
+			*/
+			var moveClonesOutOfSight = function(){
+				if (settings.sideways) {
+					view.scrollLeft(singleSize * visible); 
+				} else {
+					view.scrollTop(singleSize * visible); 
+				}
+			};
+						
+			/** calculate the settings of the carrot
+			*/
+			var setupCarrot = function(){
+				if (settings.auto) { settings.infinite = true;  }			
+				if (settings.step) { advanceBy = settings.step; } else { advanceBy = visible; }
+				if (settings.makeNavi) { settings.navi = true; }
+				
+				howManyPages();
+				howManyEmptySlots();
+
+				if (settings.infinite) {		
+					padWithClones();						
+				} 				
+				adjustSlideSize();				
+				view.css("overflow", "hidden"); // clip extra items	(not set in css for non js view)				
+				if (settings.infinite) {
+					moveClonesOutOfSight();	
+				} else {
+					prev.addClass(settings.off);
+				}
+			};
+			
+			/** check if content is too short to scroll, add the off class to navigation items
+			*/
+			var IsThereEnoughToScroll = function(){
 				if (totalItems <= visible) {
 					prev.addClass(settings.off);
-					next.addClass(settings.off);
-				}	
+					next.addClass(settings.off);				
+					if (settings.navi) { naviContainer.addClass(settings.off); }
+					enoughToScroll = false;
+				} else {
+					enoughToScroll = true;
+				}
 			};
-
-			/** find size of view
+			
+			/** find size of view port, need to have access to single to calculate visible
 			*/
-			var findViewsize = function(){
+			var findViewSizeAndVisible = function(){				
 				if (settings.sideways) {
 					viewSize = $this.innerWidth();
-					singleSize = single.outerWidth(true);
 				} else {
 					viewSize = $this.innerHeight();
-					singleSize = single.outerHeight(true);
-				}
-				
+				}			
 				visible = Math.floor(viewSize / singleSize); // visible is everything in frame unless a step is set
 			}
 			
-			/** calculate the settings of the carrot
+			/** find each slide and make sure we have enough to scroll
+				otherwise turn off the controls
 			*/
-			var processCarrot = function(){
-				if (settings.auto) { settings.infinite = true;  } // if auto infinite hast o be true
-				findViewsize();
-				if (settings.step) { advanceBy = settings.step; } else { advanceBy = visible; }
-				calculatePages();
-				slideBy = singleSize * advanceBy;
-				if (settings.infinite) {
-					// clone a visible amount on the begin and end
-					items.filter(':first').before(items.slice(-visible).clone().addClass('cloned'));
-					items.filter(':last').after(items.slice(0, visible).clone().addClass('cloned'));
-					items = slider.children(settings.sliderChildSelect); // reselect new li
-				} else {
-					prev.addClass(settings.off);
-				}
-				adjustSlideSize();
-				view.css("overflow", "hidden"); // clip extra items	
-				
-				if (settings.infinite) {
-					if (settings.sideways) {
-						view.scrollLeft(singleSize * visible); // move clone items out of sight
-					} else {
-						view.scrollTop(singleSize * visible); // move clone items out of sight
-					}
-				}
-			};
-			
-			/** find child elements of slider
-			*/
-			var findItems = function(){
+			var findSlides = function(){
 				items = slider.children(settings.sliderChildSelect); 
 				totalItems = items.length;
 				single = items.filter(':first');
-				notEnoughToScroll();
-			};
-
-			/** find elements
-			*/
-			var findCarrot = function(){
-				view = $this.children(".carrotCellView:first");	// find first carrotcellview	
-				slider = view.children(settings.sliderSelect); 
-				findItems();
+				if (settings.sideways) {
+					singleSize = single.outerWidth(true);
+				} else {
+					singleSize = single.outerHeight(true);
+				}			
 				
+			};
+			
+			/** find and set scope of carrotcell controls
+			*/
+			var setControlScope = function(){
 				if (settings.containsControl) {
 					settings.controlScope = $this; // everything is self contained
 				} else {
@@ -469,7 +526,11 @@
 						settings.controlScope = $("body"); // default to document
 					}	
 				}
-				
+			};
+			
+			/** after control scope is set, find the controls
+			*/
+			var findControls = function(){
 				prev = settings.controlScope.find(settings.prevSelect); 
 				next = settings.controlScope.find(settings.nextSelect); 
 				pause = settings.controlScope.find(settings.pauseSelect);
@@ -477,16 +538,24 @@
 				stop = settings.controlScope.find(settings.stopSelect);
 				naviContainer = settings.controlScope.find(settings.naviContainer);
 				navi = naviContainer.find(settings.naviSelect);
+			};
+
+			/** find elements relevant to the carrot cell
+			*/
+			var findOutAboutCarrot = function(){
+				view = $this.children(".carrotCellView:first");	
+				slider = view.children(settings.sliderSelect);  							
+				setControlScope();
+				findControls();			
+				findSlides();	
+				findViewSizeAndVisible();
+				if (visible > settings.step) { visibleDifference = visible - settings.step; } 
 				
-				processCarrot();
-				assignCarrot();
-				notEnoughToScroll();
-				
-				if (visible > settings.step) {
-					visibleDifference = visible - settings.step;
-				}
-				leftover = totalItems % settings.step; // left over in a page 
-				inpage = settings.step;  // how many in a page
+				IsThereEnoughToScroll(); // check if we have enough to scroll				
+				if (enoughToScroll) {
+					setupCarrot();
+					handleCarrotEvents();
+				}	
 			};
 
 			return {
@@ -495,7 +564,7 @@
 				init : function(opt) {
 					$.extend(settings, opt); // options over ride settings
 					$this = $(opt.scope);
-					findCarrot();
+					findOutAboutCarrot();
 					// call done callback pass it the api
 					if ((typeof settings.carrotDone) == "function") { settings.carrotDone(this); }
 				},
@@ -528,15 +597,15 @@
 
 				/** stop auto
 				*/
-				stop : function() { stopCell() },
+				stop : function() { stopCarrotCell() },
 				
 				/** resume auto play
 				*/
-				play : function() { playCell() },
+				play : function() { playCarrotCell() },
 				
 				/** pause auto play
 				*/
-				pause : function() { pauseCell() },
+				pause : function() { pauseCarrotCell() },
 				
 				/** remove all carrot items
 				*/
@@ -551,8 +620,8 @@
 					if ((index > items.length ) ||  (index < 1 )) {  return false; } // out of range position to remove do nothing
 					
 					$(items[index-1]).remove();
-					findItems();
-					calculatePages();
+					findSlides();
+					howManyPages();
 					adjustSlideSize();
 				},
 				
@@ -577,8 +646,8 @@
 						} else {
 							$(settings.sliderChildSelect, slider).eq(index-1).before(newItem); // insert at index
 						}					
-						findItems();
-						processCarrot();
+						findSlides();
+						setupCarrot();
 						determinePrevNext();
 					}
 						
@@ -591,8 +660,8 @@
 					if (!items) { return false; }		
 					$(items).remove(); 
 					slider.append(newItems); // append at end
-					findItems();
-					calculatePages();
+					findSlides();
+					howManyPages();
 					adjustSlideSize();
 					gotoPage(1); // rewind to beginning on load
 					currentPage = 1;
