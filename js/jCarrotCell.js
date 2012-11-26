@@ -57,7 +57,7 @@
 				api, view, slider, items, single, totalItems,
 				frameSize, singleSize, viewSize,
 				autoScroll, pause, play, stop, 
-				visible, advanceBy, pages, realPages,
+				visible, advanceBy, myPage, pages, realPages,
 				prev, next, navi,
 				sliderSelect, sliderChildSelect, prevSelect, nextSelect,
 				pauseSelect, playSelect, stopSelect, naviContainer, naviSelect;
@@ -83,50 +83,86 @@
 				// 	console.log("what " + what);
 				// }
 			};
+			
+			/** this is called when go to page finishes scrolling
+			*/
+			var scrollToBegin = function(){
+				view.scrollLeft(singleSize * visible); // move back to beginning
+				myPage = 1;
+				currentPage = 1;
+				scrolling = false;
+				settings.controlScope.trigger("carrotScrollSkip", [settings.name, myPage]);
+				console.log("scroll to begin end event");
+			};
+			
+			/** this is called when go to page finishes scrolling
+			*/
+			var scrollHandler = function(){
+				var scrollThis = 0;
+
+				// some additional forward scrolling needs to happen
+				if (myPage > pages) {
+					scrollThis = singleSize * visible;
+				
+					settings.controlScope.trigger("carrotScrollStart", [settings.name, currentPage, currentItem]);
+					scrolling = true;
+					
+					if (settings.sideways) { 
+						//view.scrollLeft(scrollThis); 											
+						view.animate({ scrollLeft : '+=' + singleSize }, settings.speed, scrollToBegin);			
+					} else { 
+						// view.scrollTop(scrollThis); 
+						view.animate({ scrollTop : '+=' + singleSize }, settings.speed, scrollToBegin);
+					}
+				} 
+				
+				// some additional backward scrolling needs to happen
+				else if (myPage == 0) {
+					console.log("something needs to happen it is zero");
+					
+					var test = singleSize * advanceBy * pages + singleSize
+				
+					view.scrollLeft(test); // replace it with the very end if rewinding
+					myPage = pages;
+					currentPage = pages;
+				}
+				
+				// we are done with our scrolling
+				else {
+				
+					currentPage = myPage; // my page is set in gotoPage previously
+					scrolling = false;
+					settings.controlScope.trigger("carrotScrollEnd", [settings.name, myPage]);
+					console.log("scroll end event");
+				}
+
+			};
 				
 			/** scroll the carousel by advancing to the next page
 			*/
-			var gotoPage = function(page) {
-				if (!page) { page = currentPage; }
-				
-				if (settings.infinite) { 
-					
-				} 
+			var gotoPage = function(page) {				
+				if (arguments.length) { 
+					if (page == 0) {
+						console.log("page is zero"); 
+					} else if (page < 0) {
+						console.log("page smaller than zero"); 
+					} else {
+						console.log("page is " + page); 
+					}
+							
+					myPage = page; 
+				} else { 
+					myPage = currentPage; // should this be currentPage+1 ???
+				}
 				
 				// should do bounds check for non infinite
 				
-				var dir = page < currentPage ? -1 : 1, // what direction are we going
-		            n = Math.abs(currentPage - page), // how many pages to scroll
-					scrollTo = singleSize * dir * advanceBy * n; // how far in pixels		
+				var dir = myPage < currentPage ? -1 : 1, // what direction are we going
+		            n = Math.abs(currentPage - myPage), // how many pages to scroll
+					scrollTo = singleSize * dir * advanceBy * n; // how far in pixels
 					
-					// this function is called after the animation stops
-					var scrollHandler = function(){
-						var scrollThis = 0;
-						// console.log(" scroll handler page is " + page);
-						// we are exceeding page numbers!
-						if (page > pages) {
-							console.log("page is bigger than pages");
-	
-							scrollThis = singleSize * visible;
-							// console.log("scroll this " + scrollThis);
-							if (settings.sideways) { 
-								// view.scrollLeft(scrollThis); 
-								view.animate({ scrollLeft :  '+=' + scrollThis }, settings.speed/2);
-								page = 1;
-							} else { 
-								view.scrollTop(scrollThis); 
-							}
-							
-											
-						} 
-	
-						currentPage = page;
-						settings.controlScope.trigger("carrotScrollEnd", [settings.name, currentPage, currentItem]);
-						scrolling = false;
+				console.log(" my direction is " + dir + " my page is " + currentPage + " scrolling to " + scrollTo);
 
-						
-					};
-				
 				// broadcast event that carousel is moving as we start the animation
 				settings.controlScope.trigger("carrotScrollStart", [settings.name, currentPage, currentItem]);
 				scrolling = true;
@@ -274,10 +310,12 @@
 			/** subscribe to scrolling and make sure it is our thing that's moving
 			*/
 			var handleNaviAutoscroll = function() {
-				settings.controlScope.bind("carrotScrollStart", function(e, movingThing, pageNum) {
-					if (movingThing == settings.name) {
+				settings.controlScope.bind("carrotScrollStart", function(e, movingThing, pageNum) {			
+					if (movingThing == settings.name) {					
 						$(navi).removeClass(settings.current);
 						if (pageNum > pages) { pageNum = 1; } // rewind if at end
+						if (pageNum == pages) { pageNum = 0; } // weird in between
+						console.log("navi auto advance to page " + pageNum);
 						var thisNavi = $(navi)[parseInt(pageNum)];
 						$(thisNavi).addClass(settings.current);
 					}
@@ -403,6 +441,7 @@
 				}
 								
 				console.log(extraMoves + " extraMoves");
+				console.log("-----------------------------------");
 			};
 			
 			/** clone a slider worth of clones at beginning and end

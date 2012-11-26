@@ -645,3 +645,7 @@ td code {
 .naviItem {
 	padding: 0 10px;
 }
+
+.carrotCellContainer {
+	overflow: hidden;
+}
