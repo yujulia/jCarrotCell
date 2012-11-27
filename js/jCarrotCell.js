@@ -113,37 +113,46 @@
 			*/
 			var scrollHandler = function(){
 				var scrollThis = 0;
+				
+				console.log("checking extra moves " + extraMoves);
 
 				// some additional forward scrolling needs to happen
 				if (myPage > pages) {
+					settings.controlScope.trigger("carrotScrollStart", [settings.name, 0]);
+					// console.log("scroll handler > pages scroll start");
 					scrolling = true;
 					
 					// NEED to calculate what this single size is? what is this, its the left over
 					
+					var howMany = visible - extraMoves;
+					
 					if (settings.sideways) { 										
-						view.animate({ scrollLeft : '+=' + singleSize }, settings.speed, scrollToBegin);			
+						view.animate({ scrollLeft : '+=' + howMany*singleSize }, settings.speed, scrollToBegin);			
 					} else { 
-						view.animate({ scrollTop : '+=' + singleSize }, settings.speed, scrollToBegin);
+						view.animate({ scrollTop : '+=' + howMany*singleSize }, settings.speed, scrollToBegin);
 					}
 				} 
 				
 				// some additional backward scrolling needs to happen
 				else if (myPage == 0) {
 					settings.controlScope.trigger("carrotScrollStart", [settings.name, pages-1]);
-					console.log("scroll handler 0 pages scroll start");
-					scrolling = true;
+					// console.log("scroll handler 0 pages scroll start");
+					scrolling = true;;
 					
-					// need some scrolling calculation
-					scrollToEnd();
+
+					if (settings.sideways) { 										
+						view.animate({ scrollLeft : '+=' + -1*extraMoves*singleSize }, settings.speed, scrollToEnd);			
+					} else { 
+						view.animate({ scrollTop : '+=' + -1*extraMoves*singleSize }, settings.speed, scrollToEnd);
+					}
+					
 				}
 				
-				// we are done with our scrolling
-				else {
-				
+				// we are done with our scrolling, no additional things need doing
+				else {			
 					currentPage = myPage; // my page is set in gotoPage previously
 					scrolling = false;
 					settings.controlScope.trigger("carrotScrollEnd", [settings.name, myPage-1]);
-					// console.log("scroll end event");
 				}
 
 			};
@@ -167,18 +176,19 @@
 					myPage = currentPage; // should this be currentPage+1 ???
 				}				
 				
+				
 				// should do bounds check for non infinite
 				
 				var dir = myPage < currentPage ? -1 : 1, // what direction are we going
 		            n = Math.abs(currentPage - myPage), // how many pages to scroll
 					scrollTo = singleSize * dir * advanceBy * n; // how far in pixels
 					
-				console.log("my direction is " + dir + " my page is " + myPage + " scrolling to " + scrollTo);
+				// console.log("my direction is " + dir + " my page is " + myPage + " scrolling to " + scrollTo);
 				
 				
 				// broadcast event that carousel is moving as we start the animation
 				settings.controlScope.trigger("carrotScrollStart", [settings.name, myPage-1]);
-				console.log("scroll handler normal scroll start");
+				// console.log("scroll handler normal scroll start");
 				scrolling = true;
 				
 				if (settings.sideways) {
@@ -328,12 +338,11 @@
 						
 					if (movingThing == settings.name) {					
 						$(navi).removeClass(settings.current);
-	
-						
-						console.log("navi passed in page num is " + pageNum);
-						if (pageNum > pages) { pageNum = 1; } // rewind if at end
-						if (pageNum == pages) { pageNum = 0; } // weird in between
-						console.log("navi auto advancing to " + pageNum);
+
+						// console.log("navi passed in page num is " + pageNum);
+						if (pageNum > pages) { pageNum = 1; } // rewind to beginning
+						if (pageNum == pages) { pageNum = 0; } // rewind opposit
+						// console.log("navi auto advancing to " + pageNum);
 						
 						var thisNavi = $(navi)[parseInt(pageNum)];
 						$(thisNavi).addClass(settings.current);
@@ -449,16 +458,15 @@
 					extraMoves = 0; // no worries
 				} else {
 					var lastPageStartingNum = (pages-1) * advanceBy + 1;
-					console.log("starting last page slide at " + lastPageStartingNum);
+					console.log("first item of last page set is " + lastPageStartingNum);
 					
-					var lastThingAt = totalItems - lastPageStartingNum + 1;
-					console.log(lastThingAt +" last thing at");
-
-					extraMoves = visible - lastThingAt; 			
+					extraMoves = totalItems - lastPageStartingNum + 1;			
 					if (extraMoves == 0) {
 						extraMoves = visible; 
 					}
 				}
+				
+				return extraMoves;
 								
 				console.log(extraMoves + " extraMoves");
 				console.log("-----------------------------------");
