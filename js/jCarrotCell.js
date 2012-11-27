@@ -91,8 +91,22 @@
 				myPage = 1;
 				currentPage = 1;
 				scrolling = false;
-				settings.controlScope.trigger("carrotScrollSkip", [settings.name, myPage]);
-				console.log("scroll to begin end event");
+				// settings.controlScope.trigger("carrotScrollEnd", [settings.name, myPage]);
+				// console.log("scroll to begin end event");
+			};
+			
+			/** 
+			*/
+			var scrollToEnd = function(){						
+				var test = singleSize * advanceBy * pages + singleSize; //NEED calculate
+				view.scrollLeft(test); // replace it with the very end if rewinding
+				
+				myPage = pages;
+				currentPage = pages;
+				scrolling = false;
+				
+				// settings.controlScope.trigger("carrotScrollEnd", [settings.name, myPage]);
+				// console.log("scroll to end end event");
 			};
 			
 			/** this is called when go to page finishes scrolling
@@ -102,29 +116,25 @@
 
 				// some additional forward scrolling needs to happen
 				if (myPage > pages) {
-					scrollThis = singleSize * visible;
-				
-					settings.controlScope.trigger("carrotScrollStart", [settings.name, currentPage, currentItem]);
 					scrolling = true;
 					
-					if (settings.sideways) { 
-						//view.scrollLeft(scrollThis); 											
+					// NEED to calculate what this single size is? what is this, its the left over
+					
+					if (settings.sideways) { 										
 						view.animate({ scrollLeft : '+=' + singleSize }, settings.speed, scrollToBegin);			
 					} else { 
-						// view.scrollTop(scrollThis); 
 						view.animate({ scrollTop : '+=' + singleSize }, settings.speed, scrollToBegin);
 					}
 				} 
 				
 				// some additional backward scrolling needs to happen
 				else if (myPage == 0) {
-					console.log("something needs to happen it is zero");
+					settings.controlScope.trigger("carrotScrollStart", [settings.name, pages-1]);
+					console.log("scroll handler 0 pages scroll start");
+					scrolling = true;
 					
-					var test = singleSize * advanceBy * pages + singleSize
-				
-					view.scrollLeft(test); // replace it with the very end if rewinding
-					myPage = pages;
-					currentPage = pages;
+					// need some scrolling calculation
+					scrollToEnd();
 				}
 				
 				// we are done with our scrolling
@@ -132,8 +142,8 @@
 				
 					currentPage = myPage; // my page is set in gotoPage previously
 					scrolling = false;
-					settings.controlScope.trigger("carrotScrollEnd", [settings.name, myPage]);
-					console.log("scroll end event");
+					settings.controlScope.trigger("carrotScrollEnd", [settings.name, myPage-1]);
+					// console.log("scroll end event");
 				}
 
 			};
@@ -142,18 +152,20 @@
 			*/
 			var gotoPage = function(page) {				
 				if (arguments.length) { 
+					
+					// debug block
 					if (page == 0) {
-						console.log("page is zero"); 
+						console.log("* page is zero"); 
 					} else if (page < 0) {
-						console.log("page smaller than zero"); 
+						console.log("* page smaller than zero"); 
 					} else {
-						console.log("page is " + page); 
+						console.log("* page is " + page); 
 					}
 							
 					myPage = page; 
 				} else { 
 					myPage = currentPage; // should this be currentPage+1 ???
-				}
+				}				
 				
 				// should do bounds check for non infinite
 				
@@ -161,10 +173,12 @@
 		            n = Math.abs(currentPage - myPage), // how many pages to scroll
 					scrollTo = singleSize * dir * advanceBy * n; // how far in pixels
 					
-				console.log(" my direction is " + dir + " my page is " + currentPage + " scrolling to " + scrollTo);
-
+				console.log("my direction is " + dir + " my page is " + myPage + " scrolling to " + scrollTo);
+				
+				
 				// broadcast event that carousel is moving as we start the animation
-				settings.controlScope.trigger("carrotScrollStart", [settings.name, currentPage, currentItem]);
+				settings.controlScope.trigger("carrotScrollStart", [settings.name, myPage-1]);
+				console.log("scroll handler normal scroll start");
 				scrolling = true;
 				
 				if (settings.sideways) {
@@ -310,15 +324,21 @@
 			/** subscribe to scrolling and make sure it is our thing that's moving
 			*/
 			var handleNaviAutoscroll = function() {
-				settings.controlScope.bind("carrotScrollStart", function(e, movingThing, pageNum) {			
+				settings.controlScope.bind("carrotScrollStart", function(e, movingThing, pageNum) {		
+						
 					if (movingThing == settings.name) {					
 						$(navi).removeClass(settings.current);
+	
+						
+						console.log("navi passed in page num is " + pageNum);
 						if (pageNum > pages) { pageNum = 1; } // rewind if at end
 						if (pageNum == pages) { pageNum = 0; } // weird in between
-						console.log("navi auto advance to page " + pageNum);
+						console.log("navi auto advancing to " + pageNum);
+						
 						var thisNavi = $(navi)[parseInt(pageNum)];
 						$(thisNavi).addClass(settings.current);
 					}
+					
 				});
 			};
 			
