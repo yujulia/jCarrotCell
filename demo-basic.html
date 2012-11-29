@@ -16,7 +16,8 @@
 	$(document).ready(function(){
 		window.carrotDemos = window.carrotDemos || {};
 		carrotDemos.setup = function() {
-			
+			$('.example #defaultKitten').carrotCell();
+			$('.example #defaultVerticalKitten').carrotCell({ sideways: false });
 		}
 		
 		// chrome can not calculate the width correctly because it is foolish
@@ -32,11 +33,18 @@
 	
 	<link type="text/css" href="css/main.css" rel="stylesheet" /> 
 	<link type="text/css" href="css/carrotcell.css" rel="stylesheet" /> 
+	
+	<style>
+		#defaultKitten, #defaultKittenNOJS { width: 560px; }
+		#defaultVerticalKitten, #defaultVerticalKittenNOJS { width: 180px; }
+		#defaultVerticalKitten .carrotCellView, #defaultVerticalKittenNOJS .carrotCellView { height: 260px; }
+	</style>
+	
 </head>
 
 <body>
 	<header>
-		<h1>j<span>Carrot</span><em>Cell</em> Demo: Basic Setup</h1>		
+		<h1>j<span>Carrot</span><em>Cell</em> Demo: <strong>Basic Setup</strong></h1>		
 	</header>
 	
 	<nav>
@@ -45,34 +53,181 @@
 		<a href="demo.html">More Demos</a> 
 	</nav>
 	
-	<h2>Demo: Basic Setup Index</h2>
+	<h2>Demo: Basic Setup Topics</h2>
 	<ol class="index">
 		<li><a href="#one">Horizontal Scroller</a></li>
 		<li><a href="#two">Vertical Scroller</a></li>
-		<li><a href="#three">Basic Configurations</a></li>
+		<li><a href="#three">Configurations</a></li>
 		<li><a href="#four">Behavior Notes</a></li>
 	</ol>
 	
 	
 	<article id="one">
 		<h2>Horizontal Scroller</h2>
-		<p>This version takes no options and uses all of the default settings of carrotCell.</p>
+		<p>The default carrotcell is horizontal and only needs a few simple steps to set up. See the <a href="index.html">home page</a> for the instructions.</p>
+		
+		<div class="example">
+			<div id="defaultKitten" class="carrotCell">			
+				<div class="carrotCellView">
+					<ol>
+						<li><img src="images/cat01.png" /></li>
+						<li><img src="images/cat02.png" /></li>
+						<li><img src="images/cat03.png" /></li>
+						<li><img src="images/cat04.png" /></li>
+						<li><img src="images/cat05.png" /></li>
+						<li><img src="images/cat06.png" /></li>
+						<li><img src="images/cat07.png" /></li>
+						<li><img src="images/cat08.png" /></li>
+						<li><img src="images/cat09.png" /></li>
+			        </ol>       
+				</div>			
+				<div class="prev">prev</div>
+				<div class="next">next</div> 
+			</div>
+		</div>
+
+<p>The default carrotcell needs to be invoked on the .carrotCell container to start working.</p>
+<pre><code data-language="javascript" class="js">
+$('#defaultKitten').carrotCell();
+</code></pre>
+
+<p>Make sure you have styles for the .carrotCell container and its child elements, including a fix width view port and fixed same width cell elements.</p>
+<pre><code data-language="css"  class="css">
+// insert your own styling for the carousel elements
+// including .carrotCell and .carrotCellView width and height
+// and .carrotCellView li width and height - these must all be the same size for the calculations to work
+// also include the placement of the previous and next buttons
+// below are examples
+	
+#defaultKitten { width: 560px; }
+.carrotCellView li { ... } 
+.carrotCellView li img { ... }
+.carrotCell .next, .carrotCell .prev {
+	position: absolute;
+	top: 60px;
+	display: none;
+	cursor: pointer;
+	...
+}
+...
+</code></pre>
+
+<p>The basic structure of the carrotcell HTML must be followed exactly in order for it to work correctly in basic setup. See the <a href="demo-flexible.html">Layout Flexibility</a> demo to find out how to change this mark up.</p>
+<p>In the following example, the id of .carrotCell can be changed, as well as the contents of the li and .prev and .next, but nothing else.</p>
+<pre><code data-language="html"  class="html">
+<div id="defaultKitten" class="carrotCell">			
+	<div class="carrotCellView">
+		<ol>
+			<li><img src="images/cat01.png" /></li>
+			<li><img src="images/cat02.png" /></li>
+			<li><img src="images/cat03.png" /></li>
+			<li><img src="images/cat04.png" /></li>
+			<li><img src="images/cat05.png" /></li>
+			<li><img src="images/cat06.png" /></li>
+			<li><img src="images/cat07.png" /></li>
+			<li><img src="images/cat08.png" /></li>
+			<li><img src="images/cat09.png" /></li>
+		</ol>       
+	</div>			
+	<div class="prev">prev</div>
+	<div class="next">next</div> 
+</div>
+</code></pre>
+		
+		<h3>Fall Back State (No Javascript)</h3>
+		<p>This is what the horizontal carousel look like without any javascript methods being called to create the carrotcell.</p> 
+		<p>Note that the previous, next, and all javascript related control buttons buttons are hidden by default by the carrotcell.css.</p>
+
+		<div id="defaultKittenNOJS" class="carrotCell">
+			<div class="carrotCellView" >
+				<ol>
+					<li><img src="images/cat01.png" /></li>
+					<li><img src="images/cat02.png" /></li>
+					<li><img src="images/cat03.png" /></li>
+					<li><img src="images/cat04.png" /></li>
+					<li><img src="images/cat05.png" /></li>
+					<li><img src="images/cat06.png" /></li>
+					<li><img src="images/cat07.png" /></li>
+					<li><img src="images/cat08.png" /></li>
+					<li><img src="images/cat09.png" /></li>
+		        </ol>       
+			</div>
+
+			<a href="#" class="prev">prev</a>
+			<a href="#" class="next">next</a>
+		</div>
 	</article>
+	
+	
+	
+	
 	
 	<article id="two">
 		<h2>Vertical Scroller</h2>
-		<p>This version takes no options and uses all of the default settings of carrotCell.</p>
+		<p>This carrotCell scrolls vertically instead of horizontally.</p>
+		
+		<div class="example">
+			<div id="defaultVerticalKitten" class="carrotCell">
+				<div class="carrotCellView">
+					<ol>
+						<li><img src="images/cat01.png" /></li>
+						<li><img src="images/cat02.png" /></li>
+						<li><img src="images/cat03.png" /></li>
+						<li><img src="images/cat04.png" /></li>
+						<li><img src="images/cat05.png" /></li>
+						<li><img src="images/cat06.png" /></li>
+						<li><img src="images/cat07.png" /></li>
+						<li><img src="images/cat08.png" /></li>
+						<li><img src="images/cat09.png" /></li>
+			        </ol>     
+				</div>
+				<a href="#" class="prev">prev</a>
+				<a href="#" class="next">next</a> 
+			</div>
+		</div>
+		
+<p>For a vertical carrotCell you must set the parameter sideways to be the boolean false</p>
+<pre><code data-language="javascript" class="js">
+$('#defaultVerticalKitten').carrotCell({ sideways: false });
+</code></pre>
+
+<p>You must create the styles to lay out the .carrotCell and children correctly, this is not included in the .carrotCell.css.</p>
+<pre><code data-language="css"  class="css">
+#defaultVerticalKitten { width: 180px; }
+#defaultVerticalKitten .carrotCellView { height: 260px; }
+...
+</code></pre>
+
+<p>The mark up used in the vertical carrotCell is exactly the same as the horizontal one, the only difference is your changes in the CSS.</p>
+		
+
+		<h3>Fall Back State (No Javascript)</h3>
+		<p>This version uses the overflow:auto property of the .carrotCellView container when Javascript is not available. You can also over ride it to just be really long if you wish.</p>
+		<div id="defaultVerticalKittenNOJS" class="carrotCell">
+			<div class="carrotCellView">
+				<ol>
+					<li><img src="images/cat01.png" /></li>
+					<li><img src="images/cat02.png" /></li>
+					<li><img src="images/cat03.png" /></li>
+					<li><img src="images/cat04.png" /></li>
+					<li><img src="images/cat05.png" /></li>
+					<li><img src="images/cat06.png" /></li>
+					<li><img src="images/cat07.png" /></li>
+					<li><img src="images/cat08.png" /></li>
+					<li><img src="images/cat09.png" /></li>
+		        </ol>     
+			</div>
+			<a href="#" class="prev">prev</a>
+			<a href="#" class="next">next</a> 
+		</div>		
+		
 	</article>
 	
-	<article id="three">
-		<h2>Basic Configurations</h2>
-		<p>This version takes no options and uses all of the default settings of carrotCell.</p>
-	</article>
-	
-	<article id="four">
-		<h2>Behavior Notes</h2>
-		<p>This version takes no options and uses all of the default settings of carrotCell.</p>
-	</article>
+	<nav>
+		<a href="index.html">Home</a> 
+		<a href="doc.html">Documentation</a> 
+		<a href="demo.html">More Demos</a> 
+	</nav>
 	
 </body>
 </html>

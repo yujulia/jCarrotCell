@@ -140,8 +140,18 @@ h1 em {
 	font-style: normal;
 }
 
+h1 strong {
+	font-size: 40px;
+	font-weight: normal;
+	color: #ff9900;
+}
+
 h2 {
 	font-size: 30px;
+}
+
+article h2 {
+	color: #99cc33;
 }
 
 h3 {
@@ -196,6 +206,14 @@ code {
 	display: block;
 	line-height: 1.2em;
 	overflow-x: auto;
+}
+
+code.css {
+	background: #E4E4ED;
+}
+
+code.html {
+	background: #E4EBED;
 }
 
 code span {
@@ -279,6 +297,7 @@ td code {
 
 .index li a {
 	text-decoration: none;
+	border-bottom: dotted 1px #000;
 }
 
 .index li a:hover {
@@ -378,6 +397,12 @@ td code {
 .carrotCell .navi li.current {
 	background: #000;
 }
+
+
+
+
+
+
 
 /** specific carousel things
 */
