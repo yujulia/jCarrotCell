@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head> 
+    <meta charset="utf-8" /> 
+	<title>jCarrotCell Demo: Navigation</title>
+	<!--[if lt IE 9]>
+	<script src="http//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	<script src="js/jquery.js" type="text/javascript" charset="utf-8"></script>
+ 	<script src="js/jquery-touchwipe.js" type="text/javascript" charset="utf-8"></script>
+	<script src="js/jCarrotCell.js" type="text/javascript" charset="utf-8"></script>
+	<script src="js/rainbow-custom.min.js" type="text/javascript" charset="utf-8"></script>
+	
+	<script type="text/javascript" charset="utf-8">
+	$(document).ready(function(){
+		window.carrotDemos = window.carrotDemos || {};
+		carrotDemos.setup = function() {
+		
+		}
+		
+		// chrome can not calculate the width correctly because it is foolish
+		var is_chrome = navigator.userAgent.toLowerCase().indexOf('chrome') > -1;
+		if (is_chrome) {
+			$(window).load(function(){ carrotDemos.setup(); });
+		} else {
+			carrotDemos.setup();
+		}
+		
+	});
+	</script>
+	
+	<link type="text/css" href="css/main.css" rel="stylesheet" /> 
+	<link type="text/css" href="css/carrotcell.css" rel="stylesheet" /> 
+</head>
+
+<body>
+	<header>
+		<h1>j<span>Carrot</span><em>Cell</em> Demo: Navigation</h1>		
+	</header>
+	
+	<nav>
+		<a href="index.html">Home</a> 
+		<a href="doc.html">Documentation</a> 
+		<a href="demo.html">More Demos</a> 
+	</nav>
+	
+	<h2>Demo: Navigation Index</h2>
+	<ol class="index">
+		<li><a href="#one">Simple Version (Auto Generated)</a></li>
+		<li><a href="#two">Personalizing Simple Version</a></li>
+		<li><a href="#three">Self-Setup</a></li>		
+		<li><a href="#four">Configurations and Selectors</a></li>
+		<li><a href="#five">Behavior Notes</a></li>
+	</ol>
+	
+	
+	<article id="one">
+		<h2>Simple Version (Auto-Generated)</h2>
+		<p>This version takes no options and uses all of the default settings of carrotCell.</p>
+	</article>
+	
+	<article id="two">
+		<h2>Personalizing Simple Version</h2>
+		<p>This version takes no options and uses all of the default settings of carrotCell.</p>
+	</article>
+	
+	<article id="three">
+		<h2>Self-Setup</h2>
+		<p>This version takes no options and uses all of the default settings of carrotCell.</p>
+	</article>
+	
+	<article id="four">
+		<h2>Configurations and Selectors</h2>
+		<p>This version takes no options and uses all of the default settings of carrotCell.</p>
+	</article>
+	
+	<article id="five">
+		<h2>Behavior Notes</h2>
+		<p>This version takes no options and uses all of the default settings of carrotCell.</p>
+	</article>
+	
+</body>
+</html>
