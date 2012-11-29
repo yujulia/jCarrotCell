@@ -208,13 +208,13 @@ code {
 	overflow-x: auto;
 }
 
-code.css {
-	background: #E4E4ED;
+/*code.css {
+	background: #EBF4FC;
 }
 
 code.html {
 	background: #E4EBED;
-}
+}*/
 
 code span {
 	color: #99cc33;
@@ -406,6 +406,15 @@ td code {
 
 /** specific carousel things
 */
+
+.kitten {
+	width: 560px;
+}
+
+.kitten .carrotCellView {
+	width: 520px;
+}
+
 
 #kitten1, 
 #kitten2, 

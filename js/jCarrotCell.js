@@ -11,6 +11,7 @@
 		
 		makeCarrot : function(){
 			var $this = null, // this carrot cell
+			
 				// populate default settings
 				settings = {
 					step: 0,
@@ -18,7 +19,7 @@
 					sideways: true,
 					infinite: false,
 					auto: false,
-					speed: 1000,
+					speed: 500,
 					navi: false,
 					makeNavi: false,
 					delay: 5000,
@@ -41,6 +42,12 @@
 					naviClass : "naviItem"
 				},
 				
+				// CONST				
+				KEY_BACK = 37,
+				KEY_FORWARD = 39,
+				KEY_UP = 38,
+				KEY_DOWN = 40,	
+				
 				// properties of this carrotCell
 				slideWidth = 0,
 				haveBack = false,
@@ -54,6 +61,7 @@
 				visibleDifference = 0,
 				extraMoves = 0,
 				enoughToScroll = false,
+			
 				api, view, slider, items, single, totalItems,
 				frameSize, singleSize, viewSize,
 				autoScroll, pause, play, stop, 
@@ -247,15 +255,11 @@
 			/** up down for vertical, left right for horizonal arrow key movement
 			*/
 			var setupKeyAdvance = function() {
-				$(document).keydown(function(e){
+				$(document).keyup(function(e){
 					if (scrolling) { return false; }
-					if (settings.sideways) { 
-				    	if (e.keyCode == 37) { moveBack(); } // left
-						if (e.keyCode == 39) { moveForward(); } // right
-					} else {
-						if (e.keyCode == 38) {  moveBack(); } // up
-						if (e.keyCode == 40) {  moveForward(); } // down
-					}
+					
+			    	if (e.keyCode == settings.keyBack) { moveBack(); } // left / up
+					if (e.keyCode == settings.keyForward) { moveForward(); } // right / down
 				});
 			};
 			
@@ -446,6 +450,19 @@
 				if (settings.auto) { settings.infinite = true;  }			
 				if (settings.step) { advanceBy = settings.step; } else { advanceBy = visible; }
 				if (settings.makeNavi) { settings.navi = true; }
+				
+				if (settings.key) {
+					if (settings.sideways) {
+						settings.keyBack = settings.keyBack || KEY_BACK;
+						settings.keyForward = settings.keyForward || KEY_FORWARD;
+					} else {
+						settings.keyBack = settings.keyBack || KEY_UP;
+						settings.keyForward = settings.keyForward || KEY_DOWN;
+					}
+					console.log("side ways is " + settings.sideways + " back is " + settings.keyBack + " fwd is " + settings.keyForward);
+				}
+				
+				
 				
 				howManyPages();
 				howManyExtraMoves();

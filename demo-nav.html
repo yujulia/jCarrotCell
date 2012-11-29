@@ -16,7 +16,18 @@
 	$(document).ready(function(){
 		window.carrotDemos = window.carrotDemos || {};
 		carrotDemos.setup = function() {
-		
+			$('.example #prevNextKitten').carrotCell({
+				containsControl: false,
+				prevSelect: "#prevNextExample .controls .fancyPrev",
+				nextSelect: "#prevNextExample .controls .fancyNext"
+			});
+			
+			$('.example #keyKitten').carrotCell({ key: true });
+			$('.example #keyCustomKitten').carrotCell({ 
+				key: true,
+				keyBack: 81,
+				keyForward: 80
+			});
 		}
 		
 		// chrome can not calculate the width correctly because it is foolish
@@ -32,6 +43,31 @@
 	
 	<link type="text/css" href="css/main.css" rel="stylesheet" /> 
 	<link type="text/css" href="css/carrotcell.css" rel="stylesheet" /> 
+	
+	<style>
+		#prevNextExample {
+			margin-top: 40px;
+		}
+		#prevNextExample .fancyPrev, 
+		#prevNextExample .fancyNext {
+			display: block;
+			float: left;
+			font-weight: bold;
+			color: #ff9900;
+			border: solid 1px #ccc;
+			cursor: pointer;
+		} 
+		#prevNextExample .disabled {
+			color: #ccc;
+		}
+		#prevNextExample .fancyPrev {
+			margin-right: 320px;
+		}
+		#prevNextExample .controls {
+			overflow: hidden;
+		}
+	</style>
+	
 </head>
 
 <body>
@@ -47,7 +83,7 @@
 	
 	<h2>Demo: Navigation Index</h2>
 	<ol class="index">
-		<li><a href="#one">Previous and Next</a></li>
+		<li><a href="#one">Previous &amp; Next</a></li>
 		<li><a href="#two">Keyboard Navigation</a></li>
 		<li><a href="#three">Simple Navi (Auto Generated)</a></li>
 		<li><a href="#four">Personalizing the Simple Navi</a></li>
@@ -57,14 +93,140 @@
 	</ol>
 	
 	<article id="one">
-		<h2>Previous and Next</h2>
-		<p>This version takes no options and uses all of the default settings of carrotCell.</p>
+		<h2>Previous &amp; Next</h2>
+		<p>If you follow the default mark up, you do not need to do anything special in order for previous and next to work except to style them appropriately in the CSS.</p>
+		
+		
+		<div id="prevNextExample" class="example">
+			<div class="controls"> 
+				<button class="fancyPrev">Previously in Kittens</button>
+				<button class="fancyNext">Next in Kittens</button>
+			</div>
+			
+			<div id="prevNextKitten" class="carrotCell kitten">			
+				<div class="carrotCellView">
+					<ol>
+						<li><img src="images/cat01.png" /></li>
+						<li><img src="images/cat02.png" /></li>
+						<li><img src="images/cat03.png" /></li>
+						<li><img src="images/cat04.png" /></li>
+						<li><img src="images/cat05.png" /></li>
+						<li><img src="images/cat06.png" /></li>
+						<li><img src="images/cat07.png" /></li>
+						<li><img src="images/cat08.png" /></li>
+						<li><img src="images/cat09.png" /></li>
+			        </ol>       
+				</div>			
+				
+			</div>
+		</div>
+		
+		
+<p>The following example shows how to move the previous and next buttons out of .carrotCell if your markup and styling needs it.</p>
+<pre><code data-language="html"  class="html">
+<div id="prevNextExample">
+	<div class="controls"> 
+		<button class="fancyPrev">Previously in Kittens</button>
+		<button class="fancyNext">Next in Kittens</button>
+	</div>
+	<div id="prevNextKitten" class="carrotCell">			
+		<div class="carrotCellView">
+			<ol>
+				<li><img src="images/cat01.png" /></li>
+				<li><img src="images/cat02.png" /></li>
+				<li><img src="images/cat03.png" /></li>
+				<li><img src="images/cat04.png" /></li>
+				<li><img src="images/cat05.png" /></li>
+				<li><img src="images/cat06.png" /></li>
+				<li><img src="images/cat07.png" /></li>
+				<li><img src="images/cat08.png" /></li>
+				<li><img src="images/cat09.png" /></li>
+			</ol>       
+		</div>					
+	</div>
+</div>
+</code></pre>
+
+<p>When invoking carrotCell on this mark up, you need to tell it that the .carrotCell container does not containsControl and set it to false in boolean, then also pass in the previous and next selectors so javascript can find where they are. See the <a href="doc.html">documentation</a> for more details.</p>
+<pre><code data-language="javascript" class="js">
+$('#prevNextKitten').carrotCell({
+	containsControl: false,
+	prevSelect: "#prevNextExample .controls .fancyPrev",
+	nextSelect: "#prevNextExample .controls .fancyNext"
+});
+</code></pre>
+
 	</article>
+	
+	
+	
+	
+	
 	
 	<article id="two">
 		<h2>Keyboard Navigation</h2>
-		<p>This version takes no options and uses all of the default settings of carrotCell.</p>
+		<p>By default the left and right arrow keys control horizontal carrotCells and up and down control vertical carrotCells.</p>
+		<p>Use the left and right arrow keys to navigate the following example.</p>
+		<div class="example">
+			<div id="keyKitten" class="carrotCell kitten">			
+				<div class="carrotCellView">
+					<ol>
+						<li><img src="images/cat01.png" /></li>
+						<li><img src="images/cat02.png" /></li>
+						<li><img src="images/cat03.png" /></li>
+						<li><img src="images/cat04.png" /></li>
+						<li><img src="images/cat05.png" /></li>
+						<li><img src="images/cat06.png" /></li>
+						<li><img src="images/cat07.png" /></li>
+						<li><img src="images/cat08.png" /></li>
+						<li><img src="images/cat09.png" /></li>
+			        </ol>       
+				</div>							
+			</div>
+		</div>
+
+<p>All you have to do is set key to the boolean true in the carrotCell params. Note that since key events are a global document event, be careful when binding them to control multiple things.</p>
+<pre><code data-language="javascript" class="js">
+$('#keyKitten').carrotCell({ key: true });
+</code></pre>
+
+		<p>In this example we'll assign P and Q to be our forward and backward key events instead of arrow keys.</p>
+		<div class="example">
+			<div id="keyCustomKitten" class="carrotCell kitten">			
+				<div class="carrotCellView">
+					<ol>
+						<li><img src="images/cat01.png" /></li>
+						<li><img src="images/cat02.png" /></li>
+						<li><img src="images/cat03.png" /></li>
+						<li><img src="images/cat04.png" /></li>
+						<li><img src="images/cat05.png" /></li>
+						<li><img src="images/cat06.png" /></li>
+						<li><img src="images/cat07.png" /></li>
+						<li><img src="images/cat08.png" /></li>
+						<li><img src="images/cat09.png" /></li>
+			        </ol>       
+				</div>							
+			</div>
+		</div>
+
+<p>Pass in the corresponding javascript key code of the key you want to assign.</p>
+<pre><code data-language="javascript" class="js">
+$('#keyCustomKitten').carrotCell({ 
+	key: true,
+	keyBack: 81, // Q key
+	keyForward: 80 // P key
+});
+</code></pre>
+
 	</article>
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	<article id="three">
 		<h2>Simple Navi (Auto-Generated)</h2>
