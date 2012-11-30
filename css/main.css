@@ -380,28 +380,23 @@ td code {
 	cursor: pointer;
 }
 
-.carrotCell .navi {
+.navi {
 	margin: 10px 0 0 20px;
 }
 
-.carrotCell .navi li {
+.naviItem {
 	display: inline-block;
-	padding: 4px 6px 2px 6px;
+	padding: 6px;
 	margin: 3px;
 	cursor: pointer;
-	background: #666;
+	background: #ccc;
 	color: #fff;
 	font-weight: bold;
 }
 
-.carrotCell .navi li.current {
-	background: #000;
+.navi .current {
+	background: #99cc33;
 }
-
-
-
-
-
 
 
 /** specific carousel things
@@ -675,10 +670,6 @@ td code {
 	font-weight: bold;
 	border: none;
 	margin: 0;
-}
-
-.naviItem {
-	padding: 0 10px;
 }
 
 .carrotCellContainer {

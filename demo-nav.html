@@ -20,13 +20,24 @@
 				containsControl: false,
 				prevSelect: "#prevNextExample .controls .fancyPrev",
 				nextSelect: "#prevNextExample .controls .fancyNext"
-			});
+			});		
 			
 			$('.example #keyKitten').carrotCell({ key: true });
+			
 			$('.example #keyCustomKitten').carrotCell({ 
 				key: true,
 				keyBack: 81,
 				keyForward: 80
+			});
+			
+			$('.example #naviKitten').carrotCell({ 
+				navi: true,
+				makeNavi: true
+			});
+			
+			$('.example #naviNamedKitten').carrotCell({ 
+				navi: true,
+				makeNavi: true
 			});
 		}
 		
@@ -85,11 +96,8 @@
 	<ol class="index">
 		<li><a href="#one">Previous &amp; Next</a></li>
 		<li><a href="#two">Keyboard Navigation</a></li>
-		<li><a href="#three">Simple Navi (Auto Generated)</a></li>
-		<li><a href="#four">Personalizing the Simple Navi</a></li>
-		<li><a href="#five">Self-Setup Navi</a></li>		
-		<li><a href="#six">Configuration</a></li>
-		<li><a href="#seven">Behavior Notes</a></li>
+		<li><a href="#three">Auto Generated Navi</a></li>
+		<li><a href="#four">Custom Navi</a></li>		
 	</ol>
 	
 	<article id="one">
@@ -156,13 +164,24 @@ $('#prevNextKitten').carrotCell({
 });
 </code></pre>
 
+
+<p>Another way to do the same as above is to set the controlScope, the element in which the controls are contained instead of setting the specifics in the selector. If controlScope is not set, it is set by default to the BODY of the document.</p>
+<p>Note that controlScope is assumed to house all of the carrotCell controls including previous, next, pause, play, stop and navi.</p>
+<pre><code data-language="javascript" class="js">
+$('.example #prevNextKitten').carrotCell({
+	containsControl: false,
+	controlScope: "#prevNextExample",
+	prevSelect: ".controls .fancyPrev",
+	nextSelect: ".controls .fancyNext"
+});
+</code></pre>
+
 	</article>
 	
-	
-	
-	
-	
-	
+
+
+
+
 	<article id="two">
 		<h2>Keyboard Navigation</h2>
 		<p>By default the left and right arrow keys control horizontal carrotCells and up and down control vertical carrotCells.</p>
@@ -227,31 +246,109 @@ $('#keyCustomKitten').carrotCell({
 	
 	
 	
-	
 	<article id="three">
-		<h2>Simple Navi (Auto-Generated)</h2>
-		<p>This version takes no options and uses all of the default settings of carrotCell.</p>
+		<h2>Auto-Generated Navi</h2>
+		<p>You can ask the carrotCell to auto generate a paging control for you. The number of pages is automatically how many times the carrotCell needs to scroll before reaching the end. (Based on the number of items, how many of these items are visible in the view port, and how many items you are moving at once.)</p>
+		
+		<div class="example">
+			<div id="naviKitten" class="carrotCell kitten">	
+				<div class="navi"></div>		
+				<div class="carrotCellView">
+					<ol>
+						<li><img src="images/cat01.png" /></li>
+						<li><img src="images/cat02.png" /></li>
+						<li><img src="images/cat03.png" /></li>
+						<li><img src="images/cat04.png" /></li>
+						<li><img src="images/cat05.png" /></li>
+						<li><img src="images/cat06.png" /></li>
+						<li><img src="images/cat07.png" /></li>
+						<li><img src="images/cat08.png" /></li>
+						<li><img src="images/cat09.png" /></li>
+			        </ol>       
+				</div>							
+			</div>
+		</div>
+		
+<p>When setting up the carrotCell, pass in the parameters navi and makeNavi in order to auto generate the paging control.</p>
+<pre><code data-language="javascript" class="js">
+$('.example #naviKitten').carrotCell({ 
+	navi: true,
+	makeNavi: true
+});
+</code></pre>
+
+<p>Make sure you add in the navi html container inside the .carrotCell element. The following will generate an ordered list (OL) of numbers by default for the paging control. You can also use UL or DIV depending on what you prefer. The code will inspect the .navi container and generate the proper children nodes.</p>
+<pre><code data-language="html" class="html">
+<div id="naviKitten" class="carrotCell kitten">	
+	<ol class="navi"></ol>		
+	<div class="carrotCellView">
+		<ol>...</ol>       
+	</div>							
+</div>
+</code></pre>
+
+<p>The resulting generated navi mark up will look like:</p>
+<pre><code data-language="html" class="html">
+<ol class="navi">
+	<li class="naviItem current">1</li>
+	<li class="naviItem">2</li>
+	<li class="naviItem">3</li>
+</ol>
+</code></pre>
+
+<p>The following uses DIVs instead of OL and LI when generating navi. </p>
+<pre><code data-language="html" class="html">
+<div id="naviKitten" class="carrotCell kitten">	
+	<div class="navi"></div>		
+	<div class="carrotCellView">
+		<ol>...</ol>       
+	</div>							
+</div>
+</code></pre>
+		
+<p>The resulting generated navi mark up will look like:</p>
+<pre><code data-language="html" class="html">
+<div class="navi">
+	<div class="naviItem current">1</div>
+	<div class="naviItem">2</div>
+	<div class="naviItem">3</div>
+</div>
+</code></pre>	
+		
+		<p>By default the paging controls are set to be numbers, but you can pass in custom names through the data attribute navi of .navi.</p>
+		<div class="example">
+			<div id="naviNamedKitten" class="carrotCell kitten">	
+				<ol class="navi" data-navi='["fabulous kittens set", "basket kitten set"]'></ol>
+				<div class="carrotCellView">
+					<ol>
+						<li><img src="images/cat01.png" /></li>
+						<li><img src="images/cat02.png" /></li>
+						<li><img src="images/cat03.png" /></li>
+						<li><img src="images/cat04.png" /></li>
+						<li><img src="images/cat05.png" /></li>
+						<li><img src="images/cat06.png" /></li>
+						<li><img src="images/cat07.png" /></li>
+						<li><img src="images/cat08.png" /></li>
+						<li><img src="images/cat09.png" /></li>
+			        </ol>       
+				</div>							
+			</div>
+		</div>
 	</article>
+
+<p>In this example we only pass in 2 names, and the 3rd page is using the default number name. If you pass in more than enough items they will be ignored.</p>
+<p>Note that data-navi is inclosed in single quotes as per JSON specification and contents of the array in double quotes. Also note that you can not use single or double quotes in the names. For more versatility use the <a href="#four">custom navi</a> explained in the next section.</p>
+<pre><code data-language="html" class="html">
+<ol class="navi"  data-navi='["fabulous kittens set", "basket kitten set"]'></ol>
+</code></pre>
+	
 	
 	<article id="four">
-		<h2>Personalizing the Simple Navi</h2>
+		<h2>Custom Navi</h2>
 		<p>This version takes no options and uses all of the default settings of carrotCell.</p>
 	</article>
 	
-	<article id="five">
-		<h2>Self-Setup Navi</h2>
-		<p>This version takes no options and uses all of the default settings of carrotCell.</p>
-	</article>
-	
-	<article id="six">
-		<h2>Configuration</h2>
-		<p>This version takes no options and uses all of the default settings of carrotCell.</p>
-	</article>
-	
-	<article id="seven">
-		<h2>Behavior Notes</h2>
-		<p>This version takes no options and uses all of the default settings of carrotCell.</p>
-	</article>
+
 	
 </body>
 </html>

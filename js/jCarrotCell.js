@@ -269,9 +269,10 @@
 				$(naviContainer).empty(); // clear the navi container
 				var itemNames = {};
 				for (var j = 1; j <= pages; j++) { itemNames[j] = j; }
-				
+
 				var nameList = $(naviContainer).data("navi");
-				if ((nameList !== undefined) && (nameList.length !== 0) ) {					
+				
+				if ((nameList !== null) && (nameList !== undefined) && (nameList.length !== 0) ) {					
 					$(nameList).each(function(n){
 						itemNames[n+1] = nameList[n]; // add the names into item names if they exist
 					});								
