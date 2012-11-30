@@ -303,11 +303,6 @@ td code {
 	overflow: visible;
 }
 
-.index li a {
-	display: block;
-	border: none;
-}
-
 .index li .sub li {
 	list-style-type: circle;
 	margin: 0 16px;

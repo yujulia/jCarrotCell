@@ -16,31 +16,32 @@
 	$(document).ready(function(){
 		window.carrotDemos = window.carrotDemos || {};
 		carrotDemos.setup = function() {
-			$('.example #prevNextKitten').carrotCell({
+			$('#prevNextKitten').carrotCell({
 				containsControl: false,
-				prevSelect: ".controls .fancyPrev",
-				nextSelect: ".controls .fancyNext"
+				controlScope: "#prevNextKitten .controls",
+				prevSelect: ".fancyPrev",
+				nextSelect: ".fancyNext"
 			});		
 			
-			$('.example #keyKitten').carrotCell({ key: true });
+			$('#keyKitten').carrotCell({ key: true });
 			
-			$('.example #keyCustomKitten').carrotCell({ 
+			$('#keyCustomKitten').carrotCell({ 
 				key: true,
 				keyBack: 81,
 				keyForward: 80
 			});
 			
-			$('.example #naviKitten').carrotCell({ 
+			$('#naviKitten').carrotCell({ 
 				navi: true,
 				makeNavi: true
 			});
 			
-			$('.example #naviNamedKitten').carrotCell({ 
+			$('#naviNamedKitten').carrotCell({ 
 				navi: true,
 				makeNavi: true
 			});
 			
-			$('.example #naviCustomKitten').carrotCell({ 
+			$('#naviCustomKitten').carrotCell({ 
 				navi: true
 			});
 		}
@@ -107,8 +108,7 @@
 	
 	<article id="one">
 		<h2>Previous &amp; Next</h2>
-		<p>If you follow the default mark up, you do not need to do anything special in order for previous and next to work except to style them appropriately in the CSS.</p>
-		
+		<p>Using the default mark up, there is no need to do anything special in order for previous and next to work except to style them appropriately in the CSS.</p>
 		
 		<div id="prevNextExample" class="example">
 			<div class="controls"> 
@@ -135,45 +135,27 @@
 		</div>
 		
 		
-<p>The following example shows how to move the previous and next buttons out of .carrotCell if your markup and styling needs it.</p>
+<p>The following example shows how to move the previous and next buttons out of the .carrotCell container.</p>
 <pre><code data-language="html"  class="html">
-<div id="prevNextExample">
-	<div class="controls"> 
-		<button class="fancyPrev">Previously in Kittens</button>
-		<button class="fancyNext">Next in Kittens</button>
-	</div>
-	<div id="prevNextKitten" class="carrotCell">			
-		<div class="carrotCellView">
-			<ol>
-				<li><img src="images/cat01.png" /></li>
-				<li><img src="images/cat02.png" /></li>
-				<li><img src="images/cat03.png" /></li>
-				<li><img src="images/cat04.png" /></li>
-				<li><img src="images/cat05.png" /></li>
-				<li><img src="images/cat06.png" /></li>
-				<li><img src="images/cat07.png" /></li>
-				<li><img src="images/cat08.png" /></li>
-				<li><img src="images/cat09.png" /></li>
-			</ol>       
-		</div>					
-	</div>
-</div>
+&lt;div id="prevNextExample"&gt;
+
+	&lt;div class="controls"&gt; 
+		&lt;button class="fancyPrev"&gt;Previously in Kittens&lt;/button&gt;
+		&lt;button class="fancyNext"&gt;Next in Kittens&lt;/button&gt;
+	&lt;/div&gt;
+	
+	&lt;div id="prevNextKitten" class="carrotCell"&gt;			
+		&lt;div class="carrotCellView"&gt;
+			&lt;ol&gt; ... &lt;/ol&gt;       
+		&lt;/div&gt;					
+	&lt;/div&gt;
+&lt;/div&gt;&lt;
 </code></pre>
 
-<p>When invoking carrotCell on this mark up, you need to tell it that the .carrotCell container does not containsControl and set it to false in boolean, then also pass in the previous and next selectors so javascript can find where they are. See the <a href="doc.html">documentation</a> for more details.</p>
+<p>Set the <strong>containsControl</strong> to boolean <strong>false</strong> to indicate that the previous and next are not inside .carrotCell, then set the <strong>controlScope</strong> to the appropriate selector. Lastly pass in the <strong>prevSelect</strong> and <strong>nextSelect</strong> selectors to find the buttons. If nothing is passed in for <strong>controlScope</strong>, it is assumed that the document body is the scope. Check the <a href="doc.html">documentation</a> for more detail.</p>
+
 <pre><code data-language="javascript" class="js">
 $('#prevNextKitten').carrotCell({
-	containsControl: false,
-	prevSelect: ".controls .fancyPrev",
-	nextSelect: ".controls .fancyNext"
-});
-</code></pre>
-
-
-<p>Another way to do the same as above is to set the controlScope, the element in which the controls are contained instead of setting the specifics in the selector. If controlScope is not set, it is set by default to the BODY of the document.</p>
-<p>Note that controlScope is assumed to house all of the carrotCell controls including previous, next, pause, play, stop and navi.</p>
-<pre><code data-language="javascript" class="js">
-$('.example #prevNextKitten').carrotCell({
 	containsControl: false,
 	controlScope: ".controls",
 	prevSelect: ".fancyPrev",
@@ -191,49 +173,50 @@ $('.example #prevNextKitten').carrotCell({
 		<h2>Keyboard Navigation</h2>
 		<p>By default the left and right arrow keys control horizontal carrotCells and up and down control vertical carrotCells.</p>
 		<p>Use the left and right arrow keys to navigate the following example.</p>
-		<div class="example">
-			<div id="keyKitten" class="carrotCell kitten">			
-				<div class="carrotCellView">
-					<ol>
-						<li><img src="images/cat01.png" /></li>
-						<li><img src="images/cat02.png" /></li>
-						<li><img src="images/cat03.png" /></li>
-						<li><img src="images/cat04.png" /></li>
-						<li><img src="images/cat05.png" /></li>
-						<li><img src="images/cat06.png" /></li>
-						<li><img src="images/cat07.png" /></li>
-						<li><img src="images/cat08.png" /></li>
-						<li><img src="images/cat09.png" /></li>
-			        </ol>       
-				</div>							
-			</div>
+
+		<div id="keyKitten" class="carrotCell kitten">			
+			<div class="carrotCellView">
+				<ol>
+					<li><img src="images/cat01.png" /></li>
+					<li><img src="images/cat02.png" /></li>
+					<li><img src="images/cat03.png" /></li>
+					<li><img src="images/cat04.png" /></li>
+					<li><img src="images/cat05.png" /></li>
+					<li><img src="images/cat06.png" /></li>
+					<li><img src="images/cat07.png" /></li>
+					<li><img src="images/cat08.png" /></li>
+					<li><img src="images/cat09.png" /></li>
+		        </ol>       
+			</div>							
 		</div>
 
-<p>All you have to do is set key to the boolean true in the carrotCell params. Note that since key events are a global document event, be careful when binding them to control multiple things.</p>
+
+	<p>Set <strong>key</strong> to boolean <strong>true</strong> in the carrotCell parameters. Note that since key events are a global document event, be careful when binding multiple listeners to the same event.</p>
+	
 <pre><code data-language="javascript" class="js">
 $('#keyKitten').carrotCell({ key: true });
 </code></pre>
 
-		<p>In this example we'll assign P and Q to be our forward and backward key events instead of arrow keys.</p>
-		<div class="example">
-			<div id="keyCustomKitten" class="carrotCell kitten">			
-				<div class="carrotCellView">
-					<ol>
-						<li><img src="images/cat01.png" /></li>
-						<li><img src="images/cat02.png" /></li>
-						<li><img src="images/cat03.png" /></li>
-						<li><img src="images/cat04.png" /></li>
-						<li><img src="images/cat05.png" /></li>
-						<li><img src="images/cat06.png" /></li>
-						<li><img src="images/cat07.png" /></li>
-						<li><img src="images/cat08.png" /></li>
-						<li><img src="images/cat09.png" /></li>
-			        </ol>       
-				</div>							
-			</div>
+		<p>In this example P and Q are assigned to be the forward and backward key events instead of arrow keys.</p>
+
+		<div id="keyCustomKitten" class="carrotCell kitten">			
+			<div class="carrotCellView">
+				<ol>
+					<li><img src="images/cat01.png" /></li>
+					<li><img src="images/cat02.png" /></li>
+					<li><img src="images/cat03.png" /></li>
+					<li><img src="images/cat04.png" /></li>
+					<li><img src="images/cat05.png" /></li>
+					<li><img src="images/cat06.png" /></li>
+					<li><img src="images/cat07.png" /></li>
+					<li><img src="images/cat08.png" /></li>
+					<li><img src="images/cat09.png" /></li>
+		        </ol>       
+			</div>							
 		</div>
 
-<p>Pass in the corresponding javascript key code of the key you want to assign.</p>
+
+<p>Pass <strong>key</strong> as <strong>true</strong>, <strong>keyBack</strong> and <strong>keyForward</strong> as the corresponding Javascript key event code that will control forward and back.</p>
 <pre><code data-language="javascript" class="js">
 $('#keyCustomKitten').carrotCell({ 
 	key: true,
@@ -252,140 +235,149 @@ $('#keyCustomKitten').carrotCell({
 	
 	
 	<article id="three">
-		<h2>Auto-Generated Navi</h2>
-		<p>You can ask the carrotCell to auto generate a paging control for you. The number of pages is automatically how many times the carrotCell needs to scroll before reaching the end. (Based on the number of items, how many of these items are visible in the view port, and how many items you are moving at once.)</p>
+		<h2>Auto Generated Navi</h2>
+		<p>CarrotCell can auto generate a paging control, or the "navi". The number of pages is calculated based on how many times carrotCell needs to scroll before reaching the end.</p>
 		
-		<div class="example">
-			<div id="naviKitten" class="carrotCell kitten">	
-				<div class="navi"></div>		
-				<div class="carrotCellView">
-					<ol>
-						<li><img src="images/cat01.png" /></li>
-						<li><img src="images/cat02.png" /></li>
-						<li><img src="images/cat03.png" /></li>
-						<li><img src="images/cat04.png" /></li>
-						<li><img src="images/cat05.png" /></li>
-						<li><img src="images/cat06.png" /></li>
-						<li><img src="images/cat07.png" /></li>
-						<li><img src="images/cat08.png" /></li>
-						<li><img src="images/cat09.png" /></li>
-			        </ol>       
-				</div>							
-			</div>
+
+		<div id="naviKitten" class="carrotCell kitten">	
+			<div class="navi"></div>		
+			<div class="carrotCellView">
+				<ol>
+					<li><img src="images/cat01.png" /></li>
+					<li><img src="images/cat02.png" /></li>
+					<li><img src="images/cat03.png" /></li>
+					<li><img src="images/cat04.png" /></li>
+					<li><img src="images/cat05.png" /></li>
+					<li><img src="images/cat06.png" /></li>
+					<li><img src="images/cat07.png" /></li>
+					<li><img src="images/cat08.png" /></li>
+					<li><img src="images/cat09.png" /></li>
+		        </ol>       
+			</div>							
 		</div>
+
+<p>Create an empty container for the .navi. The following example will generate an ordered list (OL) of clickable numbers. It is also possible to use DIV or UL instead. The code will inspect the .navi container and generate the appropriate children nodes.</p>
 		
-<p>When setting up the carrotCell, pass in the parameters navi and makeNavi in order to auto generate the paging control.</p>
+<pre><code data-language="html" class="html">
+&lt;div id="naviKitten" class="carrotCell"&gt;	
+
+	&lt;ol class="navi"&gt;&lt;/ol&gt;		
+	
+	&lt;div class="carrotCellView"&gt;
+		&lt;ol&gt;...&lt;/ol&gt;       
+	&lt;/div&gt;							
+&lt;/div&gt;&gt;
+</code></pre>
+
+		
+<p>Set parameter <strong>navi</strong> to boolean <strong>true</strong> and <strong>makeNavi</strong> to boolean <strong>true</strong>.</p>
 <pre><code data-language="javascript" class="js">
-$('.example #naviKitten').carrotCell({ 
+$('#naviKitten').carrotCell({ 
 	navi: true,
 	makeNavi: true
 });
 </code></pre>
 
-<p>Make sure you add in the navi html container inside the .carrotCell element. The following will generate an ordered list (OL) of numbers by default for the paging control. You can also use UL or DIV depending on what you prefer. The code will inspect the .navi container and generate the proper children nodes.</p>
+
+<p>The resulting generated navi mark up inside.carrotCell will look like:</p>
 <pre><code data-language="html" class="html">
-<div id="naviKitten" class="carrotCell kitten">	
-	<ol class="navi"></ol>		
-	<div class="carrotCellView">
-		<ol>...</ol>       
-	</div>							
-</div>
+&lt;ol class="navi"&gt;
+	&lt;li class="naviItem current"&gt;1&lt;/li&gt;
+	&lt;li class="naviItem"&gt;2&lt;/li&gt;
+	&lt;li class="naviItem"&gt;3&lt;/li&gt;
+&lt;/ol&gt;
 </code></pre>
 
-<p>The resulting generated navi mark up will look like:</p>
+<p>The following uses DIVs instead of OL when generating navi. </p>
 <pre><code data-language="html" class="html">
-<ol class="navi">
-	<li class="naviItem current">1</li>
-	<li class="naviItem">2</li>
-	<li class="naviItem">3</li>
-</ol>
-</code></pre>
+&lt;div id="naviKitten" class="carrotCell"&gt;	
 
-<p>The following uses DIVs instead of OL and LI when generating navi. </p>
-<pre><code data-language="html" class="html">
-<div id="naviKitten" class="carrotCell kitten">	
-	<div class="navi"></div>		
-	<div class="carrotCellView">
-		<ol>...</ol>       
-	</div>							
-</div>
+	&lt;div class="navi"&gt;&lt;/div&gt;	
+		
+	&lt;div class="carrotCellView"&gt;
+		&lt;ol&gt;...&lt;/ol&gt;       
+	&lt;/div&gt;							
+&lt;/div&gt;
 </code></pre>
 		
 <p>The resulting generated navi mark up will look like:</p>
 <pre><code data-language="html" class="html">
-<div class="navi">
-	<div class="naviItem current">1</div>
-	<div class="naviItem">2</div>
-	<div class="naviItem">3</div>
-</div>
+&lt;div class="navi"&gt;
+	&lt;div class="naviItem current"&gt;1&lt;/div&gt;
+	&lt;div class="naviItem"&gt;2&lt;/div&gt;
+	&lt;div class="naviItem"&gt;3&lt;/div&gt;
+&lt;/div&gt;
 </code></pre>	
 		
-		<p>By default the paging controls are set to be numbers, but you can pass in custom names through the data attribute navi of .navi.</p>
-		<div class="example">
-			<div id="naviNamedKitten" class="carrotCell kitten">	
-				<ol class="navi" data-navi='["fabulous kittens set", "basket kitten set"]'></ol>
-				<div class="carrotCellView">
-					<ol>
-						<li><img src="images/cat01.png" /></li>
-						<li><img src="images/cat02.png" /></li>
-						<li><img src="images/cat03.png" /></li>
-						<li><img src="images/cat04.png" /></li>
-						<li><img src="images/cat05.png" /></li>
-						<li><img src="images/cat06.png" /></li>
-						<li><img src="images/cat07.png" /></li>
-						<li><img src="images/cat08.png" /></li>
-						<li><img src="images/cat09.png" /></li>
-			        </ol>       
-				</div>							
-			</div>
+		<p>By default the paging controls are set to be numbers, but custom names can be passed through the data attribute navi of .navi.</p>
+	
+		<div id="naviNamedKitten" class="carrotCell kitten">	
+			<ol class="navi" data-navi='["fabulous kittens set", "basket kitten set"]'></ol>
+			<div class="carrotCellView">
+				<ol>
+					<li><img src="images/cat01.png" /></li>
+					<li><img src="images/cat02.png" /></li>
+					<li><img src="images/cat03.png" /></li>
+					<li><img src="images/cat04.png" /></li>
+					<li><img src="images/cat05.png" /></li>
+					<li><img src="images/cat06.png" /></li>
+					<li><img src="images/cat07.png" /></li>
+					<li><img src="images/cat08.png" /></li>
+					<li><img src="images/cat09.png" /></li>
+		        </ol>       
+			</div>							
 		</div>
-	</article>
 
-<p>In this example we only pass in 2 names, and the 3rd page is using the default number name. If you pass in more than enough items they will be ignored.</p>
-<p>Note that data-navi is inclosed in single quotes as per JSON specification and contents of the array in double quotes. Also note that you can not use single or double quotes in the names. For more versatility use the <a href="#four">custom navi</a> explained in the next section.</p>
+		<p>In this example only 2 names are passed in, and the 3rd page is using the default number name.</p>
+		<p>Note that data-navi is inclosed in single quotes as per JSON specification and contents of the array in double quotes. Also note that you can not use single or double quotes in the names. For more versatility use the <a href="#four">custom navi</a> explained in the next section.</p>
+		
 <pre><code data-language="html" class="html">
-<ol class="navi" data-navi='["fabulous kitten set", "basket kitten set"]'></ol>
 &lt;ol class="navi" data-navi='["fabulous kitten set", "basket kitten set"]'&gt;&lt;/ol&gt;
 </code></pre>
+
+	</article>
+
+
 	
 	
 	<article id="four">
 		<h2>Custom Navi</h2>
-		<p>For more control of what goes into the navi, you can just write your own code block inside .navi.</p>
+		<p>For more control of what content goes into the navi, create the complete markup.</p>
 		
-		<div class="example">
-			<div id="naviCustomKitten" class="carrotCell kitten">	
-				<ol class="navi">
-					<li class="naviItem">kitten's with single quotes</li>
-					<li class="naviItem">"lol more kitten"</li>
-				</ol>
-				<div class="carrotCellView">
-					<ol>
-						<li><img src="images/cat01.png" /></li>
-						<li><img src="images/cat02.png" /></li>
-						<li><img src="images/cat03.png" /></li>
-						<li><img src="images/cat04.png" /></li>
-						<li><img src="images/cat05.png" /></li>
-						<li><img src="images/cat06.png" /></li>
-						<li><img src="images/cat07.png" /></li>
-						<li><img src="images/cat08.png" /></li>
-						<li><img src="images/cat09.png" /></li>
-			        </ol>       
-				</div>							
-			</div>
+		<div id="naviCustomKitten" class="carrotCell kitten">	
+			<ol class="navi">
+				<li class="naviItem">kitten's with single quotes</li>
+				<li class="naviItem">"lol more kitten"</li>
+			</ol>
+			<div class="carrotCellView">
+				<ol>
+					<li><img src="images/cat01.png" /></li>
+					<li><img src="images/cat02.png" /></li>
+					<li><img src="images/cat03.png" /></li>
+					<li><img src="images/cat04.png" /></li>
+					<li><img src="images/cat05.png" /></li>
+					<li><img src="images/cat06.png" /></li>
+					<li><img src="images/cat07.png" /></li>
+					<li><img src="images/cat08.png" /></li>
+					<li><img src="images/cat09.png" /></li>
+		        </ol>       
+			</div>							
 		</div>
-		
-<p>Note in this example there is only 2 paging controls when there is 3 pages so the 3rd page can not be accessed. To find out how many pages there are in the carrotCell you  either do the math yourself or you can access the API method getPageCount. See the <a href="demo-api.html">API demo</a> and the <a href="doc.html">documentation</a> for more information on how to use the API.</p>
+	
+<p>Note in this example there are only 2 paging controls created when there are 3 pages so the 3rd page can not be accessed. To find out how many pages there are in the carrotCell, do the math manually, or access the API method <strong>getPageCount</strong>. See the <a href="demo-api.html">API demo</a> and the <a href="doc.html">documentation</a> for more information.</p>
+
 <pre><code data-language="html" class="html">
-<div id="naviCustomKitten" class="carrotCell kitten">	
-	<ol class="navi">
-		<li class="naviItem">kitten's with single quotes</li>
-		<li class="naviItem">"lol more kitten"</li>
-	</ol>
-	<div class="carrotCellView">
-		<ol>...</ol>       
-	</div>							
-</div>
+&lt;div id="naviCustomKitten" class="carrotCell kitten"&gt;	
+
+	&lt;ol class="navi"&gt;
+		&lt;li class="naviItem"&gt;kitten's with single quotes&lt;/li&gt;
+		&lt;li class="naviItem"&gt;"lol more kitten"&lt;/li&gt;
+	&lt;/ol&gt;
+	
+	&lt;div class="carrotCellView"&gt;
+		&lt;ol&gt;...&lt;/ol&gt;       
+	&lt;/div&gt;							
+&lt;/div&gt;
 </code></pre>
 	</article>
 
