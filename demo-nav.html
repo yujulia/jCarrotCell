@@ -18,8 +18,8 @@
 		carrotDemos.setup = function() {
 			$('.example #prevNextKitten').carrotCell({
 				containsControl: false,
-				prevSelect: "#prevNextExample .controls .fancyPrev",
-				nextSelect: "#prevNextExample .controls .fancyNext"
+				prevSelect: ".controls .fancyPrev",
+				nextSelect: ".controls .fancyNext"
 			});		
 			
 			$('.example #keyKitten').carrotCell({ key: true });
@@ -38,6 +38,10 @@
 			$('.example #naviNamedKitten').carrotCell({ 
 				navi: true,
 				makeNavi: true
+			});
+			
+			$('.example #naviCustomKitten').carrotCell({ 
+				navi: true
 			});
 		}
 		
@@ -159,8 +163,8 @@
 <pre><code data-language="javascript" class="js">
 $('#prevNextKitten').carrotCell({
 	containsControl: false,
-	prevSelect: "#prevNextExample .controls .fancyPrev",
-	nextSelect: "#prevNextExample .controls .fancyNext"
+	prevSelect: ".controls .fancyPrev",
+	nextSelect: ".controls .fancyNext"
 });
 </code></pre>
 
@@ -170,9 +174,9 @@ $('#prevNextKitten').carrotCell({
 <pre><code data-language="javascript" class="js">
 $('.example #prevNextKitten').carrotCell({
 	containsControl: false,
-	controlScope: "#prevNextExample",
-	prevSelect: ".controls .fancyPrev",
-	nextSelect: ".controls .fancyNext"
+	controlScope: ".controls",
+	prevSelect: ".fancyPrev",
+	nextSelect: ".fancyNext"
 });
 </code></pre>
 
@@ -345,8 +349,44 @@ $('.example #naviKitten').carrotCell({
 	
 	<article id="four">
 		<h2>Custom Navi</h2>
-		<p>This version takes no options and uses all of the default settings of carrotCell.</p>
+		<p>For more control of what goes into the navi, you can just write your own code block inside .navi.</p>
+		
+		<div class="example">
+			<div id="naviCustomKitten" class="carrotCell kitten">	
+				<ol class="navi">
+					<li class="naviItem">kitten's with single quotes</li>
+					<li class="naviItem">"lol more kitten"</li>
+				</ol>
+				<div class="carrotCellView">
+					<ol>
+						<li><img src="images/cat01.png" /></li>
+						<li><img src="images/cat02.png" /></li>
+						<li><img src="images/cat03.png" /></li>
+						<li><img src="images/cat04.png" /></li>
+						<li><img src="images/cat05.png" /></li>
+						<li><img src="images/cat06.png" /></li>
+						<li><img src="images/cat07.png" /></li>
+						<li><img src="images/cat08.png" /></li>
+						<li><img src="images/cat09.png" /></li>
+			        </ol>       
+				</div>							
+			</div>
+		</div>
+		
+<p>Note in this example there is only 2 paging controls when there is 3 pages so the 3rd page can not be accessed. To find out how many pages there are in the carrotCell you  either do the math yourself or you can access the API method getPageCount. See the <a href="demo-api.html">API demo</a> and the <a href="doc.html">documentation</a> for more information on how to use the API.</p>
+<pre><code data-language="html" class="html">
+<div id="naviCustomKitten" class="carrotCell kitten">	
+	<ol class="navi">
+		<li class="naviItem">kitten's with single quotes</li>
+		<li class="naviItem">"lol more kitten"</li>
+	</ol>
+	<div class="carrotCellView">
+		<ol>...</ol>       
+	</div>							
+</div>
+</code></pre>
 	</article>
+
 	
 
 	
