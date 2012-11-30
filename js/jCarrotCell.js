@@ -134,7 +134,7 @@
 				
 			/** scroll the carousel by advancing to the next page
 			*/
-			var gotoPage = function(page) {				
+			var gotoPage = function(page) {			
 				if (arguments.length) { 							
 					myPage = page; 
 				} else { 
@@ -401,7 +401,9 @@
 			
 			/** find how many pages there are
 			*/
-			var howManyPages = function(){						
+			var howManyPages = function(){		
+				console.log("visible is " + visible + " advance by is " + advanceBy + " total " + totalItems);
+								
 				if ((visible !== advanceBy) && (!settings.auto)) {
 					pages = Math.ceil((totalItems - (visible - advanceBy)) / advanceBy);				
 				} else {
@@ -460,11 +462,8 @@
 						settings.keyBack = settings.keyBack || KEY_UP;
 						settings.keyForward = settings.keyForward || KEY_DOWN;
 					}
-					console.log("side ways is " + settings.sideways + " back is " + settings.keyBack + " fwd is " + settings.keyForward);
 				}
-				
-				
-				
+
 				howManyPages();
 				howManyExtraMoves();
 

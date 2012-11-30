@@ -63,7 +63,8 @@
 /** may need to be more specific in your css to over ride this
 */
 .carrotCell .disabled {
-	display: none!important;
+/*	display: none!important;*/
+	display: none;
 }
 
 .naviItem {

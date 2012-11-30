@@ -7,12 +7,39 @@
 	<!--[if lt IE 9]>
 	<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
 	<![endif]-->
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="js/jquery.js" type="text/javascript" charset="utf-8"></script>
+ 	<script src="js/jquery-touchwipe.js" type="text/javascript" charset="utf-8"></script>
+	<script src="js/jCarrotCell.js" type="text/javascript" charset="utf-8"></script>
 	<script src="js/rainbow-custom.min.js" type="text/javascript" charset="utf-8"></script>
 	
 	<link type="text/css" href="css/main.css" rel="stylesheet" /> 
 	<link type="text/css" href="css/carrotcell.css" rel="stylesheet" /> 
 	
+	<script type="text/javascript" charset="utf-8">
+	$(function() {
+	    $("#myCarrotCell").carrotCell();
+	});
+	</script>
+	
+	<style>
+		.carrotCell { 
+			width: 400px; 
+		}		
+		.carrotCellView li {
+			width: 100px;
+		}
+		.carrotCell .disabled  { 
+			color: #ccc; 
+		}
+		.prev, .next {
+			display: block;
+		}
+		.prev { 
+			float: left; 
+			margin-right: 320px;
+		}
+		
+	</style>
 </head>
 
 <body>
@@ -30,8 +57,8 @@
 		<p><strong>version:</strong> 1.0</p>
 		<p><strong>source:</strong> <a href="https://github.com/jyuya/jCarrotCell">https://github.com/jyuya/jCarrotCell</a></p>
 		<p><strong>started:</strong> 11/10/2011</p>
-		<p><strong>last updated:</strong> 10/17/2012</p>
-		<p><strong>tested with jQuery version:</strong> 1.7.2</p>
+		<p><strong>last updated:</strong> 12/1/2012</p>
+		<p><strong>tested with jQuery version:</strong> 1.8.3</p>
 	</header>
 	
 	<nav>
@@ -41,21 +68,34 @@
 	
 	<article>
 		<h2>What Is It?</h2>
-		<p>jCarrotCell is yet another jQuery carousel plugin, because there isn't enough of them out there that do exactly the thing you want. </p>
-		<p>Features of jCarrotCell include:</p>
+		<p>jCarrotCell is a jQuery carousel plugin that does all the popular carousel things. </p>
+		
+		<h2>What Makes It Different?</h2>
 		<ul class="realList">
-			<li>Vertical / horizontal scrolling</li>
-			<li>Circular / infinite scrolling with speed control</li>
-			<li>Auto advance on a custom timer</li>
-			<li>Play, pause, and stop in auto advance mode</li>
-			<li>Append to / remove from list at specific spot</li>
-			<li>Reload an entirely new bunch of slides</li>
-			<li>External navigation support</li>
-			<li>Exposed API methods</li>
-			<li>Flexible HTML tags / layout</li>	
-			<li>Recognizes swipe events on touch devices such as iPad, iPhone</li>	
-			<li>kittens, puppies</li>
-			
+			<li>Flexible markup - you don't need to use any DIVs if you don't want to.</li>
+			<li>Pass in custom selectors to find the controls, you don't need to put them in a specific place - but you do have to define how to find them.</li>
+			<li>Have the code auto-generate the paging navigation for you, or customize it if you want to.</li>
+			<li>Insert / Remove items, empty the whole carousel, reload the carousel with new items with AJAX or whatever and have it actually work.</li>
+			<li>Nested scrollers.</li>
+			<li>Touch swipe support on applicable devices.</li>
+			<li>Kittens, puppies.</li>
+		</ul>
+		
+		<h2>What Can It Do?</h2>
+		<ul class="realList">
+			<li>Vertical / horizontal scrolling.</li>
+			<li>Circular / infinite scrolling.</li>
+			<li>Scrolling speed, scrolling delay control.</li>
+			<li>Timed auto advance.</li>
+			<li>Play, pause, and stop control in auto advance mode.</li>
+			<li>Pause auto advance on hover.</li>
+			<li>Stop on click of a navigation element.</li>
+			<li>Navigate using custom key events.</li>
+			<li>Clickable paging navigation or "navi".</li>
+			<li>Exposed API methods.</li>
+			<li>Custom Events.</li>
+			<li>Custom class names.</li>
+			<li>Custom selectors to find controls anywhere on the page.</li>
 		</ul>
 	</article>
 
@@ -66,57 +106,98 @@
 	
 	<article id="howTLDR">
 		<h2>How Do I Use It? (TL,DR Version)</h2>
-		<p><span>1.</span> Set up your carousel content in HTML. Here is an example of a basic layout.</p>
+		<p><span>1.</span> Create the mark up.</p>
 <pre><code data-language="html">
-&lt;div id="myCarousel" class="carrotCell"&gt;
-	&lt;div class="carrotCellView"&gt;
-		&lt;ol&gt;
-			&lt;li&gt;...&lt;/li&gt;
-			&lt;li&gt;...&lt;/li&gt;
-			...
-		&lt;/ol&gt;
-	&lt;/div&gt;
-	
-	&lt;div class="prev"&gt;prev&lt;/div&gt;
-	&lt;div class="next"&gt;next&lt;/div&gt;
-	...
-&lt;/div&gt;
+<div class="carrotCell">			
+	<div class="carrotCellView">
+		<ol>
+			<li>item 1</li>
+			<li>item 2</li>
+			<li>item 3</li>
+			<li>item 4</li>
+			<li>item 5</li>
+			<li>item 6</li>
+			<li>item 7</li>
+			<li>item 8</li>
+			<li>item 9</li>
+		</ol>       
+	</div>			
+	<div class="prev">previous</div>
+	<div class="next">next</div> 
+</div>
 </code></pre>
 		
-		<p><span>2.</span> Include the carrotcell.css or import the styles into your own style sheet.</p>
+		<p><span>2.</span> Include the carrotcell.css.</p>
 		
 <pre><code data-language="html">
 &lt;link type="text/css" href="css/carrotcell.css" rel="stylesheet"&gt;
 </code></pre>
-		
-		<p><span>3.</span> Include the jQuery javascript file (last tested with 1.7.2).</p>
-		
-<pre><code data-language="html">
-&lt;script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js" type="text/javascript" charset="utf-8"&gt;&lt;/script&gt;
-</code></pre>
-		
-		<p><span>4.</span>Include the jCarrotCell.js file after the jQuery script.</p>
-		
-<pre><code data-language="html">
-&lt;script src="js/jCarrotCell.js" type="text/javascript" charset="utf-8"&gt;&lt;/script&gt;
-</code></pre>
-		
-		<p><span>5.</span> Finally, call the jCarrotCell function on the element of class ".carrotCell"</p>
 
+		<p><span>3.</span> Give the carrotCell some styling.</p>
+		
+<pre><code data-language="css">
+.carrotCell { 
+	width: 400px; 
+}		
+.carrotCell .disabled  { 
+	color: #ccc; 
+}
+.prev, .next {
+	display: block;
+}
+.prev { 
+	float: left; 
+	margin-right: 320px;
+}
+</code></pre>
+		
+		<p><span>4.</span> Include jQuery (1.8.3).</p>
+		
 <pre><code data-language="html">
-&lt;script type="text/javascript"&gt;
-$(document).ready(function(){
-	$('.carrotCell').carrotCell();
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+</code></pre>
+		
+		<p><span>5.</span>Include jCarrotCell.js file after jQuery.</p>
+		
+<pre><code data-language="html">
+&lt;script src="jCarrotCell.js" type="text/javascript" charset="utf-8"&gt;&lt;/script&gt;
+</code></pre>
+		
+		<p><span>6.</span> Invoke carrotCell() on the .carrotCell on document ready.</p>
+
+<pre><code data-language="js">
+$(function() {
+    $('.carrotCell').carrotCell();
 });
-&lt;/script&gt;
 </code></pre>
 
 		<p><span>Optional.</span> You can also enable swipe support for the carousel on touch devices (iPhone, iPad) simply by including the jquery-touchwipe.js by <a href="http://www.netcu.de/jquery-touchwipe-iphone-ipad-library" target="_blank">Andreas Waltl</a>. This enables you to swipe on the carousel to advance forward or back.</p>
 
 <pre><code data-language="html">
-&lt;script src="js/jquery-touchwipe.js" type="text/javascript" charset="utf-8"&gt;&lt;/script&gt;
+&lt;script src="jquery-touchwipe.js" type="text/javascript" charset="utf-8"&gt;&lt;/script&gt;
 </code></pre>
 
+	<p><span>Result:</span> A minimal carrotCell.</p>
+
+	<div id="myCarrotCell" class="carrotCell">			
+		<div class="carrotCellView">
+			<ol>
+				<li><img src="images/cat01.png" /></li>
+				<li><img src="images/cat02.png" /></li>
+				<li><img src="images/cat03.png" /></li>
+				<li><img src="images/cat04.png" /></li>
+				
+				<li><img src="images/cat05.png" /></li>
+				<li><img src="images/cat06.png" /></li>
+				<li><img src="images/cat07.png" /></li>
+				<li><img src="images/cat08.png" /></li>
+				
+				<li><img src="images/cat09.png" /></li>
+			</ol>       
+		</div>			
+		<div class="prev">previous</div>
+		<div class="next">next</div> 
+	</div>
 
 	</article>
 	

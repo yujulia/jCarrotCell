@@ -16,8 +16,8 @@
 	$(document).ready(function(){
 		window.carrotDemos = window.carrotDemos || {};
 		carrotDemos.setup = function() {
-			$('.example #defaultKitten').carrotCell();
-			$('.example #defaultVerticalKitten').carrotCell({ sideways: false });
+			$(".example #defaultKitten").carrotCell();
+			$(".example #defaultVerticalKitten").carrotCell({ sideways: false });
 		}
 		
 		// chrome can not calculate the width correctly because it is foolish
@@ -55,14 +55,73 @@
 	
 	<h2>Demo: Basic Setup Topics</h2>
 	<ol class="index">
-		<li><a href="#one">Horizontal Scroller</a></li>
-		<li><a href="#two">Vertical Scroller</a></li>
+		<li><a href="#one">Getting Started</a></li>
+		<li><a href="#two">Horizontal Scroller</a></li>
+		<li><a href="#three">Vertical Scroller</a></li>
 	</ol>
 	
-	
 	<article id="one">
+		<h2>Getting Started</h2>
+		<p><span>1.</span> Create the carrotCell markup. By default everything must be contained in the element .carrotCell, which contains a .carrotCellView that is the parent to another container with the items being its children. The controls are also assumed to be contained inside .carrotCell. The markup can be changed, please refer to the <a href="demo-fleixble.html">layout flexibility demo</a> and the <a href="doc.html">documentation</a>.</p>
+<pre><code data-language="html">
+<div class="carrotCell">			
+	<div class="carrotCellView">
+		<ol>
+			<li>item 1</li>
+			<li>item 2</li>
+			<li>item 3</li>
+			<li>item 4</li>
+			<li>item 5</li>
+			<li>item 6</li>
+			<li>item 7</li>
+			<li>item 8</li>
+			<li>item 9</li>
+		</ol>       
+	</div>			
+	<div class="prev">previous</div>
+	<div class="next">next</div> 
+</div>
+</code></pre>
+		
+		<p><span>2.</span> Include the carrotcell.css or import the styles into your own style sheet.</p>
+		
+<pre><code data-language="html">
+&lt;link type="text/css" href="css/carrotcell.css" rel="stylesheet"&gt;
+</code></pre>
+		
+		<p><span>3.</span> Include the jQuery javascript file (last tested with 1.7.2).</p>
+		
+<pre><code data-language="html">
+&lt;script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js" type="text/javascript" charset="utf-8"&gt;&lt;/script&gt;
+</code></pre>
+		
+		<p><span>4.</span>Include the jCarrotCell.js file after the jQuery script.</p>
+		
+<pre><code data-language="html">
+&lt;script src="js/jCarrotCell.js" type="text/javascript" charset="utf-8"&gt;&lt;/script&gt;
+</code></pre>
+		
+		<p><span>5.</span> Finally, call the jCarrotCell function on the element of class ".carrotCell"</p>
+
+<pre><code data-language="html">
+&lt;script type="text/javascript"&gt;
+$(document).ready(function(){
+	$('.carrotCell').carrotCell();
+});
+&lt;/script&gt;
+</code></pre>
+
+		<p><span>Optional.</span> You can also enable swipe support for the carousel on touch devices (iPhone, iPad) simply by including the jquery-touchwipe.js by <a href="http://www.netcu.de/jquery-touchwipe-iphone-ipad-library" target="_blank">Andreas Waltl</a>. This enables you to swipe on the carousel to advance forward or back.</p>
+
+<pre><code data-language="html">
+&lt;script src="js/jquery-touchwipe.js" type="text/javascript" charset="utf-8"&gt;&lt;/script&gt;
+</code></pre>
+	</article>
+	
+	
+	<article id="two">
 		<h2>Horizontal Scroller</h2>
-		<p>The default carrotcell is horizontal and only needs a few simple steps to set up. See the <a href="index.html">home page</a> for instructions.</p>
+		<p>The default carrotCell is horizontal and advances by how many is visible in the current view port. See the <a href="index.html">home page</a> for setup instructions and check the <a href="doc.html">documentation</a> on other setup parameters you can use.</p>
 		
 		<div class="example">
 			<div id="defaultKitten" class="carrotCell">			
@@ -84,9 +143,9 @@
 			</div>
 		</div>
 
-<p>The default carrotcell needs to be invoked on the .carrotCell container to start doing all its things.</p>
+<p>The default carrotcell needs to be invoked on the .carrotCell container to start doing all its magic.</p>
 <pre><code data-language="javascript" class="js">
-$('#defaultKitten').carrotCell();
+$("#defaultKitten").carrotCell();
 </code></pre>
 
 <p>Make sure you have styles for the .carrotCell container and its child elements, including a fix width view port and fixed same width cell elements.</p>
@@ -160,7 +219,7 @@ $('#defaultKitten').carrotCell();
 	
 	
 	
-	<article id="two">
+	<article id="three">
 		<h2>Vertical Scroller</h2>
 		<p>This carrotCell scrolls vertically instead of horizontally.</p>
 		

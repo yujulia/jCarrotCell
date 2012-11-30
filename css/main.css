@@ -114,10 +114,14 @@ body {
 	padding: 20px;
 }
 
-/**
-*/
 a {
-	color: #666;
+	color: #ff9900;
+	text-decoration: none;
+	border-bottom: dotted 1px #ff9900;
+}
+
+a:hover {
+	color: #99cc33;
 }
 
 h1, h2, h3 {
@@ -150,10 +154,6 @@ h2 {
 	font-size: 30px;
 }
 
-article h2 {
-	color: #99cc33;
-}
-
 h3 {
 	margin: 10px 0 0 0;
 	font-size: 20px;
@@ -168,6 +168,11 @@ article {
 	width: 100%;
 	overflow: hidden;
 }
+
+article h2 {
+	color: #99cc33;
+}
+
 
 p {
 	line-height: 1.2em;
@@ -193,6 +198,7 @@ nav a {
 	color: #fff;
 	padding: 5px;
 	text-decoration: none;
+	border: none;
 }
 
 nav a:hover {
@@ -207,14 +213,6 @@ code {
 	line-height: 1.2em;
 	overflow-x: auto;
 }
-
-/*code.css {
-	background: #EBF4FC;
-}
-
-code.html {
-	background: #E4EBED;
-}*/
 
 code span {
 	color: #99cc33;
@@ -240,6 +238,16 @@ ol.realList li {
 p span{
 	font-size: 20px;
 	font-family: georgia, times;
+}
+
+p a {
+	color: #99CC33;
+	border-bottom: dotted 1px #99CC33;
+	text-decoration: none;
+}
+
+p a:hover {
+	color: #ff9900;
 }
 
 /** property tables
@@ -295,271 +303,8 @@ td code {
 	overflow: visible;
 }
 
-.index li a {
-	text-decoration: none;
-	border-bottom: dotted 1px #000;
-}
-
-.index li a:hover {
-	text-decoration: underline;
-}
-
-/** demo carrotcell styles
+/** RAINBOW related styles
 */
-.carrotCell {
-	margin: 20px 0;
-	border: dashed 1px #ccc;
-}
-
-.carrotCellView {
-	margin: 0 20px;
-}
-
-.carrotCellView ol {
-	background: #efefef;
-}
-
-.carrotCellView li {
-	width: 100px;
-	height: 100px;
-	border: solid 5px #666;
-	margin: 10px;
-}
-
-.carrotCellView li.cloned {
-	border-color: #ffcc00;
-}
-
-.carrotCellView li span {
-	font-size: 26px;
-	position: absolute;
-	top: 0;
-	left: 0;
-	color: #ffcc00;
-	line-height: 1em;
-}
-
-.carrotCellView li img {
-	height: 100px;
-}
-
-/** carrotcell buttons
-*/
-.carrotCell .next,
-.carrotCell .prev {
-	position: absolute;
-	top: 60px;
-	text-decoration: none;
-	font-family: arial;
-	color: #666;
-	background: #fff;
-	padding: 3px;
-	font-size: 10px;
-	display: none;
-	z-index: 1;
-	cursor: pointer;
-	text-transform: uppercase;
-	border: solid 1px #ccc;
-}
-
-.carrotCell .next {
-	right: 0px;
-}
-
-.carrotCell .prev {
-	left: 0;
-}
-
-.carrotCell .pause,
-.carrotCell .play,
-.carrotCell .stop {
-	margin: 10px 5px;
-	float: left;
-	border: solid 1px #ccc;
-	padding: 3px 5px;
-	cursor: pointer;
-}
-
-.navi {
-	margin: 10px 0 0 20px;
-}
-
-.naviItem {
-	display: inline-block;
-	padding: 6px;
-	margin: 3px;
-	cursor: pointer;
-	background: #ccc;
-	color: #fff;
-	font-weight: bold;
-}
-
-.navi .current {
-	background: #99cc33;
-}
-
-
-/** specific carousel things
-*/
-
-.kitten {
-	width: 560px;
-}
-
-.kitten .carrotCellView {
-	width: 520px;
-}
-
-
-#kitten1, 
-#kitten2, 
-#kitten5,
-#kitten6,
-#kitten7,
-#kitten9,
-#kittenx
-{
-	width: 560px;
-}
-
-#kitten1 .carrotCellView,
-#kitten5 .carrotCellView,
-#kitten6 .carrotCellView,
-#kitten7 .carrotCellView,
-#kitten9 .carrotCellView,
-#kittenx .carrotCellView
-{
-	width: 520px;
-}
-
-#kitten3, 
-#kitten4 {
-	width: 180px;
-}
-
-#kitten3 .carrotCellView,
-#kitten4 .carrotCellView {
-	height: 260px;
-}
-
-#kitten3 .carrotCellView ol {
-	width: 130px;
-	background: #efefef;
-}
-
-#kitten3 .next {
-	top: 47%;
-	right: 0;
-}
-
-#kitten3 .prev {
-	top: 47%;
-}
-
-.button {
-	border: solid 1px #aaa;
-	padding: 3px 5px;
-	background: #ccc;
-	font-weight: bold;
-	color: #000;
-	text-decoration: none;
-	font-family: arial;
-	display: block;
-	margin: 5px 0;
-	width: 100px;
-	text-align: center;
-	cursor: pointer;
-}
-
-#kitten7test {
-	width: 100%;
-	overflow: hidden;
-	margin-left: -5px;
-}
-
-#kitten7testinsert, #kitten7testload {
-	width: 100%;
-	padding: 20px;
-	margin-bottom: 10px;
-	background: #efefef;
-}
-
-#kitten7test code {
-
-	margin: 0;
-}
-
-#kitten8Nav {
-	padding: 0 20px;
-	text-align: center;
-	width: 480px;
-}
-
-#kitten8Nav .navi {
-	display: inline;
-	cursor: pointer;
-	margin: 0 10px;
-}
-
-#kitten8Nav .navi div {
-	padding: 3px 7px;
-	display: inline;
-}
-
-#kitten8Nav .navi .current {
-	background: #efefef;
-}
-
-#kitten8Nav .btn {
-	display: inline;
-	cursor: pointer;
-}
-
-#kitten8Nav .disabled {
-	color: #ccc;
-}
-
-#kitten8 {
-		width: 500px;
-}
-
-#kitten8 .carrotCellView {
-	width: 480px;
-	background: #ff9900;
-	margin: 10px;
-}
-
-#kitten8 div div div{
-	float: left;
-	border: solid 3px #cc6600;
-	margin: 7px;
-	position: relative;
-	overflow: hidden;
-}
-
-#kitten8 img {
-	display: block;
-}
-
-#kitten8 div div div div {
-	position: absolute;
-	background: #000;
-	color: #fff;
-	padding: 5px 10px;
-	font-weight: bold;
-	border: none;
-	margin: 0;
-}
-
-#kitten9test {
-	background: #efefef;
-	padding: 10px;
-	overflow: hidden;
-}
-
-#kitten9test code {
-	margin: 0;
-}
 
 .comment {
         color: #ccc;
@@ -605,73 +350,3 @@ td code {
     color: #d8fa3c;
 }
 
-/*** ----------------- kittenx
-**/
-
-#kittenxNav {
-	padding: 0 20px;
-	text-align: center;
-	width: 480px;
-}
-
-#kittenxNav .navi {
-	display: inline;
-	cursor: pointer;
-	margin: 0 10px;
-}
-
-#kittenxNav .navi div {
-	padding: 3px 7px;
-	display: inline;
-}
-
-#kittenxNav .navi .current {
-	background: #efefef;
-}
-
-#kittenxNav .btn {
-	display: inline;
-	cursor: pointer;
-}
-
-#kittenxNav .disabled {
-	color: #ccc;
-}
-
-#kittenx {
-		width: 502px;
-/*		width: 260px;*/
-}
-
-#kittenx .carrotCellView {
-	width: 482px;
-/*	width: 240px;*/
-	background: #ff9900;
-	margin: 10px;
-}
-
-#kittenx div div div{
-	float: left;
-	border: solid 3px #cc6600;
-	margin: 7px;
-	position: relative;
-	overflow: hidden;
-}
-
-#kittenx img {
-	display: block;
-}
-
-#kittenx div div div div {
-	position: absolute;
-	background: #000;
-	color: #fff;
-	padding: 5px 10px;
-	font-weight: bold;
-	border: none;
-	margin: 0;
-}
-
-.carrotCellContainer {
-	overflow: hidden;
-}
