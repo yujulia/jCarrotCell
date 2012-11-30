@@ -33,6 +33,7 @@
 	
 	<link type="text/css" href="css/main.css" rel="stylesheet" /> 
 	<link type="text/css" href="css/carrotcell.css" rel="stylesheet" /> 
+	<link type="text/css" href="css/carrotSkin.css" rel="stylesheet" /> 
 	
 	<style>
 		#defaultKitten, #defaultKittenNOJS { width: 560px; }
@@ -55,73 +56,59 @@
 	
 	<h2>Demo: Basic Setup Topics</h2>
 	<ol class="index">
-		<li><a href="#one">Getting Started</a></li>
+		<li><a href="#one">Set Up</a></li>
 		<li><a href="#two">Horizontal Scroller</a></li>
 		<li><a href="#three">Vertical Scroller</a></li>
 	</ol>
 	
 	<article id="one">
-		<h2>Getting Started</h2>
+		<h2>Set Up</h2>
 		<p><span>1.</span> Create the carrotCell markup. By default everything must be contained in the element .carrotCell, which contains a .carrotCellView that is the parent to another container with the items being its children. The controls are also assumed to be contained inside .carrotCell. The markup can be changed, please refer to the <a href="demo-fleixble.html">layout flexibility demo</a> and the <a href="doc.html">documentation</a>.</p>
 <pre><code data-language="html">
-<div class="carrotCell">			
-	<div class="carrotCellView">
-		<ol>
-			<li>item 1</li>
-			<li>item 2</li>
-			<li>item 3</li>
-			<li>item 4</li>
-			<li>item 5</li>
-			<li>item 6</li>
-			<li>item 7</li>
-			<li>item 8</li>
-			<li>item 9</li>
-		</ol>       
-	</div>			
-	<div class="prev">previous</div>
-	<div class="next">next</div> 
-</div>
+&lt;div class="carrotCell"&gt;			
+	&lt;div class="carrotCellView"&gt;
+		&lt;ol&gt;
+			&lt;li&gt;&lt;img src="images/cat01.png" /&gt;&lt;/li&gt;
+			&lt;li&gt;&lt;img src="images/cat02.png" /&gt;&lt;/li&gt;
+			&lt;li&gt;&lt;img src="images/cat03.png" /&gt;&lt;/li&gt;
+			&lt;li&gt;&lt;img src="images/cat04.png" /&gt;&lt;/li&gt;
+			&lt;li&gt;&lt;img src="images/cat05.png" /&gt;&lt;/li&gt;
+			&lt;li&gt;&lt;img src="images/cat06.png" /&gt;&lt;/li&gt;
+			&lt;li&gt;&lt;img src="images/cat07.png" /&gt;&lt;/li&gt;
+			&lt;li&gt;&lt;img src="images/cat08.png" /&gt;&lt;/li&gt;
+			&lt;li&gt;&lt;img src="images/cat09.png" /&gt;&lt;/li&gt;
+		&lt;/ol&gt;       
+	&lt;/div&gt;			
+	&lt;div class="prev"&gt;prev&lt;/div&gt;
+	&lt;div class="next"&gt;next&lt;/div&gt; 
+&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;
 </code></pre>
 		
-		<p><span>2.</span> Include the carrotcell.css or import the styles into your own style sheet.</p>
+		<p><span>2.</span> Include the carrotcell.css or import the styles. This CSS contains the basic foundations needed to make carrotCell work.</p>
 		
 <pre><code data-language="html">
 &lt;link type="text/css" href="css/carrotcell.css" rel="stylesheet"&gt;
 </code></pre>
 		
-		<p><span>3.</span> Include the jQuery javascript file (last tested with 1.7.2).</p>
+		<p><span>3.</span> Include jQuery (1.8.3) from the CDN or any versions 1.6+ up to 1.8.3.</p>
 		
 <pre><code data-language="html">
-&lt;script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js" type="text/javascript" charset="utf-8"&gt;&lt;/script&gt;
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
 </code></pre>
 		
-		<p><span>4.</span>Include the jCarrotCell.js file after the jQuery script.</p>
+		<p><span>4.</span>Include the jCarrotCell.js after the jQuery script.</p>
 		
 <pre><code data-language="html">
-&lt;script src="js/jCarrotCell.js" type="text/javascript" charset="utf-8"&gt;&lt;/script&gt;
+&lt;script src="jCarrotCell.js" type="text/javascript" charset="utf-8"&gt;&lt;/script&gt;
 </code></pre>
 		
-		<p><span>5.</span> Finally, call the jCarrotCell function on the element of class ".carrotCell"</p>
-
-<pre><code data-language="html">
-&lt;script type="text/javascript"&gt;
-$(document).ready(function(){
-	$('.carrotCell').carrotCell();
-});
-&lt;/script&gt;
-</code></pre>
-
-		<p><span>Optional.</span> You can also enable swipe support for the carousel on touch devices (iPhone, iPad) simply by including the jquery-touchwipe.js by <a href="http://www.netcu.de/jquery-touchwipe-iphone-ipad-library" target="_blank">Andreas Waltl</a>. This enables you to swipe on the carousel to advance forward or back.</p>
-
-<pre><code data-language="html">
-&lt;script src="js/jquery-touchwipe.js" type="text/javascript" charset="utf-8"&gt;&lt;/script&gt;
-</code></pre>
 	</article>
 	
 	
 	<article id="two">
 		<h2>Horizontal Scroller</h2>
-		<p>The default carrotCell is horizontal and advances by how many is visible in the current view port. See the <a href="index.html">home page</a> for setup instructions and check the <a href="doc.html">documentation</a> on other setup parameters you can use.</p>
+		<p>The default carrotCell is horizontal and advances by how many is visible in the current view port.</p>
 		
 		<div class="example">
 			<div id="defaultKitten" class="carrotCell">			
@@ -142,58 +129,24 @@ $(document).ready(function(){
 				<div class="next">next</div> 
 			</div>
 		</div>
+		
+		<p><span>5.a.1</span> Define a fixed width for .carrotCell and/or .carrotCellView, then define a fixed width for the scrolling items. These values are used in the horizontal scroll calculations.</p>
+<pre><code data-language="css">
+.carrotCell {  width: 560px; }	// set the width of the over all carrotCell
+.carrotCellView { width: 500px; }	// set the width of the clipping pane
+.carrotCellView li { width: 100px; } // set the width of each scrolling item
+</code></pre>
 
-<p>The default carrotcell needs to be invoked on the .carrotCell container to start doing all its magic.</p>
+
+		<p><span>5.a.2</span> Call carrotCell() on the .carrotCell container element.</p>
 <pre><code data-language="javascript" class="js">
-$("#defaultKitten").carrotCell();
+$(".carrotCell").carrotCell();
 </code></pre>
 
-<p>Make sure you have styles for the .carrotCell container and its child elements, including a fix width view port and fixed same width cell elements.</p>
-<pre><code data-language="css"  class="css">
-// insert your own styling for the carousel elements
-// including .carrotCell and .carrotCellView width and height
-// and .carrotCellView li width and height - these must all be the same size for the calculations to work
-// also include the placement of the previous and next buttons
-// below are examples
-	
-#defaultKitten { width: 560px; }
-.carrotCellView li { ... } 
-.carrotCellView li img { ... }
-.carrotCell .next, .carrotCell .prev {
-	position: absolute;
-	top: 60px;
-	display: none;
-	cursor: pointer;
-	...
-}
-...
-</code></pre>
-
-<p>The basic structure of the carrotcell HTML must be followed exactly in order for it to work correctly in basic setup. See the <a href="demo-flexible.html">Layout Flexibility</a> demo to find out how to change this mark up.</p>
-<p>In the following example, the id of .carrotCell can be changed, as well as the contents of the li and .prev and .next, but nothing else.</p>
-<pre><code data-language="html"  class="html">
-<div id="defaultKitten" class="carrotCell">			
-	<div class="carrotCellView">
-		<ol>
-			<li><img src="images/cat01.png" /></li>
-			<li><img src="images/cat02.png" /></li>
-			<li><img src="images/cat03.png" /></li>
-			<li><img src="images/cat04.png" /></li>
-			<li><img src="images/cat05.png" /></li>
-			<li><img src="images/cat06.png" /></li>
-			<li><img src="images/cat07.png" /></li>
-			<li><img src="images/cat08.png" /></li>
-			<li><img src="images/cat09.png" /></li>
-		</ol>       
-	</div>			
-	<div class="prev">prev</div>
-	<div class="next">next</div> 
-</div>
-</code></pre>
 		
 		<h3>Fall Back State (No Javascript)</h3>
 		<p>This is what the horizontal carousel look like without any javascript methods being called to create the carrotcell.</p> 
-		<p>Note that the previous, next, and all javascript related control buttons buttons are hidden by default by the carrotcell.css.</p>
+		<p>Note that the previous, next, and all javascript related control buttons buttons are hidden by default through carrotcell.css.</p>
 
 		<div id="defaultKittenNOJS" class="carrotCell">
 			<div class="carrotCellView" >
@@ -221,8 +174,8 @@ $("#defaultKitten").carrotCell();
 	
 	<article id="three">
 		<h2>Vertical Scroller</h2>
-		<p>This carrotCell scrolls vertically instead of horizontally.</p>
-		
+		<p>This carrotCell scrolls vertically instead of horizontally. The mark up used in the vertical carrotCell is exactly the same as the horizontal one, the only difference is changes in the CSS.</p>
+			
 		<div class="example">
 			<div id="defaultVerticalKitten" class="carrotCell">
 				<div class="carrotCellView">
@@ -242,24 +195,22 @@ $("#defaultKitten").carrotCell();
 				<a href="#" class="next">next</a> 
 			</div>
 		</div>
+
+		<p>Create the styles to lay out the .carrotCell and children correctly, this is not included in the .carrotCell.css.</p>
+<pre><code data-language="css"  class="css">
+.carrotCell { width: 180px; } // make it narrow
+.carrotCell .carrotCellView { height: 260px; } // set the height of clip
+.carrotCellView  li{ height: 260px; } // set the height of each element
+...
+</code></pre>
 		
-<p>For a vertical carrotCell you must set the parameter sideways to be the boolean false</p>
+		<p><span>5.b.2</span> For a vertical carrotCell, set the parameter <strong>sideways</strong> to be the boolean <strong>false</strong></p>
 <pre><code data-language="javascript" class="js">
 $('#defaultVerticalKitten').carrotCell({ sideways: false });
 </code></pre>
 
-<p>You must create the styles to lay out the .carrotCell and children correctly, this is not included in the .carrotCell.css.</p>
-<pre><code data-language="css"  class="css">
-#defaultVerticalKitten { width: 180px; }
-#defaultVerticalKitten .carrotCellView { height: 260px; }
-...
-</code></pre>
-
-<p>The mark up used in the vertical carrotCell is exactly the same as the horizontal one, the only difference is your changes in the CSS.</p>
-		
-
 		<h3>Fall Back State (No Javascript)</h3>
-		<p>This version uses the overflow:auto property of the .carrotCellView container when Javascript is not available. You can also over ride it to just be really long if you wish.</p>
+		<p>This uses the overflow:auto property of the .carrotCellView container when Javascript is not available.</p>
 		<div id="defaultVerticalKittenNOJS" class="carrotCell">
 			<div class="carrotCellView">
 				<ol>

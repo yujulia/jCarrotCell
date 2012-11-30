@@ -23,10 +23,17 @@
 	
 	<style>
 		.carrotCell { 
-			width: 400px; 
+			width: 450px; 
 		}		
 		.carrotCellView li {
 			width: 100px;
+			height: 100px;
+			border: solid 1px #ccc;
+			margin: 5px;
+			text-align: center;
+			font-family: georgia;
+			font-size: 80px;
+			color: #ccc;
 		}
 		.carrotCell .disabled  { 
 			color: #ccc; 
@@ -36,7 +43,7 @@
 		}
 		.prev { 
 			float: left; 
-			margin-right: 320px;
+			margin-right: 370px;
 		}
 		
 	</style>
@@ -72,13 +79,13 @@
 		
 		<h2>What Makes It Different?</h2>
 		<ul class="realList">
-			<li>Flexible markup - you don't need to use any DIVs if you don't want to.</li>
-			<li>Pass in custom selectors to find the controls, you don't need to put them in a specific place - but you do have to define how to find them.</li>
-			<li>Have the code auto-generate the paging navigation for you, or customize it if you want to.</li>
+			<li>Flexible markup - no need to use weird out dated mark up.</li>
+			<li>Pass in custom selectors to find the controls anywhere on the page.</li>
+			<li>Have the code auto-generate the paging navigation, or customize it.</li>
 			<li>Insert / Remove items, empty the whole carousel, reload the carousel with new items with AJAX or whatever and have it actually work.</li>
 			<li>Nested scrollers.</li>
-			<li>Touch swipe support on applicable devices.</li>
-			<li>Kittens, puppies.</li>
+			<li>Swipe support on applicable devices.</li>
+			<li>Kittens, puppies in examples.</li>
 		</ul>
 		
 		<h2>What Can It Do?</h2>
@@ -133,12 +140,17 @@
 &lt;link type="text/css" href="css/carrotcell.css" rel="stylesheet"&gt;
 </code></pre>
 
-		<p><span>3.</span> Give the carrotCell some styling.</p>
+		<p><span>3.</span> Give the carrotCell some styling and sizes.</p>
 		
 <pre><code data-language="css">
 .carrotCell { 
 	width: 400px; 
 }		
+.carrotCellView li {
+	width: 100px;
+	height: 100px;
+	... // additional styles
+}
 .carrotCell .disabled  { 
 	color: #ccc; 
 }
@@ -157,7 +169,7 @@
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
 </code></pre>
 		
-		<p><span>5.</span>Include jCarrotCell.js file after jQuery.</p>
+		<p><span>5.</span> Include jCarrotCell.js file after jQuery.</p>
 		
 <pre><code data-language="html">
 &lt;script src="jCarrotCell.js" type="text/javascript" charset="utf-8"&gt;&lt;/script&gt;
@@ -171,7 +183,7 @@ $(function() {
 });
 </code></pre>
 
-		<p><span>Optional.</span> You can also enable swipe support for the carousel on touch devices (iPhone, iPad) simply by including the jquery-touchwipe.js by <a href="http://www.netcu.de/jquery-touchwipe-iphone-ipad-library" target="_blank">Andreas Waltl</a>. This enables you to swipe on the carousel to advance forward or back.</p>
+		<p><span>Optional.</span> Enable swipe support for the carousel on touch devices (iPhone, iPad) simply by including the jquery-touchwipe.js by <a href="http://www.netcu.de/jquery-touchwipe-iphone-ipad-library" target="_blank">Andreas Waltl</a>. This enables swipes on the carousel content to advance forward or back.</p>
 
 <pre><code data-language="html">
 &lt;script src="jquery-touchwipe.js" type="text/javascript" charset="utf-8"&gt;&lt;/script&gt;
@@ -182,17 +194,15 @@ $(function() {
 	<div id="myCarrotCell" class="carrotCell">			
 		<div class="carrotCellView">
 			<ol>
-				<li><img src="images/cat01.png" /></li>
-				<li><img src="images/cat02.png" /></li>
-				<li><img src="images/cat03.png" /></li>
-				<li><img src="images/cat04.png" /></li>
-				
-				<li><img src="images/cat05.png" /></li>
-				<li><img src="images/cat06.png" /></li>
-				<li><img src="images/cat07.png" /></li>
-				<li><img src="images/cat08.png" /></li>
-				
-				<li><img src="images/cat09.png" /></li>
+				<li>1</li>
+				<li>2</li>
+				<li>3</li>
+				<li>4</li>				
+				<li>5</li>
+				<li>6</li>
+				<li>7</li>
+				<li>8</li>				
+				<li>9</li>
 			</ol>       
 		</div>			
 		<div class="prev">previous</div>

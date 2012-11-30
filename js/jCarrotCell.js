@@ -402,8 +402,6 @@
 			/** find how many pages there are
 			*/
 			var howManyPages = function(){		
-				console.log("visible is " + visible + " advance by is " + advanceBy + " total " + totalItems);
-								
 				if ((visible !== advanceBy) && (!settings.auto)) {
 					pages = Math.ceil((totalItems - (visible - advanceBy)) / advanceBy);				
 				} else {
