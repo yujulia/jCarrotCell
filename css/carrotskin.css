@@ -91,3 +91,12 @@
 .navi .current {
 	background: #99cc33;
 }
+
+
+.kitten {
+	width: 560px;
+}
+
+.kitten .carrotCellView {
+	width: 520px;
+}

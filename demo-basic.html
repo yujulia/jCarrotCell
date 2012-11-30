@@ -3,7 +3,7 @@
 
 <head> 
     <meta charset="utf-8" /> 
-	<title>jCarrotCell Demo: Basic Setup</title>
+	<title>jCarrotCell Demo: The Basics</title>
 	<!--[if lt IE 9]>
 	<script src="http//html5shim.googlecode.com/svn/trunk/html5.js"></script>
 	<![endif]-->
@@ -16,8 +16,13 @@
 	$(document).ready(function(){
 		window.carrotDemos = window.carrotDemos || {};
 		carrotDemos.setup = function() {
-			$(".example #defaultKitten").carrotCell();
-			$(".example #defaultVerticalKitten").carrotCell({ sideways: false });
+			$("#defaultKitten").carrotCell();
+			$("#defaultVerticalKitten").carrotCell({ sideways: false });
+			$("#nKitten").carrotCell({ step: 1 });
+			$("#speedKitten").carrotCell({ 
+				step: 2,
+				speed: 2000
+			});
 		}
 		
 		// chrome can not calculate the width correctly because it is foolish
@@ -45,7 +50,7 @@
 
 <body>
 	<header>
-		<h1>j<span>Carrot</span><em>Cell</em> Demo: <strong>Basic Setup</strong></h1>		
+		<h1>j<span>Carrot</span><em>Cell</em> Demo: <strong>The Basics</strong></h1>		
 	</header>
 	
 	<nav>
@@ -54,15 +59,17 @@
 		<a href="demo.html">More Demos</a> 
 	</nav>
 	
-	<h2>Demo: Basic Setup Topics</h2>
+	<h2>Demo: The Basics Topics</h2>
 	<ol class="index">
-		<li><a href="#one">Set Up</a></li>
+		<li><a href="#one">Setup</a></li>
 		<li><a href="#two">Horizontal Scroller</a></li>
 		<li><a href="#three">Vertical Scroller</a></li>
+		<li><a href="#four">Advance By <em>n</em> Steps</a></li>
+		<li><a href="#five">Scrolling Speed</a></li>
 	</ol>
 	
 	<article id="one">
-		<h2>Set Up</h2>
+		<h2>Setup</h2>
 		<p><span>1.</span> Create the carrotCell markup. By default everything must be contained in the element .carrotCell, which contains a .carrotCellView that is the parent to another container with the items being its children. The controls are also assumed to be contained inside .carrotCell. The markup can be changed, please refer to the <a href="demo-fleixble.html">layout flexibility demo</a> and the <a href="doc.html">documentation</a>.</p>
 <pre><code data-language="html">
 &lt;div class="carrotCell"&gt;			
@@ -108,45 +115,44 @@
 	
 	<article id="two">
 		<h2>Horizontal Scroller</h2>
-		<p>The default carrotCell is horizontal and advances by how many is visible in the current view port.</p>
-		
-		<div class="example">
-			<div id="defaultKitten" class="carrotCell">			
-				<div class="carrotCellView">
-					<ol>
-						<li><img src="images/cat01.png" /></li>
-						<li><img src="images/cat02.png" /></li>
-						<li><img src="images/cat03.png" /></li>
-						<li><img src="images/cat04.png" /></li>
-						<li><img src="images/cat05.png" /></li>
-						<li><img src="images/cat06.png" /></li>
-						<li><img src="images/cat07.png" /></li>
-						<li><img src="images/cat08.png" /></li>
-						<li><img src="images/cat09.png" /></li>
-			        </ol>       
-				</div>			
-				<div class="prev">prev</div>
-				<div class="next">next</div> 
-			</div>
+		<p>The default carrotCell is horizontal and advances by how many is visible in the current view port.</p>	
+
+		<div id="defaultKitten" class="carrotCell">			
+			<div class="carrotCellView">
+				<ol>
+					<li><img src="images/cat01.png" /></li>
+					<li><img src="images/cat02.png" /></li>
+					<li><img src="images/cat03.png" /></li>
+					<li><img src="images/cat04.png" /></li>
+					<li><img src="images/cat05.png" /></li>
+					<li><img src="images/cat06.png" /></li>
+					<li><img src="images/cat07.png" /></li>
+					<li><img src="images/cat08.png" /></li>
+					<li><img src="images/cat09.png" /></li>
+		        </ol>       
+			</div>			
+			<div class="prev">prev</div>
+			<div class="next">next</div> 
 		</div>
+
 		
 		<p><span>5.a.1</span> Define a fixed width for .carrotCell and/or .carrotCellView, then define a fixed width for the scrolling items. These values are used in the horizontal scroll calculations.</p>
+		
 <pre><code data-language="css">
-.carrotCell {  width: 560px; }	// set the width of the over all carrotCell
-.carrotCellView { width: 500px; }	// set the width of the clipping pane
+.carrotCell {  width: 560px; } // set the width of the over all carrotCell
+.carrotCellView { width: 500px; } // set the width of the clipping pane
 .carrotCellView li { width: 100px; } // set the width of each scrolling item
 </code></pre>
 
-
 		<p><span>5.a.2</span> Call carrotCell() on the .carrotCell container element.</p>
+		
 <pre><code data-language="javascript" class="js">
 $(".carrotCell").carrotCell();
 </code></pre>
 
 		
 		<h3>Fall Back State (No Javascript)</h3>
-		<p>This is what the horizontal carousel look like without any javascript methods being called to create the carrotcell.</p> 
-		<p>Note that the previous, next, and all javascript related control buttons buttons are hidden by default through carrotcell.css.</p>
+		<p>This is what the horizontal carousel look like without any javascript methods being called to create the carrotcell. Note that the previous, next, and all javascript related control buttons buttons are hidden by default through carrotcell.css.</p>
 
 		<div id="defaultKittenNOJS" class="carrotCell">
 			<div class="carrotCellView" >
@@ -196,7 +202,7 @@ $(".carrotCell").carrotCell();
 			</div>
 		</div>
 
-		<p>Create the styles to lay out the .carrotCell and children correctly, this is not included in the .carrotCell.css.</p>
+		<p><span>5.b.1</span> Create the styles to lay out the .carrotCell and children correctly.</p>
 <pre><code data-language="css"  class="css">
 .carrotCell { width: 180px; } // make it narrow
 .carrotCell .carrotCellView { height: 260px; } // set the height of clip
@@ -204,9 +210,9 @@ $(".carrotCell").carrotCell();
 ...
 </code></pre>
 		
-		<p><span>5.b.2</span> For a vertical carrotCell, set the parameter <strong>sideways</strong> to be the boolean <strong>false</strong></p>
+		<p><span>5.b.2</span> Set the parameter <strong>sideways</strong> to be the boolean <strong>false</strong></p>
 <pre><code data-language="javascript" class="js">
-$('#defaultVerticalKitten').carrotCell({ sideways: false });
+$('.carrotCell').carrotCell({ sideways: false });
 </code></pre>
 
 		<h3>Fall Back State (No Javascript)</h3>
@@ -229,6 +235,70 @@ $('#defaultVerticalKitten').carrotCell({ sideways: false });
 			<a href="#" class="next">next</a> 
 		</div>		
 		
+	</article>
+	
+	
+	<article id="four">
+		<h2>Advance By <em>n</em> Steps</h2>
+		
+		<p>By default the carrotCell scrolls the whole page of what is currently visible, but it can be changed to scroll <em>n</em> amount of items at once.</p>
+		
+		<div id="nKitten" class="carrotCell kitten">			
+			<div class="carrotCellView">
+				<ol>
+					<li><img src="images/cat01.png" /></li>
+					<li><img src="images/cat02.png" /></li>
+					<li><img src="images/cat03.png" /></li>
+					<li><img src="images/cat04.png" /></li>
+					<li><img src="images/cat05.png" /></li>
+					<li><img src="images/cat06.png" /></li>
+					<li><img src="images/cat07.png" /></li>
+					<li><img src="images/cat08.png" /></li>
+					<li><img src="images/cat09.png" /></li>
+		        </ol>       
+			</div>			
+			<div class="prev">prev</div>
+			<div class="next">next</div> 
+		</div>
+
+
+		<p>Set the parameter <strong>step</strong> to be whatever number, in this case it is 1.</p>
+<pre><code data-language="javascript" class="js">
+$('.carrotCell').carrotCell({ step: 1 });
+</code></pre>		
+	</article>
+	
+	
+	<article id="five">
+		<h2>Scrolling Speed</h2>
+
+		<p>By default the carrotCell scrolls at 500ms, the below example is scrolling at 2000ms.</p>
+
+		<div id="speedKitten" class="carrotCell kitten">			
+			<div class="carrotCellView">
+				<ol>
+					<li><img src="images/cat01.png" /></li>
+					<li><img src="images/cat02.png" /></li>
+					<li><img src="images/cat03.png" /></li>
+					<li><img src="images/cat04.png" /></li>
+					<li><img src="images/cat05.png" /></li>
+					<li><img src="images/cat06.png" /></li>
+					<li><img src="images/cat07.png" /></li>
+					<li><img src="images/cat08.png" /></li>
+					<li><img src="images/cat09.png" /></li>
+		        </ol>       
+			</div>			
+			<div class="prev">prev</div>
+			<div class="next">next</div> 
+		</div>
+
+		<p>Set the <strong>speed</strong> parameter to be an integer (milisec), in this example it is also set to advance by 2 items at a time.</p>
+<pre><code data-language="javascript" class="js">
+$(".carrotCell").carrotCell({ 
+	step: 2,
+	speed: 2000
+});
+</code></pre>		
 	</article>
 	
 	<nav>
