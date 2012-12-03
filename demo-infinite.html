@@ -16,7 +16,7 @@
 	$(document).ready(function(){
 		window.carrotDemos = window.carrotDemos || {};
 		carrotDemos.setup = function() {
-			
+			$('#infiniteKitten').carrotCell({ infinite: true });
 		}
 		
 		// chrome can not calculate the width correctly because it is foolish
@@ -32,6 +32,8 @@
 	
 	<link type="text/css" href="css/main.css" rel="stylesheet" /> 
 	<link type="text/css" href="css/carrotcell.css" rel="stylesheet" /> 
+	<link type="text/css" href="css/carrotskin.css" rel="stylesheet" />
+	
 </head>
 
 <body>
@@ -50,14 +52,33 @@
 		<li><a href="#one">Infinite Scroll</a></li>
 		<li><a href="#two">Auto Scroll</a></li>
 		<li><a href="#two">Auto Scroll Controls</a></li>
-		<li><a href="#three">Configuration</a></li>
-		<li><a href="#four">Behavior Notes</a></li>
+
 	</ol>
 	
 	
 	<article id="one">
 		<h2>Infinite Scroll</h2>
-		<p>This version takes no options and uses all of the default settings of carrotCell.</p>
+		<p>Below the carrotCell is set to infinite scroll. Note the slides with a yellow border around it are the cloned elements at the beginning and end, they are replaced by the gray bordered items once they come into full view.</p>
+		
+		<div id="infiniteKitten" class="carrotCell kitten">	
+			<div class="carrotCellView">
+				<ol>
+					<li><span>1</span><img src="images/cat01.png" /></li>
+					<li><span>2</span><img src="images/cat02.png" /></li>
+					<li><span>3</span><img src="images/cat03.png" /></li>
+					<li><span>4</span><img src="images/cat04.png" /></li>
+					<li><span>5</span><img src="images/cat05.png" /></li>
+					<li><span>6</span><img src="images/cat06.png" /></li>
+					<li><span>7</span><img src="images/cat07.png" /></li>
+					<li><span>8</span><img src="images/cat08.png" /></li>
+					<li><span>9</span><img src="images/cat09.png" /></li>
+		        </ol>       
+			</div>			
+			<a href="#" class="prev">prev</a>
+			<a href="#" class="next">next</a>				
+		</div>
+		
+		
 	</article>
 	
 	<article id="two">

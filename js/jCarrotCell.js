@@ -83,8 +83,9 @@
 			
 			/** scroll to the very end 
 			*/
-			var scrollToEnd = function(){						
-				view.scrollLeft(singleSize * advanceBy * pages + singleSize); 			
+			var scrollToEnd = function(){
+				var scrollBy = 	singleSize * advanceBy * (pages-1) + singleSize;
+				view.scrollLeft(scrollBy);	
 				myPage = pages;
 				currentPage = pages;
 				scrolling = false;			
@@ -114,8 +115,8 @@
 				else if (myPage == 0) {
 					settings.controlScope.trigger("carrotScrollStart", [settings.name, pages-1]);
 					// console.log("scroll handler 0 pages scroll start");
-					scrolling = true;;					
-
+					scrolling = true;
+		
 					if (settings.sideways) { 										
 						view.animate({ scrollLeft : '+=' + -1 * extraMoves * singleSize }, settings.speed, scrollToEnd);			
 					} else { 
