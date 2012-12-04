@@ -137,7 +137,7 @@ $('#autoKitten').carrotCell({
 	
 	<article id="three">
 		<h2>Auto Scroll Controls</h2>
-		<p>This version takes no options and uses all of the default settings of carrotCell.</p>
+		<p>With autoscroll, the controls <strong>pause</strong>, <strong>play</strong> and <strong>stop</strong> can be used to control the scrolling. The navi also auto advances as the carrotCell slides.</p>
 		
 		<div id="controlKitten" class="carrotCell kitten">	
 			<ol class="navi"></ol>
@@ -154,15 +154,47 @@ $('#autoKitten').carrotCell({
 					<li><span>9</span><img src="images/cat09.png" /></li>
 		        </ol>       
 			</div>			
-			<a href="#" class="prev">prev</a>
-			<a href="#" class="next">next</a>				
+			<div class="prev">prev</div>
+			<div class="next">next</div>				
 			
-			<a href="#" class="pause">pause</a>
+			<button class="pause">pause</button>
 			<a href="#" class="play">play</a>
-			<a href="#" class="stop">stop</a>
+			<div class="stop">stop</div>
 		</div>
+
+<p>The default controls have the classes .play, .stop, .pause, any markup can be used to create the controls. As long as these classes exist inside .carrotCell the controls will be automatically created for autoscrolling carrotCells.</p>		
+<pre><code data-language="html" class="html">
+&lt;div id="controlKitten" class="carrotCell"&gt;	
+	&lt;ol class="navi"&gt;&lt;/ol&gt;
+	&lt;div class="carrotCellView"&gt;
+		&lt;ol&gt; ... &lt;/ol&gt;       
+	&lt;/div&gt;			
+	&lt;a href="#" class="prev"&gt;prev&lt;/a&gt;
+	&lt;a href="#" class="next"&gt;next&lt;/a&gt;				
+
+	&lt;button class="pause"&gt;pause&lt;/button&gt;
+	&lt;a href="#" class="play"&gt;play&lt;/a&gt;
+	&lt;div class="stop"&gt;stop&lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+
+<p>Custom classes can also be used for the controls instead of the default, by setting <strong>pauseSelect</strong>, <strong>playSelect</strong> and <strong>stopSelect</strong> to be a string selector. To move the controls outside the .carrotCell scope, refer to the demo for <a href="demo-nav.html#one">previous &amp; next</a> which shows how to set the <strong>controlScope</strong> for all controls.</p>
+<pre><code data-language="javascript" class="js">		
+$('#autoKitten').carrotCell({ 
+	...
+	pauseSelect :  ".customPauseName",
+	playSelect : ".playThis",
+	stopSelect : ".customStop"
+});
+</code></pre>
+
 	</article>
 	
+	<nav>
+		<a href="index.html">Home</a> 
+		<a href="doc.html">Documentation</a> 
+		<a href="demo.html">More Demos</a> 
+	</nav>
 
 	
 </body>

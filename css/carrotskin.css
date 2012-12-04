@@ -72,6 +72,9 @@
 	border: solid 1px #ccc;
 	padding: 3px 5px;
 	cursor: pointer;
+	display: block;
+	float: left;
+	color: #000;
 }
 
 .navi {
