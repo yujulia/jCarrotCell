@@ -540,9 +540,6 @@
 				stop = settings.controlScope.find(settings.stopSelect);
 				naviContainer = settings.controlScope.find(settings.naviContainer);
 				navi = naviContainer.find(settings.naviSelect);
-				
-				console.log("navi container is ");
-				console.log(naviContainer);
 			};
 
 			/** find elements relevant to the carrot cell

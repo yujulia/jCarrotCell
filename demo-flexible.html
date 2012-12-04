@@ -33,6 +33,15 @@
 				navi: true,
 				makeNavi: true
 			});
+			
+			$("#classKitten").carrotCell({
+				auto: true,
+				navi: true,
+				makeNavi: true,
+				disabled: "herp",
+				naviClass: "derp",
+				current: "really"
+			});
 		}
 		
 		// chrome can not calculate the width correctly because it is foolish
@@ -104,6 +113,21 @@
 		
 		.testControls button.disabled {
 			opacity: 0.3;
+		}
+		
+		#classKitten .herp {
+			background-color: #FF9900;
+		}
+		
+		#classKitten .derp {
+			background-color: #99CC33;
+			padding: 3px 5px;
+			margin-right: 5px;
+			color: #000;
+		}
+		
+		#classKitten .really {
+			background-color: #FF9900;
 		}
 	
 	</style>
@@ -286,7 +310,42 @@ $('#movingKitten').carrotCell({
 	
 	<article id="three">
 		<h2>Custom Class Names</h2>
-		<p>This version takes no options and uses all of the default settings of carrotCell.</p>
+		<p>Outside of .carrotCell and .carrotCellView, any of the class names from the default mark up can be changed by passing in the appropriate selector or class name through the carrotCell settings object. In the previous examples it has been shown how to change the class names in markup and pass in the relevant selector, this section will demonstrate some class configurations not used by selectors but by the CSS.</p>
+		
+		<div id="classKitten" class="carrotCell kitten">	
+			<ul class="navi"> </ul>		
+			<div class="carrotCellView">
+				<ol>
+					<li><img src="images/cat01.png" /></li>
+					<li><img src="images/cat02.png" /></li>
+					<li><img src="images/cat03.png" /></li>
+					<li><img src="images/cat04.png" /></li>
+					<li><img src="images/cat05.png" /></li>
+					<li><img src="images/cat06.png" /></li>
+					<li><img src="images/cat07.png" /></li>
+					<li><img src="images/cat08.png" /></li>
+					<li><img src="images/cat09.png" /></li>
+		        </ol>       
+			</div>	
+			<div class="stop">stop</div>			
+			<div class="pause">pause</div>
+			<div class="play">play</div>
+		</div>
+	
+	<p>These class names are generated in the code and not taken from the existing markup, thus they must be passed through the setting object.</p>
+
+<pre><code data-language="js">	
+$("#classKitten").carrotCell({
+	auto: true,
+	navi: true,
+	makeNavi: true,
+	disabled: "herp",
+	naviClass: "derp",
+	current: "really"
+});
+</code></pre>	
+	
+		
 	</article>
 	
 	<article id="four">
