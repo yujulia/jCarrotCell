@@ -27,8 +27,7 @@
 					controlScope : "",
 					stopOnClick : false,
 					pauseOnHover : false,
-					off: "disabled",
-					unseen: "invisible",
+					disabled: "disabled",
 					current: "current",
 					sliderSelect : "ol",
 					sliderChildSelect : "li",
@@ -168,8 +167,8 @@
 							
 				if (nextPage <= 1) { haveBack = false; } else { haveBack = true; };
 				if (nextPage >= pages) { haveForward = false; } else { haveForward = true; };								
-				if (haveBack) { prev.removeClass(settings.off); } else { prev.addClass(settings.off); }
-				if (haveForward) { next.removeClass(settings.off); } else { next.addClass(settings.off); }
+				if (haveBack) { prev.removeClass(settings.disabled); } else { prev.addClass(settings.disabled); }
+				if (haveForward) { next.removeClass(settings.disabled); } else { next.addClass(settings.disabled); }
 			};
 
 			/** move carousel back
@@ -204,9 +203,9 @@
 				paused = true;
 				playing = false;
 				stopped = false;
-				pause.addClass(settings.unseen);
-				play.removeClass(settings.unseen);
-				stop.removeClass(settings.unseen);
+				pause.addClass(settings.disabled);
+				play.removeClass(settings.disabled);
+				stop.removeClass(settings.disabled);
 			};
 			
 			/** resume the auto play
@@ -216,9 +215,9 @@
 				paused = false;
 				stopped = false;
 				playing = true;
-				play.addClass(settings.unseen);
-				stop.removeClass(settings.unseen);
-				pause.removeClass(settings.unseen);
+				play.addClass(settings.disabled);
+				stop.removeClass(settings.disabled);
+				pause.removeClass(settings.disabled);
 				startAutoAdvance();
 			};
 			
@@ -229,9 +228,9 @@
 				paused = false;
 				stopped = true;
 				playing = false;
-				stop.addClass(settings.unseen);
-				play.removeClass(settings.unseen);
-				pause.removeClass(settings.unseen);
+				stop.addClass(settings.disabled);
+				play.removeClass(settings.disabled);
+				pause.removeClass(settings.disabled);
 				window.clearInterval(autoScroll);
 			};
 			
@@ -241,15 +240,15 @@
 				pause.bind("click", function(e){
 					e.preventDefault();
 					pauseCarrotCell();
-				});
+				}).show();
 				play.bind("click", function(e){
 					e.preventDefault();
 					playCarrotCell();
-				});
+				}).show();
 				stop.bind("click", function(e){
 					e.preventDefault();
 					stopCarrotCell();
-				});
+				}).show();
 				playCarrotCell();
 			};
 
@@ -474,7 +473,7 @@
 				if (settings.infinite) {
 					moveClonesOutOfSight();	
 				} else {
-					prev.addClass(settings.off);
+					prev.addClass(settings.disabled);
 				}
 			};
 			
@@ -482,9 +481,9 @@
 			*/
 			var IsThereEnoughToScroll = function(){
 				if (totalItems <= visible) {
-					prev.addClass(settings.off);
-					next.addClass(settings.off);				
-					if (settings.navi) { naviContainer.addClass(settings.off); }
+					prev.addClass(settings.disabled);
+					next.addClass(settings.disabled);				
+					if (settings.navi) { naviContainer.addClass(settings.disabled); }
 					enoughToScroll = false;
 				} else {
 					enoughToScroll = true;

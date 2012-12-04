@@ -60,10 +60,15 @@
 	cursor: pointer;
 }
 
-.carrotCell .disabled {
-	display: none;
-}
-
 .naviItem {
 	display: inline-block;
 }
+
+/** disabled and invisible
+*/
+
+.carrotCell .disabled {
+	opacity: 0.3;
+}
+
+
