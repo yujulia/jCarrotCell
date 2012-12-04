@@ -16,7 +16,23 @@
 	$(document).ready(function(){
 		window.carrotDemos = window.carrotDemos || {};
 		carrotDemos.setup = function() {
+			$('#markKitten').carrotCell({
+				sliderSelect: "div",
+				sliderChildSelect: "div",
+				navi: true,
+				makeNavi: true
+			});
 			
+			$('#movingKitten').carrotCell({
+				auto: true,
+				containsControl: false,
+				controlScope: ".testControls",
+				prevSelect: ".myPrev",
+				nextSelect: ".myNext",
+				naviContainer: ".myNavi",
+				navi: true,
+				makeNavi: true
+			});
 		}
 		
 		// chrome can not calculate the width correctly because it is foolish
@@ -32,6 +48,66 @@
 	
 	<link type="text/css" href="css/main.css" rel="stylesheet" /> 
 	<link type="text/css" href="css/carrotcell.css" rel="stylesheet" /> 
+	<link type="text/css" href="css/carrotskin.css" rel="stylesheet" />
+	
+	<style>
+		#markKitten .carrotCellView div:first-child {
+			background: #efefef;
+		}
+
+		#markKitten  .carrotCellView div div {
+			width: 100px;
+			height: 100px;
+			border: solid 5px #666;
+			margin: 10px;
+			float: left;
+			overflow: hidden;
+			position: relative;
+		}
+
+		#markKitten .carrotCellView div.cloned {
+			border-color: #ffcc00;
+		}
+
+		#markKitten .carrotCellView div span {
+			font-size: 26px;
+			position: absolute;
+			top: 0;
+			left: 0;
+			color: #ffcc00;
+			line-height: 1em;
+		}
+
+		#markKitten .carrotCellView div img {
+			height: 100px;
+		}
+		
+		#movingKitten {
+			float: left;
+			margin-right: 20px;
+		}
+		
+		.testControls {
+			border: dashed 1px #ccc;
+			float: left;
+			margin-top: 20px;
+			padding: 10px;
+		}
+		
+		.testControls button {
+			display: block;
+			margin: 0 0 5px 0;
+			border: solid 1px #ccc;
+			cursor: pointer;
+			font-weight: bold;
+		}
+		
+		.testControls button.disabled {
+			opacity: 0.3;
+		}
+	
+	</style>
+	
 </head>
 
 <body>
@@ -45,24 +121,167 @@
 		<a href="demo.html">More Demos</a> 
 	</nav>
 	
-	<h2>Demo: Flexibility Index</h2>
+	<h2>Demo: Layout Flexibility Index</h2>
 	<ol class="index">
-		<li><a href="#one">Default HTML Layout</a></li>
-		<li><a href="#two">Changing the Default HTML Layout Through Selectors</a></li>						
-		<li><a href="#three">Custom Class Names</a></li>
+		<li><a href="#one">Changing Default Mark Up Through Selectors</a></li>
+		<li><a href="#two">Moving Controls Elsewhere</a></li>						
+		<li><a href="#three">Custom Classes</a></li>
 		<li><a href="#four">Custom Events</a></li>
-		<li><a href="#Five">Behavior Notes</a></li>
+
 	</ol>
 	
 	
 	<article id="one">
-		<h2>Default HTML Layout</h2>
-		<p>This version takes no options and uses all of the default settings of carrotCell.</p>
+		<h2>Changing Default Mark Up Through Selectors</h2>
+		<p>A wide range of mark up can be used to customize the carrotCell, as long as the hierarchy of elements and the class names are preserved.</p>
+		
+		<div id="markKitten" class="carrotCell kitten">	
+			<div class="prev">prev</div>
+			<div class="next">next</div>
+			<div class="carrotCellView">
+				<div class="customHold">
+					<div><img src="images/cat01.png" /></div>
+					<div><img src="images/cat02.png" /></div>
+					<div><img src="images/cat03.png" /></div>
+					<div><img src="images/cat04.png" /></div>
+					<div><img src="images/cat05.png" /></div>
+					<div><img src="images/cat06.png" /></div>
+					<div><img src="images/cat07.png" /></div>
+					<div><img src="images/cat08.png" /></div>
+					<div><img src="images/cat09.png" /></div>
+		        </div>       
+			</div>		
+			<div class="navi"></div>						
+		</div>
+		
+		<p>For example, using all DIVs (for whatever reason) instead of lists.</p>
+		
+<pre><code data-language="html">
+&lt;div id="markKitten" class="carrotCell"&gt;	
+	
+	&lt;div class="prev"&gt;prev&lt;/div&gt;
+	&lt;div class="next"&gt;next&lt;/div&gt;
+	&lt;div class="carrotCellView"&gt;
+		&lt;div&gt;
+			&lt;div&gt;&lt;img src="images/cat01.png" /&gt;&lt;/div&gt;
+			&lt;div&gt;&lt;img src="images/cat02.png" /&gt;&lt;/div&gt;
+			&lt;div&gt;&lt;img src="images/cat03.png" /&gt;&lt;/div&gt;
+			&lt;div&gt;&lt;img src="images/cat04.png" /&gt;&lt;/div&gt;
+			&lt;div&gt;&lt;img src="images/cat05.png" /&gt;&lt;/div&gt;
+			&lt;div&gt;&lt;img src="images/cat06.png" /&gt;&lt;/div&gt;
+			&lt;div&gt;&lt;img src="images/cat07.png" /&gt;&lt;/div&gt;
+			&lt;div&gt;&lt;img src="images/cat08.png" /&gt;&lt;/div&gt;
+			&lt;div&gt;&lt;img src="images/cat09.png" /&gt;&lt;/div&gt;
+        &lt;/div&gt;       
+	&lt;/div&gt;	
+	&lt;div class="navi"&gt;&lt;/div&gt;		
+				
+&lt;/div&gt;
+</code></pre>
+
+	<p>Create CSS to style these elements as the .carrotCell CSS only targets the default markup.</p>
+<pre><code data-language="css">
+#markKitten .carrotCellView div:first-child {
+	background: #efefef;
+}
+
+#markKitten  .carrotCellView div div {
+	width: 100px;
+	height: 100px;
+	border: solid 5px #666;
+	margin: 10px;
+	float: left;
+	overflow: hidden;
+	position: relative;
+}
+
+#markKitten .carrotCellView div.cloned {
+	border-color: #ffcc00;
+}
+
+#markKitten .carrotCellView div span {
+	...
+}
+
+#markKitten .carrotCellView div img {
+	...
+}
+</code></pre>
+
+<p>Set <strong>sliderSelect</strong> looks for the DIV inside .carrotCellView and returns the first result since this is assumed to the parent pane which holds all the slides. This selector can be changed to be more specific, or select by class name as long as the mark up is correct. <strong>sliderChildSelect</strong> is the selector for the children of sliderSelect and looks for the DIVs inside of it.</p>
+<pre><code data-language="javascript" class="js">
+$('#markKitten').carrotCell({
+	sliderSelect: "div",
+	sliderChildSelect: "div",
+	...
+});
+</code></pre>
+		
 	</article>
 	
 	<article id="two">
-		<h2>Changing the Default HTML Layout Through Selectors</h2>
-		<p>This version takes no options and uses all of the default settings of carrotCell.</p>
+		<h2>Moving Controls Elsewhere</h2>
+		<p>Sometimes layouts require the carrotCell control buttons to be elsewhere on the page, the key to accomplish this is through setting the <strong>controlScope</strong> to where the controls have been moved to. The example for <a href="demo-nav#one">previous &amp; next</a> covers this same topic.</p>
+		
+		<div class="example">
+			<div id="movingKitten" class="carrotCell kitten">			
+				<div class="carrotCellView">
+					<ol>
+						<li><img src="images/cat01.png" /></li>
+						<li><img src="images/cat02.png" /></li>
+						<li><img src="images/cat03.png" /></li>
+						<li><img src="images/cat04.png" /></li>
+						<li><img src="images/cat05.png" /></li>
+						<li><img src="images/cat06.png" /></li>
+						<li><img src="images/cat07.png" /></li>
+						<li><img src="images/cat08.png" /></li>
+						<li><img src="images/cat09.png" /></li>
+			        </ol>       
+				</div>				
+			</div>
+
+			<div class="testControls"> 
+				<button class="myPrev">Previously in Kittens</button>
+				<button class="myNext">Next in Kittens</button>
+				<button class="pause">Pause Kittens</button>
+				<button class="play">Play Kittens</button>
+				<button class="stop">Stop Kittens</button>
+				<ul class="myNavi"> </ul>
+			</div>
+		</div>
+
+<p>In this example, all possible controls reside inside .testControls outside of the .carrotCell block</p>
+<pre><code data-language="html">
+&lt;div id="movingKitten" class="carrotCell"&gt;			
+	&lt;div class="carrotCellView"&gt;
+		&lt;ol&gt;...&lt;/ol&gt;       
+	&lt;/div&gt;				
+&lt;/div&gt;
+
+&lt;div class="testControls"&gt; 
+	&lt;button class="myPrev"&gt;Previously in Kittens&lt;/button&gt;
+	&lt;button class="myNext"&gt;Next in Kittens&lt;/button&gt;
+	&lt;button class="pause"&gt;Pause Kittens&lt;/button&gt;
+	&lt;button class="play"&gt;Play Kittens&lt;/button&gt;
+	&lt;button class="stop"&gt;Stop Kittens&lt;/button&gt;
+	&lt;ul class="myNavi"&gt; &lt;/ul&gt;
+&lt;/div&gt;
+</code></pre>
+
+<p>Set the <strong>containsControl</strong> to boolean <strong>false</strong> to indicate that the controls .carrotCell, then set the <strong>controlScope</strong> to the appropriate selector, if <strong>controlScope</strong> is not set, body is assumed to be the scope where the controls can be found. If the default class names of the controls have been changed, pass in the appropriate selectors. Check the <a href="doc.html">documentation</a> for more detail.</p>
+<pre><code data-language="js">		
+$('#movingKitten').carrotCell({
+	containsControl: false,
+	controlScope: ".testControls",
+	prevSelect: ".myPrev",
+	nextSelect: ".myNext",
+	naviContainer: ".myNavi",
+	navi: true,
+	makeNavi: true,
+	...
+});
+</code></pre>
+
 	</article>
 	
 	<article id="three">

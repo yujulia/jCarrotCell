@@ -103,3 +103,9 @@
 .kitten .carrotCellView {
 	width: 520px;
 }
+
+.example {
+	width: 100%;
+	overflow: hidden;
+	position: relative;
+}
