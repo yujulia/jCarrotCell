@@ -501,6 +501,13 @@
 					prev.addClass(settings.disabledClassd);
 				}
 				
+				// reset view scroll if any
+				if (settings.sideways){				
+					view.scrollLeft(0);
+				} else {
+					view.scrollTop(0);
+				}
+			
 				determinePrevNext(0); // hide previous
 			};
 			

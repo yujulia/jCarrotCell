@@ -65,6 +65,15 @@
 				}
 				eventResult.append("<p>" + carrotName + " event <strong>" + eventName + "</strong> happened. " + pageNumReport + "</p>");
 			});
+			
+			$("#callKittenAction").bind("click", function(e){
+				e.preventDefault();				
+				$("#callKitten").carrotCell({
+					carrotDone: specialCallKittenFunction
+				});				
+			});
+			
+			
 		}
 		
 		// chrome can not calculate the width correctly because it is foolish
@@ -76,6 +85,13 @@
 		}
 		
 	});
+	
+	// test function
+	var specialCallKittenFunction = function(api){
+		api.advance();
+		$("#callKittenResult").html("kitten has loaded and advanced forward 1 page");
+	};
+	
 	</script>
 	
 	<link type="text/css" href="css/main.css" rel="stylesheet" /> 
@@ -157,19 +173,24 @@
 			border-color: #99CC33;
 		}
 		
-		#eventKitten {
+		#eventKitten, #callKitten {
 			float: left;
 			margin-right: 20px;
 		}
 		
-		#eventKittenResult {
+		#callKittenAction {
+			float: left;
+			margin: 20px 20px 0 0;
+		}
+		
+		#eventKittenResult, #callKittenResult {
 			border: dashed 1px #ccc;
 			line-height: 1.2em;
 			padding: 10px;
 			float: left;
 			margin: 20px 0 0 0;
 		}
-	
+		
 	</style>
 	
 </head>
@@ -464,6 +485,53 @@ $(document).bind("carrotHappened", function(e, carrotName, eventName, pageNum){
 	eventResult.append("<p>" + carrotName + " event <strong>" + eventName + "</strong> happened. " + pageNumReport + "</p>");
 });
 </code></pre>
+	</article>
+	
+	<article id="five">
+		<h2>Initialized CallBack</h2>
+		<p>To chain carrotCell into the load order of some over all application, the optional callback function <strong>carrotDone</strong> can be passed in, this function will be called once the carrotCell has finished its initialization and setup. The <strong>carrotDone</strong> function will have access to the carrotCell API and be able to interact with it through that. See the <a href="doc.html">documentation</a> for more detail or see the <a href="demo-api.html">API demo</a>.</p>
+		<div class="example">
+			<div id="callKitten" class="carrotCell kitten">			
+				<div class="carrotCellView">
+					<ol>
+						<li><img src="images/cat01.png" /></li>
+						<li><img src="images/cat02.png" /></li>
+						<li><img src="images/cat03.png" /></li>
+						<li><img src="images/cat04.png" /></li>
+						<li><img src="images/cat05.png" /></li>
+						<li><img src="images/cat06.png" /></li>
+						<li><img src="images/cat07.png" /></li>
+						<li><img src="images/cat08.png" /></li>
+						<li><img src="images/cat09.png" /></li>
+			        </ol>     	
+				</div>	
+				<div class="prev">prev</div>
+				<div class="next">next</div>		
+			</div>
+		
+			<button id="callKittenAction">Make This Into CarrotCell</button>
+			<div id="callKittenResult">no results</div>
+		</div>
+		
+<p>This example shows how a click event can trigger the carrotCell creation, then when carrotCell is created, trigger the callback function.</p>
+<pre><code data-language="js">
+// after the callKittenAction button is clicked carrotCell is created
+// after carrotCell is created, specialCallKittenFunction is called
+$("#callKittenAction").bind("click", function(e){
+	e.preventDefault();				
+	$("#callKitten").carrotCell({
+		carrotDone: specialCallKittenFunction
+	});				
+});
+
+// this callback function is passed the carrotCell API
+var specialCallKittenFunction = function(api){
+	api.advance();
+	$("#callKittenResult").html("kitten has loaded and advanced forward 1 page");
+};
+</code></pre>		
+		
+		
 	</article>
 	
 
