@@ -38,9 +38,10 @@
 				auto: true,
 				navi: true,
 				makeNavi: true,
-				disabled: "herp",
+				disabledClass: "herp",
 				naviClass: "derp",
-				current: "really"
+				currentClass: "really",
+				cloneClass: "legion"
 			});
 		}
 		
@@ -129,6 +130,10 @@
 		#classKitten .really {
 			background-color: #FF9900;
 		}
+		
+		#classKitten .legion {
+			border-color: #99CC33;
+		}
 	
 	</style>
 	
@@ -147,16 +152,16 @@
 	
 	<h2>Demo: Layout Flexibility Index</h2>
 	<ol class="index">
-		<li><a href="#one">Changing Default Mark Up Through Selectors</a></li>
+		<li><a href="#one">Changing Default Mark Up</a></li>
 		<li><a href="#two">Moving Controls Elsewhere</a></li>						
-		<li><a href="#three">Custom Classes</a></li>
-		<li><a href="#four">Custom Events</a></li>
+		<li><a href="#three">Custom Class Names</a></li>
+		<li><a href="#four">Custom Event Names</a></li>
 
 	</ol>
 	
 	
 	<article id="one">
-		<h2>Changing Default Mark Up Through Selectors</h2>
+		<h2>Changing Default Mark Up</h2>
 		<p>A wide range of mark up can be used to customize the carrotCell, as long as the hierarchy of elements and the class names are preserved.</p>
 		
 		<div id="markKitten" class="carrotCell kitten">	
@@ -203,7 +208,7 @@
 &lt;/div&gt;
 </code></pre>
 
-	<p>Create CSS to style these elements as the .carrotCell CSS only targets the default markup.</p>
+	<p>Create CSS to style these elements as the <em>.carrotCell</em> CSS only targets the default markup.</p>
 <pre><code data-language="css">
 #markKitten .carrotCellView div:first-child {
 	background: #efefef;
@@ -232,7 +237,7 @@
 }
 </code></pre>
 
-<p>Set <strong>sliderSelect</strong> looks for the DIV inside .carrotCellView and returns the first result since this is assumed to the parent pane which holds all the slides. This selector can be changed to be more specific, or select by class name as long as the mark up is correct. <strong>sliderChildSelect</strong> is the selector for the children of sliderSelect and looks for the DIVs inside of it.</p>
+<p>Set <strong>sliderSelect</strong> looks for the DIV inside <em>.carrotCellView</em> and returns the first result since this is assumed to the parent pane which holds all the slides. This selector can be changed to be more specific, or select by class name as long as the mark up is correct. <strong>sliderChildSelect</strong> is the selector for the children of sliderSelect and looks for the DIVs inside of it.</p>
 <pre><code data-language="javascript" class="js">
 $('#markKitten').carrotCell({
 	sliderSelect: "div",
@@ -274,7 +279,7 @@ $('#markKitten').carrotCell({
 			</div>
 		</div>
 
-<p>In this example, all possible controls reside inside .testControls outside of the .carrotCell block</p>
+<p>In this example, all possible controls reside inside <em>.testControls</em> outside of the <em>.carrotCell</em> block</p>
 <pre><code data-language="html">
 &lt;div id="movingKitten" class="carrotCell"&gt;			
 	&lt;div class="carrotCellView"&gt;
@@ -292,7 +297,7 @@ $('#markKitten').carrotCell({
 &lt;/div&gt;
 </code></pre>
 
-<p>Set the <strong>containsControl</strong> to boolean <strong>false</strong> to indicate that the controls .carrotCell, then set the <strong>controlScope</strong> to the appropriate selector, if <strong>controlScope</strong> is not set, body is assumed to be the scope where the controls can be found. If the default class names of the controls have been changed, pass in the appropriate selectors. Check the <a href="doc.html">documentation</a> for more detail.</p>
+<p>Set the <strong>containsControl</strong> to boolean <strong>false</strong> to indicate that the controls <em>.carrotCell</em>, then set the <strong>controlScope</strong> to the appropriate selector, if <strong>controlScope</strong> is not set, body is assumed to be the scope where the controls can be found. If the default class names of the controls have been changed, pass in the appropriate selectors. Check the <a href="doc.html">documentation</a> for more detail.</p>
 <pre><code data-language="js">		
 $('#movingKitten').carrotCell({
 	containsControl: false,
@@ -310,7 +315,7 @@ $('#movingKitten').carrotCell({
 	
 	<article id="three">
 		<h2>Custom Class Names</h2>
-		<p>Outside of .carrotCell and .carrotCellView, any of the class names from the default mark up can be changed by passing in the appropriate selector or class name through the carrotCell settings object. In the previous examples it has been shown how to change the class names in markup and pass in the relevant selector, this section will demonstrate some class configurations not used by selectors but by the CSS.</p>
+		<p>Outside of <em>.carrotCell</em> and <em>.carrotCellView</em>, any of the class names from the default mark up can be changed by passing in the appropriate selector or class name through the carrotCell settings object. In the previous examples it has been shown how to change the class names in markup and pass in the relevant selector, this section will demonstrate some class configurations not used by selectors but by the CSS.</p>
 		
 		<div id="classKitten" class="carrotCell kitten">	
 			<ul class="navi"> </ul>		
@@ -339,28 +344,48 @@ $("#classKitten").carrotCell({
 	auto: true,
 	navi: true,
 	makeNavi: true,
-	disabled: "herp",
+	disabledClass: "herp",
 	naviClass: "derp",
-	current: "really"
+	currentClass: "really",
+	cloneClass: "legion"
 });
 </code></pre>	
 
-	<p>The mark up generated from the above example would look like:</p>
+	<p>The mark up generated from the above example is shown below. Note that <em>.really</em> is used for the navi selected state, <em>.derp</em> is the navi individual node class, <em>.legion</em> is the class that indicate a slide element is a clone, and <em>.herp</em> is the control button inactive state</p>
 	
 <pre><code data-language="html">	
-something something
+&lt;div class="carrotCell kitten" id="classKitten"&gt;	
+	&lt;ul class="navi"&gt;
+		&lt;li class="derp really"&gt;1&lt;/li&gt;
+		&lt;li class="derp"&gt;2&lt;/li&gt;
+		&lt;li class="derp"&gt;3&lt;/li&gt;
+	&lt;/ul&gt;		
+	&lt;div class="carrotCellView" style="overflow: hidden;"&gt;
+		&lt;ol style="width: 2210px;"&gt;
+			&lt;li class="legion"&gt;&lt;img src="images/cat06.png"&gt;&lt;/li&gt;
+			...
+			&lt;li class="legion"&gt;&lt;img src="images/cat09.png"&gt;&lt;/li&gt;
+			&lt;li&gt;&lt;img src="images/cat01.png"&gt;&lt;/li&gt;
+			...
+			&lt;li&gt;&lt;img src="images/cat09.png"&gt;&lt;/li&gt;
+			&lt;li class="legion"&gt;&lt;img src="images/cat01.png"&gt;&lt;/li&gt;
+			...
+			&lt;li class="legion"&gt;&lt;img src="images/cat04.png"&gt;&lt;/li&gt;
+        &lt;/ol&gt;       
+	&lt;/div&gt;	
+	&lt;div class="stop"&gt;stop&lt;/div&gt;			
+	&lt;div class="pause"&gt;pause&lt;/div&gt;
+	&lt;div class="play herp"&gt;play&lt;/div&gt;
+&lt;/div&gt;
 </code></pre>	
 		
 	</article>
 	
 	<article id="four">
-		<h2>Custom Events</h2>
+		<h2>Custom Event Names</h2>
 		<p>This version takes no options and uses all of the default settings of carrotCell.</p>
 	</article>
 	
-	<article id="five">
-		<h2>Behavior Notes</h2>
-		<p>This version takes no options and uses all of the default settings of carrotCell.</p>
-	</article>
+
 </body>
 </html>

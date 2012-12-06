@@ -27,8 +27,9 @@
 					controlScope : "",
 					stopOnClick : false,
 					pauseOnHover : false,
-					disabled: "disabled",
-					current: "current",
+					disabledClass: "disabled",
+					currentClass: "current",
+					cloneClass: "clone",
 					sliderSelect : "ol",
 					sliderChildSelect : "li",
 					prevSelect : ".prev",
@@ -38,7 +39,14 @@
 					stopSelect : ".stop",
 					naviContainer : ".navi",
 					naviSelect : "> *",
-					naviClass : "naviItem"
+					naviClass : "naviItem",
+					scrollStart : "carrotScrollStart",
+					scrollEnd : "carrotScrollEnd"
+					atStart : "carrotAtStart",
+					atEnd : "carrotAtEnd"
+					onPlay : "carrotPlay",
+					onPause : "carrotPause",
+					onStop : "carrotStop"
 				},
 				
 				// CONST				
@@ -77,7 +85,7 @@
 				myPage = 1;
 				currentPage = 1;
 				scrolling = false;
-				settings.controlScope.trigger("carrotScrollEnd", [settings.name, myPage]);
+				settings.controlScope.trigger(settings.scrollEnd, [settings.name, myPage]);
 			};
 			
 			/** scroll to the very end 
@@ -88,7 +96,7 @@
 				myPage = pages;
 				currentPage = pages;
 				scrolling = false;			
-				settings.controlScope.trigger("carrotScrollEnd", [settings.name, myPage]);
+				settings.controlScope.trigger(settings.scrollEnd, [settings.name, myPage]);
 			};
 			
 			/** this is called when go to page finishes scrolling
@@ -98,7 +106,7 @@
 
 				// some additional forward scrolling needs to happen
 				if (myPage > pages) {
-					settings.controlScope.trigger("carrotScrollStart", [settings.name, 0]);
+					settings.controlScope.trigger(settings.scrollStart, [settings.name, 0]);
 					// console.log("scroll handler > pages scroll start");
 					scrolling = true;
 					
@@ -112,7 +120,7 @@
 				
 				// some additional backward scrolling needs to happen
 				else if (myPage == 0) {
-					settings.controlScope.trigger("carrotScrollStart", [settings.name, pages-1]);
+					settings.controlScope.trigger(settings.scrollStart, [settings.name, pages-1]);
 					// console.log("scroll handler 0 pages scroll start");
 					scrolling = true;
 		
@@ -127,7 +135,7 @@
 				else {			
 					currentPage = myPage; // my page is set in gotoPage previously
 					scrolling = false;
-					settings.controlScope.trigger("carrotScrollEnd", [settings.name, myPage-1]);
+					settings.controlScope.trigger(settings.scrollEnd, [settings.name, myPage-1]);
 				}
 
 			};
@@ -149,7 +157,7 @@
 					
 				// console.log("my direction is " + dir + " my page is " + myPage + " scrolling to " + scrollTo);		
 				// broadcast event that carousel is moving as we start the animation
-				settings.controlScope.trigger("carrotScrollStart", [settings.name, myPage-1]);
+				settings.controlScope.trigger(settings.scrollStart, [settings.name, myPage-1]);
 				// console.log("scroll handler normal scroll start");
 				scrolling = true;
 				
@@ -167,8 +175,8 @@
 							
 				if (nextPage <= 1) { haveBack = false; } else { haveBack = true; };
 				if (nextPage >= pages) { haveForward = false; } else { haveForward = true; };								
-				if (haveBack) { prev.removeClass(settings.disabled); } else { prev.addClass(settings.disabled); }
-				if (haveForward) { next.removeClass(settings.disabled); } else { next.addClass(settings.disabled); }
+				if (haveBack) { prev.removeClass(settings.disabledClass); } else { prev.addClass(settings.disabledClass); }
+				if (haveForward) { next.removeClass(settings.disabledClass); } else { next.addClass(settings.disabledClass); }
 			};
 
 			/** move carousel back
@@ -203,9 +211,9 @@
 				paused = true;
 				playing = false;
 				stopped = false;
-				pause.addClass(settings.disabled);
-				play.removeClass(settings.disabled);
-				stop.removeClass(settings.disabled);
+				pause.addClass(settings.disabledClass);
+				play.removeClass(settings.disabledClass);
+				stop.removeClass(settings.disabledClass);
 			};
 			
 			/** resume the auto play
@@ -215,9 +223,9 @@
 				paused = false;
 				stopped = false;
 				playing = true;
-				play.addClass(settings.disabled);
-				stop.removeClass(settings.disabled);
-				pause.removeClass(settings.disabled);
+				play.addClass(settings.disabledClass);
+				stop.removeClass(settings.disabledClass);
+				pause.removeClass(settings.disabledClass);
 				startAutoAdvance();
 			};
 			
@@ -228,9 +236,9 @@
 				paused = false;
 				stopped = true;
 				playing = false;
-				stop.addClass(settings.disabled);
-				play.removeClass(settings.disabled);
-				pause.removeClass(settings.disabled);
+				stop.addClass(settings.disabledClass);
+				play.removeClass(settings.disabledClass);
+				pause.removeClass(settings.disabledClass);
 				window.clearInterval(autoScroll);
 			};
 			
@@ -293,10 +301,10 @@
 			/** subscribe to scrolling and make sure it is our thing that's moving
 			*/
 			var handleNaviAutoscroll = function() {
-				settings.controlScope.bind("carrotScrollStart", function(e, movingThing, pageNum) {		
+				settings.controlScope.bind(settings.scrollStart, function(e, movingThing, pageNum) {		
 						
 					if (movingThing == settings.name) {					
-						$(navi).removeClass(settings.current);
+						$(navi).removeClass(settings.currentClass);
 
 						// console.log("navi passed in page num is " + pageNum);
 						if (pageNum > pages) { pageNum = 1; } // rewind to beginning
@@ -304,7 +312,7 @@
 						// console.log("navi auto advancing to " + pageNum);
 						
 						var thisNavi = $(navi)[parseInt(pageNum)];
-						$(thisNavi).addClass(settings.current);
+						$(thisNavi).addClass(settings.currentClass);
 					}
 					
 				});
@@ -314,7 +322,7 @@
 			*/
 			var setupNavi = function() {			
 				if (settings.makeNavi) { creatNavi(); }				
-				$(navi).first().addClass(settings.current);
+				$(navi).first().addClass(settings.currentClass);
 				navi.each(function(iNav){
 					var thisNavi = this; // an item of this nav
 					var navIndex = iNav + 1;
@@ -322,8 +330,8 @@
 						if (playing && settings.stopOnClick) {  stopCarrotCell(); }
 						if (scrolling) { return false; } // no queue ups on rapid clicking
 						
-						$(this).siblings().removeClass(settings.current);
-						$(this).addClass(settings.current);
+						$(this).siblings().removeClass(settings.currentClass);
+						$(this).addClass(settings.currentClass);
 						if ((navIndex <= pages) && (navIndex > 0)) {
 							gotoPage(navIndex);
 							determinePrevNext(navIndex);
@@ -430,8 +438,8 @@
 			/** clone a slider worth of clones at beginning and end
 			*/
 			var padWithClones = function(){
-				items.filter(':first').before(items.slice(-visible).clone().addClass('cloned'));
-				items.filter(':last').after(items.slice(0, visible).clone().addClass('cloned'));
+				items.filter(':first').before(items.slice(-visible).clone().addClass(settings.cloneClass));
+				items.filter(':last').after(items.slice(0, visible).clone().addClass(settings.cloneClass));
 				items = slider.children(settings.sliderChildSelect); // reselect everything including clones
 			};
 			
@@ -473,7 +481,7 @@
 				if (settings.infinite) {
 					moveClonesOutOfSight();	
 				} else {
-					prev.addClass(settings.disabled);
+					prev.addClass(settings.disabledClassd);
 				}
 			};
 			
@@ -481,9 +489,9 @@
 			*/
 			var IsThereEnoughToScroll = function(){
 				if (totalItems <= visible) {
-					prev.addClass(settings.disabled);
-					next.addClass(settings.disabled);				
-					if (settings.navi) { naviContainer.addClass(settings.disabled); }
+					prev.addClass(settings.disabledClass);
+					next.addClass(settings.disabledClass);				
+					if (settings.navi) { naviContainer.addClass(settings.disabledClass); }
 					enoughToScroll = false;
 				} else {
 					enoughToScroll = true;

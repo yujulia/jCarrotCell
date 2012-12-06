@@ -250,6 +250,10 @@ p a:hover {
 	color: #ff9900;
 }
 
+p em {
+	color: #ff9900;
+}
+
 /** property tables
 */
 
