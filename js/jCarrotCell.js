@@ -54,6 +54,13 @@
 				KEY_FORWARD = 39,
 				KEY_UP = 38,
 				KEY_DOWN = 40,	
+				SCROLL_END = "scrollEnd",
+				SCROLL_START = "scrollStart",
+				AT_START = "atStart",
+				AT_END = "atEnd",
+				ON_PLAY = "onPlay",
+				ON_PAUSE = "onPause",
+				ON_STOP = "onStop",
 				
 				// properties of this carrotCell
 				slideWidth = 0,
@@ -80,12 +87,12 @@
 			
 			/** scroll back to the very beginning
 			*/
-			var scrollToBegin = function(){
+			var scrollToStart = function(){
 				view.scrollLeft(singleSize * visible); // move back to beginning
 				myPage = 1;
 				currentPage = 1;
 				scrolling = false;
-				settings.controlScope.trigger(settings.scrollEnd, [settings.name, myPage]);
+				settings.controlScope.trigger(settings.scrollEnd, [settings.name, SCROLL_END, myPage]);
 			};
 			
 			/** scroll to the very end 
@@ -96,7 +103,7 @@
 				myPage = pages;
 				currentPage = pages;
 				scrolling = false;			
-				settings.controlScope.trigger(settings.scrollEnd, [settings.name, myPage]);
+				settings.controlScope.trigger(settings.scrollEnd, [settings.name, SCROLL_END, myPage]);
 			};
 			
 			/** this is called when go to page finishes scrolling
@@ -106,21 +113,21 @@
 
 				// some additional forward scrolling needs to happen
 				if (myPage > pages) {
-					settings.controlScope.trigger(settings.scrollStart, [settings.name, 0]);
+					settings.controlScope.trigger(settings.scrollStart, [settings.name, SCROLL_START, 0]);
 					// console.log("scroll handler > pages scroll start");
 					scrolling = true;
 					
 					var moveBy = visible - extraMoves;				
 					if (settings.sideways) { 										
-						view.animate({ scrollLeft : '+=' + moveBy * singleSize }, settings.speed, scrollToBegin);			
+						view.animate({ scrollLeft : '+=' + moveBy * singleSize }, settings.speed, scrollToStart);			
 					} else { 
-						view.animate({ scrollTop : '+=' + moveBy * singleSize }, settings.speed, scrollToBegin);
+						view.animate({ scrollTop : '+=' + moveBy * singleSize }, settings.speed, scrollToStart);
 					}
 				} 
 				
 				// some additional backward scrolling needs to happen
 				else if (myPage == 0) {
-					settings.controlScope.trigger(settings.scrollStart, [settings.name, pages-1]);
+					settings.controlScope.trigger(settings.scrollStart, [settings.name, SCROLL_START, pages-1]);
 					// console.log("scroll handler 0 pages scroll start");
 					scrolling = true;
 		
@@ -135,7 +142,7 @@
 				else {			
 					currentPage = myPage; // my page is set in gotoPage previously
 					scrolling = false;
-					settings.controlScope.trigger(settings.scrollEnd, [settings.name, myPage-1]);
+					settings.controlScope.trigger(settings.scrollEnd, [settings.name, SCROLL_END, myPage-1]);
 				}
 
 			};
@@ -157,7 +164,7 @@
 					
 				// console.log("my direction is " + dir + " my page is " + myPage + " scrolling to " + scrollTo);		
 				// broadcast event that carousel is moving as we start the animation
-				settings.controlScope.trigger(settings.scrollStart, [settings.name, myPage-1]);
+				settings.controlScope.trigger(settings.scrollStart, [settings.name, SCROLL_START, myPage-1]);
 				// console.log("scroll handler normal scroll start");
 				scrolling = true;
 				
@@ -171,12 +178,21 @@
 			/** determine if the previous and next buttons should be active based on the next page they will be linking to
 			*/
 			var determinePrevNext = function(nextPage) {
-				if (settings.infinite) { return false; } // do nothing if its infinite	
-							
+				if (settings.infinite) { return false; } // do nothing if its infinite								
 				if (nextPage <= 1) { haveBack = false; } else { haveBack = true; };
 				if (nextPage >= pages) { haveForward = false; } else { haveForward = true; };								
-				if (haveBack) { prev.removeClass(settings.disabledClass); } else { prev.addClass(settings.disabledClass); }
-				if (haveForward) { next.removeClass(settings.disabledClass); } else { next.addClass(settings.disabledClass); }
+				if (haveBack) { 
+					prev.removeClass(settings.disabledClass); 
+				} else { 
+					prev.addClass(settings.disabledClass); 
+					settings.controlScope.trigger(settings.atStart, [settings.name, AT_START]);
+				}
+				if (haveForward) { 
+					next.removeClass(settings.disabledClass); 
+				} else { 
+					next.addClass(settings.disabledClass); 
+					settings.controlScope.trigger(settings.atEnd, [settings.name, AT_END]);
+				}
 			};
 
 			/** move carousel back
@@ -214,6 +230,7 @@
 				pause.addClass(settings.disabledClass);
 				play.removeClass(settings.disabledClass);
 				stop.removeClass(settings.disabledClass);
+				settings.controlScope.trigger(settings.onPause, [settings.name, ON_PAUSE]);
 			};
 			
 			/** resume the auto play
@@ -227,6 +244,7 @@
 				stop.removeClass(settings.disabledClass);
 				pause.removeClass(settings.disabledClass);
 				startAutoAdvance();
+				settings.controlScope.trigger(settings.onPlay, [settings.name, ON_PLAY]);
 			};
 			
 			/** resume the auto play
@@ -240,6 +258,7 @@
 				play.removeClass(settings.disabledClass);
 				pause.removeClass(settings.disabledClass);
 				window.clearInterval(autoScroll);
+				settings.controlScope.trigger(settings.onStop, [settings.name, ON_STOP]);
 			};
 			
 			/** set up the controls if any, then auto scroll
@@ -264,8 +283,7 @@
 			*/
 			var setupKeyAdvance = function() {
 				$(document).keyup(function(e){
-					if (scrolling) { return false; }
-					
+					if (scrolling) { return false; }					
 			    	if (e.keyCode == settings.keyBack) { moveBack(); } // left / up
 					if (e.keyCode == settings.keyForward) { moveForward(); } // right / down
 				});
@@ -301,9 +319,9 @@
 			/** subscribe to scrolling and make sure it is our thing that's moving
 			*/
 			var handleNaviAutoscroll = function() {
-				settings.controlScope.bind(settings.scrollStart, function(e, movingThing, pageNum) {		
+				settings.controlScope.bind(settings.scrollStart, function(e, movingThing, eventName, pageNum) {		
 						
-					if (movingThing == settings.name) {					
+					if ((movingThing == settings.name) && (eventName == SCROLL_START)) {					
 						$(navi).removeClass(settings.currentClass);
 
 						// console.log("navi passed in page num is " + pageNum);
