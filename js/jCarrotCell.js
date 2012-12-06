@@ -143,6 +143,7 @@
 					currentPage = myPage; // my page is set in gotoPage previously
 					scrolling = false;
 					settings.controlScope.trigger(settings.scrollEnd, [settings.name, SCROLL_END, myPage-1]);
+					determinePrevNext(myPage);
 				}
 
 			};
@@ -201,7 +202,6 @@
 				if (!settings.infinite && (currentPage == 1)) { return false; } // we are at the left most page or its circular
 				var nextPage = currentPage - 1;
 				gotoPage(nextPage);
-				determinePrevNext(nextPage);
 			};
 
 			/** move carousel forward
@@ -210,7 +210,6 @@
 				if (!settings.infinite && (currentPage >= pages)) { return false; } // we are at the right most page				
 				var nextPage = currentPage + 1;
 				gotoPage(nextPage);
-				determinePrevNext(nextPage);
 			};
 			
 			/** set up the interval
@@ -501,6 +500,8 @@
 				} else {
 					prev.addClass(settings.disabledClassd);
 				}
+				
+				determinePrevNext(0); // hide previous
 			};
 			
 			/** check if content is too short to scroll, add the off class to navigation items
