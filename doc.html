@@ -240,6 +240,94 @@ var myCarouselAPI = $('#myCarousel').carrotCell({
 						
 		</table>
 		
+		<h3>Events</h3>
+		<p>Event names can be changed through the settings, but their intrinsic event type such as "atStart" remains the same. Events return values regarding which carrotCell it belongs to, what the intrinsic event is, and other information.</p> 
+		<table>
+			<thead>
+				<tr>
+					<th>Config Property</th>
+					<th>Example</th>
+					<th>Description</th>
+					<th>Default</th>
+					<th>Event</th>
+					<th>Values Passed</th>
+				</tr>
+			</thead>
+
+			<tr>
+				<td>scrollStart</td>
+				<td>"myScrollStart"</td>
+				<td>
+					<p>Signal that the carousel has started its scrolling animation.</p> 
+				</td>
+				<td>"carrotScrollStart"</td>
+				<td>"scrollStart"</td>
+				<td>carrotCellName, eventName, currentPageNumber</td>
+			</tr>			
+			<tr>
+				<td>scrollEnd</td>
+				<td>"myScrollEnd"</td>
+				<td>
+					<p>Signal that the carousel has ended its scrolling animation.</p> 
+				</td>
+				<td>"carrotScrollEnd"</td>
+				<td>"scrollEnd"</td>
+				<td>carrotCellName, eventName, currentPageNumber</td>
+			</tr>
+			<tr>
+				<td>atStart</td>
+				<td>"firstPage"</td>
+				<td>
+					<p>Signal that the carousel has reached its starting point.</p> 
+				</td>
+				<td>"carrotAtStart"</td>
+				<td>"atStart"</td>
+				<td>carrotCellName, eventName, </td>
+			</tr>
+			<tr>
+				<td>atEnd</td>
+				<td>"lastPage"</td>
+				<td>
+					<p>Signal that the carousel has reached its ending point.</p> 
+				</td>
+				<td>"carrotAtEnd"</td>
+				<td>"atEnd"</td>
+				<td>carrotCellName, eventName, </td>
+			</tr>
+			<tr>
+				<td>onPlay</td>
+				<td>"playing"</td>
+				<td>
+					<p>Signal that the carousel is currently on auto scroll.</p> 
+				</td>
+				<td>"carrotPlay"</td>
+				<td>"onPlay"</td>
+				<td>carrotCellName, eventName, </td>
+			</tr>
+			<tr>
+				<td>onPause</td>
+				<td>"paused"</td>
+				<td>
+					<p>Signal that the carousel is currently paused on auto scroll.</p> 
+				</td>
+				<td>"carrotPause"</td>
+				<td>"onPause"</td>
+				<td>carrotCellName, eventName, </td>
+			</tr>
+			<tr>
+				<td>onStop</td>
+				<td>"stopped"</td>
+				<td>
+					<p>Signal that the auto scroll on carousel is currently disabled.</p> 
+				</td>
+				<td>"carrotStop"</td>
+				<td>"onStop"</td>
+				<td>carrotCellName, eventName, </td>
+			</tr>
+
+						
+		</table>
+		
 		<h3>Selector Configuration</h3>
 		<p>Some default selectors can be over-ridden by passing in a new jQuery selector string.</p>
 		<p>Note that most selectors operate inside .carrotCell unless you over ride the scope with controlScope and the containsControl property. </p>

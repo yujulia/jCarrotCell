@@ -3,7 +3,7 @@
 
 <head> 
     <meta charset="utf-8" /> 
-	<title>jCarrotCell Demo: Layout Flexibility</title>
+	<title>jCarrotCell Demo: Customize</title>
 	<!--[if lt IE 9]>
 	<script src="http//html5shim.googlecode.com/svn/trunk/html5.js"></script>
 	<![endif]-->
@@ -176,7 +176,7 @@
 
 <body>
 	<header>
-		<h1>j<span>Carrot</span><em>Cell</em> Demo: <strong>Layout Flexibility</strong></h1>		
+		<h1>j<span>Carrot</span><em>Cell</em> Demo: <strong>Customize</strong></h1>		
 	</header>
 	
 	<nav>
@@ -185,13 +185,13 @@
 		<a href="demo.html">More Demos</a> 
 	</nav>
 	
-	<h2>Demo: Layout Flexibility Index</h2>
+	<h2>Demo: Customize Index</h2>
 	<ol class="index">
 		<li><a href="#one">Changing Default Mark Up</a></li>
 		<li><a href="#two">Moving Controls Elsewhere</a></li>						
-		<li><a href="#three">Custom Class Names</a></li>
-		<li><a href="#four">Custom Event Names</a></li>
-
+		<li><a href="#three">Custom Classes</a></li>
+		<li><a href="#four">Custom Events</a></li>
+		<li><a href="#five">Initialized CallBack</a></li>
 	</ol>
 	
 	
@@ -349,7 +349,7 @@ $('#movingKitten').carrotCell({
 	</article>
 	
 	<article id="three">
-		<h2>Custom Class Names</h2>
+		<h2>Custom Classes</h2>
 		<p>Outside of <em>.carrotCell</em> and <em>.carrotCellView</em>, any of the class names from the default mark up can be changed by passing in the appropriate selector or class name through the carrotCell settings object. In the previous examples it has been shown how to change the class names in markup and pass in the relevant selector, this section will demonstrate some class configurations not used by selectors but by the CSS.</p>
 		
 		<div id="classKitten" class="carrotCell kitten">	
@@ -417,7 +417,7 @@ $("#classKitten").carrotCell({
 	</article>
 	
 	<article id="four">
-		<h2>Custom Event Names</h2>
+		<h2>Custom Events</h2>
 		<p>If the default event names of the carrotCell creates conflict with existing code, it is possible to rename the existing events used. Refer to the <a href="doc.html">documentation</a> for the complete event list. In this example, click previous and next to see what events are happening.</p>
 		
 		<div class="example">
