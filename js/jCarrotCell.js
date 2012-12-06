@@ -41,9 +41,9 @@
 					naviSelect : "> *",
 					naviClass : "naviItem",
 					scrollStart : "carrotScrollStart",
-					scrollEnd : "carrotScrollEnd"
+					scrollEnd : "carrotScrollEnd",
 					atStart : "carrotAtStart",
-					atEnd : "carrotAtEnd"
+					atEnd : "carrotAtEnd",
 					onPlay : "carrotPlay",
 					onPause : "carrotPause",
 					onStop : "carrotStop"
