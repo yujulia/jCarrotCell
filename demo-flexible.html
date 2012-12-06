@@ -59,7 +59,11 @@
 			var eventResult = $("#eventKittenResult");
 			
 			$(document).bind("carrotHappened", function(e, carrotName, eventName, pageNum){
-				eventResult.append("<p>" + carrotName + " event <strong>" + eventName + "</strong> happened </p>");
+				var pageNumReport = "";
+				if (pageNum) {
+						pageNumReport = "Page number is " + pageNum;
+				}
+				eventResult.append("<p>" + carrotName + " event <strong>" + eventName + "</strong> happened. " + pageNumReport + "</p>");
 			});
 		}
 		
@@ -441,7 +445,7 @@ $("#classKitten").carrotCell({
 			</div>
 		</div>
 		
-		<p>In this example, every event is using the same event name of "carrotHappened". The event listener is passed in the name of the carrotCell object, then the real event.</p>
+		<p>In this example, every event is using the same event name of "carrotHappened" letting one event handler parse all relevant events. The event listener is passed in the name of the carrotCell object, then the constant event name string and the rest of the event information. See the <a href="doc.html">documentation</a> for more  on event information.</p>
 <pre><code data-language="js">
 $("#eventKitten").carrotCell({
 	scrollStart : "carrotHappened",
@@ -452,8 +456,12 @@ $("#eventKitten").carrotCell({
 
 var eventResult = $("#eventKittenResult");
 
-$(document).bind("carrotHappened", function(e, carrotName, eventName){
-	eventResult.append("<p>" + carrotName + " event <strong>" + eventName + "</strong> happened </p>");
+$(document).bind("carrotHappened", function(e, carrotName, eventName, pageNum){
+	var pageNumReport = "";
+	if (pageNum) {
+			pageNumReport = "Page number is " + pageNum;
+	}
+	eventResult.append("<p>" + carrotName + " event <strong>" + eventName + "</strong> happened. " + pageNumReport + "</p>");
 });
 </code></pre>
 	</article>
