@@ -3,40 +3,34 @@
 
 <head> 
     <meta charset="utf-8" /> 
-	<title>jCarrotCell Demos</title>
+	<title>jCarrotCell Demo: Using the API</title>
 	<!--[if lt IE 9]>
 	<script src="http//html5shim.googlecode.com/svn/trunk/html5.js"></script>
 	<![endif]-->
 	<script src="js/jquery.js" type="text/javascript" charset="utf-8"></script>
+ 	<script src="js/jquery-touchwipe.js" type="text/javascript" charset="utf-8"></script>
 	<script src="js/jCarrotCell.js" type="text/javascript" charset="utf-8"></script>
+	<script src="js/rainbow-custom.min.js" type="text/javascript" charset="utf-8"></script>
+	
 	<script type="text/javascript" charset="utf-8">
 	$(document).ready(function(){
 		window.carrotDemos = window.carrotDemos || {};
 		carrotDemos.setup = function() {
-			
-			var test = $('#kittenx').carrotCell({
-				sliderSelect : "div",
-				sliderChildSelect : "div",
-				containsControl : false,
-				navi : true,
-				makeNavi : true,
-				controlScope : "#kittenxNav",
-				prevSelect : "#goBack",
-				nextSelect : "#goForward",
-				delay: 1000,
-				infinite: true,
-				//auto: true,
-				step: 2
+			var kitten = $("#insertKitten").carrotCell({
+				scrollToInserted : true
 			});
+			var kittenAPI = $(kitten).data("carrotCell");
 			
-			var api = $(test).data('carrotCell');
+			var howManyPages = kittenAPI.getPageCount();
 			
-			$("#moveThis").bind("click", function(e){
+			$("#insertKittenAction").bind("click", function(e){
 				e.preventDefault();
-				var insertedAt = api.insert('<div><div>strange cat</div><img src="images/cat07.png" /></div>'); 
-				api.moveToPage(0);
+				
+				var myIndex = parseInt($("#insertKittenValue").val());
+				
+				kittenAPI.insert('<li><span>insert</span><img src="images/cat07.png" /></li>', myIndex); 
 			});
-		
+
 		}
 		
 		// chrome can not calculate the width correctly because it is foolish
@@ -52,38 +46,38 @@
 	
 	<link type="text/css" href="css/main.css" rel="stylesheet" /> 
 	<link type="text/css" href="css/carrotcell.css" rel="stylesheet" /> 
+	<link type="text/css" href="css/carrotSkin.css" rel="stylesheet" /> 
+
+	
 </head>
 
 <body>
 
-	<article>
-		
-		<div id="kittenxNav">
-			<div id="goBack" class="btn">prev</div>
-			<div class="navi" data-navi='["item 1", "item 2"]'></div>
-			
-			<div id="goForward" class="btn">next</div>
-		</div>
-		
-		<div id="kittenx" class="carrotCell">
-			<div class="carrotCellView">
-				<div class="carrotCellContainer">
-					<div><div>1</div><img src="images/cat01.png"></div>
-					<div><div>2</div><img src="images/cat02.png"></div>
-					<div><div>3</div><img src="images/cat03.png"></div>
-					<div><div>4</div><img src="images/cat04.png"></div>
-					<div><div>5</div><img src="images/cat05.png"></div>
-					<div><div>6</div><img src="images/cat06.png"></div>
-					<div><div>7</div><img src="images/cat07.png"></div>
-					<div><div>8</div><img src="images/cat08.png"></div>
-					<div><div>9</div><img src="images/cat09.png"></div>
-		        </div>     
+		<div class="example">
+			<div id="insertKitten" class="carrotCell kitten">			
+				<div class="carrotCellView">
+					<ol>
+						<li><span>1</span><img src="images/cat01.png" /></li>
+						<li><span>2</span><img src="images/cat02.png" /></li>
+						<li><span>3</span><img src="images/cat03.png" /></li>
+						<li><span>4</span><img src="images/cat04.png" /></li>
+						<li><span>5</span><img src="images/cat05.png" /></li>
+						<li><span>6</span><img src="images/cat06.png" /></li>
+						<li><span>7</span><img src="images/cat07.png" /></li>
+						<li><span>8</span><img src="images/cat08.png" /></li>
+						<li><span>9</span><img src="images/cat09.png" /></li>
+			        </ol>       
+				</div>			
+				<div class="prev">prev</div>
+				<div class="next">next</div> 
+			</div>
+			<button id="insertKittenAction" class="result">Insert Item</button>
+			<div class="result">
+				<span>at index</span>
+				<input id="insertKittenValue" type="text" name="kittenValue"/>
 			</div>
 		</div>
-		
-		<a href="#" id="moveThis">insert</a>		
-		
-	</article>
+
 
 </body>
 </html>

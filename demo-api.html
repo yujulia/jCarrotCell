@@ -16,7 +16,10 @@
 	$(document).ready(function(){
 		window.carrotDemos = window.carrotDemos || {};
 		carrotDemos.setup = function() {
-			
+			var kitten = $("#kitten").carrotCell();
+			var kittenAPI = $(kitten).data("carrotCell");
+			var howManyPages = kittenAPI.getPageCount();
+			$("#kittenResult").html(howManyPages + " pages of kittens");
 		}
 		
 		// chrome can not calculate the width correctly because it is foolish
@@ -32,6 +35,12 @@
 	
 	<link type="text/css" href="css/main.css" rel="stylesheet" /> 
 	<link type="text/css" href="css/carrotcell.css" rel="stylesheet" /> 
+	<link type="text/css" href="css/carrotSkin.css" rel="stylesheet" /> 
+	
+	<style>
+
+	</style>
+	
 </head>
 
 <body>
@@ -48,7 +57,7 @@
 	<h2>Demo: Using the API</h2>
 	<ol class="index">
 		<li><a href="#one">Getting the API</a></li>
-		<li><a href="#two">API Methods</a></li>						
+		<li><a href="#two">Calling API Methods</a></li>						
 		<li><a href="#three">Inserting</a></li>
 		<li><a href="#four">Removing</a></li>
 		<li><a href="#Five">Loading</a></li>
@@ -57,17 +66,77 @@
 	
 	<article id="one">
 		<h2>Getting the API</h2>
-		<p>This version takes no options and uses all of the default settings of carrotCell.</p>
+		<p>To obtain the carrotCell API, a callback function can be used, see the<a href="demo-customize.html#five">customize demo: initialized callback</a>. Another way is to obtain it through the carrotCell creation.</p>
+		
+<pre><code data-language="js">
+var myCarrotCell = $(".carrotCell").carrotCell();
+var myAPI = $(myCarrotCell).data("carrotCell");
+</code></pre>
+		
 	</article>
 	
 	<article id="two">
-		<h2>API Methods</h2>
-		<p>This version takes no options and uses all of the default settings of carrotCell.</p>
+		<h2>Calling API Methods</h2>
+		<p>To see the complete list of API methods, please see the <a href="doc.html">documentation</a>.</p>
+	
+		<div class="example">
+			<div id="kitten" class="carrotCell kitten">			
+				<div class="carrotCellView">
+					<ol>
+						<li><img src="images/cat01.png" /></li>
+						<li><img src="images/cat02.png" /></li>
+						<li><img src="images/cat03.png" /></li>
+						<li><img src="images/cat04.png" /></li>
+						<li><img src="images/cat05.png" /></li>
+						<li><img src="images/cat06.png" /></li>
+						<li><img src="images/cat07.png" /></li>
+						<li><img src="images/cat08.png" /></li>
+						<li><img src="images/cat09.png" /></li>
+			        </ol>       
+				</div>			
+				<div class="prev">prev</div>
+				<div class="next">next</div> 
+			</div>
+		
+			<div id="kittenResult" class="result">Don't know how many pages of kittens. :(</div>
+		</div>
+
+<p>This example shows how the API method <strong>getPAgeCount</strong> is used.</p>		
+<pre><code data-language="js">
+var kitten = $("#kitten").carrotCell();
+var kittenAPI = $(kitten).data("carrotCell");
+var howManyPages = kittenAPI.getPageCount();
+$("#kittenResult").html(howManyPages + " pages of kittens");
+</code></pre>
+		
 	</article>
 	
 	<article id="three">
 		<h2>Inserting</h2>
 		<p>This version takes no options and uses all of the default settings of carrotCell.</p>
+		
+		<div class="example">
+			<div id="insertKitten" class="carrotCell kitten">			
+				<div class="carrotCellView">
+					<ol>
+						<li><img src="images/cat01.png" /></li>
+						<li><img src="images/cat02.png" /></li>
+						<li><img src="images/cat03.png" /></li>
+						<li><img src="images/cat04.png" /></li>
+						<li><img src="images/cat05.png" /></li>
+						<li><img src="images/cat06.png" /></li>
+						<li><img src="images/cat07.png" /></li>
+						<li><img src="images/cat08.png" /></li>
+						<li><img src="images/cat09.png" /></li>
+			        </ol>       
+				</div>			
+				<div class="prev">prev</div>
+				<div class="next">next</div> 
+			</div>
+		
+			<div id="kittenResult" class="result">Don't know how many pages of kittens. :(</div>
+		</div>
+		
 	</article>
 	
 	<article id="four">
@@ -79,5 +148,11 @@
 		<h2>Loading</h2>
 		<p>This version takes no options and uses all of the default settings of carrotCell.</p>
 	</article>
+	
+	<nav>
+		<a href="index.html">Home</a> 
+		<a href="doc.html">Documentation</a> 
+		<a href="demo.html">More Demos</a> 
+	</nav>
 </body>
 </html>

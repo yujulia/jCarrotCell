@@ -72,7 +72,6 @@
 				paused = false,
 				stopped = false,
 				scrolling = false,
-				visibleDifference = 0,
 				extraMoves = 0,
 				enoughToScroll = false,
 			
@@ -82,13 +81,18 @@
 				visible, advanceBy, myPage, pages, realPages,
 				prev, next, navi,
 				sliderSelect, sliderChildSelect, prevSelect, nextSelect,
-				pauseSelect, playSelect, stopSelect, naviContainer, naviSelect;
+				pauseSelect, playSelect, stopSelect, naviContainer, naviSelect,
+				firstOfLastPage, extraOnLastPage, hasOpenSpot;
 				
 			
 			/** scroll back to the very beginning
 			*/
 			var scrollToStart = function(){
-				view.scrollLeft(singleSize * visible); // move back to beginning
+				if (settings.sideways) { 	
+					view.scrollLeft(singleSize * visible); // move back to beginning
+				} else {
+					view.scrollTop(singleSize * visible);
+				}
 				myPage = 1;
 				currentPage = 1;
 				scrolling = false;
@@ -99,7 +103,12 @@
 			*/
 			var scrollToEnd = function(){
 				var scrollBy = 	singleSize * advanceBy * (pages-1) + singleSize;
-				view.scrollLeft(scrollBy);	
+				// var scrollBy = singleSize * totalItems;
+				if (settings.sideways) { 
+					view.scrollLeft(scrollBy);	
+				} else {
+					view.scrollTop(scrollBy);	
+				}
 				myPage = pages;
 				currentPage = pages;
 				scrolling = false;			
@@ -114,7 +123,7 @@
 				// some additional forward scrolling needs to happen
 				if (myPage > pages) {
 					settings.controlScope.trigger(settings.scrollStart, [settings.name, SCROLL_START, 0]);
-					// console.log("scroll handler > pages scroll start");
+					console.log("scroll handler > pages scroll start");
 					scrolling = true;
 					
 					var moveBy = visible - extraMoves;				
@@ -128,7 +137,7 @@
 				// some additional backward scrolling needs to happen
 				else if (myPage == 0) {
 					settings.controlScope.trigger(settings.scrollStart, [settings.name, SCROLL_START, pages-1]);
-					// console.log("scroll handler 0 pages scroll start");
+					console.log("scroll handler 0 pages scroll start");
 					scrolling = true;
 		
 					if (settings.sideways) { 										
@@ -139,7 +148,7 @@
 				}
 				
 				// we are done with our scrolling, no additional things need doing
-				else {			
+				else {		
 					currentPage = myPage; // my page is set in gotoPage previously
 					scrolling = false;
 					settings.controlScope.trigger(settings.scrollEnd, [settings.name, SCROLL_END, myPage-1]);
@@ -156,14 +165,24 @@
 				} else { 
 					myPage = currentPage; // should this be currentPage+1 ???
 				}				
+						
+				// console.log("going to page " + myPage + " current Page is " + currentPage);
 				
 				// should do bounds check for non infinite
 				
 				var dir = myPage < currentPage ? -1 : 1, // what direction are we going
 		            n = Math.abs(currentPage - myPage), // how many pages to scroll
 					scrollTo = singleSize * dir * advanceBy * n; // how far in pixels
+				
+				// current page and next page are the same, only occurs on insert by one
+				// scroll by the single size	
+				if (n == 0) {
+					scrollTo = singleSize * dir;
+				}
 					
-				// console.log("my direction is " + dir + " my page is " + myPage + " scrolling to " + scrollTo);		
+				// console.log("singleSize is " + singleSize + " dir is " + dir + " advance by is " + advanceBy + " n "+n);
+				// console.log("my direction is " + dir + " my page is " + myPage + " scrolling to " + scrollTo);	
+				
 				// broadcast event that carousel is moving as we start the animation
 				settings.controlScope.trigger(settings.scrollStart, [settings.name, SCROLL_START, myPage-1]);
 				// console.log("scroll handler normal scroll start");
@@ -438,18 +457,36 @@
 			/** find out if we have any weird empty spots in a page
 			*/
 			var howManyExtraMoves = function(){	
-				if (advanceBy == visible) {
-					extraMoves = 0; // no worries
-				} else {
-					var lastPageStartingNum = (pages-1) * advanceBy + 1;
-					// console.log("first item of last page set is " + lastPageStartingNum);
-					
-					extraMoves = totalItems - lastPageStartingNum + 1;			
-					if (extraMoves == 0) {
-						extraMoves = visible; 
-					}
-				}
+				// if (advanceBy == visible) {
+				// 	extraMoves = 0; // no worries
+				// 	
+				// } else {
+				// 	var lastPageStartingNum = (pages-1) * advanceBy + 1;
+				// 	// console.log("first item of last page set is " + lastPageStartingNum);
+				// 	
+				// 	extraMoves = totalItems - lastPageStartingNum + 1;			
+				// 	if (extraMoves == 0) {
+				// 		extraMoves = visible; 
+				// 	}
+				// 	
+				// 	console.log(extraMoves + " extra moves");
+				// }		
 				
+				
+				firstOfLastPage = (pages-1) * advanceBy + 1;
+				// console.log("first item of last page set is " + firstOfLastPage);
+
+				// i dont understand what this calculation is still
+				extraMoves = totalItems - firstOfLastPage + 1;			
+				if (extraMoves == 0) {
+					extraMoves = visible; 
+				}
+				// console.log(extraMoves + " extra moves");		
+				
+				extraOnLastPage = advanceBy - totalItems%advanceBy;
+				hasOpenSpot = extraOnLastPage; // we have 3 slots open
+				// console.log(extraOnLastPage + " extra spots on the last page");
+					
 			};
 			
 			/** clone a slider worth of clones at beginning and end
@@ -469,7 +506,16 @@
 					view.scrollTop(singleSize * visible); 
 				}
 			};
-						
+			
+			/** something has changed about slides, update calculations
+			*/
+			var updateSlider = function(){
+				findSlides();
+				howManyPages();
+				howManyExtraMoves();
+				adjustSlideSize();
+			};
+							
 			/** calculate the settings of the carrot
 			*/
 			var setupCarrot = function(){
@@ -490,9 +536,7 @@
 				howManyPages();
 				howManyExtraMoves();
 
-				if (settings.infinite) {		
-					padWithClones();						
-				} 				
+				if (settings.infinite) { padWithClones(); } 				
 				adjustSlideSize();				
 				view.css("overflow", "hidden"); // clip extra items	(not set in css for non js view)				
 				if (settings.infinite) {
@@ -547,7 +591,6 @@
 				} else {
 					singleSize = single.outerHeight(true);
 				}			
-				
 			};
 			
 			/** find and set scope of carrotcell controls
@@ -584,14 +627,40 @@
 				setControlScope();
 				findControls();			
 				findSlides();	
-				findViewSizeAndVisible();
-				if (visible > settings.step) { visibleDifference = visible - settings.step; } 
+				findViewSizeAndVisible(); 
 				
 				IsThereEnoughToScroll(); // check if we have enough to scroll				
 				if (enoughToScroll) {
 					setupCarrot();
 					handleCarrotEvents();
 				}	
+			};
+			
+			/** find out which page in the set contains the item
+			*/
+			var whichPageContains = function(itemIndex){
+				var inPage = 0;			
+				for (var i = 0; i < pages; i++) {
+				    var thisMax = i * advanceBy + advanceBy;
+					var thisMin = i * advanceBy;
+					if ((itemIndex < thisMax) && (itemIndex >= thisMin)) {
+						inPage = i;
+					}
+				}
+				inPage++;
+				console.log(inPage + " is the page the inserted is on");
+				return inPage;
+			};
+			
+			/** given some item index, check to see that it is in range
+				return a number that is in range if its not
+			*/
+			var itemRangeFix = function(itemIndex) {
+				itemIndex = parseInt(itemIndex); // make sure its an integer
+				if (isNaN(itemIndex)) { itemIndex = items.length; } // if no index assumed to be last item
+				if (itemIndex < 1 ) { itemIndex = 1; } // range reset if for some reason its negative...					
+				if (itemIndex > items.length ) { itemIndex = items.length; } // range check
+				return itemIndex;
 			};
 
 			return {
@@ -601,8 +670,7 @@
 					$.extend(settings, opt); // options over ride settings
 					$this = $(opt.scope);
 					findOutAboutCarrot();
-					// call done callback pass it the api
-					if ((typeof settings.carrotDone) == "function") { settings.carrotDone(this); }
+					if ((typeof settings.carrotDone) == "function") { settings.carrotDone(this); } // callback
 				},
 				
 				/** find out this carrot instance's name
@@ -664,29 +732,27 @@
 				/** add a new item to the carousel (at index or at end)
 				*/
 				insert : function(newItem, index) {
-					if (!newItem) { return false; }
-					index = parseInt(index);
-					if (isNaN(index)) { index = items.length; } // if no index add at end 		
-					if (index < 1 ) { index = 1; } // range reset if for some reason its negative...					
-					if (index > items.length ) { index = items.length; } // rang check
+					if (!newItem) { return false; } // nothing to insert
+					index = itemRangeFix(index);
 					
-					// if auto
-					if (settings.infinite || settings.auto) {
-						
-					} else {
-						// a normal insert
-						if (index == items.length) {
-							slider.append(newItem); // append at end
-						} else if (index == 1){
-							$(settings.sliderChildSelect + ':first', slider).before(newItem); // append at start
+					if (index == items.length) {
+						if (settings.infinite || settings.auto) {
+							// append at some other place
 						} else {
-							$(settings.sliderChildSelect, slider).eq(index-1).before(newItem); // insert at index
-						}					
-						findSlides();
-						setupCarrot();
-					//	determinePrevNext(); // ??? basically this needs to reset next
+							slider.append(newItem); // insert at end
+						}				
+					} else {
+						$(settings.sliderChildSelect, slider).eq(index-1).before(newItem); // insert at index
+					}				
+							
+	
+					updateSlider(); // set the slider right	
+					
+					if (settings.scrollToInserted) {
+						var whichPage = whichPageContains(index);
+						gotoPage(whichPage);					
 					}
-						
+			
 					return index; // return the position we inserted at
 				},
 
@@ -718,7 +784,7 @@
 				methods.count++;
 				var opt = options || {};
 				opt.scope = this;
-				opt.name = $(opt.scope).attr("id") || ("defaultCarrot"+methods.count);
+				opt.name = $(opt.scope).attr("id") || ("defaultCarrot" + methods.count);
 				
 				methods.carrots[opt.name] = new methods.makeCarrot();
 				methods.carrots[opt.name].init(opt);
