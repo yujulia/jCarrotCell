@@ -166,7 +166,7 @@
 					myPage = currentPage; // should this be currentPage+1 ???
 				}				
 						
-	 			// console.log("going to page " + myPage + " current Page is " + currentPage);
+	 			console.log("going to page " + myPage + " current Page is " + currentPage);
 				
 				// should do bounds check for non infinite
 				
@@ -177,7 +177,16 @@
 				// current page and next page are the same, only occurs on insert by one
 				// scroll by the single size	
 				if (n == 0) {
-					scrollTo = singleSize * dir;
+					if (currentPage == 1) {
+						scrollTo = 0;
+					} 
+					if (currentPage >= pages) {
+						console.log(" n is zero and we have more")
+						// save up extras for scroll to to subtract from?
+						scrollTo = singleSize * dir; // this is messing up going backwards
+					}
+					
+					
 				}
 					
 				// console.log("singleSize is " + singleSize + " dir is " + dir + " advance by is " + advanceBy + " n "+n);
@@ -634,8 +643,12 @@
 				for (var i = 0; i < pages; i++) {
 				    var thisMax = i * advanceBy + advanceBy;
 					var thisMin = i * advanceBy;
-					if ((itemIndex < thisMax) && (itemIndex >= thisMin)) {
+					
+					console.log("min is " + thisMin + " max is " + thisMax + " index is " + itemIndex);
+					
+					if ((itemIndex <= thisMax) && (itemIndex > thisMin)) {
 						inPage = i;
+						console.log(inPage + " is in here");
 					}
 				}
 				inPage++;
@@ -743,6 +756,7 @@
 					index = itemRangeFix(index);
 					var flag = false;
 					
+					// append the item at whatever index
 					if (index == items.length) {
 						flag = true;
 						if (settings.infinite || settings.auto) {
@@ -753,20 +767,30 @@
 					} else {
 						$(settings.sliderChildSelect, slider).eq(index-1).before(newItem); // insert at index
 					}					
-					
-					if (flag) {
-						determinePrevNext(pages-1);
-					}		
 	
-					updateSlider(); // set the slider right	
+					updateSlider(); // reset the slider info
 					
-					
-					
+					// reset the slider to start if not inserting at end
+					// if (!flag) {
+					// 	if (settings.sideways) { view.scrollLeft(0); } else { view.scrollTop(0); }
+					// }
+
 					if (settings.scrollToInserted) {
 						var whichPage = whichPageContains(index);
-						gotoPage(whichPage);					
+						gotoPage(whichPage);
+						currentPage = whichPage;
+						// determinePrevNext(currentPage);
+						console.log("scrolling to inserted thing at page " + whichPage);					
+					} else {
+						// inserting at end but not scrolling, next becomes active
+						if (flag) {
+							determinePrevNext(pages-1); // if its at the end, we can move 1 more
+						}
 					}
-			
+					
+					console.log("current page is " + currentPage);
+					console.log("-------------------------------")
+			 
 					return index; // return the position we inserted at
 				},
 

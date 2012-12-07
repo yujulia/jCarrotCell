@@ -16,17 +16,21 @@
 	$(document).ready(function(){
 		window.carrotDemos = window.carrotDemos || {};
 		carrotDemos.setup = function() {
-			var kitten = $("#insertKitten").carrotCell();
+			var kitten = $("#insertKitten").carrotCell({
+				scrollToInserted : true
+			});
 			var kittenAPI = $(kitten).data("carrotCell");
 			
+			var count = 0;
 			var howManyPages = kittenAPI.getPageCount();
 			
 			$("#insertKittenAction").bind("click", function(e){
 				e.preventDefault();
 				
 				var myIndex = parseInt($("#insertKittenValue").val());
-				
-				kittenAPI.insert('<li><span>insert</span><img src="images/cat07.png" /></li>', myIndex); 
+				count++;
+				$("#insertKittenCount").html(count);
+				kittenAPI.insert('<li><span>insert ' + count + '</span><img src="images/cat07.png" /></li>', myIndex); 
 			});
 
 		}
@@ -73,6 +77,8 @@
 			<div class="result">
 				<span>at index</span>
 				<input id="insertKittenValue" type="text" name="kittenValue"/>
+				<span>on inserted item</span>
+				<span id="insertKittenCount"></span>
 			</div>
 		</div>
 
