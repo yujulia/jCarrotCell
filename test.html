@@ -16,9 +16,7 @@
 	$(document).ready(function(){
 		window.carrotDemos = window.carrotDemos || {};
 		carrotDemos.setup = function() {
-			var kitten = $("#insertKitten").carrotCell({
-				scrollToInserted : true
-			});
+			var kitten = $("#insertKitten").carrotCell();
 			var kittenAPI = $(kitten).data("carrotCell");
 			
 			var howManyPages = kittenAPI.getPageCount();

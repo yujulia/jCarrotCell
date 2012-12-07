@@ -121,9 +121,9 @@
 				var scrollThis = 0;
 
 				// some additional forward scrolling needs to happen
-				if (myPage > pages) {
+				if (settings.infinite && (myPage > pages)) {
 					settings.controlScope.trigger(settings.scrollStart, [settings.name, SCROLL_START, 0]);
-					console.log("scroll handler > pages scroll start");
+					// console.log("scroll handler > pages scroll start");
 					scrolling = true;
 					
 					var moveBy = visible - extraMoves;				
@@ -135,9 +135,9 @@
 				} 
 				
 				// some additional backward scrolling needs to happen
-				else if (myPage == 0) {
+				else if (settings.infinite && (myPage == 0)) {
 					settings.controlScope.trigger(settings.scrollStart, [settings.name, SCROLL_START, pages-1]);
-					console.log("scroll handler 0 pages scroll start");
+					// console.log("scroll handler 0 pages scroll start");
 					scrolling = true;
 		
 					if (settings.sideways) { 										
@@ -166,7 +166,7 @@
 					myPage = currentPage; // should this be currentPage+1 ???
 				}				
 						
-				// console.log("going to page " + myPage + " current Page is " + currentPage);
+	 			// console.log("going to page " + myPage + " current Page is " + currentPage);
 				
 				// should do bounds check for non infinite
 				
@@ -198,7 +198,8 @@
 			/** determine if the previous and next buttons should be active based on the next page they will be linking to
 			*/
 			var determinePrevNext = function(nextPage) {
-				if (settings.infinite) { return false; } // do nothing if its infinite								
+				if (settings.infinite) { return false; } // do nothing if its infinite	
+											
 				if (nextPage <= 1) { haveBack = false; } else { haveBack = true; };
 				if (nextPage >= pages) { haveForward = false; } else { haveForward = true; };								
 				if (haveBack) { 
@@ -226,7 +227,13 @@
 			/** move carousel forward
 			*/
 			var moveForward = function() {
-				if (!settings.infinite && (currentPage >= pages)) { return false; } // we are at the right most page				
+				if (!settings.infinite && (currentPage > pages)) { return false; } // we are at the right most page	
+				
+				if (!settings.infinite && (currentPage == pages)) { 
+					currentPage--; // we are still on the same page
+					gotoPage(currentPage); // move by a single unit
+				}
+							
 				var nextPage = currentPage + 1;
 				gotoPage(nextPage);
 			};
@@ -456,23 +463,7 @@
 			
 			/** find out if we have any weird empty spots in a page
 			*/
-			var howManyExtraMoves = function(){	
-				// if (advanceBy == visible) {
-				// 	extraMoves = 0; // no worries
-				// 	
-				// } else {
-				// 	var lastPageStartingNum = (pages-1) * advanceBy + 1;
-				// 	// console.log("first item of last page set is " + lastPageStartingNum);
-				// 	
-				// 	extraMoves = totalItems - lastPageStartingNum + 1;			
-				// 	if (extraMoves == 0) {
-				// 		extraMoves = visible; 
-				// 	}
-				// 	
-				// 	console.log(extraMoves + " extra moves");
-				// }		
-				
-				
+			var howManyExtraMoves = function(){						
 				firstOfLastPage = (pages-1) * advanceBy + 1;
 				// console.log("first item of last page set is " + firstOfLastPage);
 
@@ -729,33 +720,7 @@
 					adjustSlideSize();
 				},
 				
-				/** add a new item to the carousel (at index or at end)
-				*/
-				insert : function(newItem, index) {
-					if (!newItem) { return false; } // nothing to insert
-					index = itemRangeFix(index);
-					
-					if (index == items.length) {
-						if (settings.infinite || settings.auto) {
-							// append at some other place
-						} else {
-							slider.append(newItem); // insert at end
-						}				
-					} else {
-						$(settings.sliderChildSelect, slider).eq(index-1).before(newItem); // insert at index
-					}				
-							
-	
-					updateSlider(); // set the slider right	
-					
-					if (settings.scrollToInserted) {
-						var whichPage = whichPageContains(index);
-						gotoPage(whichPage);					
-					}
-			
-					return index; // return the position we inserted at
-				},
-
+				
 				/** load an entire new set of slides
 				*/
 				reloadWith : function(newItems) {
@@ -770,6 +735,41 @@
 					determinePrevNext();
 				},
 				
+				
+				/** add a new item to the carousel (at index or at end)
+				*/
+				insert : function(newItem, index) {
+					if (!newItem) { return false; } // nothing to insert
+					index = itemRangeFix(index);
+					var flag = false;
+					
+					if (index == items.length) {
+						flag = true;
+						if (settings.infinite || settings.auto) {
+							// append at some other place
+						} else {
+							slider.append(newItem); // insert at end
+						}				
+					} else {
+						$(settings.sliderChildSelect, slider).eq(index-1).before(newItem); // insert at index
+					}					
+					
+					if (flag) {
+						determinePrevNext(pages-1);
+					}		
+	
+					updateSlider(); // set the slider right	
+					
+					
+					
+					if (settings.scrollToInserted) {
+						var whichPage = whichPageContains(index);
+						gotoPage(whichPage);					
+					}
+			
+					return index; // return the position we inserted at
+				},
+
 				/** set api for internal access for whatever reason
 				*/
 				setAPI : function(newAPI) { api = newAPI; }
