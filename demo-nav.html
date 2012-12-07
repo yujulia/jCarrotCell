@@ -16,9 +16,10 @@
 	$(document).ready(function(){
 		window.carrotDemos = window.carrotDemos || {};
 		carrotDemos.setup = function() {
+			
 			$('#prevNextKitten').carrotCell({
 				containsControl: false,
-				controlScope: "#prevNextKitten .controls",
+				controlScope: ".controls",
 				prevSelect: ".fancyPrev",
 				nextSelect: ".fancyNext"
 			});		
@@ -129,8 +130,7 @@
 						<li><img src="images/cat08.png" /></li>
 						<li><img src="images/cat09.png" /></li>
 			        </ol>       
-				</div>			
-				
+				</div>							
 			</div>
 		</div>
 		
