@@ -74,6 +74,7 @@
 				scrolling = false,
 				extraMoves = 0,
 				enoughToScroll = false,
+				inserting = false,
 			
 				api, view, slider, items, single, totalItems,
 				frameSize, singleSize, viewSize,
@@ -163,12 +164,15 @@
 				if (arguments.length) { 							
 					myPage = page; 
 				} else { 
-					myPage = currentPage; // should this be currentPage+1 ???
-				}				
-						
-	 			console.log("going to page " + myPage + " current Page is " + currentPage);
+					return false; // need to pass in a page ffs
+				}									
+	 			console.log("going to page " + myPage + " current Page is " + currentPage + " inserting is " + inserting + " has spot open is " + hasOpenSpot);
 				
 				// should do bounds check for non infinite
+				
+				if (inserting && (hasOpenSpot == (visible-1))) {
+					myPage++; // go to a new page as we inserted enough to make a new page
+				}
 				
 				var dir = myPage < currentPage ? -1 : 1, // what direction are we going
 		            n = Math.abs(currentPage - myPage), // how many pages to scroll
@@ -178,6 +182,7 @@
 				// scroll by the single size	
 				if (n == 0) {
 					if (currentPage == 1) {
+						console.log("scrolling to 0");
 						scrollTo = 0;
 					} 
 					if (currentPage >= pages) {
@@ -185,9 +190,8 @@
 						// save up extras for scroll to to subtract from?
 						scrollTo = singleSize * dir; // this is messing up going backwards
 					}
-					
-					
 				}
+
 					
 				// console.log("singleSize is " + singleSize + " dir is " + dir + " advance by is " + advanceBy + " n "+n);
 				// console.log("my direction is " + dir + " my page is " + myPage + " scrolling to " + scrollTo);	
@@ -484,8 +488,9 @@
 				// console.log(extraMoves + " extra moves");		
 				
 				extraOnLastPage = advanceBy - totalItems%advanceBy;
-				hasOpenSpot = extraOnLastPage; // we have 3 slots open
-				// console.log(extraOnLastPage + " extra spots on the last page");
+				if (extraOnLastPage == visible ) { extraOnLastPage = 0; } // no extras really							
+				hasOpenSpot = extraOnLastPage; // the counter			
+				// console.log(hasOpenSpot + " extra spots on the last page");
 					
 			};
 			
@@ -642,13 +647,11 @@
 				var inPage = 0;			
 				for (var i = 0; i < pages; i++) {
 				    var thisMax = i * advanceBy + advanceBy;
-					var thisMin = i * advanceBy;
-					
-					console.log("min is " + thisMin + " max is " + thisMax + " index is " + itemIndex);
-					
+					var thisMin = i * advanceBy;			
+					// console.log("min is " + thisMin + " max is " + thisMax + " index is " + itemIndex);				
 					if ((itemIndex <= thisMax) && (itemIndex > thisMin)) {
 						inPage = i;
-						console.log(inPage + " is in here");
+						// console.log(inPage + " is in here");
 					}
 				}
 				inPage++;
@@ -723,29 +726,29 @@
 					index starts at 1, if no index, remove last
 				*/
 				remove : function(index) {
-					index = parseInt(index);
-					if (isNaN(index)) { index = items.length; } // nothing passed, default to last
-					if ((index > items.length ) ||  (index < 1 )) {  return false; } // out of range position to remove do nothing
-					
-					$(items[index-1]).remove();
-					findSlides();
-					howManyPages();
-					adjustSlideSize();
+					// index = parseInt(index);
+					// if (isNaN(index)) { index = items.length; } // nothing passed, default to last
+					// if ((index > items.length ) ||  (index < 1 )) {  return false; } // out of range position to remove do nothing
+					// 
+					// $(items[index-1]).remove();
+					// findSlides();
+					// howManyPages();
+					// adjustSlideSize();
 				},
 				
 				
 				/** load an entire new set of slides
 				*/
 				reloadWith : function(newItems) {
-					if (!items) { return false; }		
-					$(items).remove(); 
-					slider.append(newItems); // append at end
-					findSlides();
-					howManyPages();
-					adjustSlideSize();
-					gotoPage(1); // rewind to beginning on load
-					currentPage = 1;
-					determinePrevNext();
+					// if (!items) { return false; }		
+					// $(items).remove(); 
+					// slider.append(newItems); // append at end
+					// findSlides();
+					// howManyPages();
+					// adjustSlideSize();
+					// gotoPage(1); // rewind to beginning on load
+					// currentPage = 1;
+					// determinePrevNext();
 				},
 				
 				
@@ -753,12 +756,13 @@
 				*/
 				insert : function(newItem, index) {
 					if (!newItem) { return false; } // nothing to insert
-					index = itemRangeFix(index);
-					var flag = false;
+					index = itemRangeFix(index); // fix the range on the index	
+					inserting = true; // trying to insert
+					var endFlag = false; // inserting at end flag
 					
 					// append the item at whatever index
 					if (index == items.length) {
-						flag = true;
+						endFlag = true;
 						if (settings.infinite || settings.auto) {
 							// append at some other place
 						} else {
@@ -766,14 +770,11 @@
 						}				
 					} else {
 						$(settings.sliderChildSelect, slider).eq(index-1).before(newItem); // insert at index
-					}					
-	
-					updateSlider(); // reset the slider info
+					}						
 					
-					// reset the slider to start if not inserting at end
-					// if (!flag) {
-					// 	if (settings.sideways) { view.scrollLeft(0); } else { view.scrollTop(0); }
-					// }
+					if (hasOpenSpot > 0) { hasOpenSpot--; } else { hasOpenSpot = visible-1; }
+					
+					updateSlider(); // reset the slider info
 
 					if (settings.scrollToInserted) {
 						var whichPage = whichPageContains(index);
@@ -783,12 +784,14 @@
 						console.log("scrolling to inserted thing at page " + whichPage);					
 					} else {
 						// inserting at end but not scrolling, next becomes active
-						if (flag) {
+						if (endFlag) {
 							determinePrevNext(pages-1); // if its at the end, we can move 1 more
 						}
 					}
 					
-					console.log("current page is " + currentPage);
+					inserting = false;
+					
+					console.log("current page is " + currentPage + " open spot is " + hasOpenSpot);
 					console.log("-------------------------------")
 			 
 					return index; // return the position we inserted at
