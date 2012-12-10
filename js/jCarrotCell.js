@@ -61,6 +61,7 @@
 				ON_PLAY = "onPlay",
 				ON_PAUSE = "onPause",
 				ON_STOP = "onStop",
+				SCROLL_BY_ONE = "scrollByOne",
 				
 				// properties of this carrotCell
 				slideWidth = 0,
@@ -75,6 +76,10 @@
 				extraMoves = 0,
 				enoughToScroll = false,
 				inserting = false,
+				prevDisabled = true,
+				nextDisabled = true,
+				moveByOne = false,
+				oneScrolled = 0,
 			
 				api, view, slider, items, single, totalItems,
 				frameSize, singleSize, viewSize,
@@ -161,46 +166,27 @@
 			/** scroll the carousel by advancing to the next page
 			*/
 			var gotoPage = function(page) {			
-				if (arguments.length) { 							
-					myPage = page; 
-				} else { 
-					return false; // need to pass in a page ffs
-				}									
-	 			console.log("going to page " + myPage + " current Page is " + currentPage + " inserting is " + inserting + " has spot open is " + hasOpenSpot);
-				
-				// should do bounds check for non infinite
-				
-				if (inserting && (hasOpenSpot == (visible-1))) {
-					myPage++; // go to a new page as we inserted enough to make a new page
-				}
+				if (arguments.length) {  myPage = page;  } else {  return false; }						
+											
+				// 	console.log("going to page " + myPage + " current Page is " + currentPage + " inserting is " + inserting + " has spot open is " + hasOpenSpot);
+				// 
+				// // should do bounds check for non infinite
+				// 
+				// if (inserting && (hasOpenSpot == (visible-1))) {
+				// 	myPage++; // go to a new page as we inserted enough to make a new page
+				// }
 				
 				var dir = myPage < currentPage ? -1 : 1, // what direction are we going
 		            n = Math.abs(currentPage - myPage), // how many pages to scroll
 					scrollTo = singleSize * dir * advanceBy * n; // how far in pixels
-				
-				// current page and next page are the same, only occurs on insert by one
-				// scroll by the single size	
-				if (n == 0) {
-					if (currentPage == 1) {
-						console.log("scrolling to 0");
-						scrollTo = 0;
-					} 
-					if (currentPage >= pages) {
-						console.log(" n is zero and we have more")
-						// save up extras for scroll to to subtract from?
-						scrollTo = singleSize * dir; // this is messing up going backwards
-					}
-				}
-
+					
+				console.log(" my page is " + myPage + " current page is " + currentPage);
 					
 				// console.log("singleSize is " + singleSize + " dir is " + dir + " advance by is " + advanceBy + " n "+n);
 				// console.log("my direction is " + dir + " my page is " + myPage + " scrolling to " + scrollTo);	
 				
-				// broadcast event that carousel is moving as we start the animation
 				settings.controlScope.trigger(settings.scrollStart, [settings.name, SCROLL_START, myPage-1]);
-				// console.log("scroll handler normal scroll start");
 				scrolling = true;
-				
 				if (settings.sideways) {
 					view.filter(':not(:animated)').animate({ scrollLeft : '+=' + scrollTo }, settings.speed, scrollHandler);
 				} else {
@@ -212,27 +198,56 @@
 			*/
 			var determinePrevNext = function(nextPage) {
 				if (settings.infinite) { return false; } // do nothing if its infinite	
-											
-				if (nextPage <= 1) { haveBack = false; } else { haveBack = true; };
-				if (nextPage >= pages) { haveForward = false; } else { haveForward = true; };								
+	
+				if ((nextPage <= 1) || (currentPage == 1)) { haveBack = false; } else { haveBack = true; };			
+				if (nextPage >= pages) { haveForward = false; } else { haveForward = true; };	
+
+				if (moveByOne) { haveForward = true; }
+
+				// enable and disable							
 				if (haveBack) { 
 					prev.removeClass(settings.disabledClass); 
+					prevDisabled = false;
 				} else { 
+					prevDisabled = true;
 					prev.addClass(settings.disabledClass); 
 					settings.controlScope.trigger(settings.atStart, [settings.name, AT_START]);
 				}
+				
 				if (haveForward) { 
 					next.removeClass(settings.disabledClass); 
+					nextDisabled = false;
 				} else { 
 					next.addClass(settings.disabledClass); 
 					settings.controlScope.trigger(settings.atEnd, [settings.name, AT_END]);
+					nextDisabled = true;
+				}							
+			};
+			
+			/** called when scroll by one is done
+			*/
+			var scrollByOneHandler = function() {
+				scrolling = false;
+				settings.controlScope.trigger(settings.scrollEnd, [settings.name, SCROLL_END, currentPage, SCROLL_BY_ONE]);
+				determinePrevNext(pages); // fake move
+			};
+			
+			/** scroll forward by one only on insert
+			*/
+			var scrollByOne = function() {		
+				settings.controlScope.trigger(settings.scrollStart, [settings.name, SCROLL_START, currentPage, SCROLL_BY_ONE]);
+				scrolling = true;
+				if (settings.sideways) {
+					view.filter(':not(:animated)').animate({ scrollLeft : '+=' + singleSize }, settings.speed, scrollByOneHandler);
+				} else {
+					view.filter(':not(:animated)').animate({ scrollTop : '+=' + singleSize }, settings.speed, scrollByOneHandler);
 				}
 			};
 
 			/** move carousel back
 			*/
 			var moveBack = function() {
-				if (!settings.infinite && (currentPage == 1)) { return false; } // we are at the left most page or its circular
+				if (!settings.infinite && prevDisabled) { return false; } // we are at the left most page or its circular
 				var nextPage = currentPage - 1;
 				gotoPage(nextPage);
 			};
@@ -240,15 +255,24 @@
 			/** move carousel forward
 			*/
 			var moveForward = function() {
-				if (!settings.infinite && (currentPage > pages)) { return false; } // we are at the right most page	
-				
-				if (!settings.infinite && (currentPage == pages)) { 
-					currentPage--; // we are still on the same page
-					gotoPage(currentPage); // move by a single unit
-				}
-							
+				if (!settings.infinite && nextDisabled) { return false; } // we are at the right most page	
 				var nextPage = currentPage + 1;
-				gotoPage(nextPage);
+				
+				if (moveByOne) {
+					console.log("move by one " + hasOpenSpot);
+					moveByOne = false;
+					if (hasOpenSpot == 0) {
+						console.log(" going to next page which is " + nextPage);
+						gotoPage(nextPage);
+						oneScrolled = 0;
+					} else {
+						oneScrolled++;
+						scrollByOne();
+					}
+				} else {			
+					gotoPage(nextPage);
+				}
+				
 			};
 			
 			/** set up the interval
@@ -758,11 +782,9 @@
 					if (!newItem) { return false; } // nothing to insert
 					index = itemRangeFix(index); // fix the range on the index	
 					inserting = true; // trying to insert
-					var endFlag = false; // inserting at end flag
 					
 					// append the item at whatever index
 					if (index == items.length) {
-						endFlag = true;
 						if (settings.infinite || settings.auto) {
 							// append at some other place
 						} else {
@@ -772,21 +794,27 @@
 						$(settings.sliderChildSelect, slider).eq(index-1).before(newItem); // insert at index
 					}						
 					
-					if (hasOpenSpot > 0) { hasOpenSpot--; } else { hasOpenSpot = visible-1; }
-					
+					if (hasOpenSpot > 0) { hasOpenSpot--; } else { hasOpenSpot = visible-1; } 				
 					updateSlider(); // reset the slider info
 
 					if (settings.scrollToInserted) {
+						
 						var whichPage = whichPageContains(index);
+						console.log(" scroll to inserted go to page")
 						gotoPage(whichPage);
 						currentPage = whichPage;
+						
 						// determinePrevNext(currentPage);
-						console.log("scrolling to inserted thing at page " + whichPage);					
+						console.log("scrolling to inserted thing at page " + whichPage);	
+										
 					} else {
-						// inserting at end but not scrolling, next becomes active
-						if (endFlag) {
-							determinePrevNext(pages-1); // if its at the end, we can move 1 more
+						if (currentPage == pages) {
+							moveByOne = true;											
+							determinePrevNext(pages); // if its at the end, we can move 1 more
+						} else {
+							determinePrevNext(currentPage);
 						}
+														
 					}
 					
 					inserting = false;
