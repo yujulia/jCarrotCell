@@ -694,9 +694,15 @@
 			*/
 			var itemRangeFix = function(itemIndex) {
 				itemIndex = parseInt(itemIndex); // make sure its an integer
-				if (isNaN(itemIndex)) { itemIndex = items.length; } // if no index assumed to be last item
-				if (itemIndex < 1 ) { itemIndex = 1; } // range reset if for some reason its negative...					
-				if (itemIndex > items.length ) { itemIndex = items.length; } // range check
+				if (isNaN(itemIndex)) { 
+					itemIndex = items.length + 1; // got nothing, add to end
+				} else {
+					if (itemIndex < 1 ) { 
+						itemIndex = 1; 
+					} else if (itemIndex > items.length ) {
+						itemIndex = items.length + 1; // too big, make it the end
+					}
+				} 
 				return itemIndex;
 			};
 
@@ -787,7 +793,6 @@
 				insert : function(newItem, index) {
 					if (!newItem) { return false; } 			// nothing to insert
 					index = itemRangeFix(index); 				// fix the range on the index
-					if (index == items.length ) { index++; }	// when inserting we want to insert into NEXT to max length
 					inserting = true; 							// trying to insert
 					
 					// append the item at whatever index
