@@ -79,7 +79,6 @@
 				prevDisabled = true,
 				nextDisabled = true,
 				moveByOne = false,
-				oneScrolled = 0,
 				scrollCallBack = null,
 			
 				api, view, slider, items, single, totalItems,
@@ -92,7 +91,7 @@
 				firstOfLastPage, extraOnLastPage, hasOpenSpot;
 				
 			
-			/** scroll back to the very beginning
+			/** scroll back to the very beginning - used by infinite and auto 
 			*/
 			var scrollToStart = function(){
 				if (settings.sideways) { 	
@@ -106,11 +105,13 @@
 				settings.controlScope.trigger(settings.scrollEnd, [settings.name, SCROLL_END, myPage]);
 			};
 			
-			/** scroll to the very end 
+			/** scroll to the very end  - used by infinite and auto
 			*/
 			var scrollToEnd = function(){
-				var scrollBy = 	singleSize * advanceBy * (pages-1) + singleSize;
-				// var scrollBy = singleSize * totalItems;
+				// var scrollBy = 	singleSize * advanceBy * (pages-1) + singleSize;
+				
+				var scrollBy = singleSize * (totalItems + visible*2); // all items plus clones
+				
 				if (settings.sideways) { 
 					view.scrollLeft(scrollBy);	
 				} else {
@@ -177,14 +178,13 @@
 				if (arguments.length) {  myPage = page;  } else {  return false; }						
 											
 				// 	console.log("going to page " + myPage + " current Page is " + currentPage + " inserting is " + inserting + " has spot open is " + hasOpenSpot);
-				// 
 				// should do bounds check for non infinite
 				
 				var dir = myPage < currentPage ? -1 : 1, // what direction are we going
 		            n = Math.abs(currentPage - myPage), // how many pages to scroll
 					scrollTo = singleSize * dir * advanceBy * n; // how far in pixels
 					
-				console.log(" - goign to page " + myPage + " current page is " + currentPage);
+				console.log(" - goign to page " + myPage + "/"+ pages + " current page is " + currentPage);
 					
 				// console.log("singleSize is " + singleSize + " dir is " + dir + " advance by is " + advanceBy + " n "+n);
 				// console.log("my direction is " + dir + " my page is " + myPage + " scrolling to " + scrollTo);	
@@ -266,11 +266,8 @@
 					console.log("move by one " + hasOpenSpot);
 					moveByOne = false;
 					if (hasOpenSpot == 0) {
-						console.log(" going to next page which is " + nextPage);
 						gotoPage(nextPage);
-						oneScrolled = 0;
 					} else {
-						oneScrolled++;
 						scrollByOne();
 					}
 				} else {			
@@ -534,7 +531,8 @@
 			*/
 			var moveClonesOutOfSight = function(){
 				if (settings.sideways) {
-					view.scrollLeft(singleSize * visible); 
+					view.scrollLeft(singleSize * visible);
+					console.log(" scroll left move clones"); 
 				} else {
 					view.scrollTop(singleSize * visible); 
 				}
@@ -571,18 +569,20 @@
 
 				if (settings.infinite) { padWithClones(); } 				
 				adjustSlideSize();				
-				view.css("overflow", "hidden"); // clip extra items	(not set in css for non js view)				
-				if (settings.infinite) {
-					moveClonesOutOfSight();	
-				} else {
-					prev.addClass(settings.disabledClassd);
-				}
+				view.css("overflow", "hidden"); // clip extra items	(not set in css for non js view)
 				
-				// reset view scroll if any
+				// reset view scroll back to original if reloading
 				if (settings.sideways){				
 					view.scrollLeft(0);
 				} else {
 					view.scrollTop(0);
+				}
+				
+				// move clones if infinite				
+				if (settings.infinite) {
+					moveClonesOutOfSight();	
+				} else {
+					prev.addClass(settings.disabledClassd);
 				}
 			
 				determinePrevNext(0); // hide previous
@@ -694,9 +694,9 @@
 			*/
 			var itemRangeFix = function(itemIndex) {
 				itemIndex = parseInt(itemIndex); // make sure its an integer
-				if (isNaN(itemIndex)) { itemIndex = items.length+1; } // if no index assumed to be last item
+				if (isNaN(itemIndex)) { itemIndex = items.length; } // if no index assumed to be last item
 				if (itemIndex < 1 ) { itemIndex = 1; } // range reset if for some reason its negative...					
-				if (itemIndex > items.length ) { itemIndex = items.length+1; } // range check
+				if (itemIndex > items.length ) { itemIndex = items.length; } // range check
 				return itemIndex;
 			};
 
@@ -785,56 +785,42 @@
 				/** add a new item to the carousel (at index or at end)
 				*/
 				insert : function(newItem, index) {
-					if (!newItem) { return false; } 	// nothing to insert
-					index = itemRangeFix(index); 		// fix the range on the index	
-					inserting = true; 					// trying to insert
+					if (!newItem) { return false; } 			// nothing to insert
+					index = itemRangeFix(index); 				// fix the range on the index
+					if (index == items.length ) { index++; }	// when inserting we want to insert into NEXT to max length
+					inserting = true; 							// trying to insert
 					
 					// append the item at whatever index
 					if (index > items.length) {
 						if (settings.infinite || settings.auto) {
-							// append at some other place
+							// append at some other place at the end
 						} else {
 							slider.append(newItem); // insert at end
 						}				
 					} else {
-						$(settings.sliderChildSelect, slider).eq(index-1).before(newItem); // insert at index
+						if (settings.infinite || settings.auto) {
+							// insert at some modified place
+						} else {
+							$(settings.sliderChildSelect, slider).eq(index-1).before(newItem); // insert at index
+						}			
 					}						
 					
-					if (hasOpenSpot > 0) { hasOpenSpot--; } else { hasOpenSpot = visible-1; } 				
-					updateSlider(); // reset the slider info
-					
+					if (hasOpenSpot > 0) { hasOpenSpot--; } else { hasOpenSpot = visible-1; } // less open slots now we inserted
+								
+					updateSlider(); // reset the slider info				
 					
 					// after appending, several things to take care of
 
 					if (settings.scrollToInserted) {					
-							console.log("INSERT index " + index);
 							var whichPage = whichPageContains(index);
-							
-							myScrollByOne = function(){
-								console.log("this is the scroll callback has open spot " + hasOpenSpot);			
-								oneScrolled++;
-								scrollByOne();
-								console.log("-------------------- end call back ----------------")
-								
-							}
-							
-							// we need to go to the last page
 							if (whichPage == pages) {
-								console.log(" we are going to the last page that is where the inserted is");
-
 								if (currentPage !== pages) {
-									console.log(" we are not on the last page so lets scroll there....");
-									scrollCallBack = myScrollByOne;
+									scrollCallBack = scrollByOne;
 									gotoPage(pages); // go to the last page 
 								} else {
-									myScrollByOne(); // 
-									// ok we are here
+									scrollByOne();
 								}
-								
-								
-							// we need to go to some other page
 							} else {
-								console.log("we are going to a non last page " + whichPage + " pages is " + pages);
 								gotoPage(whichPage);
 							}
 					
@@ -844,15 +830,11 @@
 							determinePrevNext(pages); // if its at the end, we can move 1 more
 						} else {
 							determinePrevNext(currentPage);
-						}
-														
+						}						
 					}
 					
-					inserting = false;
-					
-					console.log("------------------------------- end of insert function ---")
-			 
-					return index; // return the position we inserted at
+					inserting = false;		 
+					return index; // inserted successfully
 				},
 
 				/** set api for internal access for whatever reason
