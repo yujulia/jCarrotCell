@@ -716,7 +716,7 @@
 					if ((typeof settings.carrotDone) == "function") { settings.carrotDone(this); } // callback
 				},
 				
-				/** find out this carrot instance's name
+				/** find out this carrot instance's name *** RETURN ALL SETTINGS?? 
 				*/
 				whichCarrot : function(){ return settings.name; },
 				
@@ -727,9 +727,7 @@
 				/** move to the page passed in if its a number in range
 				*/
 				moveToPage : function(movePage) {
-					movePage = parseInt(movePage);
-					if (isNaN(movePage)) {  return false; }		
-					if (movePage < 1) { movePage = 1; }
+					movePage = itemRangeFix(movePage);
 					if (movePage > pages) { movePage = pages; }
 					gotoPage(movePage); // move
 				},
@@ -756,7 +754,7 @@
 				
 				/** remove all carrot items
 				*/
-				empty : function() { $(items).remove(); },
+				empty : function() { $(items).remove(); }, // NEED MORE RESETTING
 				
 				/** remove an item from the carousel (by index)
 					index starts at 1, if no index, remove last
@@ -791,9 +789,9 @@
 				/** add a new item to the carousel (at index or at end)
 				*/
 				insert : function(newItem, index) {
-					if (!newItem) { return false; } 			// nothing to insert
-					index = itemRangeFix(index); 				// fix the range on the index
-					inserting = true; 							// trying to insert
+					if (!newItem) { return false; } // nothing to insert
+					index = itemRangeFix(index); 	// fix the range on the index
+					inserting = true; 				// trying to insert
 					
 					// append the item at whatever index
 					if (index > items.length) {
@@ -821,9 +819,9 @@
 							if (whichPage == pages) {
 								if (currentPage !== pages) {
 									scrollCallBack = scrollByOne;
-									gotoPage(pages); // go to the last page 
+									gotoPage(pages); // go to the last page then scroll by 1
 								} else {
-									scrollByOne();
+									scrollByOne(); // we are on the last page already
 								}
 							} else {
 								gotoPage(whichPage);

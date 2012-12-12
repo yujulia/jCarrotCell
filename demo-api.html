@@ -20,6 +20,34 @@
 			var kittenAPI = $(kitten).data("carrotCell");
 			var howManyPages = kittenAPI.getPageCount();
 			$("#kittenResult").html(howManyPages + " pages of kittens");
+			
+			var insertKitten = $("#insertKitten").carrotCell();
+			var insertKittenAPI = $(insertKitten).data("carrotCell");			
+			var insertCount = 0;
+			
+			$("#insertKittenAction").bind("click", function(e){
+				e.preventDefault();			
+				var myIndex = parseInt($("#insertKittenValue").val());
+				insertCount++;
+				$("#insertKittenCount").html(insertCount);
+				insertKittenAPI.insert('<li><span>insert ' + insertCount + '</span><img src="images/cat07.png" /></li>', myIndex); 
+			});
+			
+			
+			var insertKitten2 = $("#insertKitten2").carrotCell({
+				scrollToInserted : true
+			});
+			var insertKittenAPI2 = $(insertKitten2).data("carrotCell");			
+			var insertCount2 = 0;
+			
+			$("#insertKittenAction2").bind("click", function(e){
+				e.preventDefault();			
+				var myIndex = parseInt($("#insertKittenValue2").val());
+				insertCount2++;
+				$("#insertKittenCount2").html(insertCount2);
+				insertKittenAPI2.insert('<li><span>insert ' + insertCount2 + '</span><img src="images/cat07.png" /></li>', myIndex); 
+			});
+			
 		}
 		
 		// chrome can not calculate the width correctly because it is foolish
@@ -113,29 +141,82 @@ $("#kittenResult").html(howManyPages + " pages of kittens");
 	
 	<article id="three">
 		<h2>Inserting</h2>
-		<p>This version takes no options and uses all of the default settings of carrotCell.</p>
+		<p>This example shows insertion at whatever index on a regular carrotCell. If no value is specified for index in this example, it is assumed to insert or append at the last spot. (Scroll to the last page to see the inserted item if appending at the end.)</p>
 		
 		<div class="example">
 			<div id="insertKitten" class="carrotCell kitten">			
 				<div class="carrotCellView">
 					<ol>
-						<li><img src="images/cat01.png" /></li>
-						<li><img src="images/cat02.png" /></li>
-						<li><img src="images/cat03.png" /></li>
-						<li><img src="images/cat04.png" /></li>
-						<li><img src="images/cat05.png" /></li>
-						<li><img src="images/cat06.png" /></li>
-						<li><img src="images/cat07.png" /></li>
-						<li><img src="images/cat08.png" /></li>
-						<li><img src="images/cat09.png" /></li>
+						<li><span>1</span><img src="images/cat01.png" /></li>
+						<li><span>2</span><img src="images/cat02.png" /></li>
+						<li><span>3</span><img src="images/cat03.png" /></li>
+						<li><span>4</span><img src="images/cat04.png" /></li>
+						<li><span>5</span><img src="images/cat05.png" /></li>
+						<li><span>6</span><img src="images/cat06.png" /></li>
+						<li><span>7</span><img src="images/cat07.png" /></li>
+						<li><span>8</span><img src="images/cat08.png" /></li>
+						<li><span>9</span><img src="images/cat09.png" /></li>
 			        </ol>       
 				</div>			
 				<div class="prev">prev</div>
 				<div class="next">next</div> 
 			</div>
-		
-			<div id="kittenResult" class="result">Don't know how many pages of kittens. :(</div>
+			<button id="insertKittenAction" class="result">Insert Item</button>
+			<div class="result">
+				<span>at index</span>
+				<input id="insertKittenValue" type="text" name="kittenValue"/>				
+				<span>Inserted Items:</span>
+				<span id="insertKittenCount">0</span>
+			</div>
 		</div>
+
+<p>Call the API method <strong>insert</strong> to add one slide to the carrotCell. Note if more than one slide is passed the calculations will not work correctly. Insert takes the slide markup, and an integer index that tells carrotCell where to insert the slide.</p>
+<pre><code data-language="js">
+var kitten = $("#insertKitten").carrotCell();
+var kittenAPI = $(insertKitten).data("carrotCell");			
+
+var someIndex = ... // set it or get it in whatever way
+
+$("#insertKittenAction").bind("click", function(e){
+	kittenAPI.insert('<li><span>insert ' + insertCount + '</span><img src="images/cat07.png" /></li>', someIndex); 
+});
+</code></pre>
+		
+		<p>While the above example works, it is not very intuitive to the user when something has been inserted. There is a setting to scroll to the position of the inserted item that can be used.</p>
+		
+		<div class="example">
+			<div id="insertKitten2" class="carrotCell kitten">			
+				<div class="carrotCellView">
+					<ol>
+						<li><span>1</span><img src="images/cat01.png" /></li>
+						<li><span>2</span><img src="images/cat02.png" /></li>
+						<li><span>3</span><img src="images/cat03.png" /></li>
+						<li><span>4</span><img src="images/cat04.png" /></li>
+						<li><span>5</span><img src="images/cat05.png" /></li>
+						<li><span>6</span><img src="images/cat06.png" /></li>
+						<li><span>7</span><img src="images/cat07.png" /></li>
+						<li><span>8</span><img src="images/cat08.png" /></li>
+						<li><span>9</span><img src="images/cat09.png" /></li>
+			        </ol>       
+				</div>			
+				<div class="prev">prev</div>
+				<div class="next">next</div> 
+			</div>
+			<button id="insertKittenAction2" class="result">Insert Item</button>
+			<div class="result">
+				<span>at index</span>
+				<input id="insertKittenValue2" type="text" name="kittenValue"/>				
+				<span>Inserted Items:</span>
+				<span id="insertKittenCount2">0</span>
+			</div>
+		</div>
+
+<p>By setting <strong>scrollToInserted</strong> to the boolean true, when an item is inserted, the carrotCell will automatically scroll to show the inserted item.</p>
+<pre><code data-language="js">
+var kitten = $("#insertKitten2").carrotCell({
+	scrollToInserted : true
+});
+</code></pre>		
 		
 	</article>
 	
