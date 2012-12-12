@@ -262,7 +262,9 @@
 				if (!settings.infinite && nextDisabled) { return false; } // we are at the right most page	
 				var nextPage = currentPage + 1;
 				
-				if (moveByOne) {
+				// move by one if its not infinite
+			
+				if (moveByOne && !settings.infinite) {
 					console.log("move by one " + hasOpenSpot);
 					moveByOne = false;
 					if (hasOpenSpot == 0) {
@@ -480,7 +482,11 @@
 			/** fix the slider so it fits all the items perfectly
 			*/
 			var adjustSlideSize = function(){
+				
 				var slideSize = singleSize * items.length; // find size of all items including cloned
+				
+				console.log("adjusting slide size " + items.length + " length " + slideSize);
+				
 				if (settings.sideways) { 
 					slider.css("width",  slideSize + "px"); // set length of slider
 				} else {
@@ -491,12 +497,13 @@
 			/** find how many pages there are
 			*/
 			var howManyPages = function(){		
+				
 				if ((visible !== advanceBy) && (!settings.auto)) {
 					pages = Math.ceil((totalItems - (visible - advanceBy)) / advanceBy);				
 				} else {
 					pages = Math.ceil(totalItems / advanceBy);																
 				}	
-				// console.log(pages + " pages");									
+				console.log(pages + " pages totalItems " + totalItems);									
 			};
 			
 			/** find out if we have any weird empty spots in a page
@@ -522,9 +529,19 @@
 			/** clone a slider worth of clones at beginning and end
 			*/
 			var padWithClones = function(){
-				items.filter(':first').before(items.slice(-visible).clone().addClass(settings.cloneClass));
+				items.filter(':first').before(items.slice(-visible).clone().addClass(settings.cloneClass));			
 				items.filter(':last').after(items.slice(0, visible).clone().addClass(settings.cloneClass));
 				items = slider.children(settings.sliderChildSelect); // reselect everything including clones
+			};
+			
+			/** re clone the beginning and ending clones may have changed
+			*/
+			var reClone = function(){
+				items.filter("." + settings.cloneClass).remove(); // remove old clones
+				findSlides();
+				padWithClones(); // now add the clones
+				console.log("items after clonining for totalItems " + totalItems + " items length " + items.length );
+				adjustSlideSize();
 			};
 			
 			/** move the clones added at the beginning out of sight
@@ -532,7 +549,6 @@
 			var moveClonesOutOfSight = function(){
 				if (settings.sideways) {
 					view.scrollLeft(singleSize * visible);
-					console.log(" scroll left move clones"); 
 				} else {
 					view.scrollTop(singleSize * visible); 
 				}
@@ -617,8 +633,11 @@
 			*/
 			var findSlides = function(){
 				items = slider.children(settings.sliderChildSelect); 
-				totalItems = items.length;
-				single = items.filter(':first');
+				totalItems = slider.children(settings.sliderChildSelect).filter(":not(." + settings.cloneClass + ")").length;
+				single = items.filter(':first');	
+				
+				console.log("in find slides single is " + single + " total items is " + totalItems + " items length is " + items.length);
+				
 				if (settings.sideways) {
 					singleSize = single.outerWidth(true);
 				} else {
@@ -793,16 +812,19 @@
 					index = itemRangeFix(index); 	// fix the range on the index
 					inserting = true; 				// trying to insert
 					
-					// append the item at whatever index
 					if (index > items.length) {
-						if (settings.infinite || settings.auto) {
-							// append at some other place at the end
+						if (settings.infinite || settings.auto) {			
+							var adjustedIndex = totalItems + visible; 
+							$(settings.sliderChildSelect, slider).eq(adjustedIndex).before(newItem); 
+							reClone();	
 						} else {
 							slider.append(newItem); // insert at end
 						}				
 					} else {
 						if (settings.infinite || settings.auto) {
-							// insert at some modified place
+							var adjustedIndex = index-1 + visible;
+							$(settings.sliderChildSelect, slider).eq(adjustedIndex).before(newItem); // insert at index
+							reClone();									
 						} else {
 							$(settings.sliderChildSelect, slider).eq(index-1).before(newItem); // insert at index
 						}			
@@ -814,8 +836,10 @@
 					
 					// after appending, several things to take care of
 
-					if (settings.scrollToInserted) {					
+					if (settings.scrollToInserted) {	
+										
 							var whichPage = whichPageContains(index);
+							
 							if (whichPage == pages) {
 								if (currentPage !== pages) {
 									scrollCallBack = scrollByOne;
@@ -827,8 +851,8 @@
 								gotoPage(whichPage);
 							}
 					
-					} else {
-						if (currentPage == pages) {
+					} else {					
+						if ((currentPage == pages) && !settings.inifnite) {
 							moveByOne = true;											
 							determinePrevNext(pages); // if its at the end, we can move 1 more
 						} else {
