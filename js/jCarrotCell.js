@@ -108,9 +108,10 @@
 			/** scroll to the very end  - used by infinite and auto
 			*/
 			var scrollToEnd = function(){
-				// var scrollBy = 	singleSize * advanceBy * (pages-1) + singleSize;
-				
-				var scrollBy = singleSize * (totalItems + visible*2); // all items plus clones
+				var scrollBy = singleSize * items.length;
+				if (settings.infinite) {
+					scrollBy = singleSize * (items.length - visible*2);
+				}
 				
 				if (settings.sideways) { 
 					view.scrollLeft(scrollBy);	
@@ -131,15 +132,19 @@
 				// some additional forward scrolling needs to happen
 				if (settings.infinite && (myPage > pages)) {
 					settings.controlScope.trigger(settings.scrollStart, [settings.name, SCROLL_START, 0]);
+					
 					// console.log("scroll handler > pages scroll start");
 					scrolling = true;
 					
-					var moveBy = visible - extraMoves;				
+					var moveBy = visible - extraMoves;	
+					// console.log("move by is " + moveBy + " visible is " + visible + " extra moves is " + extraMoves);
+								
 					if (settings.sideways) { 										
 						view.animate({ scrollLeft : '+=' + moveBy * singleSize }, settings.speed, scrollToStart);			
 					} else { 
 						view.animate({ scrollTop : '+=' + moveBy * singleSize }, settings.speed, scrollToStart);
 					}
+					
 					console.log(" go to page scroll handler INFITIE and at end current page is " + currentPage);
 				} 
 				
@@ -176,18 +181,12 @@
 			*/
 			var gotoPage = function(page) {			
 				if (arguments.length) {  myPage = page;  } else {  return false; }						
-											
-				// 	console.log("going to page " + myPage + " current Page is " + currentPage + " inserting is " + inserting + " has spot open is " + hasOpenSpot);
-				// should do bounds check for non infinite
-				
+
 				var dir = myPage < currentPage ? -1 : 1, // what direction are we going
 		            n = Math.abs(currentPage - myPage), // how many pages to scroll
 					scrollTo = singleSize * dir * advanceBy * n; // how far in pixels
 					
 				console.log(" - goign to page " + myPage + "/"+ pages + " current page is " + currentPage);
-					
-				// console.log("singleSize is " + singleSize + " dir is " + dir + " advance by is " + advanceBy + " n "+n);
-				// console.log("my direction is " + dir + " my page is " + myPage + " scrolling to " + scrollTo);	
 				
 				settings.controlScope.trigger(settings.scrollStart, [settings.name, SCROLL_START, myPage-1]);
 				scrolling = true;
@@ -481,12 +480,8 @@
 			
 			/** fix the slider so it fits all the items perfectly
 			*/
-			var adjustSlideSize = function(){
-				
+			var adjustSlideSize = function(){				
 				var slideSize = singleSize * items.length; // find size of all items including cloned
-				
-				console.log("adjusting slide size " + items.length + " length " + slideSize);
-				
 				if (settings.sideways) { 
 					slider.css("width",  slideSize + "px"); // set length of slider
 				} else {
@@ -496,8 +491,7 @@
 			
 			/** find how many pages there are
 			*/
-			var howManyPages = function(){		
-				
+			var howManyPages = function(){						
 				if ((visible !== advanceBy) && (!settings.auto)) {
 					pages = Math.ceil((totalItems - (visible - advanceBy)) / advanceBy);				
 				} else {
@@ -510,20 +504,14 @@
 			*/
 			var howManyExtraMoves = function(){						
 				firstOfLastPage = (pages-1) * advanceBy + 1;
-				// console.log("first item of last page set is " + firstOfLastPage);
-
-				// i dont understand what this calculation is still
 				extraMoves = totalItems - firstOfLastPage + 1;			
 				if (extraMoves == 0) {
 					extraMoves = visible; 
-				}
-				// console.log(extraMoves + " extra moves");		
-				
+				}				
 				extraOnLastPage = advanceBy - totalItems%advanceBy;
 				if (extraOnLastPage == visible ) { extraOnLastPage = 0; } // no extras really							
 				hasOpenSpot = extraOnLastPage; // the counter			
-				// console.log(hasOpenSpot + " extra spots on the last page");
-					
+				// console.log(hasOpenSpot + " extra spots on the last page");		
 			};
 			
 			/** clone a slider worth of clones at beginning and end
@@ -539,8 +527,7 @@
 			var reClone = function(){
 				items.filter("." + settings.cloneClass).remove(); // remove old clones
 				findSlides();
-				padWithClones(); // now add the clones
-				console.log("items after clonining for totalItems " + totalItems + " items length " + items.length );
+				padWithClones();
 				adjustSlideSize();
 			};
 			
@@ -635,9 +622,7 @@
 				items = slider.children(settings.sliderChildSelect); 
 				totalItems = slider.children(settings.sliderChildSelect).filter(":not(." + settings.cloneClass + ")").length;
 				single = items.filter(':first');	
-				
-				console.log("in find slides single is " + single + " total items is " + totalItems + " items length is " + items.length);
-				
+
 				if (settings.sideways) {
 					singleSize = single.outerWidth(true);
 				} else {
@@ -840,7 +825,7 @@
 										
 							var whichPage = whichPageContains(index);
 							
-							if (whichPage == pages) {
+							if ((whichPage == pages) && !settings.infinite) {
 								if (currentPage !== pages) {
 									scrollCallBack = scrollByOne;
 									gotoPage(pages); // go to the last page then scroll by 1
