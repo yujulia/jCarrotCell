@@ -103,6 +103,7 @@
 				currentPage = 1;
 				scrolling = false;
 				settings.controlScope.trigger(settings.scrollEnd, [settings.name, SCROLL_END, myPage]);
+				console.log("scroll to start");
 			};
 			
 			/** scroll to the very end  - used by infinite and auto
@@ -122,30 +123,41 @@
 				currentPage = pages;
 				scrolling = false;			
 				settings.controlScope.trigger(settings.scrollEnd, [settings.name, SCROLL_END, myPage]);
+				console.log("scroll to end");
 			};
 			
 			/** this is called when go to page finishes scrolling
 			*/
 			var scrollHandler = function(){
 				var scrollThis = 0;
+				return false;
+				
+				currentPage = myPage; // WE ALREADY SCROLLED, so current page is now whatever page
+				
+				console.log(" in scroll handler current page is " + currentPage);
 
 				// some additional forward scrolling needs to happen
 				if (settings.infinite && (myPage > pages)) {
+					
+					
 					settings.controlScope.trigger(settings.scrollStart, [settings.name, SCROLL_START, 0]);
 					
-					// console.log("scroll handler > pages scroll start");
-					scrolling = true;
-					
+					console.log("scroll handler > pages scroll to start");
+					scrolling = true;					
 					var moveBy = visible - extraMoves;	
+					console.log("moveBy is " + moveBy + " visible is " + visible + " extra moves is " + extraMoves);
+					
+					// var moveBy = visible - hasOpenSpot;
 					// console.log("move by is " + moveBy + " visible is " + visible + " extra moves is " + extraMoves);
-								
+																
+
 					if (settings.sideways) { 										
 						view.animate({ scrollLeft : '+=' + moveBy * singleSize }, settings.speed, scrollToStart);			
 					} else { 
 						view.animate({ scrollTop : '+=' + moveBy * singleSize }, settings.speed, scrollToStart);
 					}
-					
-					console.log(" go to page scroll handler INFITIE and at end current page is " + currentPage);
+
+					console.log("go to page scroll handler INFITIE and at end current page is " + currentPage);
 				} 
 				
 				// some additional backward scrolling needs to happen
@@ -180,13 +192,15 @@
 			/** scroll the carousel by advancing to the next page
 			*/
 			var gotoPage = function(page) {			
-				if (arguments.length) {  myPage = page;  } else {  return false; }						
-
+				if (arguments.length) {  myPage = page;  } else {  return false; }		
+				
 				var dir = myPage < currentPage ? -1 : 1, // what direction are we going
 		            n = Math.abs(currentPage - myPage), // how many pages to scroll
 					scrollTo = singleSize * dir * advanceBy * n; // how far in pixels
 					
 				console.log(" - goign to page " + myPage + "/"+ pages + " current page is " + currentPage);
+				
+				
 				
 				settings.controlScope.trigger(settings.scrollStart, [settings.name, SCROLL_START, myPage-1]);
 				scrolling = true;
@@ -681,14 +695,16 @@
 				for (var i = 0; i < pages; i++) {
 				    var thisMax = i * advanceBy + advanceBy;
 					var thisMin = i * advanceBy + 1;			
-					// console.log("min is " + thisMin + " max is " + thisMax + " index is " + itemIndex);				
+					console.log("min is " + thisMin + " max is " + thisMax + " index is " + itemIndex);				
 					if ((itemIndex <= thisMax) && (itemIndex >= thisMin)) {
 						inPage = i;
-						// console.log(inPage + " is in here");
+						console.log(inPage + " is in here");
 					}
 				}
+				inPage++; // starting from 1 instead of 0 fix
 				
-				inPage++;
+				if (itemIndex > totalItems) { inPage = pages; }
+				
 				console.log("looking for " + itemIndex + " it is in page " + inPage);
 				return inPage;
 			};
@@ -708,6 +724,58 @@
 					}
 				} 
 				return itemIndex;
+			};
+			
+			/** insert item at index
+			*/
+			var insertItem = function(newItem, index){
+				if (index > items.length) {
+					if (settings.infinite || settings.auto) {			
+						var adjustedIndex = totalItems + visible; 
+						$(settings.sliderChildSelect, slider).eq(adjustedIndex).before(newItem); 
+						reClone();	
+					} else {
+						slider.append(newItem); // insert at end
+					}				
+				} else {
+					if (settings.infinite || settings.auto) {
+						var adjustedIndex = index-1 + visible;
+						$(settings.sliderChildSelect, slider).eq(adjustedIndex).before(newItem); // insert at index
+						reClone();									
+					} else {
+						$(settings.sliderChildSelect, slider).eq(index-1).before(newItem); // insert at index
+					}			
+				}						
+
+				if (hasOpenSpot > 0) { hasOpenSpot--; } else { hasOpenSpot = visible-1; } // less open slots now we inserted
+
+				updateSlider(); // reset the slider info
+			};
+			
+			
+			/** do this after insert
+			*/
+			var afterInsert = function(index) {
+				if (settings.scrollToInserted) {											
+						var whichPage = whichPageContains(index);							
+						if ((whichPage == pages) && !settings.infinite) {
+							if (currentPage !== pages) {
+								scrollCallBack = scrollByOne;
+								gotoPage(pages); // go to the last page then scroll by 1
+							} else {
+								scrollByOne(); // we are on the last page already
+							}
+						} else {
+							gotoPage(whichPage);
+						}					
+				} else {					
+					if ((currentPage == pages) && !settings.inifnite) {
+						moveByOne = true;											
+						determinePrevNext(pages); // if its at the end, we can move 1 more
+					} else {
+						determinePrevNext(currentPage);
+					}						
+				}
 			};
 
 			return {
@@ -795,58 +863,11 @@
 				insert : function(newItem, index) {
 					if (!newItem) { return false; } // nothing to insert
 					index = itemRangeFix(index); 	// fix the range on the index
-					inserting = true; 				// trying to insert
-					
-					if (index > items.length) {
-						if (settings.infinite || settings.auto) {			
-							var adjustedIndex = totalItems + visible; 
-							$(settings.sliderChildSelect, slider).eq(adjustedIndex).before(newItem); 
-							reClone();	
-						} else {
-							slider.append(newItem); // insert at end
-						}				
-					} else {
-						if (settings.infinite || settings.auto) {
-							var adjustedIndex = index-1 + visible;
-							$(settings.sliderChildSelect, slider).eq(adjustedIndex).before(newItem); // insert at index
-							reClone();									
-						} else {
-							$(settings.sliderChildSelect, slider).eq(index-1).before(newItem); // insert at index
-						}			
-					}						
-					
-					if (hasOpenSpot > 0) { hasOpenSpot--; } else { hasOpenSpot = visible-1; } // less open slots now we inserted
-								
-					updateSlider(); // reset the slider info				
-					
-					// after appending, several things to take care of
-
-					if (settings.scrollToInserted) {	
-										
-							var whichPage = whichPageContains(index);
-							
-							if ((whichPage == pages) && !settings.infinite) {
-								if (currentPage !== pages) {
-									scrollCallBack = scrollByOne;
-									gotoPage(pages); // go to the last page then scroll by 1
-								} else {
-									scrollByOne(); // we are on the last page already
-								}
-							} else {
-								gotoPage(whichPage);
-							}
-					
-					} else {					
-						if ((currentPage == pages) && !settings.inifnite) {
-							moveByOne = true;											
-							determinePrevNext(pages); // if its at the end, we can move 1 more
-						} else {
-							determinePrevNext(currentPage);
-						}						
-					}
-					
+					inserting = true; 				// trying to insert					
+					insertItem(newItem, index);
+					afterInsert(index);				
 					inserting = false;		 
-					return index; // inserted successfully
+					return index; 					// inserted successfully
 				},
 
 				/** set api for internal access for whatever reason
