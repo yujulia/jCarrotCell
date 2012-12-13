@@ -63,7 +63,7 @@
 				ON_STOP = "onStop",
 				SCROLL_BY_ONE = "scrollByOne",
 				
-				DEBUG_ON = true, // DEBUG shows console logs
+				DEBUG_ON = false, // DEBUG shows console logs
 				
 				// properties of this carrotCell
 				slideWidth = 0,
