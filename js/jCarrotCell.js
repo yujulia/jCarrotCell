@@ -63,6 +63,8 @@
 				ON_STOP = "onStop",
 				SCROLL_BY_ONE = "scrollByOne",
 				
+				DEBUG_ON = false, // DEBUG shows console logs
+				
 				// properties of this carrotCell
 				slideWidth = 0,
 				haveBack = false,
@@ -89,97 +91,102 @@
 				sliderSelect, sliderChildSelect, prevSelect, nextSelect,
 				pauseSelect, playSelect, stopSelect, naviContainer, naviSelect,
 				firstOfLastPage, extraOnLastPage, hasOpenSpot;
-				
 			
-			/** scroll back to the very beginning - used by infinite and auto 
+			
+			/** console.log wrapper for debugging
 			*/
-			var scrollToStart = function(){
-				if (settings.sideways) { 	
-					view.scrollLeft(singleSize * visible); // move back to beginning
-				} else {
-					view.scrollTop(singleSize * visible);
+			var debug = function(debugString) {
+				if (DEBUG_ON) {
+					console.log(debugString);
 				}
-				myPage = 1;
-				currentPage = 1;
-				scrolling = false;
-				settings.controlScope.trigger(settings.scrollEnd, [settings.name, SCROLL_END, myPage]);
-				console.log("scroll to start");
 			};
 			
-			/** scroll to the very end  - used by infinite and auto
+			/** no animation scroll to "this"
+			*/
+			var scrollToThis = function(scrollBy, pageValue) {
+				if (settings.sideways) { 	
+					view.scrollLeft(scrollBy); 
+				} else {
+					view.scrollTop(scrollBy);
+				}				
+				myPage = pageValue;
+				currentPage = pageValue;
+				scrolling = false;
+				settings.controlScope.trigger(settings.scrollEnd, [settings.name, SCROLL_END, pageValue]);
+			};
+				
+			
+			/** scroll back to the very beginning 
+			*/
+			var scrollToStart = function(){
+				var scrollBy = 0;
+				if (settings.infinite) {
+					scrollBy = singleSize * visible; // bypass first set of clones
+				}				
+				scrollToThis(scrollBy, 1);
+				debug("scroll to start");
+			};
+			
+			/** scroll to the very end  
 			*/
 			var scrollToEnd = function(){
 				var scrollBy = singleSize * items.length;
 				if (settings.infinite) {
-					scrollBy = singleSize * (items.length - visible*2);
-				}
-				
-				if (settings.sideways) { 
-					view.scrollLeft(scrollBy);	
-				} else {
-					view.scrollTop(scrollBy);	
-				}
-				myPage = pages;
-				currentPage = pages;
-				scrolling = false;			
-				settings.controlScope.trigger(settings.scrollEnd, [settings.name, SCROLL_END, myPage]);
-				console.log("scroll to end");
+					scrollBy = singleSize * (items.length - visible*2); // stop before the clones if infinite
+				}				
+				scrollToThis(scrollBy, pages);
+				debug("scroll to end");
 			};
 			
 			/** this is called when go to page finishes scrolling
 			*/
 			var scrollHandler = function(){
 				var scrollThis = 0;
-				return false;
-				
-				currentPage = myPage; // WE ALREADY SCROLLED, so current page is now whatever page
-				
-				console.log(" in scroll handler current page is " + currentPage);
+				debug("in scroll handler current page is " + currentPage);
 
-				// some additional forward scrolling needs to happen
+				// scrolling forward infinite loop
 				if (settings.infinite && (myPage > pages)) {
+					debug("scroll handler handling infinite and extra pages will be scrolling to start. Page " + 1);
 					
-					
-					settings.controlScope.trigger(settings.scrollStart, [settings.name, SCROLL_START, 0]);
-					
-					console.log("scroll handler > pages scroll to start");
+					settings.controlScope.trigger(settings.scrollStart, [settings.name, SCROLL_START, 1]);
 					scrolling = true;					
-					var moveBy = visible - extraMoves;	
-					console.log("moveBy is " + moveBy + " visible is " + visible + " extra moves is " + extraMoves);
+					var moveBy = (visible - extraMoves) * singleSize;	// scroll extras that are not yet 1 page full
 					
-					// var moveBy = visible - hasOpenSpot;
-					// console.log("move by is " + moveBy + " visible is " + visible + " extra moves is " + extraMoves);
-																
+					debug("moveBy is " + moveBy + " visible is " + visible + " extra moves is " + extraMoves +" has open spot is " + hasOpenSpot);								
 
 					if (settings.sideways) { 										
-						view.animate({ scrollLeft : '+=' + moveBy * singleSize }, settings.speed, scrollToStart);			
+						view.animate({ scrollLeft : '+=' + moveBy }, settings.speed, scrollToStart);			
 					} else { 
-						view.animate({ scrollTop : '+=' + moveBy * singleSize }, settings.speed, scrollToStart);
+						view.animate({ scrollTop : '+=' + moveBy }, settings.speed, scrollToStart);
 					}
-
-					console.log("go to page scroll handler INFITIE and at end current page is " + currentPage);
 				} 
 				
-				// some additional backward scrolling needs to happen
+				// scrolling backwards infinite loop
 				else if (settings.infinite && (myPage == 0)) {
+					debug("scroll handler handling infinite and negative pages will be scrolling to end. Page " + pages);
+					
 					settings.controlScope.trigger(settings.scrollStart, [settings.name, SCROLL_START, pages-1]);
-					// console.log("scroll handler 0 pages scroll start");
 					scrolling = true;
+					var moveby = -1 * extraMoves * singleSize;
 		
 					if (settings.sideways) { 										
-						view.animate({ scrollLeft : '+=' + -1 * extraMoves * singleSize }, settings.speed, scrollToEnd);			
+						view.animate({ scrollLeft : '+=' + moveby }, settings.speed, scrollToEnd);			
 					} else { 
-						view.animate({ scrollTop : '+=' + -1 * extraMoves * singleSize }, settings.speed, scrollToEnd);
-					}			
-					console.log(" go to page scroll handler INFINITE and 0 current page is " + currentPage);		
+						view.animate({ scrollTop : '+=' + moveby }, settings.speed, scrollToEnd);
+					}									
 				}
 				
-				// we are done with our scrolling, no additional things need doing
-				else {		
-					currentPage = myPage; // my page is set in gotoPage previously
+				// default scrolling
+				else {	
+					debug("scroll handler default handling do nothing. Page " + myPage);
+					
+					currentPage = myPage;
+					settings.controlScope.trigger(settings.scrollEnd, [settings.name, SCROLL_END, myPage]);
 					scrolling = false;
-					settings.controlScope.trigger(settings.scrollEnd, [settings.name, SCROLL_END, myPage-1]);
+					
 					determinePrevNext(myPage);
+					
+					// call any callbacks then reset the callback
 					if (typeof scrollCallBack == "function" ) {
 						console.log("have a call back for default");
 						scrollCallBack();
@@ -198,12 +205,11 @@
 		            n = Math.abs(currentPage - myPage), // how many pages to scroll
 					scrollTo = singleSize * dir * advanceBy * n; // how far in pixels
 					
-				console.log(" - goign to page " + myPage + "/"+ pages + " current page is " + currentPage);
-				
-				
-				
+				debug(" - goign to page " + myPage + "/"+ pages + " current page is " + currentPage + " scrollto is " + scrollTo);
+
 				settings.controlScope.trigger(settings.scrollStart, [settings.name, SCROLL_START, myPage-1]);
 				scrolling = true;
+				
 				if (settings.sideways) {
 					view.filter(':not(:animated)').animate({ scrollLeft : '+=' + scrollTo }, settings.speed, scrollHandler);
 				} else {
@@ -278,7 +284,7 @@
 				// move by one if its not infinite
 			
 				if (moveByOne && !settings.infinite) {
-					console.log("move by one " + hasOpenSpot);
+					debug("move by one " + hasOpenSpot);
 					moveByOne = false;
 					if (hasOpenSpot == 0) {
 						gotoPage(nextPage);
@@ -405,7 +411,7 @@
 						// console.log("navi passed in page num is " + pageNum);
 						if (pageNum > pages) { pageNum = 1; } // rewind to beginning
 						if (pageNum == pages) { pageNum = 0; } // rewind opposit
-						// console.log("navi auto advancing to " + pageNum);
+						debug("navi auto advancing to " + pageNum);
 						
 						var thisNavi = $(navi)[parseInt(pageNum)];
 						$(thisNavi).addClass(settings.currentClass);
@@ -511,7 +517,7 @@
 				} else {
 					pages = Math.ceil(totalItems / advanceBy);																
 				}	
-				console.log(pages + " pages totalItems " + totalItems);									
+				debug(pages + " pages totalItems " + totalItems);									
 			};
 			
 			/** find out if we have any weird empty spots in a page
@@ -525,7 +531,7 @@
 				extraOnLastPage = advanceBy - totalItems%advanceBy;
 				if (extraOnLastPage == visible ) { extraOnLastPage = 0; } // no extras really							
 				hasOpenSpot = extraOnLastPage; // the counter			
-				// console.log(hasOpenSpot + " extra spots on the last page");		
+				debug(hasOpenSpot + " extra spots on the last page");		
 			};
 			
 			/** clone a slider worth of clones at beginning and end
@@ -695,17 +701,16 @@
 				for (var i = 0; i < pages; i++) {
 				    var thisMax = i * advanceBy + advanceBy;
 					var thisMin = i * advanceBy + 1;			
-					console.log("min is " + thisMin + " max is " + thisMax + " index is " + itemIndex);				
+					debug("min is " + thisMin + " max is " + thisMax + " index is " + itemIndex);				
 					if ((itemIndex <= thisMax) && (itemIndex >= thisMin)) {
 						inPage = i;
-						console.log(inPage + " is in here");
+						debug(inPage + " is in here");
 					}
 				}
-				inPage++; // starting from 1 instead of 0 fix
-				
+				inPage++; // starting from 1 instead of 0 fix				
 				if (itemIndex > totalItems) { inPage = pages; }
 				
-				console.log("looking for " + itemIndex + " it is in page " + inPage);
+				debug("looking for " + itemIndex + " it is in page " + inPage);
 				return inPage;
 			};
 			
@@ -729,6 +734,7 @@
 			/** insert item at index
 			*/
 			var insertItem = function(newItem, index){
+				inserting = true; 
 				if (index > items.length) {
 					if (settings.infinite || settings.auto) {			
 						var adjustedIndex = totalItems + visible; 
@@ -746,9 +752,7 @@
 						$(settings.sliderChildSelect, slider).eq(index-1).before(newItem); // insert at index
 					}			
 				}						
-
 				if (hasOpenSpot > 0) { hasOpenSpot--; } else { hasOpenSpot = visible-1; } // less open slots now we inserted
-
 				updateSlider(); // reset the slider info
 			};
 			
@@ -776,6 +780,7 @@
 						determinePrevNext(currentPage);
 					}						
 				}
+				inserting = false; 
 			};
 
 			return {
@@ -862,11 +867,9 @@
 				*/
 				insert : function(newItem, index) {
 					if (!newItem) { return false; } // nothing to insert
-					index = itemRangeFix(index); 	// fix the range on the index
-					inserting = true; 				// trying to insert					
+					index = itemRangeFix(index); 	// fix the range on the index				
 					insertItem(newItem, index);
 					afterInsert(index);				
-					inserting = false;		 
 					return index; 					// inserted successfully
 				},
 
