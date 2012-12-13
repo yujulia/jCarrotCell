@@ -24,8 +24,7 @@
 			// first insert kitten
 			var insertKitten = $("#insertKitten").carrotCell();
 			var insertKittenAPI = $(insertKitten).data("carrotCell");			
-			var insertCount = 0;
-			
+			var insertCount = 0;			
 			$("#insertKittenAction").bind("click", function(e){
 				e.preventDefault();			
 				var myIndex = parseInt($("#insertKittenValue").val());
@@ -39,8 +38,7 @@
 				scrollToInserted : true
 			});
 			var insertKittenAPI2 = $(insertKitten2).data("carrotCell");			
-			var insertCount2 = 0;
-			
+			var insertCount2 = 0;			
 			$("#insertKittenAction2").bind("click", function(e){
 				e.preventDefault();			
 				var myIndex = parseInt($("#insertKittenValue2").val());
@@ -55,8 +53,7 @@
 				auto: true
 			});
 			var insertKittenAPI3 = $(insertKitten3).data("carrotCell");			
-			var insertCount3 = 0;
-			
+			var insertCount3 = 0;			
 			$("#insertKittenAction3").bind("click", function(e){
 				e.preventDefault();			
 				var myIndex = parseInt($("#insertKittenValue3").val());
@@ -66,13 +63,20 @@
 			});
 			
 			// remove kitten
-			var kitten = $("#removeKitten").carrotCell();
-			var kittenAPI = $(kitten).data("carrotCell");			
-			
+			var removeKitten = $("#removeKitten").carrotCell();
+			var removeKittenAPI = $(removeKitten).data("carrotCell");						
 			$("#removeKittenAction").bind("click", function(e){
 				e.preventDefault();			
 				var myIndex = parseInt($("#removeKittenValue").val());
-				kittenAPI.remove(myIndex); 
+				removeKittenAPI.remove(myIndex); 
+			});
+		
+			// empty kitten
+			var emptyKitten = $("#emptyKitten").carrotCell();
+			var emptyKittenAPI = $(emptyKitten).data("carrotCell");						
+			$("#emptyKittenAction").bind("click", function(e){
+				e.preventDefault();
+				emptyKittenAPI.empty(); 
 			});
 			
 		}
@@ -321,7 +325,39 @@ $("#removeKittenAction").bind("click", function(e){
 	
 	<article id="five">
 		<h2>Empty</h2>
-		<p>This method clears all slides from the slide show.</p>
+		<p>This method clears all slides from the slide show. Note that the view port does not have a height set due to progressive enhancement keeping it flexible.</p>
+		
+		<div class="example">
+			<div id="emptyKitten" class="carrotCell kitten">			
+				<div class="carrotCellView">
+					<ol>
+						<li><span>1</span><img src="images/cat01.png" /></li>
+						<li><span>2</span><img src="images/cat02.png" /></li>
+						<li><span>3</span><img src="images/cat03.png" /></li>
+						<li><span>4</span><img src="images/cat04.png" /></li>
+						<li><span>5</span><img src="images/cat05.png" /></li>
+						<li><span>6</span><img src="images/cat06.png" /></li>
+						<li><span>7</span><img src="images/cat07.png" /></li>
+						<li><span>8</span><img src="images/cat08.png" /></li>
+						<li><span>9</span><img src="images/cat09.png" /></li>
+			        </ol>       
+				</div>			
+				<div class="prev">prev</div>
+				<div class="next">next</div> 
+			</div>
+			<button id="emptyKittenAction" class="result">Empty</button>
+		</div>
+		
+<pre><code data-language="js">
+var kitten = $("#emptyKitten").carrotCell();
+var kittenAPI = $(kitten).data("carrotCell");			
+
+$("#emptyKittenAction").bind("click", function(e){
+	e.preventDefault();
+	kittenAPI.empty(); 
+});
+</code></pre>		
+
 	</article>
 	
 	<article id="six">
