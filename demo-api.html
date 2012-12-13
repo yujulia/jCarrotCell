@@ -65,6 +65,16 @@
 				insertKittenAPI3.insert('<li><span>insert ' + insertCount3 + '</span><img src="images/cat07.png" /></li>', myIndex); 
 			});
 			
+			// remove kitten
+			var kitten = $("#removeKitten").carrotCell();
+			var kittenAPI = $(kitten).data("carrotCell");			
+			
+			$("#removeKittenAction").bind("click", function(e){
+				e.preventDefault();			
+				var myIndex = parseInt($("#removeKittenValue").val());
+				kittenAPI.remove(myIndex); 
+			});
+			
 		}
 		
 		// chrome can not calculate the width correctly because it is foolish
@@ -101,9 +111,10 @@
 	<ol class="index">
 		<li><a href="#one">Getting the API</a></li>
 		<li><a href="#two">Calling API Methods</a></li>						
-		<li><a href="#three">Inserting</a></li>
-		<li><a href="#four">Removing</a></li>
-		<li><a href="#Five">Loading</a></li>
+		<li><a href="#three">Insert</a></li>
+		<li><a href="#four">Remove</a></li>
+		<li><a href="#five">Empty</a></li>
+		<li><a href="#six">ReloadWith</a></li>
 	</ol>
 	
 	
@@ -155,7 +166,7 @@ $("#kittenResult").html(howManyPages + " pages of kittens");
 	</article>
 	
 	<article id="three">
-		<h2>Inserting</h2>
+		<h2>Insert</h2>
 		<p>This example shows insertion at whatever index on a regular carrotCell. If no value is specified for index in this example, it is assumed to insert or append at the last spot. (Scroll to the last page to see the inserted item if appending at the end.)</p>
 		
 		<div class="example">
@@ -267,12 +278,55 @@ var kitten = $("#insertKitten2").carrotCell({
 	
 	<article id="four">
 		<h2>Remove</h2>
-		<p>This version takes no options and uses all of the default settings of carrotCell.</p>
+		<p>Removing works in a similar way as inserting, except only an index of the item to be removed need to be provided. If items remaining no longer make up more than 1 page, the previous and next will be disabled.</p>
+		
+		<div class="example">
+			<div id="removeKitten" class="carrotCell kitten">			
+				<div class="carrotCellView">
+					<ol>
+						<li><span>1</span><img src="images/cat01.png" /></li>
+						<li><span>2</span><img src="images/cat02.png" /></li>
+						<li><span>3</span><img src="images/cat03.png" /></li>
+						<li><span>4</span><img src="images/cat04.png" /></li>
+						<li><span>5</span><img src="images/cat05.png" /></li>
+						<li><span>6</span><img src="images/cat06.png" /></li>
+						<li><span>7</span><img src="images/cat07.png" /></li>
+						<li><span>8</span><img src="images/cat08.png" /></li>
+						<li><span>9</span><img src="images/cat09.png" /></li>
+			        </ol>       
+				</div>			
+				<div class="prev">prev</div>
+				<div class="next">next</div> 
+			</div>
+			<button id="removeKittenAction" class="result">Remove Item</button>
+			<div class="result">
+				<span>at index</span>
+				<input id="removeKittenValue" type="text" name="kittenValue"/>
+			</div>
+		</div>
+		
+		<p>This example shows how slides can be removed. Note removing from infinite and auto scrolling is also possible, though be sure not to count the clones in the index value.</p>
+<pre><code data-language="js">
+var kitten = $("#removeKitten").carrotCell();
+var kittenAPI = $(kitten).data("carrotCell");			
+
+$("#removeKittenAction").bind("click", function(e){
+	e.preventDefault();
+	var myIndex = parseInt($("#removeKittenValue").val());
+	kittenAPI.remove(myIndex); 
+});
+</code></pre>		
+		
 	</article>
 	
 	<article id="five">
-		<h2>Loading</h2>
-		<p>This version takes no options and uses all of the default settings of carrotCell.</p>
+		<h2>Empty</h2>
+		<p>This method clears all slides from the slide show.</p>
+	</article>
+	
+	<article id="six">
+		<h2>ReloadWith</h2>
+		<p>Use this API method to replace the entire slide show with new content.</p>
 	</article>
 	
 	<nav>

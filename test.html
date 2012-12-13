@@ -17,16 +17,14 @@
 		window.carrotDemos = window.carrotDemos || {};
 		carrotDemos.setup = function() {
 			
-			var kitten = $("#removeKitten").carrotCell({
-				infinite: true
+			var kitten = $("#emptyKitten").carrotCell({
+				// auto: true
 			});
 			var kittenAPI = $(kitten).data("carrotCell");			
 			
-			$("#removeKittenAction").bind("click", function(e){
+			$("#emptyKittenAction").bind("click", function(e){
 				e.preventDefault();
-				
-				var myIndex = parseInt($("#removeKittenValue").val());
-				kittenAPI.remove(myIndex); 
+				kittenAPI.empty(); 
 			});
 
 		}
@@ -51,7 +49,7 @@
 <body>
 
 		<div class="example">
-			<div id="removeKitten" class="carrotCell kitten">			
+			<div id="emptyKitten" class="carrotCell kitten">			
 				<div class="carrotCellView">
 					<ol>
 						<li><span>1</span><img src="images/cat01.png" /></li>
@@ -68,11 +66,8 @@
 				<div class="prev">prev</div>
 				<div class="next">next</div> 
 			</div>
-			<button id="removeKittenAction" class="result">Remove Item</button>
-			<div class="result">
-				<span>at index</span>
-				<input id="removeKittenValue" type="text" name="kittenValue"/>
-			</div>
+			<button id="emptyKittenAction" class="result">Empty</button>
+
 		</div>
 
 

@@ -218,8 +218,8 @@
 
 			/** determine if the previous and next buttons should be active based on the next page they will be linking to
 			*/
-			var determinePrevNext = function(nextPage) {
-				if (settings.infinite) { return false; } // do nothing if its infinite	
+			var determinePrevNext = function(nextPage) {			
+				if (settings.infinite) { return false; }
 	
 				if ((nextPage <= 1) || (currentPage == 1)) { haveBack = false; } else { haveBack = true; };			
 				if (nextPage >= pages) { haveForward = false; } else { haveForward = true; };	
@@ -243,7 +243,7 @@
 					next.addClass(settings.disabledClass); 
 					settings.controlScope.trigger(settings.atEnd, [settings.name, AT_END]);
 					nextDisabled = true;
-				}							
+				}						
 			};
 			
 			/** called when scroll by one is done
@@ -730,6 +730,14 @@
 				return itemIndex;
 			};
 			
+			/** remove all the items
+			*/
+			var emptyItems = function(){
+				$(items).remove(); 
+				updateSlider(); // reset the slider info				
+				IsThereEnoughToScroll();
+			}
+			
 			/** remove item at index
 			*/
 			var removeItem = function(index) {			
@@ -758,7 +766,8 @@
 				
 				debug("Remove item at " + adjustedIndex + " has open spot is now " + hasOpenSpot);
 				
-				updateSlider(); // reset the slider info
+				updateSlider(); // reset the slider info				
+				IsThereEnoughToScroll();	
 			};
 			
 			/** insert item at index
@@ -818,16 +827,24 @@
 					$.extend(settings, opt); // options over ride settings
 					$this = $(opt.scope);
 					findOutAboutCarrot();
-					if ((typeof settings.carrotDone) == "function") { settings.carrotDone(this); } // callback
+					if ((typeof settings.carrotDone) == "function") { settings.carrotDone(this); } // callback 
 				},
 				
-				/** find out this carrot instance's name *** RETURN ALL SETTINGS?? 
+				/** get this carrot instance's name 
 				*/
-				whichCarrot : function(){ return settings.name; },
+				getName : function(){ return settings.name; },
 				
-				/** find out how many pages this carrot has
+				/** get how many pages this carrot has
 				*/
 				getPageCount : function(){ return pages; },
+				
+				/** get how many slides are in the carousel, excluding clones
+				*/
+				getTotalItems : function() { return totalItems; },
+				
+				/** get the entire settings object
+				*/
+				getSettings : function() { return settings; },
 				
 				/** move to the page passed in if its a number in range
 				*/
@@ -856,11 +873,7 @@
 				/** pause auto play
 				*/
 				pause : function() { pauseCarrotCell() },
-				
-				/** remove all carrot items
-				*/
-				empty : function() { $(items).remove(); }, // NEED MORE RESETTING
-				
+
 				/** load an entire new set of slides
 				*/
 				reloadWith : function(newItems) {
@@ -875,13 +888,19 @@
 					// determinePrevNext();
 				},
 				
+				/** remove all carrot items
+				*/
+				empty : function() { 
+					emptyItems();
+				}, // NEED MORE RESETTING
+				
 				/** remove an item from the carousel (by index)
 					index starts at 1, if no index, remove last
 				*/
 				remove : function(index) {
 					index = itemRangeFix(index); 	// fix the range on the index	
 					removeItem(index);
-					return index;
+					return totalItems;
 				},
 				
 				/** add a new item to the carousel (at index or at end)
@@ -891,12 +910,12 @@
 					index = itemRangeFix(index); 	// fix the range on the index				
 					insertItem(newItem, index);
 					afterInsert(index);				
-					return index; 					// inserted successfully
+					return totalItems; 					// inserted successfully
 				},
 
 				/** set api for internal access for whatever reason
 				*/
-				setAPI : function(newAPI) { api = newAPI; }
+				setAPI : function(newAPI) {  api = newAPI; }
 			}
 		},
 		
