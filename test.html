@@ -16,23 +16,17 @@
 	$(document).ready(function(){
 		window.carrotDemos = window.carrotDemos || {};
 		carrotDemos.setup = function() {
-			var kitten = $("#insertKitten").carrotCell({
-				scrollToInserted : true,
-				// auto: true
-				infinite: true
+			
+			var kitten = $("#removeKitten").carrotCell({
+				// infinite: true
 			});
-			var kittenAPI = $(kitten).data("carrotCell");
+			var kittenAPI = $(kitten).data("carrotCell");			
 			
-			var count = 0;
-			var howManyPages = kittenAPI.getPageCount();
-			
-			$("#insertKittenAction").bind("click", function(e){
+			$("#removeKittenAction").bind("click", function(e){
 				e.preventDefault();
 				
-				var myIndex = parseInt($("#insertKittenValue").val());
-				count++;
-				$("#insertKittenCount").html(count);
-				kittenAPI.insert('<li><span>insert ' + count + '</span><img src="images/cat07.png" /></li>', myIndex); 
+				var myIndex = parseInt($("#removeKittenValue").val());
+				kittenAPI.remove(myIndex); 
 			});
 
 		}
@@ -57,7 +51,7 @@
 <body>
 
 		<div class="example">
-			<div id="insertKitten" class="carrotCell kitten">			
+			<div id="removeKitten" class="carrotCell kitten">			
 				<div class="carrotCellView">
 					<ol>
 						<li><span>1</span><img src="images/cat01.png" /></li>
@@ -74,12 +68,10 @@
 				<div class="prev">prev</div>
 				<div class="next">next</div> 
 			</div>
-			<button id="insertKittenAction" class="result">Insert Item</button>
+			<button id="removeKittenAction" class="result">Remove Item</button>
 			<div class="result">
 				<span>at index</span>
-				<input id="insertKittenValue" type="text" name="kittenValue"/>
-				<span>on inserted item</span>
-				<span id="insertKittenCount"></span>
+				<input id="removeKittenValue" type="text" name="kittenValue"/>
 			</div>
 		</div>
 

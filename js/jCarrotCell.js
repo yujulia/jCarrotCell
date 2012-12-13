@@ -63,7 +63,7 @@
 				ON_STOP = "onStop",
 				SCROLL_BY_ONE = "scrollByOne",
 				
-				DEBUG_ON = false, // DEBUG shows console logs
+				DEBUG_ON = true, // DEBUG shows console logs
 				
 				// properties of this carrotCell
 				slideWidth = 0,
@@ -77,7 +77,6 @@
 				scrolling = false,
 				extraMoves = 0,
 				enoughToScroll = false,
-				inserting = false,
 				prevDisabled = true,
 				nextDisabled = true,
 				moveByOne = false,
@@ -731,27 +730,57 @@
 				return itemIndex;
 			};
 			
+			/** remove item at index
+			*/
+			var removeItem = function(index) {			
+				var adjustedIndex = index;
+				
+				if (settings.infinite || settings.auto) {
+					adjustedIndex = visible + index;
+					
+					if (adjustedIndex > (totalItems + visible)) {
+						adjustedIndex = totalItems + visible;
+					} else if (index < visible)  {
+						adjustedIndex = visible;
+					} 
+				} else {
+					if (index > totalItems) {
+						adjustedIndex = totalItems;
+					}
+				}
+				
+				$(items[adjustedIndex-1]).remove();
+				if (settings.infinite || settings.auto) {
+					reClone();
+				}
+
+				if (hasOpenSpot < visible ) { hasOpenSpot++; } else { hasOpenSpot = 0; }
+				
+				debug("Remove item at " + adjustedIndex + " has open spot is now " + hasOpenSpot);
+				
+				updateSlider(); // reset the slider info
+			};
+			
 			/** insert item at index
 			*/
 			var insertItem = function(newItem, index){
-				inserting = true; 
-				if (index > items.length) {
-					if (settings.infinite || settings.auto) {			
-						var adjustedIndex = totalItems + visible; 
-						$(settings.sliderChildSelect, slider).eq(adjustedIndex).before(newItem); 
-						reClone();	
+				var adjustedIndex = index;			
+				if (settings.infinite || settings.auto) {
+					if (index > items.length) {
+						adjustedIndex = totalItems + visible; 
 					} else {
-						slider.append(newItem); // insert at end
-					}				
+						adjustedIndex = index-1 + visible;				
+					}					
+					$(settings.sliderChildSelect, slider).eq(adjustedIndex).before(newItem); // insert at index
+					reClone();					
 				} else {
-					if (settings.infinite || settings.auto) {
-						var adjustedIndex = index-1 + visible;
-						$(settings.sliderChildSelect, slider).eq(adjustedIndex).before(newItem); // insert at index
-						reClone();									
+					if (index > items.length) {
+						slider.append(newItem); // insert at end
 					} else {
 						$(settings.sliderChildSelect, slider).eq(index-1).before(newItem); // insert at index
-					}			
-				}						
+					}
+				}
+		
 				if (hasOpenSpot > 0) { hasOpenSpot--; } else { hasOpenSpot = visible-1; } // less open slots now we inserted
 				updateSlider(); // reset the slider info
 			};
@@ -780,7 +809,6 @@
 						determinePrevNext(currentPage);
 					}						
 				}
-				inserting = false; 
 			};
 
 			return {
@@ -833,21 +861,6 @@
 				*/
 				empty : function() { $(items).remove(); }, // NEED MORE RESETTING
 				
-				/** remove an item from the carousel (by index)
-					index starts at 1, if no index, remove last
-				*/
-				remove : function(index) {
-					// index = parseInt(index);
-					// if (isNaN(index)) { index = items.length; } // nothing passed, default to last
-					// if ((index > items.length ) ||  (index < 1 )) {  return false; } // out of range position to remove do nothing
-					// 
-					// $(items[index-1]).remove();
-					// findSlides();
-					// howManyPages();
-					// adjustSlideSize();
-				},
-				
-				
 				/** load an entire new set of slides
 				*/
 				reloadWith : function(newItems) {
@@ -862,6 +875,14 @@
 					// determinePrevNext();
 				},
 				
+				/** remove an item from the carousel (by index)
+					index starts at 1, if no index, remove last
+				*/
+				remove : function(index) {
+					index = itemRangeFix(index); 	// fix the range on the index	
+					removeItem(index);
+					return index;
+				},
 				
 				/** add a new item to the carousel (at index or at end)
 				*/
