@@ -87,6 +87,29 @@
 				e.preventDefault();
 				reloadKittenAPI.reloadWith('<li><span>reload 1</span><img src="images/dog01.png" /></li><li><span>reload 2</span><img src="images/dog02.png" /></li><li><span>reload 3</span><img src="images/dog03.png" /></li><li><span>reload 4</span><img src="images/dog04.png" /></li><li><span>reload 5</span><img src="images/cat12.png" /></li><li><span>reload 6</span><img src="images/cat11.png" /></li><li><span>reload 7</span><img src="images/cat01.png" /></li><li><span>reload 8</span><img src="images/cat02.png" /></li><li><span>reload 9</span><img src="images/cat10.png" /></li>'); 
 			});
+					
+			// getters demo
+			var getKitten = $("#getKitten").carrotCell({ auto: true, delay: 2000 });
+			var getKittenAPI = $(getKitten).data("carrotCell");			
+			var getResult = $("#getResult");
+			
+			$("#getName").bind("click", function(){ getResult.html(getKittenAPI.getName()); });
+			$("#getPageCount").bind("click", function(){ getResult.html(getKittenAPI.getPageCount()); });
+			$("#getTotalItems").bind("click", function(){ getResult.html(getKittenAPI.getTotalItems()); });
+			$("#getSettings").bind("click", function(){ 			
+				var mySettings = getKittenAPI.getSettings()
+				var output = '';
+				for (property in mySettings) {
+				  output += property + ': ' + mySettings[property]+'; <br />';
+				}				
+				getResult.html(output); 
+			});
+			
+			$("#goForward").bind("click", function(){ getKittenAPI.forward(); });
+			$("#goBackward").bind("click", function(){ getKittenAPI.backward(); });
+			$("#goPlay").bind("click", function(){ getKittenAPI.play(); });
+			$("#goStop").bind("click", function(){ getKittenAPI.stop(); });
+			$("#goPause").bind("click", function(){ getKittenAPI.pause(); });
 			
 		}
 		
@@ -128,6 +151,7 @@
 		<li><a href="#four">Remove</a></li>
 		<li><a href="#five">Empty</a></li>
 		<li><a href="#six">ReloadWith</a></li>
+		<li><a href="#seven">Other API Methods</a></li>
 	</ol>
 	
 	
@@ -394,7 +418,7 @@ $("#emptyKittenAction").bind("click", function(e){
 			<button id="reloadKittenAction" class="result">Reload</button>
 		</div>
 
-		<p>Pass <strong>reloadWith</strong> all the elements of the slide show. Note that there is no error checking on what is passed in.</p>
+		<p>Pass <strong>reloadWith</strong> all the elements of the slide show. Note that there is no error checking on what is passed in. Also when reloading on an auto scrolling carrotCell strange behavior might occur.</p>
 		
 <pre><code data-language="js">
 var reloadKitten = $("#reloadKitten").carrotCell();
@@ -404,6 +428,75 @@ $("#reloadKittenAction").bind("click", function(e){
 	e.preventDefault();
 	reloadKittenAPI.reloadWith('<li><span>reload 1</span><img src="images/dog01.png" /></li><li><span>reload 2</span><img src="images/dog02.png" /></li><li><span>reload 3</span><img src="images/dog03.png" /></li><li><span>reload 4</span><img src="images/dog04.png" /></li><li><span>reload 5</span><img src="images/cat12.png" /></li><li><span>reload 6</span><img src="images/cat11.png" /></li><li><span>reload 7</span><img src="images/cat01.png" /></li><li><span>reload 8</span><img src="images/cat02.png" /></li><li><span>reload 9</span><img src="images/cat10.png" /></li>'); 
 });	
+</code></pre>		
+		
+	</article>
+	
+	<article id="seven">
+		<h2>Other API Methods</h2>
+		
+		<p>A demonstrating of the API methods follow.</p>
+		<div class="example">
+			<div id="getKitten" class="carrotCell kitten">			
+				<div class="carrotCellView">
+					<ol>
+						<li><span>1</span><img src="images/cat01.png" /></li>
+						<li><span>2</span><img src="images/cat02.png" /></li>
+						<li><span>3</span><img src="images/cat03.png" /></li>
+						<li><span>4</span><img src="images/cat04.png" /></li>
+						<li><span>5</span><img src="images/cat05.png" /></li>
+						<li><span>6</span><img src="images/cat06.png" /></li>
+						<li><span>7</span><img src="images/cat07.png" /></li>
+						<li><span>8</span><img src="images/cat08.png" /></li>
+						<li><span>9</span><img src="images/cat09.png" /></li>
+			        </ol>       
+				</div>			
+				<div class="prev">prev</div>
+				<div class="next">next</div> 
+			</div>
+			<div class="block">
+				<button id="getName" class="result">Get Name</button>
+				<button id="getPageCount" class="result">Get Page Count</button>
+				<button id="getTotalItems" class="result">Get Total Items</button>
+				<button id="getSettings" class="result">Get Settings</button>
+			
+				<button id="goForward" class="result">Forward</button>
+				<button id="goBackward" class="result">Backward</button>
+				<button id="goPlay" class="result">Play</button>
+				<button id="goPause" class="result">Pause</button>
+				<button id="goStop" class="result">Stop</button>
+			</div>
+			
+			<div class="result">
+				<strong>Result: </strong>
+				<div id="getResult">No Results yet</div>
+			</div>
+		</div>
+		
+		<p>For the complete list of what getters return, please see the <a href="doc.html">documentation</a>.</p>
+		
+<pre><code data-language="js">
+var getKitten = $("#getKitten").carrotCell({ auto: true, delay: 2000 });
+var getKittenAPI = $(getKitten).data("carrotCell");			
+var getResult = $("#getResult");
+
+$("#getName").bind("click", function(){ getResult.html(getKittenAPI.getName()); });
+$("#getPageCount").bind("click", function(){ getResult.html(getKittenAPI.getPageCount()); });
+$("#getTotalItems").bind("click", function(){ getResult.html(getKittenAPI.getTotalItems()); });
+$("#getSettings").bind("click", function(){ 			
+	var mySettings = getKittenAPI.getSettings()
+	var output = '';
+	for (property in mySettings) {
+	  output += property + ': ' + mySettings[property]+'; <br />';
+	}				
+	getResult.html(output); 
+});
+
+$("#goForward").bind("click", function(){ getKittenAPI.forward(); });
+$("#goBackward").bind("click", function(){ getKittenAPI.backward(); });
+$("#goPlay").bind("click", function(){ getKittenAPI.play(); });
+$("#goStop").bind("click", function(){ getKittenAPI.stop(); });
+$("#goPause").bind("click", function(){ getKittenAPI.pause(); });
 </code></pre>		
 		
 	</article>

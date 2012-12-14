@@ -189,7 +189,7 @@
 					
 					// call any callbacks then reset the callback
 					if (typeof scrollCallBack == "function" ) {
-						console.log("have a call back for default");
+						debug("have a call back for default");
 						scrollCallBack();
 					}
 					scrollCallBack = null;
@@ -518,7 +518,7 @@
 				} else {
 					pages = Math.ceil(totalItems / advanceBy);																
 				}	
-				debug(pages + " pages totalItems " + totalItems);									
+				debug(pages + " pages totalItems " + totalItems);								
 			};
 			
 			/** find out if we have any weird empty spots in a page
@@ -871,11 +871,11 @@
 
 				/** move forward by one
 				*/
-				advance : function() { moveForward(); },
+				forward : function() { moveForward(); },
 				
 				/** move backward by one
 				*/
-				rewind : function() { moveBack(); },
+				backward : function() { moveBack(); },
 
 				/** stop auto
 				*/
