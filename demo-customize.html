@@ -66,8 +66,7 @@
 				eventResult.append("<p>" + carrotName + " event <strong>" + eventName + "</strong> happened. " + pageNumReport + "</p>");
 			});
 			
-			$("#callKittenAction").bind("click", function(e){
-				e.preventDefault();				
+			$("#callKittenAction").bind("click", function(){	
 				$("#callKitten").carrotCell({
 					carrotDone: specialCallKittenFunction
 				});				
@@ -500,8 +499,7 @@ $(document).bind("carrotHappened", function(e, carrotName, eventName, pageNum){
 <pre><code data-language="js">
 // after the callKittenAction button is clicked carrotCell is created
 // after carrotCell is created, specialCallKittenFunction is called
-$("#callKittenAction").bind("click", function(e){
-	e.preventDefault();				
+$("#callKittenAction").bind("click", function(){		
 	$("#callKitten").carrotCell({
 		carrotDone: specialCallKittenFunction
 	});				

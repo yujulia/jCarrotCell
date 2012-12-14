@@ -7,72 +7,9 @@
 	<!--[if lt IE 9]>
 	<script src="http//html5shim.googlecode.com/svn/trunk/html5.js"></script>
 	<![endif]-->
-	<script src="js/jquery.js" type="text/javascript" charset="utf-8"></script>
- 	<script src="js/jquery-touchwipe.js" type="text/javascript" charset="utf-8"></script>
-	<script src="js/jCarrotCell.js" type="text/javascript" charset="utf-8"></script>
-	<script src="js/rainbow-custom.min.js" type="text/javascript" charset="utf-8"></script>
-	
-	<script type="text/javascript" charset="utf-8">
-	$(document).ready(function(){
-		window.carrotDemos = window.carrotDemos || {};
-		carrotDemos.setup = function() {
-			$('#kitten1').carrotCell();
-			$('#kitten3').carrotCell({ sideways: false });
-			$('#kitten5').carrotCell({ auto: true, step: 1, pauseOnHover: true, delay: 1000 });
-			
-			var kitten6 = $('#kitten6').carrotCell({ key: true,  navi: true });
-			var kitten6Api = $(kitten6).data('carrotCell');
-		
-			var kittenCount = 0;
-			var kitten7 = $('#kitten7').carrotCell({step: 2});
-			var kitten7Api = $(kitten7).data('carrotCell');
-
-			
-			$('#kitten7insert').click(function(){
-				kittenCount++;
-				kitten7Api.insert('<li><span>insert ' + kittenCount + '</span><img src="images/cat07.png" /></li>'); 	
-				var lastpage = kitten7Api.getPageCount();
-				console.log(lastpage);
-				kitten7Api.move(lastpage); 					
-			});
-			
-			
-			$('#kitten7load').click(function(){
-				kitten7Api.load('<li><span>load 1</span><img src="images/cat07.png" /></li> <li><span>load 2</span><img src="images/cat08.png" /></li> <li><span>load 3</span><img src="images/cat09.png" /></li><li><span>load 1</span><img src="images/cat07.png" /></li> <li><span>load 2</span><img src="images/cat08.png" /></li> <li><span>load 3</span><img src="images/cat09.png" /></li>'); 
-			});
-			
-			$('#kitten8').carrotCell({
-				sliderSelect : "div",
-				sliderChildSelect : "div",
-				containsControl : false,
-				navi : true,
-				controlScope : "#kitten8Nav",
-				prevSelect : "#goBack",
-				nextSelect : "#goForward"
-			});
-			
-			var kitten9 =$('#kitten9').carrotCell();
-			var kitten9Api = $(kitten9).data('carrotCell');
-			$("#kitten9remove").bind("click", function(){
-				kitten9Api.remove(2);
-			});
-		}
-		
-		// chrome can not calculate the width correctly because it is foolish
-		var is_chrome = navigator.userAgent.toLowerCase().indexOf('chrome') > -1;
-		if (is_chrome) {
-			$(window).load(function(){ carrotDemos.setup(); });
-		} else {
-			carrotDemos.setup();
-		}
-		
-	});
-	</script>
 	
 	<link type="text/css" href="css/main.css" rel="stylesheet" /> 
-	<link type="text/css" href="css/carrotcell.css" rel="stylesheet" /> 
-	<link type="text/css" href="css/carrotskin.css" rel="stylesheet" /> 
-	<link type="text/css" href="css/oldskin.css" rel="stylesheet" /> 
+
 </head>
 
 <body>
@@ -138,7 +75,6 @@
 		</li>
 	</ol>
 	
-
 	<nav>
 		<a href="index.html">Home</a> 
 		<a href="doc.html">Documentation</a> 

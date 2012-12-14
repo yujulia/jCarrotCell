@@ -25,8 +25,7 @@
 			var insertKitten = $("#insertKitten").carrotCell();
 			var insertKittenAPI = $(insertKitten).data("carrotCell");			
 			var insertCount = 0;			
-			$("#insertKittenAction").bind("click", function(e){
-				e.preventDefault();			
+			$("#insertKittenAction").bind("click", function(e){		
 				var myIndex = parseInt($("#insertKittenValue").val());
 				insertCount++;
 				$("#insertKittenCount").html(insertCount);
@@ -39,8 +38,7 @@
 			});
 			var insertKittenAPI2 = $(insertKitten2).data("carrotCell");			
 			var insertCount2 = 0;			
-			$("#insertKittenAction2").bind("click", function(e){
-				e.preventDefault();			
+			$("#insertKittenAction2").bind("click", function(e){	
 				var myIndex = parseInt($("#insertKittenValue2").val());
 				insertCount2++;
 				$("#insertKittenCount2").html(insertCount2);
@@ -54,8 +52,7 @@
 			});
 			var insertKittenAPI3 = $(insertKitten3).data("carrotCell");			
 			var insertCount3 = 0;			
-			$("#insertKittenAction3").bind("click", function(e){
-				e.preventDefault();			
+			$("#insertKittenAction3").bind("click", function(e){		
 				var myIndex = parseInt($("#insertKittenValue3").val());
 				insertCount3++;
 				$("#insertKittenCount3").html(insertCount3);
@@ -65,8 +62,7 @@
 			// remove kitten
 			var removeKitten = $("#removeKitten").carrotCell();
 			var removeKittenAPI = $(removeKitten).data("carrotCell");						
-			$("#removeKittenAction").bind("click", function(e){
-				e.preventDefault();			
+			$("#removeKittenAction").bind("click", function(e){	
 				var myIndex = parseInt($("#removeKittenValue").val());
 				removeKittenAPI.remove(myIndex); 
 			});
@@ -75,7 +71,6 @@
 			var emptyKitten = $("#emptyKitten").carrotCell();
 			var emptyKittenAPI = $(emptyKitten).data("carrotCell");						
 			$("#emptyKittenAction").bind("click", function(e){
-				e.preventDefault();
 				emptyKittenAPI.empty(); 
 			});
 			
@@ -84,7 +79,6 @@
 			var reloadKittenAPI = $(reloadKitten).data("carrotCell");			
 			
 			$("#reloadKittenAction").bind("click", function(e){
-				e.preventDefault();
 				reloadKittenAPI.reloadWith('<li><span>reload 1</span><img src="images/dog01.png" /></li><li><span>reload 2</span><img src="images/dog02.png" /></li><li><span>reload 3</span><img src="images/dog03.png" /></li><li><span>reload 4</span><img src="images/dog04.png" /></li><li><span>reload 5</span><img src="images/cat12.png" /></li><li><span>reload 6</span><img src="images/cat11.png" /></li><li><span>reload 7</span><img src="images/cat01.png" /></li><li><span>reload 8</span><img src="images/cat02.png" /></li><li><span>reload 9</span><img src="images/cat10.png" /></li>'); 
 			});
 					
@@ -347,8 +341,7 @@ var kitten = $("#insertKitten2").carrotCell({
 var kitten = $("#removeKitten").carrotCell();
 var kittenAPI = $(kitten).data("carrotCell");			
 
-$("#removeKittenAction").bind("click", function(e){
-	e.preventDefault();
+$("#removeKittenAction").bind("click", function(){
 	var myIndex = parseInt($("#removeKittenValue").val());
 	kittenAPI.remove(myIndex); 
 });
@@ -385,8 +378,7 @@ $("#removeKittenAction").bind("click", function(e){
 var kitten = $("#emptyKitten").carrotCell();
 var kittenAPI = $(kitten).data("carrotCell");			
 
-$("#emptyKittenAction").bind("click", function(e){
-	e.preventDefault();
+$("#emptyKittenAction").bind("click", function(){
 	kittenAPI.empty(); 
 });
 </code></pre>		
@@ -424,8 +416,7 @@ $("#emptyKittenAction").bind("click", function(e){
 var reloadKitten = $("#reloadKitten").carrotCell();
 var reloadKittenAPI = $(reloadKitten).data("carrotCell");			
 
-$("#reloadKittenAction").bind("click", function(e){
-	e.preventDefault();
+$("#reloadKittenAction").bind("click", function(){
 	reloadKittenAPI.reloadWith('<li><span>reload 1</span><img src="images/dog01.png" /></li><li><span>reload 2</span><img src="images/dog02.png" /></li><li><span>reload 3</span><img src="images/dog03.png" /></li><li><span>reload 4</span><img src="images/dog04.png" /></li><li><span>reload 5</span><img src="images/cat12.png" /></li><li><span>reload 6</span><img src="images/cat11.png" /></li><li><span>reload 7</span><img src="images/cat01.png" /></li><li><span>reload 8</span><img src="images/cat02.png" /></li><li><span>reload 9</span><img src="images/cat10.png" /></li>'); 
 });	
 </code></pre>		
