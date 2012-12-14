@@ -17,27 +17,17 @@
 		window.carrotDemos = window.carrotDemos || {};
 		carrotDemos.setup = function() {
 			
-			var getKitten = $("#getKitten").carrotCell({ auto: true, delay: 2000 });
-			var getKittenAPI = $(getKitten).data("carrotCell");			
-			var getResult = $("#getResult");
-			
-			$("#getName").bind("click", function(){ getResult.html(getKittenAPI.getName()); });
-			$("#getPageCount").bind("click", function(){ getResult.html(getKittenAPI.getPageCount()); });
-			$("#getTotalItems").bind("click", function(){ getResult.html(getKittenAPI.getTotalItems()); });
-			$("#getSettings").bind("click", function(){ 			
-				var mySettings = getKittenAPI.getSettings()
-				var output = '';
-				for (property in mySettings) {
-				  output += property + ': ' + mySettings[property]+'; <br />';
-				}				
-				getResult.html(output); 
+			var removeKitten = $("#removeKitten").carrotCell({
+				navi: true,
+				makeNavi: true
+			});
+			var removeKittenAPI = $(removeKitten).data("carrotCell");						
+			$("#removeKittenAction").bind("click", function(e){	
+				var myIndex = parseInt($("#removeKittenValue").val());
+				removeKittenAPI.remove(myIndex); 
 			});
 			
-			$("#goForward").bind("click", function(){ getKittenAPI.forward(); });
-			$("#goBackward").bind("click", function(){ getKittenAPI.backward(); });
-			$("#goPlay").bind("click", function(){ getKittenAPI.play(); });
-			$("#goStop").bind("click", function(){ getKittenAPI.stop(); });
-			$("#goPause").bind("click", function(){ getKittenAPI.pause(); });
+			
 
 		}
 		
@@ -61,7 +51,8 @@
 <body>
 
 		<div class="example">
-			<div id="getKitten" class="carrotCell kitten">			
+			<div id="removeKitten" class="carrotCell kitten">		
+				<div class="navi"></div>	
 				<div class="carrotCellView">
 					<ol>
 						<li><span>1</span><img src="images/cat01.png" /></li>
@@ -78,24 +69,11 @@
 				<div class="prev">prev</div>
 				<div class="next">next</div> 
 			</div>
-			<div class="block">
-				<button id="getName" class="result">Get Name</button>
-				<button id="getPageCount" class="result">Get Page Count</button>
-				<button id="getTotalItems" class="result">Get Total Items</button>
-				<button id="getSettings" class="result">Get Settings</button>
-			
-				<button id="goForward" class="result">Forward</button>
-				<button id="goBackward" class="result">Backward</button>
-				<button id="goPlay" class="result">Play</button>
-				<button id="goPause" class="result">Pause</button>
-				<button id="goStop" class="result">Stop</button>
-			</div>
-			
+			<button id="removeKittenAction" class="result">Remove Item</button>
 			<div class="result">
-				<strong>Result: </strong>
-				<div id="getResult">No Results yet</div>
+				<span>at index</span>
+				<input id="removeKittenValue" type="text" name="kittenValue"/>
 			</div>
-
 		</div>
 
 

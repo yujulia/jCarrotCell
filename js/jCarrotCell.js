@@ -71,8 +71,10 @@
 				
 				// properties of this carrotCell
 				slideWidth = 0,
+				
 				haveBack = false,
 				haveForward = true,
+				
 				currentPage = 1,
 				currentItem = 1,
 				playing = false,
@@ -85,11 +87,12 @@
 				nextDisabled = true,
 				moveByOne = false,
 				scrollCallBack = null,
+				oldPages = null,
 			
 				api, view, slider, items, single, totalItems,
 				frameSize, singleSize, viewSize,
 				autoScroll, pause, play, stop, 
-				visible, advanceBy, myPage, pages, realPages,
+				visible, advanceBy, myPage, pages,
 				prev, next, navi,
 				sliderSelect, sliderChildSelect, prevSelect, nextSelect,
 				pauseSelect, playSelect, stopSelect, naviContainer, naviSelect,
@@ -229,7 +232,7 @@
 					if (nextPage >= pages) { haveForward = false; } else { haveForward = true; };	
 					if (moveByOne) { haveForward = true; }
 				}
-
+				
 				// enable and disable							
 				if (haveBack) { 
 					prev.removeClass(settings.disabledClass); 
@@ -426,9 +429,11 @@
 			var setupNavi = function() {			
 				if (settings.makeNavi) { creatNavi(); }				
 				$(navi).first().addClass(settings.currentClass);
+				
 				navi.each(function(iNav){
 					var thisNavi = this; // an item of this nav
 					var navIndex = iNav + 1;
+					
 					$(thisNavi).bind("click", function(){
 						if (playing && settings.stopOnClick) {  stopCarrotCell(); }
 						if (scrolling) { return false; } // no queue ups on rapid clicking
@@ -440,7 +445,8 @@
 							determinePrevNext(navIndex);
 						}
 					});
-				});					
+				});				
+					
 				handleNaviAutoscroll();					
 			};
 			
@@ -518,6 +524,14 @@
 				} else {
 					pages = Math.ceil(totalItems / advanceBy);																
 				}	
+				
+				if ((oldPages !== null) && (oldPages !== pages)) {
+					console.log("page count changed");
+					
+				}
+				oldPages = pages; // save this value
+				 
+				
 				debug(pages + " pages totalItems " + totalItems);								
 			};
 			
