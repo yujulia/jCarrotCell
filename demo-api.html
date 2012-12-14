@@ -79,6 +79,15 @@
 				emptyKittenAPI.empty(); 
 			});
 			
+			// reload kitten
+			var reloadKitten = $("#reloadKitten").carrotCell();
+			var reloadKittenAPI = $(reloadKitten).data("carrotCell");			
+			
+			$("#reloadKittenAction").bind("click", function(e){
+				e.preventDefault();
+				reloadKittenAPI.reloadWith('<li><span>reload 1</span><img src="images/dog01.png" /></li><li><span>reload 2</span><img src="images/dog02.png" /></li><li><span>reload 3</span><img src="images/dog03.png" /></li><li><span>reload 4</span><img src="images/dog04.png" /></li><li><span>reload 5</span><img src="images/cat12.png" /></li><li><span>reload 6</span><img src="images/cat11.png" /></li><li><span>reload 7</span><img src="images/cat01.png" /></li><li><span>reload 8</span><img src="images/cat02.png" /></li><li><span>reload 9</span><img src="images/cat10.png" /></li>'); 
+			});
+			
 		}
 		
 		// chrome can not calculate the width correctly because it is foolish
@@ -363,6 +372,38 @@ $("#emptyKittenAction").bind("click", function(e){
 	<article id="six">
 		<h2>ReloadWith</h2>
 		<p>Use this API method to replace the entire slide show with new content.</p>
+		
+		<div class="example">
+			<div id="reloadKitten" class="carrotCell kitten">			
+				<div class="carrotCellView">
+					<ol>
+						<li><span>1</span><img src="images/cat01.png" /></li>
+						<li><span>2</span><img src="images/cat02.png" /></li>
+						<li><span>3</span><img src="images/cat03.png" /></li>
+						<li><span>4</span><img src="images/cat04.png" /></li>
+						<li><span>5</span><img src="images/cat05.png" /></li>
+						<li><span>6</span><img src="images/cat06.png" /></li>
+						<li><span>7</span><img src="images/cat07.png" /></li>
+						<li><span>8</span><img src="images/cat08.png" /></li>
+						<li><span>9</span><img src="images/cat09.png" /></li>
+			        </ol>       
+				</div>			
+				<div class="prev">prev</div>
+				<div class="next">next</div> 
+			</div>
+			<button id="reloadKittenAction" class="result">Reload</button>
+		</div>
+
+<pre><code data-language="js">
+var reloadKitten = $("#reloadKitten").carrotCell();
+var reloadKittenAPI = $(reloadKitten).data("carrotCell");			
+
+$("#reloadKittenAction").bind("click", function(e){
+	e.preventDefault();
+	reloadKittenAPI.reloadWith('<li><span>reload 1</span><img src="images/dog01.png" /></li><li><span>reload 2</span><img src="images/dog02.png" /></li><li><span>reload 3</span><img src="images/dog03.png" /></li><li><span>reload 4</span><img src="images/dog04.png" /></li><li><span>reload 5</span><img src="images/cat12.png" /></li><li><span>reload 6</span><img src="images/cat11.png" /></li><li><span>reload 7</span><img src="images/cat01.png" /></li><li><span>reload 8</span><img src="images/cat02.png" /></li><li><span>reload 9</span><img src="images/cat10.png" /></li>'); 
+});	
+</code></pre>		
+		
 	</article>
 	
 	<nav>

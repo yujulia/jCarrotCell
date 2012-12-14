@@ -17,16 +17,13 @@
 		window.carrotDemos = window.carrotDemos || {};
 		carrotDemos.setup = function() {
 			
-			var kitten = $("#emptyKitten").carrotCell({
-				// auto: true
-			});
-			var kittenAPI = $(kitten).data("carrotCell");			
+			var reloadKitten = $("#reloadKitten").carrotCell();
+			var reloadKittenAPI = $(reloadKitten).data("carrotCell");			
 			
-			$("#emptyKittenAction").bind("click", function(e){
+			$("#reloadKittenAction").bind("click", function(e){
 				e.preventDefault();
-				kittenAPI.empty(); 
+				reloadKittenAPI.reloadWith('<li><span>reload 1</span><img src="images/dog01.png" /></li><li><span>reload 2</span><img src="images/dog02.png" /></li><li><span>reload 3</span><img src="images/dog03.png" /></li><li><span>reload 4</span><img src="images/dog04.png" /></li><li><span>reload 5</span><img src="images/cat12.png" /></li><li><span>reload 6</span><img src="images/cat11.png" /></li><li><span>reload 7</span><img src="images/cat01.png" /></li><li><span>reload 8</span><img src="images/cat02.png" /></li><li><span>reload 9</span><img src="images/cat10.png" /></li>'); 
 			});
-
 		}
 		
 		// chrome can not calculate the width correctly because it is foolish
@@ -49,7 +46,7 @@
 <body>
 
 		<div class="example">
-			<div id="emptyKitten" class="carrotCell kitten">			
+			<div id="reloadKitten" class="carrotCell kitten">			
 				<div class="carrotCellView">
 					<ol>
 						<li><span>1</span><img src="images/cat01.png" /></li>
@@ -66,7 +63,7 @@
 				<div class="prev">prev</div>
 				<div class="next">next</div> 
 			</div>
-			<button id="emptyKittenAction" class="result">Empty</button>
+			<button id="reloadKittenAction" class="result">Reload</button>
 		</div>
 
 

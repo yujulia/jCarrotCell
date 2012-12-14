@@ -61,6 +61,10 @@
 				ON_PLAY = "onPlay",
 				ON_PAUSE = "onPause",
 				ON_STOP = "onStop",
+				ON_REMOVE = "removed",
+				ON_EMPTY = "empty",
+				ON_INSERT = "inserted",
+				ON_RELOAD = "reloaded",
 				SCROLL_BY_ONE = "scrollByOne",
 				
 				DEBUG_ON = false, // DEBUG shows console logs
@@ -95,9 +99,7 @@
 			/** console.log wrapper for debugging
 			*/
 			var debug = function(debugString) {
-				if (DEBUG_ON) {
-					console.log(debugString);
-				}
+				if (DEBUG_ON) { console.log(debugString); }
 			};
 			
 			/** no animation scroll to "this"
@@ -219,12 +221,14 @@
 			/** determine if the previous and next buttons should be active based on the next page they will be linking to
 			*/
 			var determinePrevNext = function(nextPage) {			
-				if (settings.infinite) { return false; }
-	
-				if ((nextPage <= 1) || (currentPage == 1)) { haveBack = false; } else { haveBack = true; };			
-				if (nextPage >= pages) { haveForward = false; } else { haveForward = true; };	
-
-				if (moveByOne) { haveForward = true; }
+				if (settings.infinite) { 
+					haveBack = true;
+					haveForward = true;					
+				} else {
+					if ((nextPage <= 1) || (currentPage == 1)) { haveBack = false; } else { haveBack = true; };			
+					if (nextPage >= pages) { haveForward = false; } else { haveForward = true; };	
+					if (moveByOne) { haveForward = true; }
+				}
 
 				// enable and disable							
 				if (haveBack) { 
@@ -280,8 +284,6 @@
 				if (!settings.infinite && nextDisabled) { return false; } // we are at the right most page	
 				var nextPage = currentPage + 1;
 				
-				// move by one if its not infinite
-			
 				if (moveByOne && !settings.infinite) {
 					debug("move by one " + hasOpenSpot);
 					moveByOne = false;
@@ -560,15 +562,6 @@
 				}
 			};
 			
-			/** something has changed about slides, update calculations
-			*/
-			var updateSlider = function(){
-				findSlides();
-				howManyPages();
-				howManyExtraMoves();
-				adjustSlideSize();
-			};
-							
 			/** calculate the settings of the carrot
 			*/
 			var setupCarrot = function(){
@@ -692,6 +685,17 @@
 				}	
 			};
 			
+			/** something has changed about slides, update calculations
+			*/
+			var updateSlider = function(){
+				findSlides();
+				howManyPages();
+				howManyExtraMoves();
+				if (settings.infinite) { padWithClones(); } 
+				adjustSlideSize();
+				if (settings.infinite) { moveClonesOutOfSight(); }
+			};
+			
 			/** find out which page in the set contains the item
 			*/
 			var whichPageContains = function(itemIndex){
@@ -792,8 +796,7 @@
 		
 				if (hasOpenSpot > 0) { hasOpenSpot--; } else { hasOpenSpot = visible-1; } // less open slots now we inserted
 				updateSlider(); // reset the slider info
-			};
-			
+			};		
 			
 			/** do this after insert
 			*/
@@ -818,6 +821,26 @@
 						determinePrevNext(currentPage);
 					}						
 				}
+			};
+			
+			/** reload the slide show with a complete new set of items
+			*/
+			var reloadItems = function(newItems) {			
+				if (settings.auto) { stopCarrotCell(); }	
+				emptyItems();
+				slider.append(newItems);			
+				updateSlider(); // reset the slider info	
+
+				gotoPage(1);
+				
+				if (settings.infinite) {
+					determinePrevNext(1);	
+				} else {
+					determinePrevNext(1);		
+					IsThereEnoughToScroll();
+				}		
+				if (settings.auto) { playCarrotCell(); }
+				
 			};
 
 			return {
@@ -845,15 +868,7 @@
 				/** get the entire settings object
 				*/
 				getSettings : function() { return settings; },
-				
-				/** move to the page passed in if its a number in range
-				*/
-				moveToPage : function(movePage) {
-					movePage = itemRangeFix(movePage);
-					if (movePage > pages) { movePage = pages; }
-					gotoPage(movePage); // move
-				},
-				
+
 				/** move forward by one
 				*/
 				advance : function() { moveForward(); },
@@ -873,29 +888,27 @@
 				/** pause auto play
 				*/
 				pause : function() { pauseCarrotCell() },
+				
+				/** move to the page passed in if its a number in range
+				*/
+				moveToPage : function(movePage) {
+					movePage = itemRangeFix(movePage);
+					if (movePage > pages) { movePage = pages; }
+					gotoPage(movePage); // move
+				},
 
 				/** load an entire new set of slides
 				*/
 				reloadWith : function(newItems) {
-					// if (!items) { return false; }		
-					// $(items).remove(); 
-					// slider.append(newItems); // append at end
-					// findSlides();
-					// howManyPages();
-					// adjustSlideSize();
-					// gotoPage(1); // rewind to beginning on load
-					// currentPage = 1;
-					// determinePrevNext();
+					if (!items) { return false; }		
+					reloadItems(newItems);
 				},
 				
 				/** remove all carrot items
 				*/
-				empty : function() { 
-					emptyItems();
-				}, // NEED MORE RESETTING
+				empty : function() {  emptyItems(); },
 				
 				/** remove an item from the carousel (by index)
-					index starts at 1, if no index, remove last
 				*/
 				remove : function(index) {
 					index = itemRangeFix(index); 	// fix the range on the index	
@@ -910,7 +923,7 @@
 					index = itemRangeFix(index); 	// fix the range on the index				
 					insertItem(newItem, index);
 					afterInsert(index);				
-					return totalItems; 					// inserted successfully
+					return totalItems; 				// inserted successfully
 				},
 
 				/** set api for internal access for whatever reason
