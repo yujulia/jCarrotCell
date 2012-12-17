@@ -46,7 +46,9 @@
 					atEnd : "carrotAtEnd",
 					onPlay : "carrotPlay",
 					onPause : "carrotPause",
-					onStop : "carrotStop"
+					onStop : "carrotStop",
+					pagesChanged : "carrotPageCountChanged"
+					
 				},
 				
 				// CONST				
@@ -66,6 +68,7 @@
 				ON_INSERT = "inserted",
 				ON_RELOAD = "reloaded",
 				SCROLL_BY_ONE = "scrollByOne",
+				PAGE_COUNT_CHANGED = "pageCountChanged",
 				
 				DEBUG_ON = false, // DEBUG shows console logs
 				
@@ -88,12 +91,13 @@
 				moveByOne = false,
 				scrollCallBack = null,
 				oldPages = null,
+				itemNames = {},
 			
 				api, view, slider, items, single, totalItems,
 				frameSize, singleSize, viewSize,
 				autoScroll, pause, play, stop, 
 				visible, advanceBy, myPage, pages,
-				prev, next, navi,
+				prev, next, navi, nameList, pre, post,
 				sliderSelect, sliderChildSelect, prevSelect, nextSelect,
 				pauseSelect, playSelect, stopSelect, naviContainer, naviSelect,
 				firstOfLastPage, extraOnLastPage, hasOpenSpot;
@@ -377,14 +381,13 @@
 				});
 			};
 			
+			
 			/** auto create navi 
 			*/
 			var creatNavi = function(){
 				$(naviContainer).empty(); // clear the navi container
-				var itemNames = {};
-				for (var j = 1; j <= pages; j++) { itemNames[j] = j; }
-
-				var nameList = $(naviContainer).data("navi");
+				for (var j = 1; j <= pages; j++) { itemNames[j] = j; } // set navi names into auto integers
+			 	nameList = $(naviContainer).data("navi"); // get name list data if any
 				
 				if ((nameList !== null) && (nameList !== undefined) && (nameList.length !== 0) ) {					
 					$(nameList).each(function(n){
@@ -392,8 +395,9 @@
 					});								
 				} 
 				
-				var pre = '<div class="' + settings.naviClass +'">'; // default is div
-				var post = '</div>';
+				pre = '<div class="' + settings.naviClass +'">'; // default is div
+				post = '</div>';
+				
 				if ($(naviContainer).is("ul") || $(naviContainer).is("ol")) {
 					pre = '<li class="' + settings.naviClass +'">';
 					post = '</li>';				
@@ -401,6 +405,7 @@
 				for (var i = 1; i <= pages; i++) {
 					$(naviContainer).append(pre + itemNames[i] + post);
 				}			
+				
 				navi = $(naviContainer).find("> *"); // find all the things we just added
 			};
 			
@@ -424,30 +429,77 @@
 				});
 			};
 			
+			/** listen for events that will cause navi to change
+			*/
+			var handleNaviChanges = function() {
+				settings.controlScope.bind(settings.pagesChanged, function(e, carrotName, eventName, newPageNumber, oldPageNumber ) {		
+					debug("something about navi has to change " + newPageNumber + " used to be " + oldPageNumber);
+					
+					var newIndex, newNaviNode;
+					var diff = newPageNumber - oldPageNumber;
+					var more = true;
+					if (diff < 0) { more = false; }				
+					diff = Math.abs(diff);
+					
+					if (more) {
+						if (settings.makeNavi) {
+							for (var i = 1; i <= more; i++) {
+								newIndex = oldPageNumber + i;
+								
+								if (itemNames[newIndex]) {
+									$(naviContainer).append(pre + itemNames[newIndex] + post);
+								} else {
+									$(naviContainer).append(pre + newIndex + post);
+								}
+								
+								newNaviNode = $("> *", naviContainer).last();
+								
+								navi = $(naviContainer).find("> *"); // find all the things we just added					
+								addNaviClick(newNaviNode, newIndex);
+								
+							}			
+						}
+					} else {
+						navi.slice(-1*diff).remove(); // remove last items
+						navi = $(naviContainer).find("> *");
+					}
+					
+				});
+			};
+			
+			var addNaviClick = function(thisNavi, navIndex) {
+				debug("adding navi click " + navIndex);
+				
+				$(thisNavi).unbind().bind("click", function(){
+					if (playing && settings.stopOnClick) {  stopCarrotCell(); }
+					if (scrolling) { return false; } // no queue ups on rapid clicking
+
+					navi.removeClass(settings.currentClass);
+					$(this).addClass(settings.currentClass);
+					if ((navIndex <= pages) && (navIndex > 0)) {
+						gotoPage(navIndex);
+						determinePrevNext(navIndex);
+					}
+				});
+			};
+			
+			var processEachNaviNode = function(){
+				navi.each(function(iNav){
+					var thisNavi = this; // an item of this nav
+					var navIndex = iNav + 1;				
+					addNaviClick(thisNavi, navIndex);
+				});
+			};
+			
 			/** set up navigation, only works on pages
 			*/
 			var setupNavi = function() {			
 				if (settings.makeNavi) { creatNavi(); }				
 				$(navi).first().addClass(settings.currentClass);
 				
-				navi.each(function(iNav){
-					var thisNavi = this; // an item of this nav
-					var navIndex = iNav + 1;
-					
-					$(thisNavi).bind("click", function(){
-						if (playing && settings.stopOnClick) {  stopCarrotCell(); }
-						if (scrolling) { return false; } // no queue ups on rapid clicking
-						
-						$(this).siblings().removeClass(settings.currentClass);
-						$(this).addClass(settings.currentClass);
-						if ((navIndex <= pages) && (navIndex > 0)) {
-							gotoPage(navIndex);
-							determinePrevNext(navIndex);
-						}
-					});
-				});				
-					
-				handleNaviAutoscroll();					
+				processEachNaviNode()			
+				handleNaviAutoscroll();			
+				handleNaviChanges();		
 			};
 			
 			/** set up clickin on previous and next
@@ -526,12 +578,10 @@
 				}	
 				
 				if ((oldPages !== null) && (oldPages !== pages)) {
-					console.log("page count changed");
-					
+					settings.controlScope.trigger(settings.pagesChanged, [settings.name, PAGE_COUNT_CHANGED, pages, oldPages]);			
 				}
 				oldPages = pages; // save this value
-				 
-				
+
 				debug(pages + " pages totalItems " + totalItems);								
 			};
 			

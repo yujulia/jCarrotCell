@@ -21,10 +21,16 @@
 				navi: true,
 				makeNavi: true
 			});
-			var removeKittenAPI = $(removeKitten).data("carrotCell");						
+			var removeKittenAPI = $(removeKitten).data("carrotCell");			
+						
 			$("#removeKittenAction").bind("click", function(e){	
 				var myIndex = parseInt($("#removeKittenValue").val());
 				removeKittenAPI.remove(myIndex); 
+			});
+			
+			$("#addKittenAction").bind("click", function(e){	
+				var myIndex = parseInt($("#removeKittenValue").val());				
+				removeKittenAPI.insert('<li><img src="images/cat07.png" /></li>', myIndex); 
 			});
 			
 			
@@ -52,7 +58,7 @@
 
 		<div class="example">
 			<div id="removeKitten" class="carrotCell kitten">		
-				<div class="navi"></div>	
+				<div class="navi"  data-navi='["fabulous kittens set", "basket kitten set", "rad kitten set", "new kitten set"]'></div>	
 				<div class="carrotCellView">
 					<ol>
 						<li><span>1</span><img src="images/cat01.png" /></li>
@@ -70,6 +76,9 @@
 				<div class="next">next</div> 
 			</div>
 			<button id="removeKittenAction" class="result">Remove Item</button>
+			
+			<button id="addKittenAction" class="result">Add Item</button>
+			
 			<div class="result">
 				<span>at index</span>
 				<input id="removeKittenValue" type="text" name="kittenValue"/>
