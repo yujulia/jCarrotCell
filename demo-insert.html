@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head> 
+    <meta charset="utf-8" /> 
+	<title>jCarrotCell Demo: Insert and Remove</title>
+	<!--[if lt IE 9]>
+	<script src="http//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	<script src="js/jquery.js" type="text/javascript" charset="utf-8"></script>
+ 	<script src="js/jquery-touchwipe.js" type="text/javascript" charset="utf-8"></script>
+	<script src="js/jCarrotCell.js" type="text/javascript" charset="utf-8"></script>
+	<script src="js/rainbow-custom.min.js" type="text/javascript" charset="utf-8"></script>
+	
+	<script type="text/javascript" charset="utf-8">
+	$(document).ready(function(){
+		window.carrotDemos = window.carrotDemos || {};
+		carrotDemos.setup = function() {
+			
+			// first insert kitten
+			var insertKitten = $("#insertKitten").carrotCell();
+			var insertKittenAPI = $(insertKitten).data("carrotCell");			
+			var insertCount = 0;			
+			$("#insertKittenAction").bind("click", function(e){		
+				var myIndex = parseInt($("#insertKittenValue").val());
+				insertCount++;
+				$("#insertKittenCount").html(insertCount);
+				insertKittenAPI.insert('<li><span>insert ' + insertCount + '</span><img src="images/cat07.png" /></li>', myIndex); 
+			});
+			
+			// second insert kitten
+			var insertKitten2 = $("#insertKitten2").carrotCell({
+				scrollToInserted : true
+			});
+			var insertKittenAPI2 = $(insertKitten2).data("carrotCell");			
+			var insertCount2 = 0;			
+			$("#insertKittenAction2").bind("click", function(e){	
+				var myIndex = parseInt($("#insertKittenValue2").val());
+				insertCount2++;
+				$("#insertKittenCount2").html(insertCount2);
+				insertKittenAPI2.insert('<li><span>insert ' + insertCount2 + '</span><img src="images/cat07.png" /></li>', myIndex); 
+			});
+			
+			// third insert kitten
+			var insertKitten3 = $("#insertKitten3").carrotCell({
+				scrollToInserted : true,
+				auto: true
+			});
+			var insertKittenAPI3 = $(insertKitten3).data("carrotCell");			
+			var insertCount3 = 0;			
+			$("#insertKittenAction3").bind("click", function(e){		
+				var myIndex = parseInt($("#insertKittenValue3").val());
+				insertCount3++;
+				$("#insertKittenCount3").html(insertCount3);
+				insertKittenAPI3.insert('<li><span>insert ' + insertCount3 + '</span><img src="images/cat07.png" /></li>', myIndex); 
+			});
+			
+	
+			// remove kitten
+			var removeKitten = $("#removeKitten").carrotCell();
+			var removeKittenAPI = $(removeKitten).data("carrotCell");						
+			$("#removeKittenAction").bind("click", function(e){	
+				var myIndex = parseInt($("#removeKittenValue").val());
+				removeKittenAPI.remove(myIndex); 
+			});
+			
+			// navi auto generated
+			var naviKitten = $("#naviKitten").carrotCell({
+				navi: true,
+				scrollToInserted : true,
+				makeNavi: true
+			});
+			var naviKittenAPI = $(naviKitten).data("carrotCell");			
+						
+			$("#naviRemoveKitten").bind("click", function(e){	
+				var myIndex = parseInt($("#naviKittenValue").val());
+				naviKittenAPI.remove(myIndex); 
+			});
+			
+			$("#naviAddKitten").bind("click", function(e){	
+				var myIndex = parseInt($("#naviKittenValue").val());				
+				naviKittenAPI.insert('<li><img src="images/cat07.png" /></li>', myIndex); 
+			});
+		
+		
+			// navi user generated
+			var userKitten = $("#userKitten").carrotCell({
+				navi: true,
+				scrollToInserted : true
+			});
+			var userKittenAPI = $(userKitten).data("carrotCell");			
+			var count = 0;
+			
+			$("#userRemoveKitten").bind("click", function(e){	
+				var myIndex = parseInt($("#userKittenValue").val());
+				userKittenAPI.remove(myIndex); 
+			});
+			
+			$("#userAddKitten").bind("click", function(e){	
+				var myIndex = parseInt($("#userKittenValue").val());				
+				userKittenAPI.insert('<li><img src="images/cat07.png" /></li>', myIndex); 
+				
+				var userOpenSpot = userKittenAPI.getOpenSpot();
+
+				if (userOpenSpot == 3) {
+					$("#userKitten .navi").append('<li class="naviItem">new nav node</li>');
+					userKittenAPI.updateNavi();
+				}
+			});
+			
+		}
+		
+		// chrome can not calculate the width correctly because it is foolish
+		var is_chrome = navigator.userAgent.toLowerCase().indexOf('chrome') > -1;
+		if (is_chrome) {
+			$(window).load(function(){ carrotDemos.setup(); });
+		} else {
+			carrotDemos.setup();
+		}
+		
+	});
+	</script>
+	
+	<link type="text/css" href="css/main.css" rel="stylesheet" /> 
+	<link type="text/css" href="css/carrotcell.css" rel="stylesheet" /> 
+	<link type="text/css" href="css/carrotSkin.css" rel="stylesheet" /> 
+	
+
+	
+</head>
+
+<body>
+	<header>
+		<h1>j<span>Carrot</span><em>Cell</em> Demo: <strong>Using the API</strong></h1>		
+	</header>
+	
+	<nav>
+		<a href="index.html">Home</a> 
+		<a href="doc.html">Documentation</a> 
+		<a href="demo.html">More Demos</a> 
+	</nav>
+	
+	<h2>Demo: Using the API</h2>
+	<ol class="index">				
+		<li><a href="#one">Insert</a></li>
+		<li><a href="#two">Scroll To Inserted</a></li>
+		<li><a href="#three">Insert Into Infinity</a></li>
+		<li><a href="#four">Remove</a></li>
+		<li><a href="#five">Impact on Auto Generated Navi</a></li>
+		<li><a href="#six">Impact on User Created Navi</a></li>
+	</ol>
+	
+	
+	<article id="one">
+		<h2>Insert</h2>
+		<p>This example shows insertion at whatever index on a regular carrotCell. If no value is specified for index in this example, it is assumed to insert or append at the last spot. (Scroll to the last page to see the inserted item if appending at the end.)</p>
+		
+		<div class="example">
+			<div id="insertKitten" class="carrotCell kitten">			
+				<div class="carrotCellView">
+					<ol>
+						<li><span>1</span><img src="images/cat01.png" /></li>
+						<li><span>2</span><img src="images/cat02.png" /></li>
+						<li><span>3</span><img src="images/cat03.png" /></li>
+						<li><span>4</span><img src="images/cat04.png" /></li>
+						<li><span>5</span><img src="images/cat05.png" /></li>
+						<li><span>6</span><img src="images/cat06.png" /></li>
+						<li><span>7</span><img src="images/cat07.png" /></li>
+						<li><span>8</span><img src="images/cat08.png" /></li>
+						<li><span>9</span><img src="images/cat09.png" /></li>
+			        </ol>       
+				</div>			
+				<div class="prev">prev</div>
+				<div class="next">next</div> 
+			</div>
+			<button id="insertKittenAction" class="result">Insert Item</button>
+			<div class="result">
+				<span>at index</span>
+				<input id="insertKittenValue" type="text" name="kittenValue"/>				
+				<span>Inserted Items:</span>
+				<span id="insertKittenCount">0</span>
+			</div>
+		</div>
+
+<p>Call the API method <strong>insert</strong> to add one slide to the carrotCell. Note if more than one slide is passed the calculations will not work correctly. Insert takes the slide markup, and an integer index that tells carrotCell where to insert the slide.</p>
+<pre><code data-language="js">
+var kitten = $("#insertKitten").carrotCell();
+var kittenAPI = $(insertKitten).data("carrotCell");			
+
+var someIndex = ... // set it or get it in whatever way
+
+$("#insertKittenAction").bind("click", function(e){
+	kittenAPI.insert('<li><span>insert ' + insertCount + '</span><img src="images/cat07.png" /></li>', someIndex); 
+});
+</code></pre>
+	</article>
+	
+	<article id="two">
+		<h2>Scroll to Inserted</h2>
+		
+		<p>While the above example works, it is not very intuitive to the user when something has been inserted. There is a setting to scroll to the position of the inserted item that can be used.</p>
+		
+		<div class="example">
+			<div id="insertKitten2" class="carrotCell kitten">			
+				<div class="carrotCellView">
+					<ol>
+						<li><span>1</span><img src="images/cat01.png" /></li>
+						<li><span>2</span><img src="images/cat02.png" /></li>
+						<li><span>3</span><img src="images/cat03.png" /></li>
+						<li><span>4</span><img src="images/cat04.png" /></li>
+						<li><span>5</span><img src="images/cat05.png" /></li>
+						<li><span>6</span><img src="images/cat06.png" /></li>
+						<li><span>7</span><img src="images/cat07.png" /></li>
+						<li><span>8</span><img src="images/cat08.png" /></li>
+						<li><span>9</span><img src="images/cat09.png" /></li>
+			        </ol>       
+				</div>			
+				<div class="prev">prev</div>
+				<div class="next">next</div> 
+			</div>
+			<button id="insertKittenAction2" class="result">Insert Item</button>
+			<div class="result">
+				<span>at index</span>
+				<input id="insertKittenValue2" type="text" name="kittenValue"/>				
+				<span>Inserted Items:</span>
+				<span id="insertKittenCount2">0</span>
+			</div>
+		</div>
+
+<p>By setting <strong>scrollToInserted</strong> to the boolean true, when an item is inserted, the carrotCell will automatically scroll to show the inserted item.</p>
+<pre><code data-language="js">
+var kitten = $("#insertKitten2").carrotCell({
+	scrollToInserted : true
+});
+</code></pre>		
+
+	</article>
+		
+	<article>
+		<h2>Insert Into Infinity</h2>
+
+		<p>It is also possible to insert into an infinite carrotCell. Be aware that the inserts can cause strange behavior in infinite carousels as inserting an item can cause the entire loop to shift.</p>
+		
+		
+		<div class="example">
+			<div id="insertKitten3" class="carrotCell kitten">			
+				<div class="carrotCellView">
+					<ol>
+						<li><span>1</span><img src="images/cat01.png" /></li>
+						<li><span>2</span><img src="images/cat02.png" /></li>
+						<li><span>3</span><img src="images/cat03.png" /></li>
+						<li><span>4</span><img src="images/cat04.png" /></li>
+						<li><span>5</span><img src="images/cat05.png" /></li>
+						<li><span>6</span><img src="images/cat06.png" /></li>
+						<li><span>7</span><img src="images/cat07.png" /></li>
+						<li><span>8</span><img src="images/cat08.png" /></li>
+						<li><span>9</span><img src="images/cat09.png" /></li>
+			        </ol>       
+				</div>			
+				<div class="prev">prev</div>
+				<div class="next">next</div> 
+			</div>
+			<button id="insertKittenAction3" class="result">Insert Item</button>
+			<div class="result">
+				<span>at index</span>
+				<input id="insertKittenValue3" type="text" name="kittenValue"/>				
+				<span>Inserted Items:</span>
+				<span id="insertKittenCount3">0</span>
+			</div>
+		</div>
+		
+	</article>
+	
+	<article id="four">
+		<h2>Remove</h2>
+		<p>Removing works in a similar way as inserting, except only an index of the item to be removed need to be provided. If items remaining no longer make up more than 1 page, the previous and next will be disabled.</p>
+		
+		<div class="example">
+			<div id="removeKitten" class="carrotCell kitten">			
+				<div class="carrotCellView">
+					<ol>
+						<li><span>1</span><img src="images/cat01.png" /></li>
+						<li><span>2</span><img src="images/cat02.png" /></li>
+						<li><span>3</span><img src="images/cat03.png" /></li>
+						<li><span>4</span><img src="images/cat04.png" /></li>
+						<li><span>5</span><img src="images/cat05.png" /></li>
+						<li><span>6</span><img src="images/cat06.png" /></li>
+						<li><span>7</span><img src="images/cat07.png" /></li>
+						<li><span>8</span><img src="images/cat08.png" /></li>
+						<li><span>9</span><img src="images/cat09.png" /></li>
+			        </ol>       
+				</div>			
+				<div class="prev">prev</div>
+				<div class="next">next</div> 
+			</div>
+			<button id="removeKittenAction" class="result">Remove Item</button>
+			<div class="result">
+				<span>at index</span>
+				<input id="removeKittenValue" type="text" name="kittenValue"/>
+			</div>
+		</div>
+		
+		<p>This example shows how slides can be removed. Note removing from infinite and auto scrolling is also possible, though be sure not to count the clones in the index value.</p>
+<pre><code data-language="js">
+var kitten = $("#removeKitten").carrotCell();
+var kittenAPI = $(kitten).data("carrotCell");			
+
+$("#removeKittenAction").bind("click", function(){
+	var myIndex = parseInt($("#removeKittenValue").val());
+	kittenAPI.remove(myIndex); 
+});
+</code></pre>		
+		
+	</article>
+	
+
+	<article id="five">
+		<h2>Impact on Auto Generated Navi</h2>
+		<p>When set to auto generate navi, the navi will update accordingly when elements are removed or inserted so that the page count increases or decreases.</p>
+		
+		<div class="example">
+			<div id="naviKitten" class="carrotCell kitten">		
+				<div class="navi"  data-navi='["fabulous kittens set", "basket kitten set", "rad kitten set", "new kitten set",  "future kitten set"]'></div>					
+				<div class="carrotCellView">
+					<ol>
+						<li><span>1</span><img src="images/cat01.png" /></li>
+						<li><span>2</span><img src="images/cat02.png" /></li>
+						<li><span>3</span><img src="images/cat03.png" /></li>
+						<li><span>4</span><img src="images/cat04.png" /></li>
+						<li><span>5</span><img src="images/cat05.png" /></li>
+						<li><span>6</span><img src="images/cat06.png" /></li>
+						<li><span>7</span><img src="images/cat07.png" /></li>
+						<li><span>8</span><img src="images/cat08.png" /></li>
+						<li><span>9</span><img src="images/cat09.png" /></li>
+			        </ol>       
+				</div>			
+				<div class="prev">prev</div>
+				<div class="next">next</div> 
+			</div>
+			<button id="naviRemoveKitten" class="result">Remove Item</button>		
+			<button id="naviAddKitten" class="result">Add Item</button>
+			
+			<div class="result">
+				<span>at index</span>
+				<input id="naviKittenValue" type="text" name="kittenValue"/>
+			</div>
+		</div>
+		
+		<p>If passing in custom names for the navi, make sure the data-navi contains a full list of possible page names otherwise it will default to the integer count. Note that the data-navi is only accessed once during carrotCell creation.</p>
+	
+<pre><code data-language="html">
+&lt;div class="navi"  data-navi='["fabulous kittens set", "basket kitten set", "rad kitten set", "new kitten set",  "future kitten set"]'&gt;
+</code></pre>	
+		
+		
+	</article>
+	
+	<article id="six">
+		<h2>Impact on User Generated Navi</h2>
+		
+		<p>When inserting on a carrotCell that has a custom navi produced by the user, make sure to insert a new navi node manually. After the node is inserted, call the API method <strong>updateNavi</strong> to add the correct actions.</p>
+			
+		<div class="example">
+			<div id="userKitten" class="carrotCell kitten">		
+				<ol class="navi">
+					<li class="naviItem">one</li>
+					<li class="naviItem">two</li>
+					<li class="naviItem">three</li>
+				</ol>					
+				<div class="carrotCellView">
+					<ol>
+						<li><span>1</span><img src="images/cat01.png" /></li>
+						<li><span>2</span><img src="images/cat02.png" /></li>
+						<li><span>3</span><img src="images/cat03.png" /></li>
+						<li><span>4</span><img src="images/cat04.png" /></li>
+						<li><span>5</span><img src="images/cat05.png" /></li>
+						<li><span>6</span><img src="images/cat06.png" /></li>
+						<li><span>7</span><img src="images/cat07.png" /></li>
+						<li><span>8</span><img src="images/cat08.png" /></li>
+						<li><span>9</span><img src="images/cat09.png" /></li>
+			        </ol>       
+				</div>			
+				<div class="prev">prev</div>
+				<div class="next">next</div> 
+			</div>
+			<button id="userRemoveKitten" class="result">Remove Item</button>		
+			<button id="userAddKitten" class="result">Add Item</button>
+			
+			<div class="result">
+				<span>at index</span>
+				<input id="userKittenValue" type="text" name="kittenValue"/>
+			</div>
+		</div>
+
+	</article>
+	
+	
+	<nav>
+		<a href="index.html">Home</a> 
+		<a href="doc.html">Documentation</a> 
+		<a href="demo.html">More Demos</a> 
+	</nav>
+</body>
+</html>

@@ -19,7 +19,9 @@
 			
 			var removeKitten = $("#removeKitten").carrotCell({
 				navi: true,
-				makeNavi: true
+				makeNavi: true,
+				infinite: true,
+				scrollToInserted : true
 			});
 			var removeKittenAPI = $(removeKitten).data("carrotCell");			
 						
@@ -28,9 +30,18 @@
 				removeKittenAPI.remove(myIndex); 
 			});
 			
+			var count = 0;
+			
 			$("#addKittenAction").bind("click", function(e){	
 				var myIndex = parseInt($("#removeKittenValue").val());				
 				removeKittenAPI.insert('<li><img src="images/cat07.png" /></li>', myIndex); 
+				count++;
+				
+				if (count >3) {
+					$(".navi").append("<li>thing</li>");
+					console.log(" appending update");
+					removeKittenAPI.updateNavi();
+				}
 			});
 			
 			
@@ -59,6 +70,14 @@
 		<div class="example">
 			<div id="removeKitten" class="carrotCell kitten">		
 				<div class="navi"  data-navi='["fabulous kittens set", "basket kitten set", "rad kitten set", "new kitten set"]'></div>	
+				
+				<!-- <ul class="navi">
+					<li>one</li>
+					<li>two</li>
+					<li>three</li>
+					
+				</ul> -->
+				
 				<div class="carrotCellView">
 					<ol>
 						<li><span>1</span><img src="images/cat01.png" /></li>

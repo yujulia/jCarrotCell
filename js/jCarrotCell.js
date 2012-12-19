@@ -12,6 +12,8 @@
 		makeCarrot : function(){
 			var $this = null, // this carrot cell
 			
+				DEBUG_ON = true, // DEBUG shows console logs
+			
 				// populate default settings
 				settings = {
 					step: 0,
@@ -47,8 +49,7 @@
 					onPlay : "carrotPlay",
 					onPause : "carrotPause",
 					onStop : "carrotStop",
-					pagesChanged : "carrotPageCountChanged"
-					
+					pagesChanged : "carrotPageCountChanged"			
 				},
 				
 				// CONST				
@@ -69,12 +70,9 @@
 				ON_RELOAD = "reloaded",
 				SCROLL_BY_ONE = "scrollByOne",
 				PAGE_COUNT_CHANGED = "pageCountChanged",
-				
-				DEBUG_ON = false, // DEBUG shows console logs
-				
+			
 				// properties of this carrotCell
-				slideWidth = 0,
-				
+				slideWidth = 0,				
 				haveBack = false,
 				haveForward = true,
 				
@@ -100,8 +98,7 @@
 				prev, next, navi, nameList, pre, post,
 				sliderSelect, sliderChildSelect, prevSelect, nextSelect,
 				pauseSelect, playSelect, stopSelect, naviContainer, naviSelect,
-				firstOfLastPage, extraOnLastPage, hasOpenSpot;
-			
+				firstOfLastPage, extraOnLastPage, hasOpenSpot;		
 			
 			/** console.log wrapper for debugging
 			*/
@@ -109,7 +106,7 @@
 				if (DEBUG_ON) { console.log(debugString); }
 			};
 			
-			/** no animation scroll to "this"
+			/** no animation scroll to reset to beginning or end
 			*/
 			var scrollToThis = function(scrollBy, pageValue) {
 				if (settings.sideways) { 	
@@ -121,8 +118,7 @@
 				currentPage = pageValue;
 				scrolling = false;
 				settings.controlScope.trigger(settings.scrollEnd, [settings.name, SCROLL_END, pageValue]);
-			};
-				
+			};				
 			
 			/** scroll back to the very beginning 
 			*/
@@ -132,7 +128,6 @@
 					scrollBy = singleSize * visible; // bypass first set of clones
 				}				
 				scrollToThis(scrollBy, 1);
-				debug("scroll to start");
 			};
 			
 			/** scroll to the very end  
@@ -143,24 +138,19 @@
 					scrollBy = singleSize * (items.length - visible*2); // stop before the clones if infinite
 				}				
 				scrollToThis(scrollBy, pages);
-				debug("scroll to end");
 			};
 			
 			/** this is called when go to page finishes scrolling
 			*/
 			var scrollHandler = function(){
 				var scrollThis = 0;
-				debug("in scroll handler current page is " + currentPage);
 
 				// scrolling forward infinite loop
-				if (settings.infinite && (myPage > pages)) {
-					debug("scroll handler handling infinite and extra pages will be scrolling to start. Page " + 1);
-					
+				if (settings.infinite && (myPage > pages)) {	
 					settings.controlScope.trigger(settings.scrollStart, [settings.name, SCROLL_START, 1]);
+
 					scrolling = true;					
-					var moveBy = (visible - extraMoves) * singleSize;	// scroll extras that are not yet 1 page full
-					
-					debug("moveBy is " + moveBy + " visible is " + visible + " extra moves is " + extraMoves +" has open spot is " + hasOpenSpot);								
+					var moveBy = (visible - extraMoves) * singleSize;	// scroll extras that are not yet 1 page full					
 
 					if (settings.sideways) { 										
 						view.animate({ scrollLeft : '+=' + moveBy }, settings.speed, scrollToStart);			
@@ -171,9 +161,8 @@
 				
 				// scrolling backwards infinite loop
 				else if (settings.infinite && (myPage == 0)) {
-					debug("scroll handler handling infinite and negative pages will be scrolling to end. Page " + pages);
-					
-					settings.controlScope.trigger(settings.scrollStart, [settings.name, SCROLL_START, pages-1]);
+					settings.controlScope.trigger(settings.scrollStart, [settings.name, SCROLL_START, pages]);
+
 					scrolling = true;
 					var moveby = -1 * extraMoves * singleSize;
 		
@@ -186,17 +175,15 @@
 				
 				// default scrolling
 				else {	
-					debug("scroll handler default handling do nothing. Page " + myPage);
-					
 					currentPage = myPage;
 					settings.controlScope.trigger(settings.scrollEnd, [settings.name, SCROLL_END, myPage]);
 					scrolling = false;
+
 					
 					determinePrevNext(myPage);
 					
 					// call any callbacks then reset the callback
 					if (typeof scrollCallBack == "function" ) {
-						debug("have a call back for default");
 						scrollCallBack();
 					}
 					scrollCallBack = null;
@@ -213,9 +200,7 @@
 		            n = Math.abs(currentPage - myPage), // how many pages to scroll
 					scrollTo = singleSize * dir * advanceBy * n; // how far in pixels
 					
-				debug(" - goign to page " + myPage + "/"+ pages + " current page is " + currentPage + " scrollto is " + scrollTo);
-
-				settings.controlScope.trigger(settings.scrollStart, [settings.name, SCROLL_START, myPage-1]);
+				settings.controlScope.trigger(settings.scrollStart, [settings.name, SCROLL_START, myPage]);
 				scrolling = true;
 				
 				if (settings.sideways) {
@@ -261,14 +246,14 @@
 			*/
 			var scrollByOneHandler = function() {
 				scrolling = false;
-				settings.controlScope.trigger(settings.scrollEnd, [settings.name, SCROLL_END, currentPage, SCROLL_BY_ONE]);
+				settings.controlScope.trigger(settings.scrollEnd, [settings.name, SCROLL_END, pages]);
 				determinePrevNext(pages); // fake move
 			};
 			
 			/** scroll forward by one only on insert
 			*/
 			var scrollByOne = function() {		
-				settings.controlScope.trigger(settings.scrollStart, [settings.name, SCROLL_START, currentPage, SCROLL_BY_ONE]);
+				settings.controlScope.trigger(settings.scrollStart, [settings.name, SCROLL_START, pages]);
 				scrolling = true;
 				if (settings.sideways) {
 					view.filter(':not(:animated)').animate({ scrollLeft : '+=' + singleSize }, settings.speed, scrollByOneHandler);
@@ -292,7 +277,6 @@
 				var nextPage = currentPage + 1;
 				
 				if (moveByOne && !settings.infinite) {
-					debug("move by one " + hasOpenSpot);
 					moveByOne = false;
 					if (hasOpenSpot == 0) {
 						gotoPage(nextPage);
@@ -414,15 +398,13 @@
 			var handleNaviAutoscroll = function() {
 				settings.controlScope.bind(settings.scrollStart, function(e, movingThing, eventName, pageNum) {		
 						
-					if ((movingThing == settings.name) && (eventName == SCROLL_START)) {					
+					if ((movingThing == settings.name) && (eventName == SCROLL_START)) {			
 						$(navi).removeClass(settings.currentClass);
-
-						// console.log("navi passed in page num is " + pageNum);
-						if (pageNum > pages) { pageNum = 1; } // rewind to beginning
-						if (pageNum == pages) { pageNum = 0; } // rewind opposit
-						debug("navi auto advancing to " + pageNum);
 						
-						var thisNavi = $(navi)[parseInt(pageNum)];
+						if (pageNum > pages) { pageNum = 1; } // going around to first
+						if (pageNum == 0) { pageNum = pages; } // going backwards to last
+						
+						var thisNavi = $(navi)[parseInt(pageNum)-1];
 						$(thisNavi).addClass(settings.currentClass);
 					}
 					
@@ -433,8 +415,7 @@
 			*/
 			var handleNaviChanges = function() {
 				settings.controlScope.bind(settings.pagesChanged, function(e, carrotName, eventName, newPageNumber, oldPageNumber ) {		
-					debug("something about navi has to change " + newPageNumber + " used to be " + oldPageNumber);
-					
+
 					var newIndex, newNaviNode;
 					var diff = newPageNumber - oldPageNumber;
 					var more = true;
@@ -455,9 +436,16 @@
 								newNaviNode = $("> *", naviContainer).last();
 								
 								navi = $(naviContainer).find("> *"); // find all the things we just added					
-								addNaviClick(newNaviNode, newIndex);
-								
-							}			
+								addNaviClick(newNaviNode, newIndex);								
+							}						
+							
+							console.log(" more");
+							
+							if (settings.scrollToInserted) {
+								$(navi).removeClass(settings.currentClass);
+								$(newNaviNode).addClass(settings.currentClass);
+								console.log(newNaviNode);
+							}				
 						}
 					} else {
 						navi.slice(-1*diff).remove(); // remove last items
@@ -468,8 +456,7 @@
 			};
 			
 			var addNaviClick = function(thisNavi, navIndex) {
-				debug("adding navi click " + navIndex);
-				
+
 				$(thisNavi).unbind().bind("click", function(){
 					if (playing && settings.stopOnClick) {  stopCarrotCell(); }
 					if (scrolling) { return false; } // no queue ups on rapid clicking
@@ -484,11 +471,16 @@
 			};
 			
 			var processEachNaviNode = function(){
-				navi.each(function(iNav){
+				navi.each(function(iNav){					
 					var thisNavi = this; // an item of this nav
 					var navIndex = iNav + 1;				
 					addNaviClick(thisNavi, navIndex);
 				});
+			};
+			
+			var updateExistingNavi = function() {
+				navi = naviContainer.find(settings.naviSelect);
+				processEachNaviNode();
 			};
 			
 			/** set up navigation, only works on pages
@@ -581,8 +573,7 @@
 					settings.controlScope.trigger(settings.pagesChanged, [settings.name, PAGE_COUNT_CHANGED, pages, oldPages]);			
 				}
 				oldPages = pages; // save this value
-
-				debug(pages + " pages totalItems " + totalItems);								
+							
 			};
 			
 			/** find out if we have any weird empty spots in a page
@@ -595,8 +586,7 @@
 				}				
 				extraOnLastPage = advanceBy - totalItems%advanceBy;
 				if (extraOnLastPage == visible ) { extraOnLastPage = 0; } // no extras really							
-				hasOpenSpot = extraOnLastPage; // the counter			
-				debug(hasOpenSpot + " extra spots on the last page");		
+				hasOpenSpot = extraOnLastPage; // the counter					
 			};
 			
 			/** clone a slider worth of clones at beginning and end
@@ -767,17 +757,14 @@
 					
 				for (var i = 0; i < pages; i++) {
 				    var thisMax = i * advanceBy + advanceBy;
-					var thisMin = i * advanceBy + 1;			
-					debug("min is " + thisMin + " max is " + thisMax + " index is " + itemIndex);				
+					var thisMin = i * advanceBy + 1;						
 					if ((itemIndex <= thisMax) && (itemIndex >= thisMin)) {
 						inPage = i;
-						debug(inPage + " is in here");
 					}
 				}
 				inPage++; // starting from 1 instead of 0 fix				
 				if (itemIndex > totalItems) { inPage = pages; }
 				
-				debug("looking for " + itemIndex + " it is in page " + inPage);
 				return inPage;
 			};
 			
@@ -831,8 +818,6 @@
 				}
 
 				if (hasOpenSpot < visible ) { hasOpenSpot++; } else { hasOpenSpot = 0; }
-				
-				debug("Remove item at " + adjustedIndex + " has open spot is now " + hasOpenSpot);
 				
 				updateSlider(); // reset the slider info				
 				IsThereEnoughToScroll();	
@@ -932,6 +917,10 @@
 				/** get the entire settings object
 				*/
 				getSettings : function() { return settings; },
+				
+				/** get the open spot left
+				*/
+				getOpenSpot : function() { return hasOpenSpot; },
 
 				/** move forward by one
 				*/
@@ -943,15 +932,21 @@
 
 				/** stop auto
 				*/
-				stop : function() { stopCarrotCell() },
+				stop : function() { stopCarrotCell(); },
 				
 				/** resume auto play
 				*/
-				play : function() { playCarrotCell() },
+				play : function() { playCarrotCell(); },
 				
 				/** pause auto play
 				*/
-				pause : function() { pauseCarrotCell() },
+				pause : function() { pauseCarrotCell(); },
+				
+				
+				
+				/** regenerate the navi because it has been updated by user
+				*/
+				updateNavi : function() { updateExistingNavi(); },
 				
 				/** move to the page passed in if its a number in range
 				*/
