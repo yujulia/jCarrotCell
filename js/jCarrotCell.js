@@ -29,11 +29,16 @@
 					controlScope : "",
 					stopOnClick : false,
 					pauseOnHover : false,
+					
+					// classNames
 					disabledClass: "disabled",
 					currentClass: "current",
 					cloneClass: "clone",
+					naviClass : "naviItem",
+					
+					// selectors
 					sliderSelect : "ol",
-					sliderChildSelect : "li",
+					sliderChildSelect : "li",					
 					prevSelect : ".prev",
 					nextSelect : ".next",
 					pauseSelect :  ".pause",
@@ -41,7 +46,8 @@
 					stopSelect : ".stop",
 					naviContainer : ".navi",
 					naviSelect : "> *",
-					naviClass : "naviItem",
+					
+					// events
 					scrollStart : "carrotScrollStart",
 					scrollEnd : "carrotScrollEnd",
 					atStart : "carrotAtStart",
@@ -49,7 +55,11 @@
 					onPlay : "carrotPlay",
 					onPause : "carrotPause",
 					onStop : "carrotStop",
-					pagesChanged : "carrotPageCountChanged"			
+					pagesChanged : "carrotPageCountChanged",
+					onRemove : "carrotRemove",
+					onEmpty : "carrotEmpty",
+					onInsert : "carrotInsert",
+					onReload : "carrotReload"
 				},
 				
 				// CONST				
@@ -64,11 +74,10 @@
 				ON_PLAY = "onPlay",
 				ON_PAUSE = "onPause",
 				ON_STOP = "onStop",
-				ON_REMOVE = "removed",
+				ON_REMOVE = "remove",
 				ON_EMPTY = "empty",
-				ON_INSERT = "inserted",
-				ON_RELOAD = "reloaded",
-				SCROLL_BY_ONE = "scrollByOne",
+				ON_INSERT = "insert",
+				ON_RELOAD = "reload",
 				PAGE_COUNT_CHANGED = "pageCountChanged",
 			
 				// properties of this carrotCell
@@ -148,10 +157,8 @@
 				// scrolling forward infinite loop
 				if (settings.infinite && (myPage > pages)) {	
 					settings.controlScope.trigger(settings.scrollStart, [settings.name, SCROLL_START, 1]);
-
 					scrolling = true;					
 					var moveBy = (visible - extraMoves) * singleSize;	// scroll extras that are not yet 1 page full					
-
 					if (settings.sideways) { 										
 						view.animate({ scrollLeft : '+=' + moveBy }, settings.speed, scrollToStart);			
 					} else { 
@@ -162,10 +169,8 @@
 				// scrolling backwards infinite loop
 				else if (settings.infinite && (myPage == 0)) {
 					settings.controlScope.trigger(settings.scrollStart, [settings.name, SCROLL_START, pages]);
-
 					scrolling = true;
-					var moveby = -1 * extraMoves * singleSize;
-		
+					var moveby = -1 * extraMoves * singleSize;		
 					if (settings.sideways) { 										
 						view.animate({ scrollLeft : '+=' + moveby }, settings.speed, scrollToEnd);			
 					} else { 
@@ -177,9 +182,7 @@
 				else {	
 					currentPage = myPage;
 					settings.controlScope.trigger(settings.scrollEnd, [settings.name, SCROLL_END, myPage]);
-					scrolling = false;
-
-					
+					scrolling = false;				
 					determinePrevNext(myPage);
 					
 					// call any callbacks then reset the callback
@@ -201,8 +204,7 @@
 					scrollTo = singleSize * dir * advanceBy * n; // how far in pixels
 					
 				settings.controlScope.trigger(settings.scrollStart, [settings.name, SCROLL_START, myPage]);
-				scrolling = true;
-				
+				scrolling = true;				
 				if (settings.sideways) {
 					view.filter(':not(:animated)').animate({ scrollLeft : '+=' + scrollTo }, settings.speed, scrollHandler);
 				} else {
@@ -245,8 +247,8 @@
 			/** called when scroll by one is done
 			*/
 			var scrollByOneHandler = function() {
-				scrolling = false;
 				settings.controlScope.trigger(settings.scrollEnd, [settings.name, SCROLL_END, pages]);
+				scrolling = false;
 				determinePrevNext(pages); // fake move
 			};
 			
@@ -276,6 +278,7 @@
 				if (!settings.infinite && nextDisabled) { return false; } // we are at the right most page	
 				var nextPage = currentPage + 1;
 				
+				// this only happens on insert and scrollOnInsert
 				if (moveByOne && !settings.infinite) {
 					moveByOne = false;
 					if (hasOpenSpot == 0) {
@@ -365,15 +368,72 @@
 				});
 			};
 			
+			/** if the total number of pages changed, adjust the navi accordingly
+			*/
+			var handleNaviChanges = function() {
+				settings.controlScope.bind(settings.pagesChanged, function(e, carrotName, eventName, newPageNumber, oldPageNumber ) {		
+					var newIndex, newNaviNode;
+					var diff = newPageNumber - oldPageNumber;
+					var more = true; // more pages or less pages?
+					if (diff < 0) { more = false; }				
+					diff = Math.abs(diff);
+					
+					if (more) {
+						if (settings.makeNavi) {
+							// consult the existing names and create a new navi item
+							for (var i = 1; i <= more; i++) {
+								newIndex = oldPageNumber + i;						
+								if (itemNames[newIndex]) {
+									$(naviContainer).append(pre + itemNames[newIndex] + post);
+								} else {
+									$(naviContainer).append(pre + newIndex + post);
+								}							
+								newNaviNode = $("> *", naviContainer).last();								
+								navi = $(naviContainer).find("> *"); // find all the things we just added					
+								addNaviClick(newNaviNode, newIndex); // add a click action to the navi					
+							}						
+							
+							// scroll to inserted
+							if (settings.scrollToInserted) {
+								$(navi).removeClass(settings.currentClass);
+								$(newNaviNode).addClass(settings.currentClass);
+							}				
+						}
+					} else {
+						// removing instead of inserting caueses page count to decrease
+						navi.slice(-1*diff).remove(); // remove last items
+						navi = $(naviContainer).find("> *");
+					}				
+				});
+			};
 			
-			/** auto create navi 
+			/** subscribe to scroll start event and highlight the appropriate navi item
+			*/
+			var handleNaviAutoscroll = function() {
+				settings.controlScope.bind(settings.scrollStart, function(e, movingThing, eventName, pageNum) {							
+					if ((movingThing == settings.name) && (eventName == SCROLL_START)) {			
+						$(navi).removeClass(settings.currentClass);			
+						if (pageNum > pages) { pageNum = 1; } // going around to first
+						if (pageNum == 0) { pageNum = pages; } // going backwards to last
+						var thisNavi = $(navi)[parseInt(pageNum)-1];
+						$(thisNavi).addClass(settings.currentClass);
+					}
+				});
+			};
+			
+			/** some user change has happened to the navi, look over it again
+			*/
+			var updateExistingNavi = function() {
+				navi = naviContainer.find(settings.naviSelect);
+				processEachNaviNode();
+			};
+								
+			/** auto create navi based on existing parent element
 			*/
 			var creatNavi = function(){
-				$(naviContainer).empty(); // clear the navi container
-				
+				$(naviContainer).empty(); // clear the navi container			
 				for (var j = 1; j <= pages; j++) { itemNames[j] = j; } // set navi names into auto integers
-			 	nameList = $(naviContainer).data("navi"); // get name list data if any
-				
+			 	nameList = $(naviContainer).data("navi"); // get name list data if any				
 				if ((nameList !== null) && (nameList !== undefined) && (nameList.length !== 0) ) {					
 					$(nameList).each(function(n){
 						itemNames[n+1] = nameList[n]; // add the names into item names if they exist
@@ -381,80 +441,22 @@
 				} 
 				
 				pre = '<div class="' + settings.naviClass +'">'; // default is div
-				post = '</div>';
-				
+				post = '</div>';			
 				if ($(naviContainer).is("ul") || $(naviContainer).is("ol")) {
 					pre = '<li class="' + settings.naviClass +'">';
 					post = '</li>';				
 				} 
+				
 				for (var i = 1; i <= pages; i++) {
 					$(naviContainer).append(pre + itemNames[i] + post);
 				}			
 				
-				navi = $(naviContainer).find("> *"); // find all the things we just added
+				navi = $(naviContainer).find("> *"); // update with all the things we just added
 			};
 			
-			/** subscribe to scrolling and make sure it is our thing that's moving
+			/** make passed in items clickable as navi items
 			*/
-			var handleNaviAutoscroll = function() {
-				settings.controlScope.bind(settings.scrollStart, function(e, movingThing, eventName, pageNum) {		
-						
-					if ((movingThing == settings.name) && (eventName == SCROLL_START)) {			
-						$(navi).removeClass(settings.currentClass);
-						
-						if (pageNum > pages) { pageNum = 1; } // going around to first
-						if (pageNum == 0) { pageNum = pages; } // going backwards to last
-						
-						var thisNavi = $(navi)[parseInt(pageNum)-1];
-						$(thisNavi).addClass(settings.currentClass);
-					}
-					
-				});
-			};
-			
-			/** listen for events that will cause navi to change
-			*/
-			var handleNaviChanges = function() {
-				settings.controlScope.bind(settings.pagesChanged, function(e, carrotName, eventName, newPageNumber, oldPageNumber ) {		
-
-					var newIndex, newNaviNode;
-					var diff = newPageNumber - oldPageNumber;
-					var more = true;
-					if (diff < 0) { more = false; }				
-					diff = Math.abs(diff);
-					
-					if (more) {
-						if (settings.makeNavi) {
-							for (var i = 1; i <= more; i++) {
-								newIndex = oldPageNumber + i;
-								
-								if (itemNames[newIndex]) {
-									$(naviContainer).append(pre + itemNames[newIndex] + post);
-								} else {
-									$(naviContainer).append(pre + newIndex + post);
-								}
-								
-								newNaviNode = $("> *", naviContainer).last();
-								
-								navi = $(naviContainer).find("> *"); // find all the things we just added					
-								addNaviClick(newNaviNode, newIndex);								
-							}						
-							
-							if (settings.scrollToInserted) {
-								$(navi).removeClass(settings.currentClass);
-								$(newNaviNode).addClass(settings.currentClass);
-							}				
-						}
-					} else {
-						navi.slice(-1*diff).remove(); // remove last items
-						navi = $(naviContainer).find("> *");
-					}
-					
-				});
-			};
-			
 			var addNaviClick = function(thisNavi, navIndex) {
-
 				$(thisNavi).unbind().bind("click", function(){
 					if (playing && settings.stopOnClick) {  stopCarrotCell(); }
 					if (scrolling) { return false; } // no queue ups on rapid clicking
@@ -468,25 +470,21 @@
 				});
 			};
 			
+			/** add events to each navi item
+			*/
 			var processEachNaviNode = function(){
 				navi.each(function(iNav){					
 					var thisNavi = this; // an item of this nav
 					var navIndex = iNav + 1;				
 					addNaviClick(thisNavi, navIndex);
 				});
-			};
-			
-			var updateExistingNavi = function() {
-				navi = naviContainer.find(settings.naviSelect);
-				processEachNaviNode();
-			};
+			};		
 			
 			/** set up navigation, only works on pages
 			*/
 			var setupNavi = function() {			
 				if (settings.makeNavi) { creatNavi(); }				
-				$(navi).first().addClass(settings.currentClass);
-				
+				$(navi).first().addClass(settings.currentClass);			
 				processEachNaviNode()			
 				handleNaviAutoscroll();			
 				handleNaviChanges();		
@@ -790,16 +788,16 @@
 				$(items).remove(); 
 				updateSlider(); // reset the slider info				
 				IsThereEnoughToScroll();
+				settings.controlScope.trigger(settings.onEmpty, [settings.name, ON_EMPTY]);
+				
 			}
 			
 			/** remove item at index
 			*/
 			var removeItem = function(index) {			
-				var adjustedIndex = index;
-				
+				var adjustedIndex = index;				
 				if (settings.infinite || settings.auto) {
-					adjustedIndex = visible + index;
-					
+					adjustedIndex = visible + index;					
 					if (adjustedIndex > (totalItems + visible)) {
 						adjustedIndex = totalItems + visible;
 					} else if (index < visible)  {
@@ -820,6 +818,8 @@
 				
 				updateSlider(); // reset the slider info				
 				IsThereEnoughToScroll();	
+				
+				settings.controlScope.trigger(settings.onRemove, [settings.name, ON_REMOVE, pages]);
 			};
 			
 			/** insert item at index
@@ -843,7 +843,7 @@
 				}
 		
 				if (hasOpenSpot > 0) { hasOpenSpot--; } else { hasOpenSpot = visible-1; } // less open slots now we inserted
-				updateSlider(); // reset the slider info
+				updateSlider(); // reset the slider info			
 			};		
 			
 			/** do this after insert
@@ -869,6 +869,7 @@
 						determinePrevNext(currentPage);
 					}						
 				}
+				settings.controlScope.trigger(settings.onInsert, [settings.name, ON_INSERT, pages]);
 			};
 			
 			/** reload the slide show with a complete new set of items
@@ -879,17 +880,14 @@
 				slider.append(newItems);			
 				updateSlider(); // reset the slider info	
 				setupNavi();
-
-				gotoPage(1);
-				
-				if (settings.infinite) {
-					determinePrevNext(1);	
-				} else {
+				gotoPage(1);		
+				determinePrevNext(1);
+				if (!settings.infinite) {
 					determinePrevNext(1);		
 					IsThereEnoughToScroll();
 				}		
-				if (settings.auto) { playCarrotCell(); }
-				
+				if (settings.auto) { playCarrotCell(); }		
+				settings.controlScope.trigger(settings.onReload, [settings.name, ON_RELOAD, pages]);
 			};
 
 			return {
@@ -941,9 +939,7 @@
 				/** pause auto play
 				*/
 				pause : function() { pauseCarrotCell(); },
-				
-				
-				
+
 				/** regenerate the navi because it has been updated by user
 				*/
 				updateNavi : function() { updateExistingNavi(); },
@@ -961,6 +957,7 @@
 				reloadWith : function(newItems) {
 					if (!items) { return false; }		
 					reloadItems(newItems);
+					return pages;
 				},
 				
 				/** remove all carrot items

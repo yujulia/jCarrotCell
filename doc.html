@@ -159,6 +159,19 @@ var myCarouselAPI = $('#myCarousel').carrotCell({
 				<td>false</td>
 			</tr>
 			<tr>
+				<td>containsControl</td>
+				<td>boolean</td>
+				<td>
+					false
+				</td>
+				<td>
+					<p>Indicates wether the carrotCell controls are contained inside .carrotCell or elsewhere in the DOM.</p> 
+					<p>Set the property controlScope (see below for Selector Configurations) to designate a new scope</p>		
+					<p>If there is no controlScope set, the body is assumed to be the new scope of controls.</p> 
+				</td>
+				<td>true</td>
+			</tr>
+			<tr>
 				<td>carrotDone</td>
 				<td>function</td>
 				<td>
@@ -173,26 +186,12 @@ var myCarouselAPI = $('#myCarousel').carrotCell({
 					<p>By default it is passed the API object of the carrotCell.</p> 
 				</td>
 				<td>&nbsp;</td>
-			</tr>
+			</tr>			
 			
-			<tr>
-				<td>containsControl</td>
-				<td>boolean</td>
-				<td>
-					false
-				</td>
-				<td>
-					<p>Indicates wether the carrotCell controls are contained inside .carrotCell or elsewhere in the DOM.</p> 
-					<p>Set the property controlScope (see below for Selector Configurations) to designate a new scope</p>		
-					<p>If there is no controlScope set, the body is assumed to be the new scope of controls.</p> 
-				</td>
-				<td>true</td>
-			</tr>
 		</table>
 		
 		<h3>Class Configuration</h3>
-		<p>Some default utility class names can be changed by passing in a new class name.</p> 
-		<p>This property does not accept selectors, only string class names.</p>
+		<p>Some default utility class names can be changed by passing in a new class name. This property does not accept selectors, only string class names. These settings are also passed in on creation of the carrotCell object.</p>
 		<table>
 			<thead>
 				<tr>
@@ -212,15 +211,6 @@ var myCarouselAPI = $('#myCarousel').carrotCell({
 				</td>
 				<td>"disabled"</td>
 			</tr>
-		
-			<tr>
-				<td>naviClass</td>
-				<td>"dot"</td>
-				<td>
-					<p>The classname for the individual navi page items.</p> 
-				</td>
-				<td>"naviItem"</td>
-			</tr>
 			<tr>
 				<td>currentClass</td>
 				<td>"on"</td>
@@ -237,100 +227,141 @@ var myCarouselAPI = $('#myCarousel').carrotCell({
 				</td>
 				<td>"clone"</td>
 			</tr>
-						
+			<tr>
+				<td>naviClass</td>
+				<td>"dot"</td>
+				<td>
+					<p>The classname for the individual navi page items.</p> 
+				</td>
+				<td>"naviItem"</td>
+			</tr>					
 		</table>
 		
 		<h3>Events</h3>
-		<p>Event names can be changed through the settings, but their intrinsic event type such as "atStart" remains the same. Events return values regarding which carrotCell it belongs to, what the intrinsic event is, and other information.</p> 
+		<p>Event names can be customized for versatility. The <strong>Event Literal</strong> is passed by the event information object to help identify what the original event is despite any name changes.</p> 
 		<table>
 			<thead>
 				<tr>
-					<th>Config Property</th>
-					<th>Example</th>
+					<th>Setting Name</th>
 					<th>Description</th>
-					<th>Default</th>
-					<th>Event</th>
-					<th>Values Passed</th>
+					<th>Event Default Name</th>
+					<th>Event Literal</th>
+					<th>Values Returned</th>
 				</tr>
 			</thead>
 
 			<tr>
 				<td>scrollStart</td>
-				<td>"myScrollStart"</td>
 				<td>
 					<p>Signal that the carousel has started its scrolling animation.</p> 
 				</td>
 				<td>"carrotScrollStart"</td>
 				<td>"scrollStart"</td>
-				<td>carrotCellName, eventName, currentPageNumber</td>
+				<td>carrotCellName, eventLiteral, currentPageNumber</td>
 			</tr>			
 			<tr>
 				<td>scrollEnd</td>
-				<td>"myScrollEnd"</td>
 				<td>
 					<p>Signal that the carousel has ended its scrolling animation.</p> 
 				</td>
 				<td>"carrotScrollEnd"</td>
 				<td>"scrollEnd"</td>
-				<td>carrotCellName, eventName, currentPageNumber</td>
+				<td>carrotCellName, eventLiteral, currentPageNumber</td>
 			</tr>
 			<tr>
 				<td>atStart</td>
-				<td>"firstPage"</td>
 				<td>
 					<p>Signal that the carousel has reached its starting point.</p> 
 				</td>
 				<td>"carrotAtStart"</td>
 				<td>"atStart"</td>
-				<td>carrotCellName, eventName, </td>
+				<td>carrotCellName, eventLiteral, </td>
 			</tr>
 			<tr>
 				<td>atEnd</td>
-				<td>"lastPage"</td>
 				<td>
 					<p>Signal that the carousel has reached its ending point.</p> 
 				</td>
 				<td>"carrotAtEnd"</td>
 				<td>"atEnd"</td>
-				<td>carrotCellName, eventName, </td>
+				<td>carrotCellName, eventLiteral, </td>
 			</tr>
 			<tr>
 				<td>onPlay</td>
-				<td>"playing"</td>
 				<td>
 					<p>Signal that the carousel is currently on auto scroll.</p> 
 				</td>
 				<td>"carrotPlay"</td>
 				<td>"onPlay"</td>
-				<td>carrotCellName, eventName, </td>
+				<td>carrotCellName, eventLiteral, </td>
 			</tr>
 			<tr>
 				<td>onPause</td>
-				<td>"paused"</td>
 				<td>
 					<p>Signal that the carousel is currently paused on auto scroll.</p> 
 				</td>
 				<td>"carrotPause"</td>
 				<td>"onPause"</td>
-				<td>carrotCellName, eventName, </td>
+				<td>carrotCellName, eventLiteral, </td>
 			</tr>
 			<tr>
 				<td>onStop</td>
-				<td>"stopped"</td>
 				<td>
 					<p>Signal that the auto scroll on carousel is currently disabled.</p> 
 				</td>
 				<td>"carrotStop"</td>
 				<td>"onStop"</td>
-				<td>carrotCellName, eventName, </td>
+				<td>carrotCellName, eventLiteral, </td>
+			</tr>		
+			<tr>
+				<td>onInsert</td>
+				<td>
+					<p>Something has been inserted into the carrotCell.</p> 
+				</td>
+				<td>"carrotInsert"</td>
+				<td>"insert"</td>
+				<td>carrotCellName, eventLiteral, totalPages</td>
 			</tr>
-
-						
+			<tr>
+				<td>onRemove</td>
+				<td>
+					<p>A carrotCell item has been removed.</p> 
+				</td>
+				<td>"carrotRemove"</td>
+				<td>"remove"</td>
+				<td>carrotCellName, eventLiteral., totalPages</td>
+			</tr>		
+			<tr>
+				<td>onEmpty</td>
+				<td>
+					<p>The carrotCell now contains no items.</p> 
+				</td>
+				<td>"carrotEmpty"</td>
+				<td>"empty"</td>
+				<td>carrotCellName, eventLiteral</td>
+			</tr>
+			<tr>
+				<td>onReload</td>
+				<td>
+					<p>The carrotCell has been reloaded with completely different content</p> 
+				</td>
+				<td>"carrotReload"</td>
+				<td>"reload"</td>
+				<td>carrotCellName, eventLiteral, pages</td>
+			</tr>
+			<tr>
+				<td>pagesChanged</td>
+				<td>
+					<p>The number of pages have changed based on insert, remove, or reload.</p> 
+				</td>
+				<td>"carrotPageCountChanged"</td>
+				<td>"pagesChanged"</td>
+				<td>carrotCellName, eventLiteral, currentPageCount, previousPageCount</td>
+			</tr>		
 		</table>
 		
 		<h3>Selector Configuration</h3>
-		<p>Some default selectors can be over-ridden by passing in a new jQuery selector string.</p>
-		<p>Note that most selectors operate inside .carrotCell unless you over ride the scope with controlScope and the containsControl property. </p>
+		<p>Default selectors can be over-ridden by passing in a new jQuery selector string. Note that most selectors operate inside <em>.carrotCell</em> unless the <strong>controlScope</strong> and the <strong>containsControl</strong> property. </p>
 		<table>
 			<thead>
 				<tr>
@@ -455,7 +486,7 @@ var myCarouselAPI = $('#myCarousel').carrotCell({
 				<td>&lt;div class="navi" data-navi='["item 1", "item 2"]'&gt;&lt;/div&gt;</td>
 				<td>
 					<p>Instead of the default 1...n add names to the navi individual items by passing it as a data attribute.</p> 
-					<p>If you only pass 2 names and there are 4 pages, you will see "item 1, item 2, 3, 4, 5" etc with the passed in transposed over the default</p>
+					<p>If only 2 names are passed and there are 4 pages, it will appear as "item 1, item 2, 3, 4, 5" etc with the passed in transposed over the default.</p>
 				</td>
 				<td>1,2,3...n</td>
 			</tr>						
@@ -466,103 +497,59 @@ var myCarouselAPI = $('#myCarousel').carrotCell({
 	
 	<article>
 		<h2>API Methods</h2>
-		<p>First retrieve the carrotCell API from the carousel created</p>
-		<code>
-			var myCarrot = $('#someCarrotCell').carrotCell(); <span>// save the created carrotCell</span><br />
-			var myAPI = $(myCarrot).data('carrotCell'); <span>//retrieve the API</span><br />
-			myAPI.moveToPage(4); <span>// call a method of the API to move to page 4</span>
-		</code>
+		<p>First retrieve the carrotCell API from the carousel created, then call any of the available API methods.</p>
 		
-		<p>The configuration options are passed into the carrotCell as an object on creation.</p>
+<pre><code data-language="js">
+var myCarrot = $('#someCarrotCell').carrotCell(); 
+var myAPI = $(myCarrot).data('carrotCell');
+myAPI.moveToPage(4); 
+</code></pre>
 		
 		<table>
 			<thead>
 				<tr>
 					<th>Method Name</th>
 					<th>Parameters</th>
-					<th>Example</th>
+					<th>Return Value</th>
+					<th>Event</th>
 					<th>Description</th>
 				</tr>
 			</thead>
 
+			
 			<tr>
-				<td>moveToPage</td>
-				<td>pageNumber (integer)</td>
-				<td>	
-					api.moveToPage(2);
-				</td>
-				<td>
-					<p>Move to page n of the carousel. Does nothing if the page number is out of range or no number is passed in.</p>
-				</td>
-			</tr>
-			<tr>
-				<td>advance</td>
-				<td></td>
-				<td>	
-					api.advance();
-				</td>
-				<td>
-					<p>Move the carousel forward by 1 page</p>
-				</td>
-			</tr>
-			<tr>
-				<td>rewind</td>
-				<td></td>
-				<td>	
-					api.rewind();
-				</td>
-				<td>
-					<p>Move the carousel backward by 1 page</p>
-				</td>
-			</tr>
-			<tr>
-				<td>insert</td>
-				<td>item (string), index (integer)</td>
-				<td>	
-					api.insert('&lt;li&gt;item&lt;/li&gt;', 4);
-				</td>
-				<td>
-					<p>Insert the new carousel element at a certain index.</p>
-					<p>If the index option is left out, the element is added at the end.</p>
-				</td>
-			</tr>
-			<tr>
-				<td>reloadWith</td>
-				<td>newItems (string)</td>
-				<td>
-					api.reloadWith('&lt;li&gt;item 1&lt;/li&gt; &lt;li&gt;item 2&lt;/li&gt;');
-				</td>
-				<td>
-					<p>Load a new set of slides into the carousel, completely removing previous content.</p>
-				</td>
-			</tr>
-			<tr>
-				<td>remove</td>
-				<td>index (integer)</td>
-				<td>	
-					api.remove(4);
-				</td>
-				<td>
-					<p>Remove a carousel item at position 4</p>
-				</td>
-			</tr>
-			<tr>
-				<td>empty</td>
+				<td>forward</td>
 				<td>&nbsp;</td>
-				<td>	
-					api.empty();
-				</td>
+				<td>&nbsp;</td>
+				<td>scrollStart, scrollEnd</td>
 				<td>
-					<p>Remove all carousel items</p>
+					<p>Move the carousel forward by 1 page.</p>
+				</td>
+			</tr>
+			<tr>
+				<td>backward</td>
+				<td>&nbsp;</td>
+				<td>&nbsp;</td>
+				<td>scrollStart, scrollEnd</td>
+				<td>
+					<p>Move the carousel backward by 1 page.</p>
 				</td>
 			</tr>
 			
 			<tr>
+				<td>moveToPage</td>
+				<td>pageNumber (integer)</td>
+				<td>&nbsp;</td>
+				<td>scrollStart, scrollEnd</td>
+				<td>
+					<p>Move to page n of the carousel. If n is out of range, go to either page 1 or last page.</p>
+				</td>
+			</tr>
+			<tr>
 				<td>play</td>
 				<td>&nbsp;</td>
-				<td>	
-					api.play();
-				</td>
+				<td>&nbsp;</td>
+				<td>onPlay</td>
 				<td>
 					<p>Auto advance the carousel in auto scroll.</p>
 				</td>
@@ -570,9 +557,8 @@ var myCarouselAPI = $('#myCarousel').carrotCell({
 			<tr>
 				<td>pause</td>
 				<td>&nbsp;</td>
-				<td>	
-					api.pause();
-				</td>
+				<td>&nbsp;</td>
+				<td>onPause</td>
 				<td>
 					<p>Pause the carousel during auto scroll.</p>
 				</td>
@@ -580,15 +566,105 @@ var myCarouselAPI = $('#myCarousel').carrotCell({
 			<tr>
 				<td>stop</td>
 				<td>&nbsp;</td>
-				<td>	
-					api.stop();
-				</td>
+				<td>&nbsp;</td>
+				<td>onStop</td>
 				<td>
 					<p>Stop the carousel from auto scrolling.</p>
 				</td>
 			</tr>
 			
-
+			<tr>
+				<td>insert</td>
+				<td>item (string), index (integer)</td>
+				<td>totalItems (integer)</td>
+				<td>onInsert</td>
+				<td>
+					<p>Insert the new carousel element at a certain index.</p>
+					<p>If there is no index, the index is assumed to be the index of the last item. If the index is smaller than 0, it is assumed to be 1. if the index is bigger than the maximum number of items, index is assumed to be the last item index.</p>
+				</td>
+			</tr>
+			<tr>
+				<td>remove</td>
+				<td>index (integer)</td>
+				<td>totalItems (integer)</td>
+				<td>onRemove</td>
+				<td>
+					<p>Remove a carousel item at position index.</p>
+					<p>If there is no index, the index is assumed to be the index of the last item. If the index is smaller than 0, it is assumed to be 1. if the index is bigger than the maximum number of items, index is assumed to be the last item index.</p>
+				</td>
+			</tr>
+			<tr>
+				<td>empty</td>
+				<td>&nbsp;</td>
+				<td>&nbsp;</td>
+				<td>onEmpty</td>
+				<td>
+					<p>Remove all carousel items.</p>
+				</td>
+			</tr>
+			<tr>
+				<td>reloadWith</td>
+				<td>newItems (string)</td>
+				<td>pages (integer)</td>
+				<td>onReload</td>
+				<td>
+					<p>Load a new set of slides into the carousel, completely removing previous content.</p>
+				</td>
+			</tr>
+			<tr>
+				<td>updateNavi</td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td>
+					<p>Re-examining the existing navi created by the user and assign handlers appropriately.</p>
+				</td>
+			</tr>
+			<tr>
+				<td>getName</td>
+				<td></td>
+				<td>name(string)</td>
+				<td></td>
+				<td>
+					<p>Returns the name of the carrotCell object</p>
+				</td>
+			</tr>
+			<tr>
+				<td>getPageCount</td>
+				<td></td>
+				<td>pages (integer)</td>
+				<td></td>
+				<td>
+					<p>Returns how many pages this carrotCell has.</p>
+				</td>
+			</tr>
+			<tr>
+				<td>getTotalItems</td>
+				<td></td>
+				<td>totalItems (integer)</td>
+				<td></td>
+				<td>
+					<p>Returns how many total items this carrotCell contains, not counting clones.</p>
+				</td>
+			</tr>
+			<tr>
+				<td>getSettings</td>
+				<td></td>
+				<td>settings (object)</td>
+				<td></td>
+				<td>
+					<p>Returns the entire settings object.</p>
+				</td>
+			</tr>
+			<tr>
+				<td>getOpenSpot</td>
+				<td></td>
+				<td>hasOpenSpot (integer)</td>
+				<td></td>
+				<td>
+					<p>Returns how many slots are left open in one page of the carrotCell.</p>
+				</td>
+			</tr>
 		</table>
 	</article>
 	
