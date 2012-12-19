@@ -370,6 +370,7 @@
 			*/
 			var creatNavi = function(){
 				$(naviContainer).empty(); // clear the navi container
+				
 				for (var j = 1; j <= pages; j++) { itemNames[j] = j; } // set navi names into auto integers
 			 	nameList = $(naviContainer).data("navi"); // get name list data if any
 				
@@ -439,12 +440,9 @@
 								addNaviClick(newNaviNode, newIndex);								
 							}						
 							
-							console.log(" more");
-							
 							if (settings.scrollToInserted) {
 								$(navi).removeClass(settings.currentClass);
 								$(newNaviNode).addClass(settings.currentClass);
-								console.log(newNaviNode);
 							}				
 						}
 					} else {
@@ -666,6 +664,7 @@
 					if (settings.navi) { naviContainer.addClass(settings.disabledClass); }
 					enoughToScroll = false;
 				} else {
+					if (settings.navi) { naviContainer.removeClass(settings.disabledClass); }
 					enoughToScroll = true;
 				}
 			};
@@ -879,6 +878,7 @@
 				emptyItems();
 				slider.append(newItems);			
 				updateSlider(); // reset the slider info	
+				setupNavi();
 
 				gotoPage(1);
 				
