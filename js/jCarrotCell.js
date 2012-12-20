@@ -153,7 +153,6 @@
 			*/
 			var scrollHandler = function(){
 				var scrollThis = 0;
-
 				// scrolling forward infinite loop
 				if (settings.infinite && (myPage > pages)) {	
 					settings.controlScope.trigger(settings.scrollStart, [settings.name, SCROLL_START, 1]);
@@ -164,8 +163,7 @@
 					} else { 
 						view.animate({ scrollTop : '+=' + moveBy }, settings.speed, scrollToStart);
 					}
-				} 
-				
+				} 				
 				// scrolling backwards infinite loop
 				else if (settings.infinite && (myPage == 0)) {
 					settings.controlScope.trigger(settings.scrollStart, [settings.name, SCROLL_START, pages]);
@@ -176,22 +174,19 @@
 					} else { 
 						view.animate({ scrollTop : '+=' + moveby }, settings.speed, scrollToEnd);
 					}									
-				}
-				
+				}				
 				// default scrolling
 				else {	
 					currentPage = myPage;
 					settings.controlScope.trigger(settings.scrollEnd, [settings.name, SCROLL_END, myPage]);
 					scrolling = false;				
-					determinePrevNext(myPage);
-					
+					determinePrevNext(myPage);				
 					// call any callbacks then reset the callback
 					if (typeof scrollCallBack == "function" ) {
 						scrollCallBack();
 					}
 					scrollCallBack = null;
 				}
-
 			};
 				
 			/** scroll the carousel by advancing to the next page
@@ -288,8 +283,7 @@
 					}
 				} else {			
 					gotoPage(nextPage);
-				}
-				
+				}				
 			};
 			
 			/** set up the interval
@@ -438,8 +432,7 @@
 					$(nameList).each(function(n){
 						itemNames[n+1] = nameList[n]; // add the names into item names if they exist
 					});								
-				} 
-				
+				} 				
 				pre = '<div class="' + settings.naviClass +'">'; // default is div
 				post = '</div>';			
 				if ($(naviContainer).is("ul") || $(naviContainer).is("ol")) {
@@ -563,13 +556,11 @@
 					pages = Math.ceil((totalItems - (visible - advanceBy)) / advanceBy);				
 				} else {
 					pages = Math.ceil(totalItems / advanceBy);																
-				}	
-				
+				}					
 				if ((oldPages !== null) && (oldPages !== pages)) {
 					settings.controlScope.trigger(settings.pagesChanged, [settings.name, PAGE_COUNT_CHANGED, pages, oldPages]);			
 				}
-				oldPages = pages; // save this value
-							
+				oldPages = pages; // save this value							
 			};
 			
 			/** find out if we have any weird empty spots in a page
@@ -641,15 +632,13 @@
 					view.scrollLeft(0);
 				} else {
 					view.scrollTop(0);
-				}
-				
+				}				
 				// move clones if infinite				
 				if (settings.infinite) {
 					moveClonesOutOfSight();	
 				} else {
 					prev.addClass(settings.disabledClassd);
-				}
-			
+				}		
 				determinePrevNext(0); // hide previous
 			};
 			
@@ -727,8 +716,7 @@
 				setControlScope();
 				findControls();			
 				findSlides();	
-				findViewSizeAndVisible(); 
-				
+				findViewSizeAndVisible(); 			
 				IsThereEnoughToScroll(); // check if we have enough to scroll				
 				if (enoughToScroll) {
 					setupCarrot();
@@ -750,8 +738,7 @@
 			/** find out which page in the set contains the item
 			*/
 			var whichPageContains = function(itemIndex){
-				var inPage = 0;			
-					
+				var inPage = 0;							
 				for (var i = 0; i < pages; i++) {
 				    var thisMax = i * advanceBy + advanceBy;
 					var thisMin = i * advanceBy + 1;						
@@ -760,8 +747,7 @@
 					}
 				}
 				inPage++; // starting from 1 instead of 0 fix				
-				if (itemIndex > totalItems) { inPage = pages; }
-				
+				if (itemIndex > totalItems) { inPage = pages; }				
 				return inPage;
 			};
 			
@@ -788,8 +774,7 @@
 				$(items).remove(); 
 				updateSlider(); // reset the slider info				
 				IsThereEnoughToScroll();
-				settings.controlScope.trigger(settings.onEmpty, [settings.name, ON_EMPTY]);
-				
+				settings.controlScope.trigger(settings.onEmpty, [settings.name, ON_EMPTY]);				
 			}
 			
 			/** remove item at index
@@ -807,18 +792,12 @@
 					if (index > totalItems) {
 						adjustedIndex = totalItems;
 					}
-				}
-				
+				}				
 				$(items[adjustedIndex-1]).remove();
-				if (settings.infinite || settings.auto) {
-					reClone();
-				}
-
-				if (hasOpenSpot < visible ) { hasOpenSpot++; } else { hasOpenSpot = 0; }
-				
+				if (settings.infinite || settings.auto) { reClone(); }
+				if (hasOpenSpot < visible ) { hasOpenSpot++; } else { hasOpenSpot = 0; }				
 				updateSlider(); // reset the slider info				
-				IsThereEnoughToScroll();	
-				
+				IsThereEnoughToScroll();					
 				settings.controlScope.trigger(settings.onRemove, [settings.name, ON_REMOVE, pages]);
 			};
 			
@@ -846,7 +825,7 @@
 				updateSlider(); // reset the slider info			
 			};		
 			
-			/** do this after insert
+			/** after item is inserted, determine if we need to scroll to the end via pages or move by one item
 			*/
 			var afterInsert = function(index) {
 				if (settings.scrollToInserted) {											
@@ -872,7 +851,7 @@
 				settings.controlScope.trigger(settings.onInsert, [settings.name, ON_INSERT, pages]);
 			};
 			
-			/** reload the slide show with a complete new set of items
+			/** reload the slide show with a complete new set of items and call any autoplays
 			*/
 			var reloadItems = function(newItems) {			
 				if (settings.auto) { stopCarrotCell(); }	
@@ -882,98 +861,61 @@
 				setupNavi();
 				gotoPage(1);		
 				determinePrevNext(1);
-				if (!settings.infinite) {
-					determinePrevNext(1);		
-					IsThereEnoughToScroll();
-				}		
+				if (!settings.infinite) { IsThereEnoughToScroll(); }		
 				if (settings.auto) { playCarrotCell(); }		
 				settings.controlScope.trigger(settings.onReload, [settings.name, ON_RELOAD, pages]);
 			};
 
 			return {
-				/** initialize this carrot instance
-				*/
 				init : function(opt) {
 					$.extend(settings, opt); // options over ride settings
 					$this = $(opt.scope);
 					findOutAboutCarrot();
 					if ((typeof settings.carrotDone) == "function") { settings.carrotDone(this); } // callback 
 				},
-				
-				/** get this carrot instance's name 
-				*/
+
 				getName : function(){ return settings.name; },
 				
-				/** get how many pages this carrot has
-				*/
 				getPageCount : function(){ return pages; },
-				
-				/** get how many slides are in the carousel, excluding clones
-				*/
+
 				getTotalItems : function() { return totalItems; },
-				
-				/** get the entire settings object
-				*/
+
 				getSettings : function() { return settings; },
-				
-				/** get the open spot left
-				*/
+
 				getOpenSpot : function() { return hasOpenSpot; },
 
-				/** move forward by one
-				*/
 				forward : function() { moveForward(); },
-				
-				/** move backward by one
-				*/
+
 				backward : function() { moveBack(); },
 
-				/** stop auto
-				*/
 				stop : function() { stopCarrotCell(); },
 				
-				/** resume auto play
-				*/
 				play : function() { playCarrotCell(); },
-				
-				/** pause auto play
-				*/
+
 				pause : function() { pauseCarrotCell(); },
 
-				/** regenerate the navi because it has been updated by user
-				*/
 				updateNavi : function() { updateExistingNavi(); },
 				
-				/** move to the page passed in if its a number in range
-				*/
 				moveToPage : function(movePage) {
 					movePage = itemRangeFix(movePage);
 					if (movePage > pages) { movePage = pages; }
 					gotoPage(movePage); // move
 				},
 
-				/** load an entire new set of slides
-				*/
 				reloadWith : function(newItems) {
 					if (!items) { return false; }		
 					reloadItems(newItems);
 					return pages;
 				},
 				
-				/** remove all carrot items
-				*/
 				empty : function() {  emptyItems(); },
 				
-				/** remove an item from the carousel (by index)
-				*/
 				remove : function(index) {
 					index = itemRangeFix(index); 	// fix the range on the index	
 					removeItem(index);
 					return totalItems;
 				},
 				
-				/** add a new item to the carousel (at index or at end)
-				*/
 				insert : function(newItem, index) {
 					if (!newItem) { return false; } // nothing to insert
 					index = itemRangeFix(index); 	// fix the range on the index				
