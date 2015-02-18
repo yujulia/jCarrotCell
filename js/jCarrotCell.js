@@ -505,12 +505,14 @@
 					if (settings.sideways) {
 						$($this).touchwipe({
 						    wipeLeft: function() {  moveForward(); },
-						    wipeRight: function() {  moveBack(); }
+						    wipeRight: function() {  moveBack(); },
+						    preventDefaultEvents: false
 						});
 					} else {
 						$($this).touchwipe({
 						    wipeDown: function() {  moveForward(); },
-						    wipeUp: function() {  moveBack(); }
+						    wipeUp: function() {  moveBack(); },
+						    preventDefaultEvents: false
 						});
 					}			
 				}
