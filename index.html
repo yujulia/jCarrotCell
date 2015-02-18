@@ -2,9 +2,16 @@
 <html lang="en">
 
 <head> 
-    <meta charset="utf-8" /> 
-	<title>jCarrotCell</title>
-		
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>jCarrotCell</title>
+    <meta name="description" content="A Jquery plugin for carousels by Julia Yu">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">     
+
+    <!--[if lt IE 9]>
+        <script src="js/html5shiv.js"></script>
+    <![endif]-->
+	
 	<link type="text/css" href="css/main.css" rel="stylesheet" /> 
 	<link type="text/css" href="css/carrotcell.css" rel="stylesheet" /> 
 	
@@ -39,29 +46,33 @@
 </head>
 
 <body>
+	<section>
 	<header>
-		<img src="/images/carrot_cell.jpg" alt="carrot cell"/>
-		<h1>j<span>Carrot</span><em>Cell</em></h1>
-		
-		<blockquote>
-			<p>&ldquo;You fool! Don't you realize yet you're up against the perfect carousel?!&rdquo;</p>
-			<p>&ldquo;Perhaps these miserable humans would appreciate a carousel.&rdquo;</p>
-			<cite>&mdash; carrotCell</cite>
-		</blockquote>
-		
-		<p><strong>by:</strong> Julia Yu</p>
-		<p><strong>version:</strong> 2.0</p>
-		<p><strong>source:</strong> <a href="https://github.com/jyuya/jCarrotCell">https://github.com/jyuya/jCarrotCell</a></p>
-		<p><strong>started:</strong> 11/10/2011</p>
-		<p><strong>last updated:</strong> 12/19/2012</p>
-		<p><strong>tested with jQuery version:</strong> 1.8.3</p>
+
+		<hgroup>
+			<h1>j<span>Carr<img src="images/carrot_cell_mini.jpg" />t</span><em>Cell</em></h1>
+			<blockquote>
+				<p>&ldquo;You fool! Don't you realize yet you're up against the perfect carousel?!&rdquo;</p>
+				<p>&ldquo;Perhaps these miserable humans would appreciate a carousel.&rdquo;</p>
+				<cite>&mdash; carrotCell</cite>
+			</blockquote>
+		</hgroup>
+
+		<div class="info">
+			<p><strong>by:</strong> Julia Yu</p>
+			<p><strong>version:</strong> 2.0</p>
+			<p><strong>source:</strong> <a href="https://github.com/jyuya/jCarrotCell">https://github.com/jyuya/jCarrotCell</a></p>
+			<p><strong>started:</strong> 11/10/2011</p>
+			<p><strong>last updated:</strong> 12/19/2012</p>
+			<p><strong>tested with jQuery version:</strong> 1.8.3</p>
+
+			<nav>
+				<a href="doc.html">Documentation</a> 
+				<a href="demo.html">Demos</a> 
+			</nav>
+		</div>
 	</header>
-	
-	<nav>
-		<a href="doc.html">Documentation</a> 
-		<a href="demo.html">Demos</a> 
-	</nav>
-	
+
 	<article>
 		<h2>What Is It?</h2>
 		<p>jCarrotCell is a jQuery carousel plugin that does all the popular carousel things. </p>
@@ -224,6 +235,6 @@ $(function() {
 	 		$("#myCarrotCell").carrotCell();
 		});	
 	</script>
-
+	</section>
 </body>
 </html>

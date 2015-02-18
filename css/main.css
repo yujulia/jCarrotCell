@@ -150,6 +150,11 @@ h1 strong {
 	color: #ff9900;
 }
 
+h1 .subtitle {
+	color: #666;
+	font-size: 40px;
+}
+
 h2 {
 	font-size: 30px;
 }
@@ -290,6 +295,10 @@ td code {
 	font-family: helvetica, arial;
 }
 
+section {
+	max-width: 1040px;
+	margin: 0 auto;
+}
 /** index
 */
 .index {
@@ -359,3 +368,12 @@ td code {
     color: #d8fa3c;
 }
 
+
+header hgroup  {
+	float: left;
+}
+
+header .info {
+	margin-top: 40px;
+	float: right;
+}

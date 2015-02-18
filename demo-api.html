@@ -2,11 +2,16 @@
 <html lang="en">
 
 <head> 
-    <meta charset="utf-8" /> 
-	<title>jCarrotCell Demo: Using the API</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="description" content="A Jquery plugin for carousels by Julia Yu">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">     
 	<!--[if lt IE 9]>
-	<script src="http//html5shim.googlecode.com/svn/trunk/html5.js"></script>
-	<![endif]-->
+        <script src="js/html5shiv.js"></script>
+    <![endif]-->
+
+	<title>jCarrotCell Demo: Using the API</title>
+
 	<script src="js/jquery.js" type="text/javascript" charset="utf-8"></script>
  	<script src="js/jquery-touchwipe.js" type="text/javascript" charset="utf-8"></script>
 	<script src="js/jCarrotCell.js" type="text/javascript" charset="utf-8"></script>
@@ -66,8 +71,9 @@
 </head>
 
 <body>
+	<section>
 	<header>
-		<h1>j<span>Carrot</span><em>Cell</em> Demo: <strong>Using the API</strong></h1>		
+		<h1>j<span>Carrot</span><em>Cell</em> <span class="subtitle">Demo: <strong>Using the API</strong></span></h1>		
 	</header>
 	
 	<nav>
@@ -207,5 +213,6 @@ $("#goPause").bind("click", function(){ getKittenAPI.pause(); });
 		<a href="doc.html">Documentation</a> 
 		<a href="demo.html">More Demos</a> 
 	</nav>
+</section>
 </body>
 </html>
