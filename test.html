@@ -40,22 +40,37 @@
 	<link type="text/css" href="css/carrotcell.css" rel="stylesheet" /> 
 	<link type="text/css" href="css/carrotskin.css" rel="stylesheet" /> 
 	<style>
+		.example .kitten {
+			margin: 0;
+			padding: 0;		
+			width: 500px;
+		}
+		.example .kitten .carrotCellView {
+			margin: 0;
+			width: 500px;
+		}
 		.carrotCellView li {
 			width: 500px;
-			height: 500px;
-			border: solid 5px #666;
-			margin: 10px;
+			height: 250px;
+			border: none;
+			margin: 0px;
+
+		}
+
+		.carrotCellView li img {
+			width: 100%;
+			height: 100%;
 		}
 
 		#output {
 			position: absolute;
-			top: 0;
-			left: 0;
+			top: 5px;
+			left: 5px;
 		}
 		@media screen and (max-width: 600px) {
 			.carrotCellView li {
 				width: 200px;
-				height: 200px;
+				height: 100px;
 				border: solid 5px red;
 				margin: 10px;
 			}
@@ -84,7 +99,7 @@
 			<div id="output"></div>
 			
 		</div>
-
+		<div id="output">null</div>
 
 </body>
 </html>
