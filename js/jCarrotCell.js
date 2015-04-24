@@ -666,6 +666,7 @@
 				} else {
 					viewSize = $this.innerHeight();
 				}			
+
 				visible = Math.floor(viewSize / singleSize); // visible is everything in frame unless a step is set
 			}
 			

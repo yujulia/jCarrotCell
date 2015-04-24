@@ -1,13 +1,17 @@
 <!DOCTYPE html>
-<html lang="en">
+<html> 
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
-<head> 
-    <meta charset="utf-8" /> 
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">     
+
 	<title>jCarrotCell Demo: Using the API</title>
 	<!--[if lt IE 9]>
 	<script src="http//html5shim.googlecode.com/svn/trunk/html5.js"></script>
 	<![endif]-->
-	<script src="js/jquery.js" type="text/javascript" charset="utf-8"></script>
+	<script src="js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
  	<script src="js/jquery-touchwipe.js" type="text/javascript" charset="utf-8"></script>
 	<script src="js/jCarrotCell.js" type="text/javascript" charset="utf-8"></script>
 	<script src="js/rainbow-custom.min.js" type="text/javascript" charset="utf-8"></script>
@@ -15,37 +19,10 @@
 	<script type="text/javascript" charset="utf-8">
 	$(document).ready(function(){
 		window.carrotDemos = window.carrotDemos || {};
-		carrotDemos.setup = function() {
-			
-			var removeKitten = $("#removeKitten").carrotCell({
-				navi: true,
-				makeNavi: true,
-				infinite: true,
-				scrollToInserted : true
-			});
-			var removeKittenAPI = $(removeKitten).data("carrotCell");			
-						
-			$("#removeKittenAction").bind("click", function(e){	
-				var myIndex = parseInt($("#removeKittenValue").val());
-				removeKittenAPI.remove(myIndex); 
-			});
-			
-			var count = 0;
-			
-			$("#addKittenAction").bind("click", function(e){	
-				var myIndex = parseInt($("#removeKittenValue").val());				
-				removeKittenAPI.insert('<li><img src="images/cat07.png" /></li>', myIndex); 
-				count++;
-				
-				if (count >3) {
-					$(".navi").append("<li>thing</li>");
-					console.log(" appending update");
-					removeKittenAPI.updateNavi();
-				}
-			});
-			
-			
 
+		carrotDemos.setup = function() {
+			var removeKitten = $("#removeKitten").carrotCell();
+			var removeKittenAPI = $(removeKitten).data("carrotCell");			
 		}
 		
 		// chrome can not calculate the width correctly because it is foolish
@@ -61,7 +38,29 @@
 	
 	<link type="text/css" href="css/main.css" rel="stylesheet" /> 
 	<link type="text/css" href="css/carrotcell.css" rel="stylesheet" /> 
-	<link type="text/css" href="css/carrotSkin.css" rel="stylesheet" /> 
+	<link type="text/css" href="css/carrotskin.css" rel="stylesheet" /> 
+	<style>
+		.carrotCellView li {
+			width: 500px;
+			height: 500px;
+			border: solid 5px #666;
+			margin: 10px;
+		}
+
+		#output {
+			position: absolute;
+			top: 0;
+			left: 0;
+		}
+		@media screen and (max-width: 600px) {
+			.carrotCellView li {
+				width: 200px;
+				height: 200px;
+				border: solid 5px red;
+				margin: 10px;
+			}
+		}
+	</style>
 
 </head>
 
@@ -69,15 +68,7 @@
 
 		<div class="example">
 			<div id="removeKitten" class="carrotCell kitten">		
-				<div class="navi"  data-navi='["fabulous kittens set", "basket kitten set", "rad kitten set", "new kitten set"]'></div>	
-				
-				<!-- <ul class="navi">
-					<li>one</li>
-					<li>two</li>
-					<li>three</li>
-					
-				</ul> -->
-				
+
 				<div class="carrotCellView">
 					<ol>
 						<li><span>1</span><img src="images/cat01.png" /></li>
@@ -85,23 +76,13 @@
 						<li><span>3</span><img src="images/cat03.png" /></li>
 						<li><span>4</span><img src="images/cat04.png" /></li>
 						<li><span>5</span><img src="images/cat05.png" /></li>
-						<li><span>6</span><img src="images/cat06.png" /></li>
-						<li><span>7</span><img src="images/cat07.png" /></li>
-						<li><span>8</span><img src="images/cat08.png" /></li>
-						<li><span>9</span><img src="images/cat09.png" /></li>
 			        </ol>       
 				</div>			
 				<div class="prev">prev</div>
 				<div class="next">next</div> 
 			</div>
-			<button id="removeKittenAction" class="result">Remove Item</button>
+			<div id="output"></div>
 			
-			<button id="addKittenAction" class="result">Add Item</button>
-			
-			<div class="result">
-				<span>at index</span>
-				<input id="removeKittenValue" type="text" name="kittenValue"/>
-			</div>
 		</div>
 
 
