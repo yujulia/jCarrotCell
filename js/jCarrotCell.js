@@ -148,6 +148,8 @@
 				if (settings.useMaxWidth) {
 					var newWidth = currentWindowWidth;
 
+					// set any max or mins for width
+
 					// find any offsets
 					if (settings.useOffset) {
 						newWidth -= settings.useOffset;
@@ -158,27 +160,34 @@
 					}
 
 					var newHeight = newWidth/cellRatio;
+					// set any max or mins for height
+					
 
 					$($this).css("width", newWidth+"px");
 					$(view).css("width", newWidth+"px");
 					var getChildren = slider.children(settings.sliderChildSelect); 
 					$(getChildren).css("width", newWidth+"px").css("height", newHeight+"px");
-
-					// reset the current scroll
-					// if (currentPage > 1){
-					// 	gotoPage(currentPage);
-					// }
-					
+		
 				}
+			};
+
+			var resizeCarrot = function(){
+				currentWindowWidth = currentWindow.innerWidth();
+				debug("resize happened " + currentWindowWidth);
+				makeItMaxWidth();
+				updateSlider();
 			};
 
 			/** the resize did happen
 			*/
 			var handleResize = function(){
-				currentWindowWidth = currentWindow.innerWidth();
-				debug("resize happened " + currentWindowWidth);
-				makeItMaxWidth();
-				updateSlider();
+				resizeCarrot();
+
+				// reset the current scroll
+				var saveCurrent = currentPage;
+				scrollToStart();
+				gotoPage(saveCurrent); // ideally no animate
+					
 			};
 			
 			/** no animation scroll to reset to beginning or end
@@ -798,7 +807,7 @@
 					var testSlide = slider.children(settings.sliderChildSelect).filter(':first'); 
 					cellRatio = testSlide.width()/testSlide.height();
 
-					handleResize(); // see how big the current window is on load
+					resizeCarrot(); // see how big the current window is on load
 					$(window).on('resize', windowResized);
 				}
 				
