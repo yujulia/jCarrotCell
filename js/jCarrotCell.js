@@ -147,12 +147,10 @@
 			*/
 			var handleResize = function(){
 				currentWindowWidth = currentWindow.innerWidth();
+				debug("resize happened " + currentWindowWidth);
+				makeItMaxWidth();
+				updateSlider();
 
-				if (currentWindowWidth < 500) { 
-					debug("small " + currentWindowWidth);
-				} else {
-					debug("large " + currentWindowWidth);
-				}
 			};
 			
 			/** no animation scroll to reset to beginning or end
@@ -647,8 +645,6 @@
 				}
 			};
 
-			
-			
 			/** calculate the settings of the carrot
 			*/
 			var setupCarrot = function(){
@@ -686,9 +682,6 @@
 					prev.addClass(settings.disabledClassd);
 				}		
 				determinePrevNext(0); // hide previous
-
-				
-				
 			};
 			
 			/** check if content is too short to scroll, add the off class to navigation items
@@ -758,6 +751,15 @@
 				navi = naviContainer.find(settings.naviSelect);
 			};
 
+			var makeItMaxWidth = function(){
+				if (settings.useMaxWidth) {
+					$($this).css("width", currentWindowWidth+"px");
+					$(view).css("width", currentWindowWidth+"px");
+					var getChildren = slider.children(settings.sliderChildSelect); 
+					$(getChildren).css("width", currentWindowWidth+"px");
+				}
+			};
+
 			/** find elements relevant to the carrot cell
 			*/
 			var findOutAboutCarrot = function(){
@@ -768,20 +770,11 @@
 
 				handleResize(); // see how big the current window is on load
 
-				var newWidth = currentWindowWidth;
-
-				$($this).css("width", newWidth+"px");
-				$(view).css("width", newWidth+"px");
-				var getChildren = slider.children(settings.sliderChildSelect); 
-				$(getChildren).css("width", newWidth+"px");
-
-
 				setControlScope();
 				findControls();			
 				findSlides();	
 				findViewSizeAndVisible(); 		
 
-			
 				$(window).on('resize', windowResized);
 
 				IsThereEnoughToScroll(); // check if we have enough to scroll	
