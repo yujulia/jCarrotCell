@@ -604,6 +604,19 @@
 					view.scrollTop(singleSize * visible); 
 				}
 			};
+
+			var waitForFinalEvent = (function () {
+			  var timers = {};
+			  return function (callback, ms, uniqueId) {
+			    if (!uniqueId) {
+			      uniqueId = "Don't call this twice without a uniqueId";
+			    }
+			    if (timers[uniqueId]) {
+			      clearTimeout (timers[uniqueId]);
+			    }
+			    timers[uniqueId] = setTimeout(callback, ms);
+			  };
+			})();
 			
 			/** calculate the settings of the carrot
 			*/
@@ -642,6 +655,20 @@
 					prev.addClass(settings.disabledClassd);
 				}		
 				determinePrevNext(0); // hide previous
+
+				$(window).on('resize', function(){
+					waitForFinalEvent(function(){
+				       var win = $(window); //this = window
+				      var currentWidth = win.width();
+
+				      if (currentWidth < 500) { 
+				      	debug("small " + currentWidth);
+				      } else {
+				      	debug("large " + currentWidth);
+				      }
+				      
+				    }, 200, "some unique string");
+				});
 			};
 			
 			/** check if content is too short to scroll, add the off class to navigation items

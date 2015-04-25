@@ -59,7 +59,7 @@
 
 		.carrotCellView li img {
 			width: 100%;
-			height: 100%;
+			height: auto;
 		}
 
 		#output {
@@ -80,26 +80,24 @@
 </head>
 
 <body>
+	<div class="example">
+		<div id="removeKitten" class="carrotCell kitten">		
 
-		<div class="example">
-			<div id="removeKitten" class="carrotCell kitten">		
-
-				<div class="carrotCellView">
-					<ol>
-						<li><span>1</span><img src="images/cat01.png" /></li>
-						<li><span>2</span><img src="images/cat02.png" /></li>
-						<li><span>3</span><img src="images/cat03.png" /></li>
-						<li><span>4</span><img src="images/cat04.png" /></li>
-						<li><span>5</span><img src="images/cat05.png" /></li>
-			        </ol>       
-				</div>			
-				<div class="prev">prev</div>
-				<div class="next">next</div> 
-			</div>
-			<div id="output"></div>
-			
+			<div class="carrotCellView">
+				<ol>
+					<li><span>1</span><img src="images/noir01.jpg" /></li>
+					<li><span>2</span><img src="images/noir02.jpg" /></li>
+					<li><span>3</span><img src="images/noir03.jpg" /></li>
+					<li><span>4</span><img src="images/noir04.jpg" /></li>
+					<li><span>5</span><img src="images/noir05.png" /></li>
+		        </ol>       
+			</div>			
+			<div class="prev">prev</div>
+			<div class="next">next</div> 
 		</div>
-		<div id="output">null</div>
-
+		<div id="output"></div>
+		
+	</div>
+	<div id="output">null</div>
 </body>
 </html>
