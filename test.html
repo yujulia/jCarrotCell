@@ -22,12 +22,7 @@
 
 		carrotDemos.setup = function() {
 			var removeKitten = $("#removeKitten").carrotCell({
-				useMaxWidth : true,
-				maxWidth : 2000, 
-				maxHeight: 1500, 
-				minWidth : 400,
-				minHeight : 200,
-				useOffset : 40 // use a specified side offset instead of calculated .offset.y
+				useMaxWidth : true
 			});
 			var removeKittenAPI = $(removeKitten).data("carrotCell");			
 		}

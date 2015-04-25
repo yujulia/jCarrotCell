@@ -161,7 +161,7 @@
 					if (settings.useOffset) {
 						newWidth -= settings.useOffset;
 					} else {
-						$(this).css("margin-left", "0").css("margin-right", "0"); // make sure no auto
+						$this.css("margin-left", "0").css("margin-right", "0"); // make sure no auto
 						var sideOffset = $this.offset().left * 2;
 						newWidth -= sideOffset;
 					}
@@ -176,8 +176,6 @@
 					}
 
 					// set any max or mins for height
-					
-
 					$($this).css("width", newWidth+"px");
 					$(view).css("width", newWidth+"px");
 					var getChildren = slider.children(settings.sliderChildSelect); 
