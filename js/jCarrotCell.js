@@ -110,6 +110,7 @@
 			
 				currentWindow,
 				currentWindowWidth, 
+				cellRatio,
 
 				api, view, slider, items, single, totalItems,
 				frameSize, singleSize, viewSize,
@@ -155,12 +156,19 @@
 						var sideOffset = $this.offset().left * 2;
 						newWidth -= sideOffset;
 					}
-				
+
+					var newHeight = newWidth/cellRatio;
 
 					$($this).css("width", newWidth+"px");
 					$(view).css("width", newWidth+"px");
 					var getChildren = slider.children(settings.sliderChildSelect); 
-					$(getChildren).css("width", newWidth+"px");
+					$(getChildren).css("width", newWidth+"px").css("height", newHeight+"px");
+
+					// reset the current scroll
+					// if (currentPage > 1){
+					// 	gotoPage(currentPage);
+					// }
+					
 				}
 			};
 
@@ -171,7 +179,6 @@
 				debug("resize happened " + currentWindowWidth);
 				makeItMaxWidth();
 				updateSlider();
-
 			};
 			
 			/** no animation scroll to reset to beginning or end
@@ -250,7 +257,8 @@
 				
 			/** scroll the carousel by advancing to the next page
 			*/
-			var gotoPage = function(page) {			
+			var gotoPage = function(page) {		
+		
 				if (arguments.length) {  myPage = page;  } else {  return false; }		
 				
 				var dir = myPage < currentPage ? -1 : 1, // what direction are we going
@@ -741,6 +749,8 @@
 
 				if (settings.sideways) {
 					singleSize = single.outerWidth(true);
+
+					debug("finding new single size it is " + singleSize);
 				} else {
 					singleSize = single.outerHeight(true);
 				}			
@@ -772,8 +782,7 @@
 				navi = naviContainer.find(settings.naviSelect);
 			};
 
-			
-
+		
 			/** find elements relevant to the carrot cell
 			*/
 			var findOutAboutCarrot = function(){
@@ -781,8 +790,14 @@
 
 				view = $this.children(".carrotCellView:first");	
 				slider = view.children(settings.sliderSelect);  	
+				
 
 				if (settings.useMaxWidth){
+
+					// find the default ratio of one slide
+					var testSlide = slider.children(settings.sliderChildSelect).filter(':first'); 
+					cellRatio = testSlide.width()/testSlide.height();
+
 					handleResize(); // see how big the current window is on load
 					$(window).on('resize', windowResized);
 				}
