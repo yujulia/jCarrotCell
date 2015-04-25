@@ -26,7 +26,8 @@
 				maxWidth : 2000, 
 				maxHeight: 1500, 
 				minWidth : 300,
-				minHeight : 150
+				minHeight : 150,
+				useOffset : 40 // use a specified side offset instead of calculated .offset.y
 			});
 			var removeKittenAPI = $(removeKitten).data("carrotCell");			
 		}
@@ -46,10 +47,7 @@
 	<link type="text/css" href="css/carrotcell.css" rel="stylesheet" /> 
 	<link type="text/css" href="css/carrotskin.css" rel="stylesheet" /> 
 	<style>
-		body {
-			padding: 0;
-		}
-		.example .kitten {
+		.kitten {
 			float: none;
 			margin: 0 auto;
 			padding: 0;		
@@ -57,13 +55,13 @@
 			border: none;
 
 		}
-		.example .kitten .carrotCellView {
+		.kitten .carrotCellView {
 			margin: 0;
 			width: 1000px;
 		}
 		.carrotCellView li {
 			width: 1000px;
-			height: 500px;
+			height: 1000px;
 			border: none;
 			margin: 0px;
 		}
@@ -83,7 +81,7 @@
 			padding: 20px;
 		}
 		@media screen and (max-width: 600px) {
-			.example .kitten, .example .kitten .carrotCellView, .carrotCellView li {
+			.kitten, .kitten .carrotCellView, .carrotCellView li {
 				width: 200px;
 			}
 			.carrotCellView li {
@@ -95,7 +93,7 @@
 </head>
 
 <body>
-	<div class="example">
+
 		<div id="removeKitten" class="carrotCell kitten">		
 
 			<div class="carrotCellView">
@@ -111,7 +109,6 @@
 			<div class="next">next</div> 
 		</div>
 
-	</div>
 	<div id="output">null</div>
 </body>
 </html>

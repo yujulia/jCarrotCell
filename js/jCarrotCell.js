@@ -143,6 +143,27 @@
 				waitForFinalEvent(handleResize, 200, "carrotWindowResize");
 			};
 
+			var makeItMaxWidth = function(){
+				if (settings.useMaxWidth) {
+					var newWidth = currentWindowWidth;
+
+					// find any offsets
+					if (settings.useOffset) {
+						newWidth -= settings.useOffset;
+					} else {
+						$(this).css("margin-left", "0").css("margin-right", "0"); // make sure no auto
+						var sideOffset = $this.offset().left * 2;
+						newWidth -= sideOffset;
+					}
+				
+
+					$($this).css("width", newWidth+"px");
+					$(view).css("width", newWidth+"px");
+					var getChildren = slider.children(settings.sliderChildSelect); 
+					$(getChildren).css("width", newWidth+"px");
+				}
+			};
+
 			/** the resize did happen
 			*/
 			var handleResize = function(){
@@ -751,14 +772,7 @@
 				navi = naviContainer.find(settings.naviSelect);
 			};
 
-			var makeItMaxWidth = function(){
-				if (settings.useMaxWidth) {
-					$($this).css("width", currentWindowWidth+"px");
-					$(view).css("width", currentWindowWidth+"px");
-					var getChildren = slider.children(settings.sliderChildSelect); 
-					$(getChildren).css("width", currentWindowWidth+"px");
-				}
-			};
+			
 
 			/** find elements relevant to the carrot cell
 			*/
@@ -768,15 +782,17 @@
 				view = $this.children(".carrotCellView:first");	
 				slider = view.children(settings.sliderSelect);  	
 
-				handleResize(); // see how big the current window is on load
-
+				if (settings.useMaxWidth){
+					handleResize(); // see how big the current window is on load
+					$(window).on('resize', windowResized);
+				}
+				
 				setControlScope();
 				findControls();			
 				findSlides();	
 				findViewSizeAndVisible(); 		
 
-				$(window).on('resize', windowResized);
-
+			
 				IsThereEnoughToScroll(); // check if we have enough to scroll	
 				if (enoughToScroll) {
 					setupCarrot();
