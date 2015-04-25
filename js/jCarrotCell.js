@@ -59,7 +59,15 @@
 					onRemove : "carrotRemove",
 					onEmpty : "carrotEmpty",
 					onInsert : "carrotInsert",
-					onReload : "carrotReload"
+					onReload : "carrotReload",
+
+					// new sizing
+					useMaxWidth : false,
+					maxWidth : 0, // grab these
+					maxHeight: 0, // grabe these
+					minWidth : 0,
+					minHeight : 0
+
 				},
 				
 				// CONST				
@@ -100,6 +108,9 @@
 				oldPages = null,
 				itemNames = {},
 			
+				currentWindow,
+				currentWindowWidth, 
+
 				api, view, slider, items, single, totalItems,
 				frameSize, singleSize, viewSize,
 				autoScroll, pause, play, stop, 
@@ -113,6 +124,35 @@
 			*/
 			var debug = function(debugString) {
 				if (DEBUG_ON) { console.log(debugString); }
+			};
+
+			/** stop barrage of some events
+			*/
+			var waitForFinalEvent = (function(){
+				var timers = {};
+				return function (callback, ms, uniqueId) {
+				    if (!uniqueId) { uniqueId = "default"; }
+				    if (timers[uniqueId]) { clearTimeout (timers[uniqueId]); }
+				    timers[uniqueId] = setTimeout(callback, ms);
+				};
+			})();
+
+			/** the window resize happened
+			*/
+			var windowResized = function(){
+				waitForFinalEvent(handleResize, 200, "carrotWindowResize");
+			};
+
+			/** the resize did happen
+			*/
+			var handleResize = function(){
+				currentWindowWidth = currentWindow.innerWidth();
+
+				if (currentWindowWidth < 500) { 
+					debug("small " + currentWindowWidth);
+				} else {
+					debug("large " + currentWindowWidth);
+				}
 			};
 			
 			/** no animation scroll to reset to beginning or end
@@ -253,7 +293,9 @@
 				settings.controlScope.trigger(settings.scrollStart, [settings.name, SCROLL_START, pages]);
 				scrolling = true;
 				if (settings.sideways) {
+
 					view.filter(':not(:animated)').animate({ scrollLeft : '+=' + singleSize }, settings.speed, scrollByOneHandler);
+				
 				} else {
 					view.filter(':not(:animated)').animate({ scrollTop : '+=' + singleSize }, settings.speed, scrollByOneHandler);
 				}
@@ -605,18 +647,7 @@
 				}
 			};
 
-			var waitForFinalEvent = (function () {
-			  var timers = {};
-			  return function (callback, ms, uniqueId) {
-			    if (!uniqueId) {
-			      uniqueId = "Don't call this twice without a uniqueId";
-			    }
-			    if (timers[uniqueId]) {
-			      clearTimeout (timers[uniqueId]);
-			    }
-			    timers[uniqueId] = setTimeout(callback, ms);
-			  };
-			})();
+			
 			
 			/** calculate the settings of the carrot
 			*/
@@ -656,19 +687,8 @@
 				}		
 				determinePrevNext(0); // hide previous
 
-				$(window).on('resize', function(){
-					waitForFinalEvent(function(){
-				       var win = $(window); //this = window
-				      var currentWidth = win.width();
-
-				      if (currentWidth < 500) { 
-				      	debug("small " + currentWidth);
-				      } else {
-				      	debug("large " + currentWidth);
-				      }
-				      
-				    }, 200, "some unique string");
-				});
+				
+				
 			};
 			
 			/** check if content is too short to scroll, add the off class to navigation items
@@ -741,13 +761,30 @@
 			/** find elements relevant to the carrot cell
 			*/
 			var findOutAboutCarrot = function(){
+				currentWindow = $(window);
+
 				view = $this.children(".carrotCellView:first");	
-				slider = view.children(settings.sliderSelect);  							
+				slider = view.children(settings.sliderSelect);  	
+
+				handleResize(); // see how big the current window is on load
+
+				var newWidth = currentWindowWidth;
+
+				$($this).css("width", newWidth+"px");
+				$(view).css("width", newWidth+"px");
+				var getChildren = slider.children(settings.sliderChildSelect); 
+				$(getChildren).css("width", newWidth+"px");
+
+
 				setControlScope();
 				findControls();			
 				findSlides();	
-				findViewSizeAndVisible(); 			
-				IsThereEnoughToScroll(); // check if we have enough to scroll				
+				findViewSizeAndVisible(); 		
+
+			
+				$(window).on('resize', windowResized);
+
+				IsThereEnoughToScroll(); // check if we have enough to scroll	
 				if (enoughToScroll) {
 					setupCarrot();
 					handleCarrotEvents();

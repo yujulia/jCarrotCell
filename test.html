@@ -21,7 +21,13 @@
 		window.carrotDemos = window.carrotDemos || {};
 
 		carrotDemos.setup = function() {
-			var removeKitten = $("#removeKitten").carrotCell();
+			var removeKitten = $("#removeKitten").carrotCell({
+				useMaxWidth : true,
+				maxWidth : 2000, 
+				maxHeight: 1500, 
+				minWidth : 300,
+				minHeight : 150
+			});
 			var removeKittenAPI = $(removeKitten).data("carrotCell");			
 		}
 		
@@ -40,21 +46,26 @@
 	<link type="text/css" href="css/carrotcell.css" rel="stylesheet" /> 
 	<link type="text/css" href="css/carrotskin.css" rel="stylesheet" /> 
 	<style>
+		body {
+			padding: 0;
+		}
 		.example .kitten {
-			margin: 0;
+			float: none;
+			margin: 0 auto;
 			padding: 0;		
-			width: 500px;
+			width: 1000px;
+			border: none;
+
 		}
 		.example .kitten .carrotCellView {
 			margin: 0;
-			width: 500px;
+			width: 1000px;
 		}
 		.carrotCellView li {
-			width: 500px;
-			height: 250px;
+			width: 1000px;
+			height: 500px;
 			border: none;
 			margin: 0px;
-
 		}
 
 		.carrotCellView li img {
@@ -66,6 +77,10 @@
 			position: absolute;
 			top: 5px;
 			left: 5px;
+			z-index: 99;
+			background: green;
+			color: white;
+			padding: 20px;
 		}
 		@media screen and (max-width: 600px) {
 			.example .kitten, .example .kitten .carrotCellView, .carrotCellView li {
@@ -95,8 +110,7 @@
 			<div class="prev">prev</div>
 			<div class="next">next</div> 
 		</div>
-		<div id="output"></div>
-		
+
 	</div>
 	<div id="output">null</div>
 </body>
