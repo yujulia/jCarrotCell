@@ -149,6 +149,13 @@
 					var newWidth = currentWindowWidth;
 
 					// set any max or mins for width
+					if (settings.maxWidth && (newWidth > settings.maxWidth)) {
+						newWidth = settings.maxWidth;
+					}
+
+					if (settings.minWidth && (newWidth < settings.minWidth)) {
+						newWidth = settings.minWidth;
+					}
 
 					// find any offsets
 					if (settings.useOffset) {
@@ -160,6 +167,14 @@
 					}
 
 					var newHeight = newWidth/cellRatio;
+
+					if (settings.maxHeight && (newHeight > settings.maxHeight)) {
+						newHeight = settings.maxHeight;
+					}
+					if (settings.minHeight && (newHeight < settings.minHeight)) {
+						newHeight = settings.minHeight;
+					}
+
 					// set any max or mins for height
 					
 
@@ -171,23 +186,24 @@
 				}
 			};
 
+			/** find out the current window size and update properties
+			*/
 			var resizeCarrot = function(){
 				currentWindowWidth = currentWindow.innerWidth();
-				debug("resize happened " + currentWindowWidth);
 				makeItMaxWidth();
 				updateSlider();
 			};
 
-			/** the resize did happen
+			/** the resize handler
 			*/
 			var handleResize = function(){
 				resizeCarrot();
-
-				// reset the current scroll
+				// reset the current scroll if we are in the middle if something
 				var saveCurrent = currentPage;
-				scrollToStart();
-				gotoPage(saveCurrent, "no"); // ideally no animate
-					
+				if (currentPage > 1){
+					scrollToStart();
+					gotoPage(saveCurrent, "no"); // ideally no animate
+				}
 			};
 			
 			/** no animation scroll to reset to beginning or end
@@ -282,7 +298,6 @@
 					} else {
 						view.filter(':not(:animated)').animate({ scrollLeft : '+=' + scrollTo }, settings.speed, scrollHandler);
 					}
-					
 				} else {
 					if (fast) {
 						view.filter(':not(:animated)').animate({ scrollTop : '+=' + scrollTo }, 0, scrollHandler);
@@ -767,8 +782,6 @@
 
 				if (settings.sideways) {
 					singleSize = single.outerWidth(true);
-
-					debug("finding new single size it is " + singleSize);
 				} else {
 					singleSize = single.outerHeight(true);
 				}			
