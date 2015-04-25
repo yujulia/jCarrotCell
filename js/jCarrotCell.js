@@ -186,7 +186,7 @@
 				// reset the current scroll
 				var saveCurrent = currentPage;
 				scrollToStart();
-				gotoPage(saveCurrent); // ideally no animate
+				gotoPage(saveCurrent, "no"); // ideally no animate
 					
 			};
 			
@@ -266,7 +266,7 @@
 				
 			/** scroll the carousel by advancing to the next page
 			*/
-			var gotoPage = function(page) {		
+			var gotoPage = function(page, fast) {		
 		
 				if (arguments.length) {  myPage = page;  } else {  return false; }		
 				
@@ -277,9 +277,18 @@
 				settings.controlScope.trigger(settings.scrollStart, [settings.name, SCROLL_START, myPage]);
 				scrolling = true;				
 				if (settings.sideways) {
-					view.filter(':not(:animated)').animate({ scrollLeft : '+=' + scrollTo }, settings.speed, scrollHandler);
+					if (fast){
+						view.filter(':not(:animated)').animate({ scrollLeft : '+=' + scrollTo }, 0, scrollHandler);
+					} else {
+						view.filter(':not(:animated)').animate({ scrollLeft : '+=' + scrollTo }, settings.speed, scrollHandler);
+					}
+					
 				} else {
-					view.filter(':not(:animated)').animate({ scrollTop : '+=' + scrollTo }, settings.speed, scrollHandler);
+					if (fast) {
+						view.filter(':not(:animated)').animate({ scrollTop : '+=' + scrollTo }, 0, scrollHandler);
+					} else {
+						view.filter(':not(:animated)').animate({ scrollTop : '+=' + scrollTo }, settings.speed, scrollHandler);
+					}
 				}
 			};
 
