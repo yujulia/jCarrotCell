@@ -89,9 +89,11 @@
 				PAGE_COUNT_CHANGED = "pageCountChanged",
 			
 				// properties of this carrotCell
+				isTouchDevice = false,
 				slideWidth = 0,				
 				haveBack = false,
 				haveForward = true,
+				cloned = false,
 				
 				currentPage = 1,
 				currentItem = 1,
@@ -107,6 +109,7 @@
 				scrollCallBack = null,
 				oldPages = null,
 				itemNames = {},
+
 			
 				currentWindow,
 				currentWindowWidth, 
@@ -145,42 +148,39 @@
 			};
 
 			var makeItMaxWidth = function(){
-				if (settings.useMaxWidth) {
-					var newWidth = currentWindowWidth;
+				var newWidth = currentWindowWidth;
+				// set any max or mins for width
+				if (settings.maxWidth && (newWidth > settings.maxWidth)) {
+					newWidth = settings.maxWidth;
+				}
+				if (settings.minWidth && (newWidth < settings.minWidth)) {
+					newWidth = settings.minWidth;
+				}
 
-					// set any max or mins for width
-					if (settings.maxWidth && (newWidth > settings.maxWidth)) {
-						newWidth = settings.maxWidth;
-					}
+				// find any offsets
+				if (settings.useOffset) {
+					newWidth -= settings.useOffset;
+				} else {
+					$this.css("margin-left", "0").css("margin-right", "0"); // make sure no auto
+					var sideOffset = $this.offset().left * 2;
+					newWidth -= sideOffset;
+				}
 
-					if (settings.minWidth && (newWidth < settings.minWidth)) {
-						newWidth = settings.minWidth;
-					}
+				var newHeight = newWidth/cellRatio;
+				if (settings.maxHeight && (newHeight > settings.maxHeight)) {
+					newHeight = settings.maxHeight;
+				}
+				if (settings.minHeight && (newHeight < settings.minHeight)) {
+					newHeight = settings.minHeight;
+				}
 
-					// find any offsets
-					if (settings.useOffset) {
-						newWidth -= settings.useOffset;
-					} else {
-						$this.css("margin-left", "0").css("margin-right", "0"); // make sure no auto
-						var sideOffset = $this.offset().left * 2;
-						newWidth -= sideOffset;
-					}
+				$($this).css("width", newWidth+"px");
+				$(view).css("width", newWidth+"px");
+				$(items).css("width", newWidth+"px")
 
-					var newHeight = newWidth/cellRatio;
-
-					if (settings.maxHeight && (newHeight > settings.maxHeight)) {
-						newHeight = settings.maxHeight;
-					}
-					if (settings.minHeight && (newHeight < settings.minHeight)) {
-						newHeight = settings.minHeight;
-					}
-
-					// set any max or mins for height
-					$($this).css("width", newWidth+"px");
-					$(view).css("width", newWidth+"px");
-					var getChildren = slider.children(settings.sliderChildSelect); 
-					$(getChildren).css("width", newWidth+"px").css("height", newHeight+"px");
-		
+				// adjust the height as well if we are resizing height
+				if (settings.resizeHeight){
+					$(items).css("height", newHeight+"px");
 				}
 			};
 
@@ -189,7 +189,12 @@
 			var resizeCarrot = function(){
 				currentWindowWidth = currentWindow.innerWidth();
 				makeItMaxWidth();
-				updateSlider();
+				if (settings.sideways) {
+					singleSize = single.outerWidth(true);
+				} else {
+					singleSize = single.outerHeight(true);
+				}	
+				adjustSlideSize();
 			};
 
 			/** the resize handler
@@ -198,11 +203,19 @@
 				resizeCarrot();
 				// reset the current scroll if we are in the middle if something
 				var saveCurrent = currentPage;
-				if (currentPage > 1){
+				if ((saveCurrent > 1) || settings.infinite){
 					scrollToStart();
 					gotoPage(saveCurrent, "no"); // ideally no animate
 				}
 			};
+
+			/** on orientationc hange we need to set the content to 0 to not mess up
+				landscape -> portrait transition where the content stretches window width
+			*/
+			var windowOrientationChanged = function(){
+				$($this).css("width", "0"); 
+				handleResize();
+			}
 			
 			/** no animation scroll to reset to beginning or end
 			*/
@@ -290,6 +303,7 @@
 					
 				settings.controlScope.trigger(settings.scrollStart, [settings.name, SCROLL_START, myPage]);
 				scrolling = true;				
+
 				if (settings.sideways) {
 					if (fast){
 						view.filter(':not(:animated)').animate({ scrollLeft : '+=' + scrollTo }, 0, scrollHandler);
@@ -725,6 +739,7 @@
 				howManyPages();
 				howManyExtraMoves();
 
+
 				if (settings.infinite) { padWithClones(); } 				
 				adjustSlideSize();				
 				view.css("overflow", "hidden"); // clip extra items	(not set in css for non js view)
@@ -777,7 +792,6 @@
 				items = slider.children(settings.sliderChildSelect); 
 				totalItems = slider.children(settings.sliderChildSelect).filter(":not(." + settings.cloneClass + ")").length;
 				single = items.filter(':first');	
-
 				if (settings.sideways) {
 					singleSize = single.outerWidth(true);
 				} else {
@@ -811,37 +825,47 @@
 				navi = naviContainer.find(settings.naviSelect);
 			};
 
-		
 			/** find elements relevant to the carrot cell
 			*/
 			var findOutAboutCarrot = function(){
-				currentWindow = $(window);
 
+				// are we on a touch device? that means it probably has orientation change
+				if (('ontouchstart' in window) || (window.DocumentTouch && document instanceof DocumentTouch)){
+					isTouchDevice = true;
+				}
+
+				currentWindow = $(window);
 				view = $this.children(".carrotCellView:first");	
 				slider = view.children(settings.sliderSelect);  	
+
+				setControlScope();
+				findControls();	
+				findSlides();
 				
-
+				// using max so resize event and on orientation change events are relevant
 				if (settings.useMaxWidth){
+					// find the default ratio of one slide based on first slide
+					var testSlide = items.filter(':first'); 
+					cellRatio = testSlide.outerWidth()/testSlide.outerHeight();
 
-					// find the default ratio of one slide
-					var testSlide = slider.children(settings.sliderChildSelect).filter(':first'); 
-					cellRatio = testSlide.width()/testSlide.height();
+					resizeCarrot(); // resize to on load window size
 
-					resizeCarrot(); // see how big the current window is on load
-					$(window).on('resize', windowResized);
+					if (isTouchDevice) {
+						$(window).on('orientationchange', windowOrientationChanged);
+					} else {
+						$(window).on('resize', windowResized);
+					}
 				}
 				
-				setControlScope();
-				findControls();			
-				findSlides();	
 				findViewSizeAndVisible(); 		
-
-			
 				IsThereEnoughToScroll(); // check if we have enough to scroll	
+
 				if (enoughToScroll) {
 					setupCarrot();
 					handleCarrotEvents();
-				}	
+				} else {
+					debug("can not scroll content, too large or not enough");
+				}
 			};
 			
 			/** something has changed about slides, update calculations
@@ -850,6 +874,7 @@
 				findSlides();
 				howManyPages();
 				howManyExtraMoves();
+
 				if (settings.infinite) { padWithClones(); } 
 				adjustSlideSize();
 				if (settings.infinite) { moveClonesOutOfSight(); }
