@@ -1,0 +1,54 @@
+/** CARROT CELL styles
+	by Julia Yu
+	these are the default styles for jCarrotCell
+*/
+/** make sure to specify a width and/or a height
+	for this parent element
+*/
+.carrotCell {
+  display: block;
+  overflow: hidden;
+  position: relative; }
+
+/** this is the clip pane
+	make sure to specify a width and/or a height
+*/
+.carrotCellView {
+  overflow: auto;
+  position: relative; }
+
+.carrotCellView ol {
+  display: block; }
+
+.carrotCellView li {
+  overflow: hidden;
+  float: left;
+  display: block;
+  position: relative; }
+
+/** carrotcell buttons
+*/
+.carrotCell .next, .carrotCell .prev, .carrotCell .pause, .carrotCell .play, .carrotCell .stop {
+  display: none;
+  z-index: 1;
+  cursor: pointer; }
+
+.carrotCell .invisible {
+  display: none; }
+
+/** navi
+*/
+.carrotCell .navi {
+  display: block; }
+
+.carrotCell .navi li {
+  display: inline-block;
+  cursor: pointer; }
+
+.naviItem {
+  display: inline-block; }
+
+/** disabled and invisible
+*/
+.carrotCell .disabled {
+  opacity: 0.2; }
