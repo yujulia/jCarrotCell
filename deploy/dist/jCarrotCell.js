@@ -620,7 +620,7 @@
 			/** if touchwipe is included add gesture support
 			*/
 			var setupTouchSupport = function(){
-				if(jQuery().touchwipe) {					
+				if(jQuery().touchwipe) {				
 					if (settings.sideways) {
 						$($this).touchwipe({
 						    wipeLeft: function() {  moveForward(); },

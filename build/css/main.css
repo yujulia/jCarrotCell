@@ -319,7 +319,9 @@ td, th {
 
 body {
   padding: 20px;
-  color: #666; }
+  color: #666;
+  font-family: verdana;
+  border: solid 1px red; }
 
 /** CARROT CELL styles
 	by Julia Yu
