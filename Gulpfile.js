@@ -88,28 +88,7 @@ gulp.task("build-jade", function(){
         .pipe(gulp.dest(HTML_BUILD));
 });
 
-// -------------------------------------------------------- serve 
-/**  
-    script-watch
-    make sure scripts task is complete before reloading browser
-**/
-gulp.task("script-watch", ["scripts"], reload);
 
-/** ----------------------------- 
-    serve
-    use browsersync to create static server for build
-**/
-gulp.task("serve", ["styles", "build-jade", "scripts"], function(){
-    browserSync.init({
-        server: "./build"
-    });
-
-    gulp.watch(SASS_SRC + "*.scss", ["styles"]);
-    gulp.watch(JS_SRC + "*.js", ["lint", "script-watch"]);
-    gulp.watch(JADE_SRC + "*.jade", ["build-jade"]);
-
-    gulp.watch("build/*.html").on("change", reload);
-});
 
 // -------------------------------------------------------- init project 
 /**  
@@ -199,6 +178,39 @@ gulp.task("deploy", ["images", "min-scripts", "min-styles", "pub-scripts", "pub-
     return gulp.src([DIST+"*", "!"+DIST+"*.zip"])
         .pipe(zip("jcarrotcell.zip"))
         .pipe(gulp.dest(DIST));
+});
+
+
+// -------------------------------------------------------- serve 
+/**  
+    script-watch
+    make sure scripts task is complete before reloading browser
+**/
+gulp.task("script-watch", ["scripts"], reload);
+
+/**  
+    serve
+    use browsersync to create static server for build
+**/
+gulp.task("serve", ["styles", "build-jade", "scripts"], function(){
+    browserSync.init({
+        server: "./build"
+    });
+
+    gulp.watch(SASS_SRC + "*.scss", ["styles"]);
+    gulp.watch(JS_SRC + "*.js", ["lint", "script-watch"]);
+    gulp.watch(JADE_SRC + "*.jade", ["build-jade"]);
+
+    gulp.watch("build/*.html").on("change", reload);
+});
+
+/** serve-deploy
+    test deploy dir
+**/
+gulp.task("serve-deploy", ["deploy"], function(){
+    browserSync.init({
+        server: "./deploy"
+    });
 });
 
 // -------------------------------------------------------- default 
