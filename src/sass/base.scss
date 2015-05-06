@@ -1,5 +1,24 @@
+@import "partials/vars";
+@import "partials/fonts";
+
 body {
-	padding: 20px;
-	color: #666;
-	font-family: verdana;
+    padding: 20px;
+    color: $color-text;
+    font-family: PT;
+    font-weight: $light;
+    font-size: 15px;
+}
+
+h1 {
+    font-family: code;
+    font-weight: $light;
+    color: $color-main-header;
+    font-size: 50px;
+}
+
+h2 {
+    font-family: raleway;
+    font-weight: $light;
+    color: $color-header;
+    font-size: 30px;
 }

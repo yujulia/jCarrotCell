@@ -1,5 +1,5 @@
 $ = require('jquery');
-$.jCarrotCell = require('./jCarrotCell.js');
-$.touchwipe = require('./vendor/touchwipe.min.js');
+$.fn.jCarrotCell = require('./jCarrotCell.js');
+$.fn.touchwipe = require('./vendor/touchwipe.min.js');
 
-var carrotHome = require('./global.js');
+require('./global.js');

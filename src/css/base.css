@@ -1,4 +1,46 @@
+@font-face {
+  font-family: 'carrotcell';
+  src: url('../fonts/carrotcell.eot');
+  src: url('../fonts/carrotcell.eot?#iefix') format('embedded-opentype'), url('../fonts/carrotcell.woff') format('woff'), url('../fonts/carrotcell.ttf') format('truetype'), url('../fonts/carrotcell.svg#webfont') format('svg');
+  font-style: normal;
+  unicode-range: U0-FFFF; }
+
+@font-face {
+  font-family: 'code';
+  src: url('../fonts/Code-Light.eot');
+  src: url('../fonts/Code-Light.eot?#iefix') format('embedded-opentype'), url('../fonts/Code-Light.woff') format('woff'), url('../fonts/Code-Light.ttf') format('truetype'), url('../fonts/Code-Light.svg#webfont') format('svg');
+  font-style: normal;
+  unicode-range: U0-FFFF; }
+
+@font-face {
+  font-family: 'PT';
+  src: url('../fonts/PTS55F-webfont.eot');
+  src: url('../fonts/PTS55F-webfont.eot?#iefix') format('embedded-opentype'), url('../fonts/PTS55F-webfont.woff') format('woff'), url('../fonts/PTS55F-webfont.ttf') format('truetype'), url('../fonts/PTS55F-webfont.svg#webfont') format('svg');
+  font-style: normal;
+  unicode-range: U0-FFFF; }
+
+@font-face {
+  font-family: 'raleway';
+  src: url('../fonts/raleway_thin-webfont.eot');
+  src: url('../fonts/raleway_thin-webfont.eot?#iefix') format('embedded-opentype'), url('../fonts/raleway_thin-webfont.woff') format('woff'), url('../fonts/raleway_thin-webfont.ttf') format('truetype'), url('../fonts/raleway_thin-webfont.svg#webfont') format('svg');
+  font-style: normal;
+  unicode-range: U0-FFFF; }
+
 body {
   padding: 20px;
-  color: #666;
-  font-family: verdana; }
+  color: #666666;
+  font-family: PT;
+  font-weight: 300;
+  font-size: 15px; }
+
+h1 {
+  font-family: code;
+  font-weight: 300;
+  color: #e1e1e1;
+  font-size: 50px; }
+
+h2 {
+  font-family: raleway;
+  font-weight: 300;
+  color: #999999;
+  font-size: 30px; }
