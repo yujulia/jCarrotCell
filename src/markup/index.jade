@@ -1,4 +1,4 @@
--var isMin = (dev == "true") ? "" : "min."
+-var addMin = (dev == true) ? "" : ".min"
 
 doctype html
 html(lang="en")
@@ -9,17 +9,12 @@ html(lang="en")
         meta(name="viewport", content="width=device-width,initial-scale=1.0")
         link(rel="shortcut icon", href="img/favicon.ico", type="image/x-icon")
         link(rel="icon", href="img/favicon.ico", type="image/x-icon")
-
-
-        if dev
-            link(rel="stylesheet", href="css/main.css")
-        else 
-            link(rel="stylesheet", href="css/main.min.css")
+        link(rel="stylesheet", href="css/main"+ addMin +".css")
 
 
     body 
         .content
-            h1(class="cc-carrot-after") jCarrotCell #{isMin} #{dev}
+            h1(class="cc-carrot-after") jCarrotCell
 
             p.intro.
                 A flexible jQuery carousel plugin that offers more customization than necessary, probably. 
