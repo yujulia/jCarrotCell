@@ -186,7 +186,9 @@ gulp.task("deploy", ["images", "min-scripts", "min-styles", "pub-scripts", "pub-
     script-watch
     make sure scripts task is complete before reloading browser
 **/
-gulp.task("script-watch", ["scripts"], reload);
+gulp.task("script-watch", ["scripts"], function(){
+    reload();
+});
 
 /**  
     serve

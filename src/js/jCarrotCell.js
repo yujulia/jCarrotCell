@@ -67,6 +67,7 @@
 					onReload : "carrotReload",
 
 					// new sizing
+					resizeHeight : false,
 					useMaxWidth : false,
 					maxWidth : 0, // grab these
 					maxHeight: 0, // grabe these
@@ -186,6 +187,7 @@
 				// adjust the height as well if we are resizing height
 				if (settings.resizeHeight){
 					$(items).css("height", newHeight+"px");
+					$(view).css("height", newHeight+"px");
 				}
 			};
 

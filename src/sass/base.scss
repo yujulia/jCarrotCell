@@ -1,6 +1,21 @@
 @import "partials/vars";
 @import "partials/fonts";
 
+// -------------------------------- resets 
+
+ol, ul {
+    @extend %nofrill;
+    list-style: none;
+}
+
+button {
+    @extend %nofrill;
+    background: none;
+    border: none;
+}
+
+// --------------------------------
+
 body {
     color: $color-text;
     font-family: PT;
@@ -8,18 +23,14 @@ body {
     font-size: 15px;
 }
 
-ol, ul {
-    @extend %nofrill;
-    list-style: none;
-}
 
 a {
     text-decoration: none;
-    color: $color-leaf;  
+    color: $color-carrot;
 }
 
 a:hover {
-    color: $color-carrot;
+    color: $color-leaf; 
 }
 
 a[class^="cc-"]:before {
@@ -86,5 +97,35 @@ nav {
 
 #jcc-home {
     margin-top: 80px;
+
+    li {
+        background: url(../img/j.png) no-repeat center center;
+        background-size: 100%;
+    }
+
+    .slide-j {
+        background-image: url(../img/j.png)
+    }
+
+    .slide-carrot {
+        background-image: url(../img/carrot.png)
+    }
+
+    .slide-cell {
+        background-image: url(../img/cell.png)
+    }
+
+    .prev, .next {
+        width: 30px;
+        height: 30px;
+        margin-top: -15px; 
+        color: transparent;
+    }
+
+    .prev:before, .next:before {
+        font-size: 30px;
+        color: $color-carrot;
+    }
+
 }
 

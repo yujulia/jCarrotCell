@@ -317,15 +317,15 @@ table {
 td, th {
   padding: 0; }
 
-ol, ul, nav, .content {
+ol, ul, button, nav, .content {
   zoom: 1; }
-  ol:before, ul:before, nav:before, .content:before, ol:after, ul:after, nav:after, .content:after {
+  ol:before, ul:before, button:before, nav:before, .content:before, ol:after, ul:after, button:after, nav:after, .content:after {
     content: "";
     display: table; }
-  ol:after, ul:after, nav:after, .content:after {
+  ol:after, ul:after, button:after, nav:after, .content:after {
     clear: both; }
 
-ol, ul {
+ol, ul, button {
   margin: 0;
   padding: 0; }
 
@@ -380,32 +380,14 @@ ol, ul {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale; }
 
+.cc-carrot-after:after {
+  content: "\e001"; }
+
 .cc-github:before {
   content: "\e003"; }
 
-.cc-left:before {
-  content: "\e004"; }
-
-.cc-down:before {
-  content: "\e005"; }
-
-.cc-right:before {
-  content: "\e006"; }
-
-.cc-up:before {
-  content: "\e007"; }
-
-.cc-carrot:before, .cc-carrot-after:after {
+.cc-carrot:before {
   content: "\e001"; }
-
-.cc-play:before {
-  content: "\e008"; }
-
-.cc-pause:before {
-  content: "\e009"; }
-
-.cc-stop:before {
-  content: "\e000"; }
 
 .cc-download:before {
   content: "\e002"; }
@@ -416,21 +398,58 @@ ol, ul {
 .cc-files:before {
   content: "\e00b"; }
 
+.cc-smalldot:before {
+  content: "\e004"; }
+
+.cc-circle:before {
+  content: "\e007"; }
+
+.cc-down:before {
+  content: "\e000"; }
+
+.cc-up:before {
+  content: "\e005"; }
+
+.cc-right:before {
+  content: "\e006"; }
+
+.cc-delete:before {
+  content: "\e009"; }
+
+.cc-left:before {
+  content: "\e00c"; }
+
+.cc-link:before {
+  content: "\e00d"; }
+
+.cc-play:before {
+  content: "\e008"; }
+
+.cc-pause:before {
+  content: "\e00e"; }
+
+.cc-stop:before {
+  content: "\e00f"; }
+
+ol, ul {
+  list-style: none; }
+
+button {
+  background: none;
+  border: none; }
+
 body {
   color: #aaaaaa;
   font-family: PT;
   font-weight: 300;
   font-size: 15px; }
 
-ol, ul {
-  list-style: none; }
-
 a {
   text-decoration: none;
-  color: #99cc33; }
+  color: #ff9900; }
 
 a:hover {
-  color: #ff9900; }
+  color: #99cc33; }
 
 a[class^="cc-"]:before {
   margin-right: 4px;
@@ -476,20 +495,34 @@ nav {
 
 #jcc-home {
   margin-top: 80px; }
+  #jcc-home li {
+    background: url(../img/j.png) no-repeat center center;
+    background-size: 100%; }
+  #jcc-home .slide-j {
+    background-image: url(../img/j.png); }
+  #jcc-home .slide-carrot {
+    background-image: url(../img/carrot.png); }
+  #jcc-home .slide-cell {
+    background-image: url(../img/cell.png); }
+  #jcc-home .prev, #jcc-home .next {
+    width: 30px;
+    height: 30px;
+    margin-top: -15px;
+    color: transparent; }
+  #jcc-home .prev:before, #jcc-home .next:before {
+    font-size: 30px;
+    color: #ff9900; }
 
-/** CARROT CELL support CSS
-	by Julia Yu
+/*! 
+	CARROT CELL support CSS
 */
-/** ------------------------------------------------------- necessary styles
+/** ------------------------------------------------------- 
+	necessary styles
 */
 .carrotCell {
   display: block;
   overflow: hidden;
   position: relative; }
-  .carrotCell .disabled {
-    opacity: 0.2; }
-  .carrotCell .invisible {
-    display: none; }
   .carrotCell .navi {
     display: block; }
     .carrotCell .navi li {
@@ -511,3 +544,28 @@ nav {
     display: none;
     z-index: 1;
     cursor: pointer; }
+
+/** -------------------------------------------------------  
+	change these styles according to your needs
+*/
+.carrotCell {
+  width: 100%;
+  margin: 0 auto; }
+  .carrotCell .disabled {
+    opacity: 0.2; }
+  .carrotCell .invisible {
+    display: none; }
+  .carrotCell .carrotCellView {
+    width: 1644px;
+    height: 400px; }
+    .carrotCell .carrotCellView li {
+      width: 1644px;
+      height: 400px; }
+  .carrotCell .prev, .carrotCell .next {
+    position: absolute;
+    top: 50%;
+    left: 10px;
+    cursor: pointer; }
+  .carrotCell .next {
+    left: auto;
+    right: 10px; }

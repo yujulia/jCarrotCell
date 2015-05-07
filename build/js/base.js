@@ -1,10 +1,16 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 $ = require('jquery');
-$.fn.jCarrotCell = require('./jCarrotCell.js');
-$.fn.touchwipe = require('./vendor/touchwipe.min.js');
+$.touchwipe = require('./vendor/touchwipe.min.js');
+$.jCarrotCell = require('./jCarrotCell.js');
 
-require('./global.js');
-},{"./global.js":3,"./jCarrotCell.js":4,"./vendor/touchwipe.min.js":5,"jquery":2}],2:[function(require,module,exports){
+
+$('.carrotCell').carrotCell({
+    infinite: true,
+    useMaxWidth: true,
+    minWidth : 300,
+    resizeHeight: true
+});
+},{"./jCarrotCell.js":3,"./vendor/touchwipe.min.js":4,"jquery":2}],2:[function(require,module,exports){
 (function (global){
 ; var __browserify_shim_require__=require;(function browserifyShim(module, exports, require, define, browserify_shim__define__module__export__) {
 /*! jQuery v2.1.4 | (c) 2005, 2015 jQuery Foundation, Inc. | jquery.org/license */
@@ -18,12 +24,6 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],3:[function(require,module,exports){
-/*!
-	this is the global js 
-	that is for this page
-*/
-$("h1").text("global is loaded");
-},{}],4:[function(require,module,exports){
 /*!
  * jCarrotCell
  * http://jcarrotcell.yujulia.com
@@ -93,6 +93,7 @@ $("h1").text("global is loaded");
 					onReload : "carrotReload",
 
 					// new sizing
+					resizeHeight : false,
 					useMaxWidth : false,
 					maxWidth : 0, // grab these
 					maxHeight: 0, // grabe these
@@ -212,6 +213,7 @@ $("h1").text("global is loaded");
 				// adjust the height as well if we are resizing height
 				if (settings.resizeHeight){
 					$(items).css("height", newHeight+"px");
+					$(view).css("height", newHeight+"px");
 				}
 			};
 
@@ -1141,7 +1143,7 @@ $("h1").text("global is loaded");
 	    }
 	};
 })(jQuery);
-},{}],5:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 /*!
  * jQuery Plugin to obtain touch gestures from iPhone, iPod Touch and iPad, should also work with Android mobile phones (not tested yet!)
  * Common usage: wipe images (left and right to show the previous or next image)

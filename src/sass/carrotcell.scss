@@ -1,21 +1,14 @@
-/** CARROT CELL support CSS
-	by Julia Yu
+/*! 
+	CARROT CELL support CSS
 */
 
-/** ------------------------------------------------------- necessary styles
+/** ------------------------------------------------------- 
+	necessary styles
 */
 .carrotCell {
 	display: block;
 	overflow: hidden;
 	position: relative;
-
-	.disabled {
-		opacity: 0.2;
-	}
-
-	.invisible {
-		display: none;
-	}
 
 	.navi {
 		display: block;
@@ -52,6 +45,47 @@
 		cursor: pointer;
 	}
 }
+
+/** -------------------------------------------------------  
+	change these styles according to your needs
+*/
+.carrotCell { 
+	width: 100%; 
+	margin: 0 auto;
+
+	.disabled {
+		opacity: 0.2;
+	}
+
+	.invisible {
+		display: none;
+	}
+
+	.carrotCellView {
+		width: 1644px;
+		height: 400px;
+
+		li {
+			width: 1644px;
+			height: 400px;
+		}
+	}
+
+	.prev, .next {
+        position: absolute;
+        top: 50%;
+        left: 10px;
+        cursor: pointer;
+    }
+
+    .next {
+        left: auto;
+        right: 10px;
+    }
+
+}		
+
+
 
 
 

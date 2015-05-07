@@ -72,32 +72,17 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+
+.cc-carrot-after:after {
+  content: "\e001";
+}
+
 .cc-github:before {
   content: "\e003";
 }
-.cc-left:before {
-  content: "\e004";
-}
-.cc-down:before {
-  content: "\e005";
-}
-.cc-right:before {
-  content: "\e006";
-}
-.cc-up:before {
-  content: "\e007";
-}
-.cc-carrot:before, .cc-carrot-after:after {
+.cc-carrot:before {
   content: "\e001";
-}
-.cc-play:before {
-  content: "\e008";
-}
-.cc-pause:before {
-  content: "\e009";
-}
-.cc-stop:before {
-  content: "\e000";
 }
 .cc-download:before {
   content: "\e002";
@@ -107,4 +92,37 @@
 }
 .cc-files:before {
   content: "\e00b";
+}
+.cc-smalldot:before {
+  content: "\e004";
+}
+.cc-circle:before {
+  content: "\e007";
+}
+.cc-down:before {
+  content: "\e000";
+}
+.cc-up:before {
+  content: "\e005";
+}
+.cc-right:before {
+  content: "\e006";
+}
+.cc-delete:before {
+  content: "\e009";
+}
+.cc-left:before {
+  content: "\e00c";
+}
+.cc-link:before {
+  content: "\e00d";
+}
+.cc-play:before {
+  content: "\e008";
+}
+.cc-pause:before {
+  content: "\e00e";
+}
+.cc-stop:before {
+  content: "\e00f";
 }
