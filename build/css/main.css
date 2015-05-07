@@ -519,6 +519,13 @@ footer {
   color: #ffffff;
   padding: 40px 10px; }
 
+pre {
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  border-radius: 10px;
+  padding: 20px;
+  background-color: #f7f7f7; }
+
 .content {
   position: relative;
   width: 960px;
@@ -560,6 +567,41 @@ footer {
     background: transparent; }
   #jcc-home .prev:focus:before, #jcc-home .next:focus:before {
     color: #99cc33; }
+
+/** RAINBOW related styles
+*/
+.comment {
+  color: #ccc; }
+
+.javascript .comment {
+  color: #535353; }
+
+.meta, .entity {
+  color: #f03200; }
+
+.support {
+  color: #666666; }
+
+.string {
+  color: #ff9900; }
+
+.string.regexp {
+  color: #fff; }
+
+.support.attribute, .support.css-property, .support.regex.modifier {
+  color: #999999; }
+
+.support.value {
+  color: #1bbbcf; }
+
+.integer, .constant {
+  color: #669900; }
+
+.keyword, .selector, .storage {
+  color: #006600; }
+
+.constant.regex.escape {
+  color: #d8fa3c; }
 
 @media screen and (max-width: 980px) {
   .content {

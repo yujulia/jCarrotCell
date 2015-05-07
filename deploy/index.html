@@ -11,28 +11,88 @@
   </head>
   <body> 
     <div class="content">
+      <h1 class="cc-carrot-after"><a href=".">jCarrotCell</a></h1>
       <nav> 
         <ol>
           <li><a href="https://github.com/yujulia/jCarrotCell" target="_blank" class="cc-github">Github </a></li>
           <li><a href="dist/jcarrotcell.zip" class="cc-download">Download </a></li>
-          <li><a href="" target="_blank" class="cc-lab">Demo </a></li>
+          <li><a href="" target="_blank" class="cc-lab">Demos </a></li>
           <li><a href="" class="cc-files">Docs </a></li>
-          <li><a href="." class="cc-carrot">&nbsp; </a></li>
         </ol>
       </nav>
-      <h1 class="cc-carrot-after"><a href=".">jCarrotCell</a></h1>
       <p class="intro">
-        A flexible jQuery carousel plugin that offers customized markup, events, selectors, classes, and placement of controls. 
-        
+        A flexible, responsive, customizable carousel plugin for jQuery. 
         
       </p>
     </div>
     <div id="jcc-home" class="carrotCell">
       <div class="carrotCellView">
         <ol>
-          <li><img src="img/j.png"></li>
+          <li class="slide-j"> </li>
+          <li class="slide-carrot"> </li>
+          <li class="slide-cell"> </li>
         </ol>
       </div>
+      <button type="button" class="prev cc-left">previous</button>
+      <button type="button" class="next cc-right">next</button>
     </div>
+    <div class="content">
+      <section>
+        <h2>Features</h2>
+        <ul class="list">
+          <li>Use your own markup, event names, classes, selectors etc. </li>
+          <li>Scroll vertically or horizontally, infinitely or finitely.</li>
+          <li>Auto play, pause, stop.</li>
+          <li>Auto generate "dots" or configure your own.</li>
+          <li>Scroll multiple items, or just one.</li>
+          <li>Add and remove items via the API.</li>
+          <li>Auto fill max width of browser, auto scale the height too, or don't.</li>
+          <li>Arrow key navigation. </li>
+          <li>Use touch events when possible, or don't.</li>
+          <li>Supports orientation change in maxwidth mode.</li>
+        </ul>
+      </section>
+      <section>
+        <h2>Setup </h2>
+        <p><a href="dist/jcarrotcell.zip" class="cc-download">Download </a>the jCarrotCell bundle or clone the repo from  <a href="https://github.com/yujulia/jCarrotCell" target="_blank" class="cc-github">Github</a>.</p>
+        <p>You will need to include some version of <a href="https://jquery.com/" target="_blank">jQuery </a>(version 1.7+) before <strong>jCarrotCell.js </strong>and also the styles from  <strong>carrotcell.css</strong>.</p>
+        <p>
+           
+          The markup should look something like this, see the <a href="" class="cc-files">Documentation </a>on how to use whatever markup you want.
+        </p><code data-language="html" class="rainbow">
+          <span class="support tag"><span class="support tag">&lt;</span><span class="support tag-name">div</span></span> <span class="support attribute">class</span><span class="support operator">=</span><span class="string quote">"</span><span class="string value">carrotCell</span><span class="string quote">"</span><span class="support tag close">&gt;</span>            
+              <span class="support tag"><span class="support tag">&lt;</span><span class="support tag-name">div</span></span> <span class="support attribute">class</span><span class="support operator">=</span><span class="string quote">"</span><span class="string value">carrotCellView</span><span class="string quote">"</span><span class="support tag close">&gt;</span>
+                  <span class="support tag"><span class="support tag">&lt;</span><span class="support tag-name">ol</span></span><span class="support tag close">&gt;</span>
+                      <span class="support tag"><span class="support tag">&lt;</span><span class="support tag-name">li</span></span><span class="support tag close">&gt;</span>item 1<span class="support tag"><span class="support tag">&lt;</span><span class="support tag special">/</span><span class="support tag-name">li</span></span><span class="support tag close">&gt;</span>
+                      <span class="support tag"><span class="support tag">&lt;</span><span class="support tag-name">li</span></span><span class="support tag close">&gt;</span>item 2<span class="support tag"><span class="support tag">&lt;</span><span class="support tag special">/</span><span class="support tag-name">li</span></span><span class="support tag close">&gt;</span>
+                      <span class="support tag"><span class="support tag">&lt;</span><span class="support tag-name">li</span></span><span class="support tag close">&gt;</span>item 3<span class="support tag"><span class="support tag">&lt;</span><span class="support tag special">/</span><span class="support tag-name">li</span></span><span class="support tag close">&gt;</span>
+                      <span class="support tag"><span class="support tag">&lt;</span><span class="support tag-name">li</span></span><span class="support tag close">&gt;</span>item 4<span class="support tag"><span class="support tag">&lt;</span><span class="support tag special">/</span><span class="support tag-name">li</span></span><span class="support tag close">&gt;</span>
+                      <span class="support tag"><span class="support tag">&lt;</span><span class="support tag-name">li</span></span><span class="support tag close">&gt;</span>item 5<span class="support tag"><span class="support tag">&lt;</span><span class="support tag special">/</span><span class="support tag-name">li</span></span><span class="support tag close">&gt;</span>
+                      <span class="support tag"><span class="support tag">&lt;</span><span class="support tag-name">li</span></span><span class="support tag close">&gt;</span>item 6<span class="support tag"><span class="support tag">&lt;</span><span class="support tag special">/</span><span class="support tag-name">li</span></span><span class="support tag close">&gt;</span>
+                      <span class="support tag"><span class="support tag">&lt;</span><span class="support tag-name">li</span></span><span class="support tag close">&gt;</span>item 7<span class="support tag"><span class="support tag">&lt;</span><span class="support tag special">/</span><span class="support tag-name">li</span></span><span class="support tag close">&gt;</span>
+                      <span class="support tag"><span class="support tag">&lt;</span><span class="support tag-name">li</span></span><span class="support tag close">&gt;</span>item 8<span class="support tag"><span class="support tag">&lt;</span><span class="support tag special">/</span><span class="support tag-name">li</span></span><span class="support tag close">&gt;</span>
+                      <span class="support tag"><span class="support tag">&lt;</span><span class="support tag-name">li</span></span><span class="support tag close">&gt;</span>item 9<span class="support tag"><span class="support tag">&lt;</span><span class="support tag special">/</span><span class="support tag-name">li</span></span><span class="support tag close">&gt;</span>
+                  <span class="support tag"><span class="support tag">&lt;</span><span class="support tag special">/</span><span class="support tag-name">ol</span></span><span class="support tag close">&gt;</span>       
+              <span class="support tag"><span class="support tag">&lt;</span><span class="support tag special">/</span><span class="support tag-name">div</span></span><span class="support tag close">&gt;</span>            
+              <span class="support tag"><span class="support tag">&lt;</span><span class="support tag-name">div</span></span> <span class="support attribute">class</span><span class="support operator">=</span><span class="string quote">"</span><span class="string value">prev</span><span class="string quote">"</span><span class="support tag close">&gt;</span>previous<span class="support tag"><span class="support tag">&lt;</span><span class="support tag special">/</span><span class="support tag-name">div</span></span><span class="support tag close">&gt;</span>
+              <span class="support tag"><span class="support tag">&lt;</span><span class="support tag-name">div</span></span> <span class="support attribute">class</span><span class="support operator">=</span><span class="string quote">"</span><span class="string value">next</span><span class="string quote">"</span><span class="support tag close">&gt;</span>next<span class="support tag"><span class="support tag">&lt;</span><span class="support tag special">/</span><span class="support tag-name">div</span></span><span class="support tag close">&gt;</span> 
+          <span class="support tag"><span class="support tag">&lt;</span><span class="support tag special">/</span><span class="support tag-name">div</span></span><span class="support tag close">&gt;</span>
+          
+          </code>
+        <p>Invoke the carrotcell with the following:</p><code data-language="js" class="rainbow">
+          $(<span class="string">'.carrotCell'</span>).<span class="function call">carrotCell</span>();
+          </code>
+      </section>
+    </div>
+    <footer> 
+      <div class="content">
+        <p>
+           
+          jCarrotCell Version 2.0 by <a href="http://yujulia.com" class="cc-link">Julia Yu</a>. Started November 10 2011, Last Update May 7, 2015 11 AM PDT
+        </p>
+        <h2><a href="https://github.com/yujulia/jCarrotCell" target="_blank" class="cc-github">Github </a></h2>
+      </div>
+    </footer>
+    <script src="js/base.js" type="text/javascript" charset="utf-8"></script>
   </body>
 </html>

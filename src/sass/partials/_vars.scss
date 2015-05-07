@@ -53,3 +53,11 @@ $color-leaf: #99cc33;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
+
+// ----------------------------------------------- mixins
+@mixin round($rad){
+    -webkit-border-radius: $rad;
+    -moz-border-radius: $rad;
+    border-radius: $rad;
+}
+    

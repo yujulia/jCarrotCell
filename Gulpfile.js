@@ -25,6 +25,7 @@ const DIST = "./deploy/dist/"; // file for distribution
 /** -------------------------------------------------------- requires
 */
 var gulp = require("gulp"),
+    gutil = require('gulp-load-utils')(['date']),
     browserSync = require("browser-sync").create(),
     reload = browserSync.reload,
     browserify = require("browserify"),
@@ -82,7 +83,7 @@ gulp.task("scripts", function(){
 gulp.task("build-jade", function(){
     return gulp.src(JADE_SRC+"*.jade")
         .pipe(jade({ 
-            locals: { "dev" : true },
+            locals: { "dev" : true, "timestamp":  gutil.date('mmm d, yyyy h:MM:ss TT Z') },
             pretty: true
         }))
         .pipe(gulp.dest(HTML_BUILD));
@@ -163,7 +164,7 @@ gulp.task("min-styles", function(){
 gulp.task("pub-jade", function(){
     return gulp.src(JADE_SRC+"*.jade")
         .pipe(jade({ 
-            locals: { "dev" : false },
+            locals: { "dev": false, "timestamp":  gutil.date('mmm d, yyyy h:MM:ss TT Z') },
             pretty: true
         }))
         .pipe(gulp.dest(HTML_DEPLOY));
@@ -195,6 +196,7 @@ gulp.task("script-watch", ["scripts"], function(){
     use browsersync to create static server for build
 **/
 gulp.task("serve", ["styles", "build-jade", "scripts"], function(){
+    
     browserSync.init({
         server: "./build"
     });

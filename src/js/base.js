@@ -1,9 +1,12 @@
+/*! 
+    jCarrotCell documentation and demo page
+**/
 $ = require('jquery');
-$.touchwipe = require('./vendor/touchwipe.min.js');
 $.jCarrotCell = require('./jCarrotCell.js');
+require('./vendor/rainbow-custom.min.js');
 
 
-$('.carrotCell').carrotCell({
+$('#jcc-home').carrotCell({
     infinite: true,
     useMaxWidth: true,
     minWidth : 300,

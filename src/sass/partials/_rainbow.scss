@@ -1,0 +1,46 @@
+/** RAINBOW related styles
+*/
+
+.comment {
+    color: #ccc;
+}
+
+.javascript .comment {
+    color: #535353;
+}
+
+.meta, .entity {
+    color: #f03200;
+}
+
+.support {
+    color: #666666;
+}
+
+.string {
+    color: #ff9900;
+}
+
+.string.regexp {
+    color: #fff;
+}
+
+.support.attribute, .support.css-property, .support.regex.modifier {
+    color: #999999;
+}
+
+.support.value {
+    color: #1bbbcf;
+}
+
+.integer, .constant {
+    color: #669900;
+}
+
+.keyword, .selector, .storage {
+    color: #006600;
+}
+
+.constant.regex.escape {
+    color: #d8fa3c;
+}
