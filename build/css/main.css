@@ -438,6 +438,11 @@ button {
   background: none;
   border: none; }
 
+:focus {
+  outline: none;
+  background-color: #99cc33;
+  color: #fff; }
+
 body {
   color: #aaaaaa;
   font-family: PT;
@@ -456,7 +461,7 @@ a[class^="cc-"]:before {
   font-size: 85%; }
 
 h1 {
-  margin: 60px 0 40px;
+  margin: 100px 0 40px;
   font-family: code;
   font-weight: 300;
   color: #999999;
@@ -476,22 +481,26 @@ h2, .intro {
 p {
   font-size: 15px; }
 
-.intro {
-  font-size: 20px;
-  line-height: 1.4em; }
-
 nav {
-  margin-top: 20px; }
+  position: absolute;
+  top: 10px;
+  right: -10px; }
   nav ol {
-    float: right;
-    font-family: PT; }
+    font-family: PT;
+    margin: 10px; }
     nav ol li {
       display: inline-block;
       margin-right: 20px; }
 
 .content {
+  position: relative;
   width: 960px;
-  margin: 0 auto; }
+  margin: 0 auto;
+  padding: 0 10px; }
+
+.intro {
+  font-size: 20px;
+  line-height: 1.4em; }
 
 #jcc-home {
   margin-top: 80px; }
@@ -512,6 +521,17 @@ nav {
   #jcc-home .prev:before, #jcc-home .next:before {
     font-size: 30px;
     color: #ff9900; }
+  #jcc-home .prev:hover:before, #jcc-home .next:hover:before {
+    color: #99cc33; }
+  #jcc-home .prev:focus, #jcc-home .next:focus {
+    background: transparent; }
+  #jcc-home .prev:focus:before, #jcc-home .next:focus:before {
+    color: #99cc33; }
+
+@media screen and (max-width: 980px) {
+  .content {
+    width: 100%; } }
+
 
 /*! 
 	CARROT CELL support CSS
