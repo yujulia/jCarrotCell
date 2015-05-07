@@ -11,13 +11,22 @@ html(lang="en")
         link(rel="icon", href="img/favicon.ico", type="image/x-icon")
         link(rel="stylesheet", href="css/main"+ addMin +".css")
 
-
     body 
         .content
-            h1(class="cc-carrot-after") jCarrotCell
+            nav 
+                ol
+                    li: a(href="https://github.com/yujulia/jCarrotCell", class="cc-github", target="_blank") Github 
+                    li: a(href="dist/jcarrotcell.zip", class="cc-download") Download 
+                    li: a(href="", class="cc-lab", target="_blank") Demo 
+                    li: a(href="", class="cc-files") Docs 
+                    li: a(href=".", class="cc-carrot") &nbsp; 
+
+
+            h1(class="cc-carrot-after"): a(href=".") jCarrotCell
 
             p.intro.
-                A flexible jQuery carousel plugin that offers more customization than necessary, probably. 
+                A flexible jQuery carousel plugin that offers customized markup, events, selectors, classes, and placement of controls. 
+
 
         div#jcc-home.carrotCell
             .carrotCellView

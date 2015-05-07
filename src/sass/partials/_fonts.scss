@@ -90,3 +90,21 @@
 .cc-carrot:before, .cc-carrot-after:after {
   content: "\e001";
 }
+.cc-play:before {
+  content: "\e008";
+}
+.cc-pause:before {
+  content: "\e009";
+}
+.cc-stop:before {
+  content: "\e000";
+}
+.cc-download:before {
+  content: "\e002";
+}
+.cc-lab:before {
+  content: "\e00a";
+}
+.cc-files:before {
+  content: "\e00b";
+}

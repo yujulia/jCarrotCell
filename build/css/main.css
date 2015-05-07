@@ -317,19 +317,15 @@ table {
 td, th {
   padding: 0; }
 
-.box, .nofrill, #jcc-home ol {
+ol, ul, nav, .content {
   zoom: 1; }
-  .box:before, .nofrill:before, #jcc-home ol:before, .box:after, .nofrill:after, #jcc-home ol:after {
+  ol:before, ul:before, nav:before, .content:before, ol:after, ul:after, nav:after, .content:after {
     content: "";
     display: table; }
-  .box:after, .nofrill:after, #jcc-home ol:after {
+  ol:after, ul:after, nav:after, .content:after {
     clear: both; }
 
-.clipbox {
-  width: 100%;
-  overflow: hidden; }
-
-.nofrill, #jcc-home ol {
+ol, ul {
   margin: 0;
   padding: 0; }
 
@@ -402,17 +398,52 @@ td, th {
 .cc-carrot:before, .cc-carrot-after:after {
   content: "\e001"; }
 
+.cc-play:before {
+  content: "\e008"; }
+
+.cc-pause:before {
+  content: "\e009"; }
+
+.cc-stop:before {
+  content: "\e000"; }
+
+.cc-download:before {
+  content: "\e002"; }
+
+.cc-lab:before {
+  content: "\e00a"; }
+
+.cc-files:before {
+  content: "\e00b"; }
+
 body {
   color: #aaaaaa;
   font-family: PT;
   font-weight: 300;
   font-size: 15px; }
 
+ol, ul {
+  list-style: none; }
+
+a {
+  text-decoration: none;
+  color: #99cc33; }
+
+a:hover {
+  color: #ff9900; }
+
+a[class^="cc-"]:before {
+  margin-right: 4px;
+  font-size: 85%; }
+
 h1 {
+  margin: 60px 0 40px;
   font-family: code;
   font-weight: 300;
-  color: #dddddd;
+  color: #999999;
   font-size: 50px; }
+  h1 a {
+    color: inherit; }
   h1 :after {
     font-size: 43px;
     color: #999999; }
@@ -427,15 +458,24 @@ p {
   font-size: 15px; }
 
 .intro {
-  font-size: 20px; }
+  font-size: 20px;
+  line-height: 1.4em; }
+
+nav {
+  margin-top: 20px; }
+  nav ol {
+    float: right;
+    font-family: PT; }
+    nav ol li {
+      display: inline-block;
+      margin-right: 20px; }
 
 .content {
   width: 960px;
-  margin: 0 auto;
-  margin-top: 100px; }
+  margin: 0 auto; }
 
 #jcc-home {
-  margin-top: 100px; }
+  margin-top: 80px; }
 
 /** CARROT CELL support CSS
 	by Julia Yu

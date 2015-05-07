@@ -8,11 +8,35 @@ body {
     font-size: 15px;
 }
 
+ol, ul {
+    @extend %nofrill;
+    list-style: none;
+}
+
+a {
+    text-decoration: none;
+    color: $color-leaf;  
+}
+
+a:hover {
+    color: $color-carrot;
+}
+
+a[class^="cc-"]:before {
+    margin-right: 4px;
+    font-size: 85%;
+}
+
 h1 {
+    margin: 60px 0 40px;
     font-family: code;
     font-weight: $light;
-    color: $color-main-header;
+    color: $color-header;
     font-size: 50px;
+
+    a {
+        color: inherit;
+    }
 
     :after {
         font-size: 43px;
@@ -35,20 +59,32 @@ p {
 .intro {
     @extend h2;
     font-size: 20px;
+    line-height: 1.4em;
+}
+
+nav {
+    @extend %clearfix;
+    margin-top: 20px;
+
+    ol {
+        float: right;
+        font-family: PT;
+
+        li {
+            display: inline-block;
+            margin-right: 20px;
+        }
+    }
+    
 }
 
 .content {
+    @extend %clearfix;
     width: 960px;
     margin: 0 auto;
-    margin-top: 100px;
 }
 
 #jcc-home {
-    margin-top: 100px;
-
-    ol {
-        @extend .nofrill;
-
-    }
+    margin-top: 80px;
 }
 

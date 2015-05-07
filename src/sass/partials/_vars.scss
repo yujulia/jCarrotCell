@@ -13,6 +13,9 @@ $color-text: #aaaaaa;
 $color-main-header: #dddddd;
 $color-header: #999999;
 
+$color-carrot: #ff9900;
+$color-leaf: #99cc33;
+
 // ----------------------------------------------- clearfix containers
 
 %clearfix {
@@ -29,16 +32,13 @@ $color-header: #999999;
 }
     
 // ----------------------------------------------- generic containers we can extend
-.box {
-    @extend %clearfix;
-}
 
-.clipbox {
+%clipbox {
     width: 100%;
     overflow: hidden;
 }
     
-.nofrill {
+%nofrill {
     @extend %clearfix;
     margin: 0;
     padding: 0;
