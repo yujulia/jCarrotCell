@@ -70,6 +70,12 @@ h2 {
 
 p {
     font-size: 15px;
+    line-height: 1.6em;
+}
+
+section {
+    @extend %clearfix;
+    padding: 80px 0;
 }
 
 nav {
@@ -88,6 +94,13 @@ nav {
         }
     }
     
+}
+
+footer {
+    @extend %clearfix;
+    background-color: #404040;
+    color: #ffffff;
+    padding: 40px 10px;
 }
 
 .content {

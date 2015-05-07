@@ -317,12 +317,12 @@ table {
 td, th {
   padding: 0; }
 
-ol, ul, button, nav, .content {
+ol, ul, button, section, nav, footer, .content {
   zoom: 1; }
-  ol:before, ul:before, button:before, nav:before, .content:before, ol:after, ul:after, button:after, nav:after, .content:after {
+  ol:before, ul:before, button:before, section:before, nav:before, footer:before, .content:before, ol:after, ul:after, button:after, section:after, nav:after, footer:after, .content:after {
     content: "";
     display: table; }
-  ol:after, ul:after, button:after, nav:after, .content:after {
+  ol:after, ul:after, button:after, section:after, nav:after, footer:after, .content:after {
     clear: both; }
 
 ol, ul, button {
@@ -479,7 +479,11 @@ h2, .intro {
   font-size: 30px; }
 
 p {
-  font-size: 15px; }
+  font-size: 15px;
+  line-height: 1.6em; }
+
+section {
+  padding: 80px 0; }
 
 nav {
   position: absolute;
@@ -491,6 +495,11 @@ nav {
     nav ol li {
       display: inline-block;
       margin-right: 20px; }
+
+footer {
+  background-color: #404040;
+  color: #ffffff;
+  padding: 40px 10px; }
 
 .content {
   position: relative;
