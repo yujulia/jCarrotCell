@@ -329,6 +329,40 @@ ol, ul, button {
   margin: 0;
   padding: 0; }
 
+[data-icon]:before, [class^="cc-"]:before, [class*=" cc-"]:before, [class^="cc-"]:after, [class*=" cc-"]:after, .list li:before {
+  font-family: "carrotcell" !important;
+  font-style: normal !important;
+  font-weight: normal !important;
+  font-variant: normal !important;
+  text-transform: none !important;
+  speak: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale; }
+
+ol, ul, button, section, nav, footer, .content {
+  zoom: 1; }
+  ol:before, ul:before, button:before, section:before, nav:before, footer:before, .content:before, ol:after, ul:after, button:after, section:after, nav:after, footer:after, .content:after {
+    content: "";
+    display: table; }
+  ol:after, ul:after, button:after, section:after, nav:after, footer:after, .content:after {
+    clear: both; }
+
+ol, ul, button {
+  margin: 0;
+  padding: 0; }
+
+[data-icon]:before, [class^="cc-"]:before, [class*=" cc-"]:before, [class^="cc-"]:after, [class*=" cc-"]:after, .list li:before {
+  font-family: "carrotcell" !important;
+  font-style: normal !important;
+  font-weight: normal !important;
+  font-variant: normal !important;
+  text-transform: none !important;
+  speak: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale; }
+
 @font-face {
   font-family: 'code';
   src: url('../fonts/Code-Light.eot');
@@ -358,27 +392,7 @@ ol, ul, button {
   font-style: normal; }
 
 [data-icon]:before {
-  font-family: "carrotcell" !important;
-  content: attr(data-icon);
-  font-style: normal !important;
-  font-weight: normal !important;
-  font-variant: normal !important;
-  text-transform: none !important;
-  speak: none;
-  line-height: 1;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale; }
-
-[class^="cc-"]:before, [class*=" cc-"]:before, [class^="cc-"]:after, [class*=" cc-"]:after {
-  font-family: "carrotcell" !important;
-  font-style: normal !important;
-  font-weight: normal !important;
-  font-variant: normal !important;
-  text-transform: none !important;
-  speak: none;
-  line-height: 1;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale; }
+  content: attr(data-icon); }
 
 .cc-carrot-after:after {
   content: "\e001"; }
@@ -398,7 +412,7 @@ ol, ul, button {
 .cc-files:before {
   content: "\e00b"; }
 
-.cc-smalldot:before {
+.cc-dot:before {
   content: "\e004"; }
 
 .cc-circle:before {
@@ -419,9 +433,6 @@ ol, ul, button {
 .cc-left:before {
   content: "\e00c"; }
 
-.cc-link:before {
-  content: "\e00d"; }
-
 .cc-play:before {
   content: "\e008"; }
 
@@ -430,6 +441,12 @@ ol, ul, button {
 
 .cc-stop:before {
   content: "\e00f"; }
+
+.cc-link:before {
+  content: "\e00d"; }
+
+.cc-star:before {
+  content: "\e010"; }
 
 ol, ul {
   list-style: none; }
@@ -483,7 +500,7 @@ p {
   line-height: 1.6em; }
 
 section {
-  padding: 80px 0; }
+  padding: 80px 0 0 0; }
 
 nav {
   position: absolute;
@@ -497,6 +514,7 @@ nav {
       margin-right: 20px; }
 
 footer {
+  margin-top: 100px;
   background-color: #404040;
   color: #ffffff;
   padding: 40px 10px; }
@@ -510,6 +528,12 @@ footer {
 .intro {
   font-size: 20px;
   line-height: 1.4em; }
+
+.list li {
+  margin: 10px 0; }
+.list li:before {
+  content: "\e010";
+  margin-right: 10px; }
 
 #jcc-home {
   margin-top: 80px; }

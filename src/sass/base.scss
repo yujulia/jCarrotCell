@@ -1,3 +1,5 @@
+@charset "UTF-8";
+
 @import "partials/vars";
 @import "partials/fonts";
 
@@ -75,7 +77,7 @@ p {
 
 section {
     @extend %clearfix;
-    padding: 80px 0;
+    padding: 80px 0 0 0;
 }
 
 nav {
@@ -97,6 +99,7 @@ nav {
 }
 
 footer {
+    margin-top: 100px;
     @extend %clearfix;
     background-color: #404040;
     color: #ffffff;
@@ -115,6 +118,19 @@ footer {
     @extend h2;
     font-size: 20px;
     line-height: 1.4em;
+}
+
+.list {
+
+    li {
+        margin: 10px 0
+    }
+
+    li:before {
+      @extend %beforeCarrotCell;
+      content: "\e010";
+      margin-right: 10px;
+    }
 }
 
 #jcc-home {

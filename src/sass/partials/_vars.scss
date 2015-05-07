@@ -16,7 +16,7 @@ $color-header: #999999;
 $color-carrot: #ff9900;
 $color-leaf: #99cc33;
 
-// ----------------------------------------------- clearfix containers
+// ----------------------------------------------- extendables
 
 %clearfix {
     zoom: 1;
@@ -31,8 +31,6 @@ $color-leaf: #99cc33;
     }   
 }
     
-// ----------------------------------------------- generic containers we can extend
-
 %clipbox {
     width: 100%;
     overflow: hidden;
@@ -42,4 +40,16 @@ $color-leaf: #99cc33;
     @extend %clearfix;
     margin: 0;
     padding: 0;
+}
+
+%beforeCarrotCell {
+    font-family: "carrotcell" !important;
+    font-style: normal !important;
+    font-weight: normal !important;
+    font-variant: normal !important;
+    text-transform: none !important;
+    speak: none;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }

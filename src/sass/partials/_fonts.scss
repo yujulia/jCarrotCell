@@ -1,4 +1,4 @@
-@charset "UTF-8";
+@import "partials/vars";
 
 @font-face { 
     font-family: 'code';
@@ -46,31 +46,15 @@
 }
 
 [data-icon]:before {
-  font-family: "carrotcell" !important;
   content: attr(data-icon);
-  font-style: normal !important;
-  font-weight: normal !important;
-  font-variant: normal !important;
-  text-transform: none !important;
-  speak: none;
-  line-height: 1;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  @extend %beforeCarrotCell;
 }
 
 [class^="cc-"]:before,
 [class*=" cc-"]:before,
 [class^="cc-"]:after,
 [class*=" cc-"]:after  {
-  font-family: "carrotcell" !important;
-  font-style: normal !important;
-  font-weight: normal !important;
-  font-variant: normal !important;
-  text-transform: none !important;
-  speak: none;
-  line-height: 1;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  @extend %beforeCarrotCell;
 }
 
 
@@ -93,7 +77,7 @@
 .cc-files:before {
   content: "\e00b";
 }
-.cc-smalldot:before {
+.cc-dot:before {
   content: "\e004";
 }
 .cc-circle:before {
@@ -114,9 +98,6 @@
 .cc-left:before {
   content: "\e00c";
 }
-.cc-link:before {
-  content: "\e00d";
-}
 .cc-play:before {
   content: "\e008";
 }
@@ -125,4 +106,10 @@
 }
 .cc-stop:before {
   content: "\e00f";
+}
+.cc-link:before {
+  content: "\e00d";
+}
+.cc-star:before {
+  content: "\e010";
 }
