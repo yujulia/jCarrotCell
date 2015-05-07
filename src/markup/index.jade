@@ -1,3 +1,5 @@
+-var isMin = (dev == "true") ? "" : "min."
+
 doctype html
 html(lang="en")
     head
@@ -5,21 +7,29 @@ html(lang="en")
         title jCarrotCell
         meta(name="description", content="a jQuery carousel plugin by Julia Yu")
         meta(name="viewport", content="width=device-width,initial-scale=1.0")
+        link(rel="shortcut icon", href="img/favicon.ico", type="image/x-icon")
+        link(rel="icon", href="img/favicon.ico", type="image/x-icon")
+
 
         if dev
             link(rel="stylesheet", href="css/main.css")
         else 
             link(rel="stylesheet", href="css/main.min.css")
 
+
     body 
-        h1 jCarrotCell #{dev}
+        .content
+            h1(class="cc-carrot-after") jCarrotCell #{isMin} #{dev}
 
-        h2 Documentation
-        p.
-            can i put shit here
-            and there
+            p.intro.
+                A flexible jQuery carousel plugin that offers more customization than necessary, probably. 
 
-        if dev 
-            p its dev
-        else 
-            p its deploy
+        div#jcc-home.carrotCell
+            .carrotCellView
+                ol
+                    li
+                        img(src="img/noir01.jpg")
+                    li
+                        img(src="img/noir02.jpg")
+
+

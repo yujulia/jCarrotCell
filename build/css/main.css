@@ -317,12 +317,21 @@ table {
 td, th {
   padding: 0; }
 
-@font-face {
-  font-family: 'carrotcell';
-  src: url('../fonts/carrotcell.eot');
-  src: url('../fonts/carrotcell.eot?#iefix') format('embedded-opentype'), url('../fonts/carrotcell.woff') format('woff'), url('../fonts/carrotcell.ttf') format('truetype'), url('../fonts/carrotcell.svg#webfont') format('svg');
-  font-style: normal;
-  unicode-range: U0-FFFF; }
+.box, .nofrill, #jcc-home ol {
+  zoom: 1; }
+  .box:before, .nofrill:before, #jcc-home ol:before, .box:after, .nofrill:after, #jcc-home ol:after {
+    content: "";
+    display: table; }
+  .box:after, .nofrill:after, #jcc-home ol:after {
+    clear: both; }
+
+.clipbox {
+  width: 100%;
+  overflow: hidden; }
+
+.nofrill, #jcc-home ol {
+  margin: 0;
+  padding: 0; }
 
 @font-face {
   font-family: 'code';
@@ -345,9 +354,56 @@ td, th {
   font-style: normal;
   unicode-range: U0-FFFF; }
 
+@font-face {
+  font-family: "carrotcell";
+  src: url("../fonts/carrotcell.eot");
+  src: url("../fonts/carrotcell.eot?#iefix") format("embedded-opentype"), url("../fonts/carrotcell.woff") format("woff"), url("../fonts/carrotcell.ttf") format("truetype"), url("../fonts/carrotcell.svg#carrotcell") format("svg");
+  font-weight: normal;
+  font-style: normal; }
+
+[data-icon]:before {
+  font-family: "carrotcell" !important;
+  content: attr(data-icon);
+  font-style: normal !important;
+  font-weight: normal !important;
+  font-variant: normal !important;
+  text-transform: none !important;
+  speak: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale; }
+
+[class^="cc-"]:before, [class*=" cc-"]:before, [class^="cc-"]:after, [class*=" cc-"]:after {
+  font-family: "carrotcell" !important;
+  font-style: normal !important;
+  font-weight: normal !important;
+  font-variant: normal !important;
+  text-transform: none !important;
+  speak: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale; }
+
+.cc-github:before {
+  content: "\e003"; }
+
+.cc-left:before {
+  content: "\e004"; }
+
+.cc-down:before {
+  content: "\e005"; }
+
+.cc-right:before {
+  content: "\e006"; }
+
+.cc-up:before {
+  content: "\e007"; }
+
+.cc-carrot:before, .cc-carrot-after:after {
+  content: "\e001"; }
+
 body {
-  padding: 20px;
-  color: #666666;
+  color: #aaaaaa;
   font-family: PT;
   font-weight: 300;
   font-size: 15px; }
@@ -355,66 +411,63 @@ body {
 h1 {
   font-family: code;
   font-weight: 300;
-  color: #e1e1e1;
+  color: #dddddd;
   font-size: 50px; }
+  h1 :after {
+    font-size: 43px;
+    color: #999999; }
 
-h2 {
+h2, .intro {
   font-family: raleway;
   font-weight: 300;
   color: #999999;
   font-size: 30px; }
 
-/** CARROT CELL styles
+p {
+  font-size: 15px; }
+
+.intro {
+  font-size: 20px; }
+
+.content {
+  width: 960px;
+  margin: 0 auto;
+  margin-top: 100px; }
+
+#jcc-home {
+  margin-top: 100px; }
+
+/** CARROT CELL support CSS
 	by Julia Yu
-	these are the default styles for jCarrotCell
 */
-/** make sure to specify a width and/or a height
-	for this parent element
+/** ------------------------------------------------------- necessary styles
 */
 .carrotCell {
   display: block;
   overflow: hidden;
   position: relative; }
-
-/** this is the clip pane
-	make sure to specify a width and/or a height
-*/
-.carrotCellView {
-  overflow: auto;
-  position: relative; }
-
-.carrotCellView ol {
-  display: block; }
-
-.carrotCellView li {
-  overflow: hidden;
-  float: left;
-  display: block;
-  position: relative; }
-
-/** carrotcell buttons
-*/
-.carrotCell .next, .carrotCell .prev, .carrotCell .pause, .carrotCell .play, .carrotCell .stop {
-  display: none;
-  z-index: 1;
-  cursor: pointer; }
-
-.carrotCell .invisible {
-  display: none; }
-
-/** navi
-*/
-.carrotCell .navi {
-  display: block; }
-
-.carrotCell .navi li {
-  display: inline-block;
-  cursor: pointer; }
-
-.naviItem {
-  display: inline-block; }
-
-/** disabled and invisible
-*/
-.carrotCell .disabled {
-  opacity: 0.2; }
+  .carrotCell .disabled {
+    opacity: 0.2; }
+  .carrotCell .invisible {
+    display: none; }
+  .carrotCell .navi {
+    display: block; }
+    .carrotCell .navi li {
+      display: inline-block;
+      cursor: pointer; }
+    .carrotCell .navi .naviItem {
+      display: inline-block; }
+  .carrotCell .carrotCellView {
+    overflow: auto;
+    position: relative; }
+    .carrotCell .carrotCellView ol {
+      display: block; }
+    .carrotCell .carrotCellView li {
+      overflow: hidden;
+      float: left;
+      display: block;
+      position: relative; }
+  .carrotCell .next, .carrotCell .prev, .carrotCell .pause, .carrotCell y, .carrotCell .stop {
+    display: none;
+    z-index: 1;
+    cursor: pointer; }

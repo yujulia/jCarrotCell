@@ -1,54 +1,34 @@
-/** CARROT CELL styles
+/** CARROT CELL support CSS
 	by Julia Yu
-	these are the default styles for jCarrotCell
 */
-/** make sure to specify a width and/or a height
-	for this parent element
+/** ------------------------------------------------------- necessary styles
 */
 .carrotCell {
   display: block;
   overflow: hidden;
   position: relative; }
-
-/** this is the clip pane
-	make sure to specify a width and/or a height
-*/
-.carrotCellView {
-  overflow: auto;
-  position: relative; }
-
-.carrotCellView ol {
-  display: block; }
-
-.carrotCellView li {
-  overflow: hidden;
-  float: left;
-  display: block;
-  position: relative; }
-
-/** carrotcell buttons
-*/
-.carrotCell .next, .carrotCell .prev, .carrotCell .pause, .carrotCell .play, .carrotCell .stop {
-  display: none;
-  z-index: 1;
-  cursor: pointer; }
-
-.carrotCell .invisible {
-  display: none; }
-
-/** navi
-*/
-.carrotCell .navi {
-  display: block; }
-
-.carrotCell .navi li {
-  display: inline-block;
-  cursor: pointer; }
-
-.naviItem {
-  display: inline-block; }
-
-/** disabled and invisible
-*/
-.carrotCell .disabled {
-  opacity: 0.2; }
+  .carrotCell .disabled {
+    opacity: 0.2; }
+  .carrotCell .invisible {
+    display: none; }
+  .carrotCell .navi {
+    display: block; }
+    .carrotCell .navi li {
+      display: inline-block;
+      cursor: pointer; }
+    .carrotCell .navi .naviItem {
+      display: inline-block; }
+  .carrotCell .carrotCellView {
+    overflow: auto;
+    position: relative; }
+    .carrotCell .carrotCellView ol {
+      display: block; }
+    .carrotCell .carrotCellView li {
+      overflow: hidden;
+      float: left;
+      display: block;
+      position: relative; }
+  .carrotCell .next, .carrotCell .prev, .carrotCell .pause, .carrotCell y, .carrotCell .stop {
+    display: none;
+    z-index: 1;
+    cursor: pointer; }

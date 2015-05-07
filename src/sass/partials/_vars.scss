@@ -1,3 +1,5 @@
+// ----------------------------------------------- font weights
+
 $xlight: 100;
 $light: 300;
 $regular: 400;
@@ -5,7 +7,39 @@ $book: 500;
 $semibold: 600;
 $bold: 700;
 
+// ----------------------------------------------- colors
 
-$color-text: #666666;
+$color-text: #aaaaaa;
 $color-main-header: #dddddd;
 $color-header: #999999;
+
+// ----------------------------------------------- clearfix containers
+
+%clearfix {
+    zoom: 1;
+
+    &:before, &:after  {
+        content: "";
+        display: table;
+    }
+
+    &:after {
+        clear: both;
+    }   
+}
+    
+// ----------------------------------------------- generic containers we can extend
+.box {
+    @extend %clearfix;
+}
+
+.clipbox {
+    width: 100%;
+    overflow: hidden;
+}
+    
+.nofrill {
+    @extend %clearfix;
+    margin: 0;
+    padding: 0;
+}

@@ -2,7 +2,6 @@
 @import "partials/fonts";
 
 body {
-    padding: 20px;
     color: $color-text;
     font-family: PT;
     font-weight: $light;
@@ -14,7 +13,13 @@ h1 {
     font-weight: $light;
     color: $color-main-header;
     font-size: 50px;
+
+    :after {
+        font-size: 43px;
+        color: $color-header;
+    }
 }
+
 
 h2 {
     font-family: raleway;
@@ -22,3 +27,28 @@ h2 {
     color: $color-header;
     font-size: 30px;
 }
+
+p {
+    font-size: 15px;
+}
+
+.intro {
+    @extend h2;
+    font-size: 20px;
+}
+
+.content {
+    width: 960px;
+    margin: 0 auto;
+    margin-top: 100px;
+}
+
+#jcc-home {
+    margin-top: 100px;
+
+    ol {
+        @extend .nofrill;
+
+    }
+}
+

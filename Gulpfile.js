@@ -197,7 +197,7 @@ gulp.task("serve", ["styles", "build-jade", "scripts"], function(){
         server: "./build"
     });
 
-    gulp.watch(SASS_SRC + "**/*.scss", ["styles"]);
+    gulp.watch(SASS_SRC + "/**/*", ["styles"]);
     gulp.watch(JS_SRC + "*.js", ["lint", "script-watch"]);
     gulp.watch(JADE_SRC + "*.jade", ["build-jade"]);
 
