@@ -6,70 +6,7 @@
 	necessary styles
 */
 .carrotCell {
-	display: block;
-	overflow: hidden;
 	position: relative;
-
-	.navi {
-		display: block;
-
-		li {
-			display: inline-block;
-			cursor: pointer;
-		}
-
-		.naviItem {
-			display: inline-block;
-		}
-	}
-
-	.carrotCellView {
-		overflow: auto;
-		position: relative;
-
-		ol {
-			display: block;
-		}
-
-		li {
-			overflow: hidden;
-			float: left;
-			display: block;
-			position: relative;
-		}
-	}
-
-	.next, .prev, .pause, y, .stop {
-		display: none;
-		z-index: 1;
-		cursor: pointer;
-	}
-}
-
-/** -------------------------------------------------------  
-	change these styles according to your needs
-*/
-.carrotCell { 
-	width: 100%; 
-	margin: 0 auto;
-
-	.disabled {
-		opacity: 0.2;
-	}
-
-	.invisible {
-		display: none;
-	}
-
-	.carrotCellView {
-		width: 1644px;
-		height: 400px;
-
-		li {
-			width: 1644px;
-			height: 400px;
-		}
-	}
 
 	.prev, .next {
         position: absolute;
@@ -83,11 +20,42 @@
         right: 10px;
     }
 
-}		
+    .disabled {
+    	opacity: 0.2;
+    }
 
+	// .navi {
+	// 	display: block;
 
+	// 	li {
+	// 		display: inline-block;
+	// 		cursor: pointer;
+	// 	}
 
+	// 	.naviItem {
+	// 		display: inline-block;
+	// 	}
+	// }
 
+	// .carrotCellView {
 
+	// 	ol {
+	// 		display: block;
+	// 		z-index: 0;
+	// 	}
 
+	// 	li {
+	// 		overflow: hidden;
+	// 		float: left;
+	// 		display: block;
+	// 		position: relative;
+	// 	}
+	// }
+
+	// .next, .prev, .pause, y, .stop {
+	// 	display: none;
+	// 	z-index: 1;
+	// 	cursor: pointer;
+	// }
+}
 

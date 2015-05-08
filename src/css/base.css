@@ -10,7 +10,7 @@ ol, ul, button {
   margin: 0;
   padding: 0; }
 
-[data-icon]:before, [class^="cc-"]:before, [class*=" cc-"]:before, [class^="cc-"]:after, [class*=" cc-"]:after, .list li:before {
+[data-icon]:before, [class^="cc-"]:before, [class*=" cc-"]:before, [class^="cc-"]:after, [class*=" cc-"]:after, .list li:before, #jcc-home .prev:before, #jcc-home .next:before, #jcc-home .navi .naviItem:before {
   font-family: "carrotcell" !important;
   font-style: normal !important;
   font-weight: normal !important;
@@ -33,7 +33,7 @@ ol, ul, button {
   margin: 0;
   padding: 0; }
 
-[data-icon]:before, [class^="cc-"]:before, [class*=" cc-"]:before, [class^="cc-"]:after, [class*=" cc-"]:after, .list li:before {
+[data-icon]:before, [class^="cc-"]:before, [class*=" cc-"]:before, [class^="cc-"]:after, [class*=" cc-"]:after, .list li:before, #jcc-home .prev:before, #jcc-home .next:before, #jcc-home .navi .naviItem:before {
   font-family: "carrotcell" !important;
   font-style: normal !important;
   font-weight: normal !important;
@@ -224,16 +224,11 @@ pre {
   margin-right: 10px; }
 
 #jcc-home {
-  margin-top: 80px; }
-  #jcc-home li {
-    background: url(../img/j.png) no-repeat center center;
-    background-size: 100%; }
-  #jcc-home .slide-j {
-    background-image: url(../img/j.png); }
-  #jcc-home .slide-carrot {
-    background-image: url(../img/carrot.png); }
-  #jcc-home .slide-cell {
-    background-image: url(../img/cell.png); }
+  width: 90%;
+  margin: 80px auto 0 auto;
+  border: solid 1px #000; }
+  #jcc-home img {
+    display: block; }
   #jcc-home .prev, #jcc-home .next {
     width: 30px;
     height: 30px;
@@ -242,12 +237,27 @@ pre {
   #jcc-home .prev:before, #jcc-home .next:before {
     font-size: 30px;
     color: #ff9900; }
+  #jcc-home .prev:before {
+    content: "\e00c"; }
+  #jcc-home .next:before {
+    content: "\e006"; }
   #jcc-home .prev:hover:before, #jcc-home .next:hover:before {
     color: #99cc33; }
   #jcc-home .prev:focus, #jcc-home .next:focus {
     background: transparent; }
   #jcc-home .prev:focus:before, #jcc-home .next:focus:before {
     color: #99cc33; }
+  #jcc-home .navi {
+    margin: 20px 0 0 0; }
+    #jcc-home .navi .naviItem {
+      color: transparent;
+      margin-right: 10px; }
+    #jcc-home .navi .naviItem:before {
+      content: "\e007";
+      color: #aaaaaa;
+      font-size: 14px; }
+    #jcc-home .navi .current:before {
+      color: #ff9900; }
 
 /** RAINBOW related styles
 */

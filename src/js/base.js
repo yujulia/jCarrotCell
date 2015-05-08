@@ -2,13 +2,28 @@
     jCarrotCell documentation and demo page
 **/
 $ = require('jquery');
-$.jCarrotCell = require('./jCarrotCell.js');
+
+/** console.log wrapper for debugging
+*/
+var debug = function(debugString) {
+    console.log(debugString); 
+};
+
+window.debug = debug;
+
 require('./vendor/rainbow-custom.min.js');
+require('./vendor/velocity.min.js');
+require('./jCarrotCell.js');
 
 
 $('#jcc-home').carrotCell({
-    infinite: true,
-    useMaxWidth: true,
-    minWidth : 300,
-    resizeHeight: true
+    // observed: 2
+    // useMaxWidth: true
+    // infinite: true,
+    // useMaxWidth: true,
+    // minWidth : 300,
+    // resizeHeight: true,
+    // key: true,
+    // navi: true,
+    // makeNavi: true
 });

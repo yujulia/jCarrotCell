@@ -5,7 +5,8 @@
   "description": "jquery carousel plugin",
   "main": "base.js",
   "browser": {
-    "jquery": "./node_modules/jquery/dist/jquery.min.js"
+    "jquery": "./node_modules/jquery/dist/jquery.min.js",
+    "velocity": "./node_modules/velocity-animate/velocity.min.js"
   },
   "browserify-shim": {
     "jquery": "$"
@@ -59,6 +60,7 @@
     "jquery": "^2.1.4",
     "lodash": "^3.8.0",
     "normalize.css": "^3.0.3",
+    "velocity-animate": "^1.2.2",
     "vinyl-source-stream": "^1.1.0",
     "watchify": "^3.2.1"
   }

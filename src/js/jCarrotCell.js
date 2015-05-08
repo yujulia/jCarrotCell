@@ -15,18 +15,18 @@
 		count : 0,
 		
 		makeCarrot : function(){
-			var $this = null, // this carrot cell
-			
-				DEBUG_ON = true, // DEBUG shows console logs
+			var $thisCarrot = null, // this carrot cell
 			
 				// populate default settings
 				settings = {
+					observed: 1,	// how many items visible at once
+					speed: 700,
+					sideways: true,
+
 					step: 0,
 					key: false,
-					sideways: true,
 					infinite: false,
 					auto: false,
-					speed: 500,
 					navi: false,
 					makeNavi: false,
 					delay: 5000,
@@ -68,7 +68,6 @@
 
 					// new sizing
 					resizeHeight : false,
-					useMaxWidth : false,
 					maxWidth : 0, // grab these
 					maxHeight: 0, // grabe these
 					minWidth : 0,
@@ -93,6 +92,24 @@
 				ON_INSERT = "insert",
 				ON_RELOAD = "reload",
 				PAGE_COUNT_CHANGED = "pageCountChanged",
+
+				// NEW 
+
+				carrotWidth = 0, 	// how wide this container is
+				carrotHeight = 0,	// how tall the container is
+				cellRatio = 1, 		// the ratio of height x width
+
+				onItem = 1, 		// currently, how many moves have we made
+				moveToItem = 1,		// the item we are going to
+				movePixels = 0,		// how much pixels to move this time
+				pixelsMoved = 0,	// how much did we move
+				moves = 0,			// how many times we can press next
+				prevMoves = 0,		// flag if number of moves changed
+				slots = 0,			// how much room total do we have by pressing moves
+				emptySlots = 0,		// how much leftover slots in a move
+				scrollAxis = "x",	// scroll on which axis
+				ANIMATE_LOCK = false,	// animation lock
+
 			
 				// properties of this carrotCell
 				isTouchDevice = false,
@@ -116,12 +133,7 @@
 				oldPages = null,
 				itemNames = {},
 
-			
-				currentWindow,
-				currentWindowWidth, 
-				cellRatio,
-
-				api, view, slider, items, single, totalItems,
+				clipPane, slider, items, single, totalItems,
 				frameSize, singleSize, viewSize,
 				autoScroll, pause, play, stop, 
 				visible, advanceBy, myPage, pages,
@@ -130,10 +142,18 @@
 				pauseSelect, playSelect, stopSelect, naviContainer, naviSelect,
 				firstOfLastPage, extraOnLastPage, hasOpenSpot;		
 			
-			/** console.log wrapper for debugging
+			// ---------------------------------------------------------- helper functions
+
+
+			/** get all attributes of some element
 			*/
-			var debug = function(debugString) {
-				if (DEBUG_ON) { console.log(debugString); }
+			var getAttributes = function(someElement){
+				var attrs = {};
+				var buildAttrList = function(id, attr){
+					attrs[attr.nodeName] = attr.nodeValue;
+				};
+				$.each(someElement[0].attributes, buildAttrList);
+				return attrs;
 			};
 
 			/** stop barrage of some events
@@ -147,6 +167,8 @@
 				};
 			})();
 
+			// ---------------------------------------------------------- carrotcell functions
+
 			/** the window resize happened
 			*/
 			var windowResized = function(){
@@ -154,22 +176,14 @@
 			};
 
 			var makeItMaxWidth = function(){
-				var newWidth = currentWindowWidth;
+				var newWidth = carrotWidth;
+
 				// set any max or mins for width
 				if (settings.maxWidth && (newWidth > settings.maxWidth)) {
 					newWidth = settings.maxWidth;
 				}
 				if (settings.minWidth && (newWidth < settings.minWidth)) {
 					newWidth = settings.minWidth;
-				}
-
-				// find any offsets
-				if (settings.useOffset) {
-					newWidth -= settings.useOffset;
-				} else {
-					$this.css("margin-left", "0").css("margin-right", "0"); // make sure no auto
-					var sideOffset = $this.offset().left * 2;
-					newWidth -= sideOffset;
 				}
 
 				var newHeight = newWidth/cellRatio;
@@ -180,28 +194,31 @@
 					newHeight = settings.minHeight;
 				}
 
-				$($this).css("width", newWidth+"px");
-				$(view).css("width", newWidth+"px");
+				// $($thisCarrot).css("width", newWidth+"px");
+				$(clipPane).css("width", newWidth+"px");
 				$(items).css("width", newWidth+"px");
 
 				// adjust the height as well if we are resizing height
 				if (settings.resizeHeight){
 					$(items).css("height", newHeight+"px");
-					$(view).css("height", newHeight+"px");
+					$(clipPane).css("height", newHeight+"px");
 				}
 			};
 
-			/** find out the current window size and update properties
+			/** find out the current container size and update properties
 			*/
 			var resizeCarrot = function(){
-				currentWindowWidth = currentWindow.innerWidth();
+
+				carrotWidth = $thisCarrot.innerWidth();
 				makeItMaxWidth();
+
+				// update the new sizes
 				if (settings.sideways) {
-					singleSize = single.outerWidth(true);
+					singleSize = single.outerWidth();
 				} else {
-					singleSize = single.outerHeight(true);
+					singleSize = single.outerHeight();
 				}	
-				adjustSlideSize();
+				adjustItemSize();
 			};
 
 			/** the resize handler
@@ -220,7 +237,7 @@
 				landscape -> portrait transition where the content stretches window width
 			*/
 			var windowOrientationChanged = function(){
-				$($this).css("width", "0"); 
+				$($thisCarrot).css("width", "0"); 
 				handleResize();
 			};
 			
@@ -228,9 +245,9 @@
 			*/
 			var scrollToThis = function(scrollBy, pageValue) {
 				if (settings.sideways) { 	
-					view.scrollLeft(scrollBy); 
+					clipPane.scrollLeft(scrollBy); 
 				} else {
-					view.scrollTop(scrollBy);
+					clipPane.scrollTop(scrollBy);
 				}				
 				myPage = pageValue;
 				currentPage = pageValue;
@@ -268,9 +285,9 @@
 					scrolling = true;					
 					var moveBy = (visible - extraMoves) * singleSize;	// scroll extras that are not yet 1 page full					
 					if (settings.sideways) { 										
-						view.animate({ scrollLeft : '+=' + moveBy }, settings.speed, scrollToStart);			
+						clipPane.animate({ scrollLeft : '+=' + moveBy }, settings.speed, scrollToStart);			
 					} else { 
-						view.animate({ scrollTop : '+=' + moveBy }, settings.speed, scrollToStart);
+						clipPane.animate({ scrollTop : '+=' + moveBy }, settings.speed, scrollToStart);
 					}
 				} 				
 				// scrolling backwards infinite loop
@@ -279,9 +296,9 @@
 					scrolling = true;
 					var moveby = -1 * extraMoves * singleSize;		
 					if (settings.sideways) { 										
-						view.animate({ scrollLeft : '+=' + moveby }, settings.speed, scrollToEnd);			
+						clipPane.animate({ scrollLeft : '+=' + moveby }, settings.speed, scrollToEnd);			
 					} else { 
-						view.animate({ scrollTop : '+=' + moveby }, settings.speed, scrollToEnd);
+						clipPane.animate({ scrollTop : '+=' + moveby }, settings.speed, scrollToEnd);
 					}									
 				}				
 				// default scrolling
@@ -313,51 +330,20 @@
 
 				if (settings.sideways) {
 					if (fast){
-						view.filter(':not(:animated)').animate({ scrollLeft : '+=' + scrollTo }, 0, scrollHandler);
+						clipPane.filter(':not(:animated)').animate({ scrollLeft : '+=' + scrollTo }, 0, scrollHandler);
 					} else {
-						view.filter(':not(:animated)').animate({ scrollLeft : '+=' + scrollTo }, settings.speed, scrollHandler);
+						clipPane.filter(':not(:animated)').animate({ scrollLeft : '+=' + scrollTo }, settings.speed, scrollHandler);
 					}
 				} else {
 					if (fast) {
-						view.filter(':not(:animated)').animate({ scrollTop : '+=' + scrollTo }, 0, scrollHandler);
+						clipPane.filter(':not(:animated)').animate({ scrollTop : '+=' + scrollTo }, 0, scrollHandler);
 					} else {
-						view.filter(':not(:animated)').animate({ scrollTop : '+=' + scrollTo }, settings.speed, scrollHandler);
+						clipPane.filter(':not(:animated)').animate({ scrollTop : '+=' + scrollTo }, settings.speed, scrollHandler);
 					}
 				}
 			};
 
-			/** determine if the previous and next buttons should be active based on the next page they will be linking to
-			*/
-			var determinePrevNext = function(nextPage) {			
-				if (settings.infinite) { 
-					haveBack = true;
-					haveForward = true;					
-				} else {
-					if ((nextPage <= 1) || (currentPage === 1)) { haveBack = false; } else { haveBack = true; }			
-					if (nextPage >= pages) { haveForward = false; } else { haveForward = true; }
-					if (moveByOne) { haveForward = true; }
-				}
-				
-				// enable and disable							
-				if (haveBack) { 
-					prev.removeClass(settings.disabledClass); 
-					prevDisabled = false;
-				} else { 
-					prevDisabled = true;
-					prev.addClass(settings.disabledClass); 
-					settings.controlScope.trigger(settings.atStart, [settings.name, AT_START]);
-				}
-				
-				if (haveForward) { 
-					next.removeClass(settings.disabledClass); 
-					nextDisabled = false;
-				} else { 
-					next.addClass(settings.disabledClass); 
-					settings.controlScope.trigger(settings.atEnd, [settings.name, AT_END]);
-					nextDisabled = true;
-				}						
-			};
-			
+
 			/** called when scroll by one is done
 			*/
 			var scrollByOneHandler = function() {
@@ -373,39 +359,14 @@
 				scrolling = true;
 				if (settings.sideways) {
 
-					view.filter(':not(:animated)').animate({ scrollLeft : '+=' + singleSize }, settings.speed, scrollByOneHandler);
+					clipPane.filter(':not(:animated)').animate({ scrollLeft : '+=' + singleSize }, settings.speed, scrollByOneHandler);
 				
 				} else {
-					view.filter(':not(:animated)').animate({ scrollTop : '+=' + singleSize }, settings.speed, scrollByOneHandler);
+					clipPane.filter(':not(:animated)').animate({ scrollTop : '+=' + singleSize }, settings.speed, scrollByOneHandler);
 				}
 			};
 
-			/** move carousel back
-			*/
-			var moveBack = function() {
-				if (!settings.infinite && prevDisabled) { return false; } // we are at the left most page or its circular
-				var nextPage = currentPage - 1;
-				gotoPage(nextPage);
-			};
 
-			/** move carousel forward
-			*/
-			var moveForward = function() {
-				if (!settings.infinite && nextDisabled) { return false; } // we are at the right most page	
-				var nextPage = currentPage + 1;
-				
-				// this only happens on insert and scrollOnInsert
-				if (moveByOne && !settings.infinite) {
-					moveByOne = false;
-					if (hasOpenSpot === 0) {
-						gotoPage(nextPage);
-					} else {
-						scrollByOne();
-					}
-				} else {			
-					gotoPage(nextPage);
-				}				
-			};
 			
 			/** set up the interval
 			*/
@@ -604,33 +565,20 @@
 				handleNaviChanges();		
 			};
 			
-			/** set up clickin on previous and next
-				show the buttons as well as bind click handler
-			*/
-			var setupPrevNextAdvance = function(){
-				prev.bind("click", function(e){
-					e.preventDefault();
-					moveBack();
-				}).show();
-
-				next.bind("click", function(e){
-					e.preventDefault();
-					moveForward();
-				}).show();
-			};
+			
 			
 			/** if touchwipe is included add gesture support
 			*/
 			var setupTouchSupport = function(){
 				if(jQuery().touchwipe) {				
 					if (settings.sideways) {
-						$($this).touchwipe({
+						$($thisCarrot).touchwipe({
 						    wipeLeft: function() {  moveForward(); },
 						    wipeRight: function() {  moveBack(); },
 						    preventDefaultEvents: false
 						});
 					} else {
-						$($this).touchwipe({
+						$($thisCarrot).touchwipe({
 						    wipeDown: function() {  moveForward(); },
 						    wipeUp: function() {  moveBack(); },
 						    preventDefaultEvents: false
@@ -643,62 +591,14 @@
 			*/
 			var setupPauseOnHover = function(){
 				if (settings.pauseOnHover && settings.auto) {	
-					view.bind({
+					clipPane.bind({
 						mouseenter : function() { pauseCarrotCell(); },
 						mouseleave: function(){ playCarrotCell(); }
 					});
 				}
 			};
 			
-			/** assign handlers
-			*/
-			var handleCarrotEvents = function(){	
-				setupPrevNextAdvance();
-				setupTouchSupport();
-				setupPauseOnHover();
-				if (settings.navi) { setupNavi(); }
-				if (settings.key) { setupKeyAdvance(); }
-				if (settings.auto) { setupAutoAdvance(); } 
-			};
-			
-			/** fix the slider so it fits all the items perfectly
-			*/
-			var adjustSlideSize = function(){				
-				var slideSize = singleSize * items.length; // find size of all items including cloned
-				if (settings.sideways) { 
-					slider.css("width",  slideSize + "px"); // set length of slider
-				} else {
-					slider.css("height",  slideSize + "px"); // set height of slider
-				}
-			};
-			
-			/** find how many pages there are
-			*/
-			var howManyPages = function(){						
-				if ((visible !== advanceBy) && (!settings.auto)) {
-					pages = Math.ceil((totalItems - (visible - advanceBy)) / advanceBy);				
-				} else {
-					pages = Math.ceil(totalItems / advanceBy);																
-				}					
-				if ((oldPages !== null) && (oldPages !== pages)) {
-					settings.controlScope.trigger(settings.pagesChanged, [settings.name, PAGE_COUNT_CHANGED, pages, oldPages]);			
-				}
-				oldPages = pages; // save this value							
-			};
-			
-			/** find out if we have any weird empty spots in a page
-			*/
-			var howManyExtraMoves = function(){						
-				firstOfLastPage = (pages-1) * advanceBy + 1;
-				extraMoves = totalItems - firstOfLastPage + 1;			
-				if (extraMoves === 0) {
-					extraMoves = visible; 
-				}				
-				extraOnLastPage = advanceBy - totalItems%advanceBy;
-				if (extraOnLastPage == visible ) { extraOnLastPage = 0; } // no extras really							
-				hasOpenSpot = extraOnLastPage; // the counter					
-			};
-			
+
 			/** clone a slider worth of clones at beginning and end
 			*/
 			var padWithClones = function(){
@@ -713,167 +613,20 @@
 				items.filter("." + settings.cloneClass).remove(); // remove old clones
 				findSlides();
 				padWithClones();
-				adjustSlideSize();
+				adjustItemSize();
 			};
 			
 			/** move the clones added at the beginning out of sight
 			*/
 			var moveClonesOutOfSight = function(){
 				if (settings.sideways) {
-					view.scrollLeft(singleSize * visible);
+					clipPane.scrollLeft(singleSize * visible);
 				} else {
-					view.scrollTop(singleSize * visible); 
+					clipPane.scrollTop(singleSize * visible); 
 				}
 			};
 
-			/** calculate the settings of the carrot
-			*/
-			var setupCarrot = function(){
-				if (settings.auto) { settings.infinite = true;  }			
-				if (settings.step) { advanceBy = settings.step; } else { advanceBy = visible; }
-				if (settings.makeNavi) { settings.navi = true; }
-				
-				if (settings.key) {
-					if (settings.sideways) {
-						settings.keyBack = settings.keyBack || KEY_BACK;
-						settings.keyForward = settings.keyForward || KEY_FORWARD;
-					} else {
-						settings.keyBack = settings.keyBack || KEY_UP;
-						settings.keyForward = settings.keyForward || KEY_DOWN;
-					}
-				}
 
-				howManyPages();
-				howManyExtraMoves();
-
-
-				if (settings.infinite) { padWithClones(); } 				
-				adjustSlideSize();				
-				view.css("overflow", "hidden"); // clip extra items	(not set in css for non js view)
-				
-				// reset view scroll back to original if reloading
-				if (settings.sideways){				
-					view.scrollLeft(0);
-				} else {
-					view.scrollTop(0);
-				}				
-				// move clones if infinite				
-				if (settings.infinite) {
-					moveClonesOutOfSight();	
-				} else {
-					prev.addClass(settings.disabledClassd);
-				}		
-				determinePrevNext(0); // hide previous
-			};
-			
-			/** check if content is too short to scroll, add the off class to navigation items
-			*/
-			var IsThereEnoughToScroll = function(){
-				if (totalItems <= visible) {
-					prev.addClass(settings.disabledClass);
-					next.addClass(settings.disabledClass);				
-					if (settings.navi) { naviContainer.addClass(settings.disabledClass); }
-					enoughToScroll = false;
-				} else {
-					if (settings.navi) { naviContainer.removeClass(settings.disabledClass); }
-					enoughToScroll = true;
-				}
-			};
-			
-			/** find size of view port, need to have access to single to calculate visible
-			*/
-			var findViewSizeAndVisible = function(){				
-				if (settings.sideways) {
-					viewSize = $this.innerWidth();
-				} else {
-					viewSize = $this.innerHeight();
-				}			
-
-				visible = Math.floor(viewSize / singleSize); // visible is everything in frame unless a step is set
-			};
-			
-			/** find each slide and make sure we have enough to scroll
-				otherwise turn off the controls
-			*/
-			var findSlides = function(){
-				items = slider.children(settings.sliderChildSelect); 
-				totalItems = slider.children(settings.sliderChildSelect).filter(":not(." + settings.cloneClass + ")").length;
-				single = items.filter(':first');	
-				if (settings.sideways) {
-					singleSize = single.outerWidth(true);
-				} else {
-					singleSize = single.outerHeight(true);
-				}			
-			};
-			
-			/** find and set scope of carrotcell controls
-			*/
-			var setControlScope = function(){
-				if (settings.containsControl) {
-					settings.controlScope = $this; // everything is self contained
-				} else {
-					if (settings.controlScope !== "") {
-						settings.controlScope = $(settings.controlScope); // use selector
-					} else {
-						settings.controlScope = $("body"); // default to document
-					}	
-				}
-			};
-			
-			/** after control scope is set, find the controls
-			*/
-			var findControls = function(){
-				prev = settings.controlScope.find(settings.prevSelect); 
-				next = settings.controlScope.find(settings.nextSelect); 
-				pause = settings.controlScope.find(settings.pauseSelect);
-				play = settings.controlScope.find(settings.playSelect);
-				stop = settings.controlScope.find(settings.stopSelect);
-				naviContainer = settings.controlScope.find(settings.naviContainer);
-				navi = naviContainer.find(settings.naviSelect);
-			};
-
-			/** find elements relevant to the carrot cell
-			*/
-			var findOutAboutCarrot = function(){
-
-				// are we on a touch device? that means it probably has orientation change
-				if (('ontouchstart' in window) || (window.DocumentTouch && document instanceof DocumentTouch)){
-					isTouchDevice = true;
-				}
-
-				currentWindow = $(window);
-				view = $this.children(".carrotCellView:first");	
-				slider = view.children(settings.sliderSelect);  	
-
-				setControlScope();
-				findControls();	
-				findSlides();
-				
-				// using max so resize event and on orientation change events are relevant
-				if (settings.useMaxWidth){
-					// find the default ratio of one slide based on first slide
-					var testSlide = items.filter(':first'); 
-					cellRatio = testSlide.outerWidth()/testSlide.outerHeight();
-
-					resizeCarrot(); // resize to on load window size
-
-					if (isTouchDevice) {
-						$(window).on('orientationchange', windowOrientationChanged);
-					} else {
-						$(window).on('resize', windowResized);
-					}
-				}
-				
-				findViewSizeAndVisible(); 		
-				IsThereEnoughToScroll(); // check if we have enough to scroll	
-
-				if (enoughToScroll) {
-					setupCarrot();
-					handleCarrotEvents();
-				} else {
-					debug("can not scroll content, too large or not enough");
-				}
-			};
 			
 			/** something has changed about slides, update calculations
 			*/
@@ -883,7 +636,7 @@
 				howManyExtraMoves();
 
 				if (settings.infinite) { padWithClones(); } 
-				adjustSlideSize();
+				adjustItemSize();
 				if (settings.infinite) { moveClonesOutOfSight(); }
 			};
 			
@@ -1018,11 +771,346 @@
 				settings.controlScope.trigger(settings.onReload, [settings.name, ON_RELOAD, pages]);
 			};
 
+
+
+			//-------------------------------------------------------- CHECK
+
+			var scrollHandler = function(){
+				ANIMATE_LOCK = false;
+				onItem = moveToItem;
+				settings.controlScope.trigger(settings.scrollEnd, [settings.name, SCROLL_END, onItem]);
+				determinePrevNext(myPage);				
+				pixelsMoved = movePixels; // store how much we moved by
+
+
+				// var scrollThis = 0;
+				// // scrolling forward infinite loop
+				// if (settings.infinite && (myPage > pages)) {	
+				// 	settings.controlScope.trigger(settings.scrollStart, [settings.name, SCROLL_START, 1]);
+				// 	scrolling = true;					
+				// 	var moveBy = (visible - extraMoves) * singleSize;	// scroll extras that are not yet 1 page full					
+				// 	if (settings.sideways) { 										
+				// 		clipPane.animate({ scrollLeft : '+=' + moveBy }, settings.speed, scrollToStart);			
+				// 	} else { 
+				// 		clipPane.animate({ scrollTop : '+=' + moveBy }, settings.speed, scrollToStart);
+				// 	}
+				// } 				
+				// // scrolling backwards infinite loop
+				// else if (settings.infinite && (myPage === 0)) {
+				// 	settings.controlScope.trigger(settings.scrollStart, [settings.name, SCROLL_START, pages]);
+				// 	scrolling = true;
+				// 	var moveby = -1 * extraMoves * singleSize;		
+				// 	if (settings.sideways) { 										
+				// 		clipPane.animate({ scrollLeft : '+=' + moveby }, settings.speed, scrollToEnd);			
+				// 	} else { 
+				// 		clipPane.animate({ scrollTop : '+=' + moveby }, settings.speed, scrollToEnd);
+				// 	}									
+				// }				
+				// // default scrolling
+				// else {	
+				
+				// 	determinePrevNext(myPage);				
+				// 	// call any callbacks then reset the callback
+				// 	if (typeof scrollCallBack == "function" ) {
+				// 		scrollCallBack();
+				// 	}
+				// 	scrollCallBack = null;
+				// }
+
+
+			};
+
+			/** scroll the carousel by advancing to the next page
+			*/
+			var moveTo = function(tempMoveTo, fast) {		
+		
+				if (tempMoveTo) { moveToItem = parseInt(tempMoveTo, 10); } else { return false; }
+
+				debug("on item " + onItem + " moveToItem " + moveToItem);
+
+				var direction = moveToItem < onItem ? -1 : 1; // are we going to advance or retreat?
+				var itemsToMove = Math.abs(onItem - moveToItem);
+				movePixels = singleSize * direction * itemsToMove + pixelsMoved;
+
+				
+
+				debug("direction is " + direction + " size is " + singleSize +" pixel is " + movePixels + " move by items " + itemsToMove);
+
+				ANIMATE_LOCK = true;
+				settings.controlScope.trigger(settings.scrollStart, [settings.name, SCROLL_START, onItem]);
+				slider.velocity('scroll', { 
+					axis: scrollAxis, 
+					duration: settings.speed, 
+					offset: movePixels, 
+					container: clipPane, 
+					complete: scrollHandler,
+					easting: "easeOutExpo"
+				} );
+					
+			
+
+				// if (settings.sideways) {
+				// 	if (fast){
+				// 		clipPane.filter(':not(:animated)').animate({ scrollLeft : '+=' + scrollTo }, 0, scrollHandler);
+				// 	} else {
+				// 		clipPane.filter(':not(:animated)').animate({ scrollLeft : '+=' + scrollTo }, settings.speed, scrollHandler);
+				// 	}
+				// } else {
+				// 	if (fast) {
+				// 		clipPane.filter(':not(:animated)').animate({ scrollTop : '+=' + scrollTo }, 0, scrollHandler);
+				// 	} else {
+				// 		clipPane.filter(':not(:animated)').animate({ scrollTop : '+=' + scrollTo }, settings.speed, scrollHandler);
+				// 	}
+				// }
+			};
+
+
+			/** show previous
+			*/
+			var moveBack = function(e) {
+				if (e) { e.preventDefault(); }
+				if ((!settings.infinite && nextDisabled) || ANIMATE_LOCK) { return false; } // we are at the left most page or its circular
+				
+				moveTo(onItem - settings.observed);
+			};
+
+			/** show next
+			*/
+			var moveForward = function(e) {
+				if (e) { e.preventDefault(); }
+				if ((!settings.infinite && nextDisabled) || ANIMATE_LOCK) { return false; } // we are at the right most page	
+				moveTo(settings.observed + onItem);
+
+				// var nextPage = currentPage + 1;
+				// debug("move forward " + nextPage);
+				// moveTo(nextPage);
+
+				
+				// this only happens on insert and scrollOnInsert
+				// if (moveByOne && !settings.infinite) {
+				// 	moveByOne = false;
+				// 	if (hasOpenSpot === 0) {
+				// 		gotoPage(nextPage);
+				// 	} else {
+				// 		scrollByOne();
+				// 	}
+				// } else {			
+				// 	gotoPage(nextPage);
+				// }				
+			};
+
+			/** determine if the previous and next buttons should be active based on the next page they will be linking to
+			*/
+			var determinePrevNext = function(nextPage) {			
+				if (settings.infinite) { 
+					haveBack = true;
+					haveForward = true;					
+				} else {
+					if ((nextPage <= 1) || (currentPage === 1)) { haveBack = false; } else { haveBack = true; }			
+					if (nextPage >= pages) { haveForward = false; } else { haveForward = true; }
+					if (moveByOne) { haveForward = true; }
+				}
+				
+				// enable and disable							
+				if (haveBack) { 
+					prev.removeClass(settings.disabledClass); 
+					prevDisabled = false;
+				} else { 
+					prevDisabled = true;
+					prev.addClass(settings.disabledClass); 
+					settings.controlScope.trigger(settings.atStart, [settings.name, AT_START]);
+				}
+				
+				if (haveForward) { 
+					next.removeClass(settings.disabledClass); 
+					nextDisabled = false;
+				} else { 
+					next.addClass(settings.disabledClass); 
+					settings.controlScope.trigger(settings.atEnd, [settings.name, AT_END]);
+					nextDisabled = true;
+				}						
+			};
+			
+
+			/** find how many moves we have
+			*/
+			var findMoves = function(){			
+				if (totalItems <= settings.observed) {
+					return false; // nothing to move
+				} else {
+					moves = Math.ceil(totalItems / settings.observed);
+				}
+				
+				slots = settings.observed * moves;
+				emptySlots = slots - totalItems;
+
+				debug("find moves: moves " + moves + " slots " + slots + " empty " + emptySlots);
+
+				if (prevMoves !== moves) {
+					settings.controlScope.trigger(settings.pagesChanged, [settings.name, PAGE_COUNT_CHANGED, moves, prevMoves]);			
+				}
+				prevMoves = moves; // save current moves						
+			};
+
+			/** adjust the size of the slider and the slides based on how
+				many we are showing
+			*/
+			var adjustItemSize = function(){		
+				if (settings.sideways) { 
+					singleSize = carrotWidth/settings.observed;
+					items.css("width", singleSize + "px");
+					slider.css("width",  singleSize * totalItems + "px"); // set length of slider
+				} else {
+					singleSize = carrotHeight/settings.observed;
+					items.css("height", singleSize + "px");
+					slider.css("height",  singleSize * totalItems + "px"); // set height of slider
+				}
+			};
+
+			/** create previous and next buttons
+			*/
+			var makePrevNext = function(){
+				// if no selectors passed in...
+				// can pass in other elements, or this following creation text
+
+				prev = $('<button/>', { 'class': 'prev', 'text' : 'Previous' }).hide();
+				next = $('<button/>', { 'class': 'next', 'text' : 'Next' }).hide();
+
+				// we can also pass in a scope here to append to
+				$thisCarrot.append(prev).append(next);
+			};
+
+			/** create the markup for carrotcell 
+				add a clipping pane around the content provided
+			*/
+			var makeCarrotFrame = function(){	
+				carrotWidth = $thisCarrot.innerWidth();
+				carrotHeight = $thisCarrot.innerHeight();
+				clipPane = $('<div/>', { 'class': 'carrotcellClip' }).css("overflow", "hidden");
+
+				if (settings.sideways){
+					clipPane.css("width", carrotWidth+"px");
+				} else {
+					clipPane.css("height", carrotWidth+"px");
+				}
+
+				var sliderType = '<div/>';
+				var carrotType = $thisCarrot.prop('tagName').toUpperCase();
+				var isList = false;
+
+				// is it a list? set the strip type to be what they prefer
+				if (carrotType === "UL" || carrotType === "OL"){ 
+					isList = true; 
+					sliderType = '<'+ carrotType + '/>';
+				}
+
+				slider = $(sliderType, { 'class': 'carrotcellStrip' });
+
+				// ok now add the content as list items to our strip
+				var appendSlide = function(){
+					$(this).addClass("carrotcellItem").appendTo(slider);
+				};
+				$thisCarrot.children().each(appendSlide);
+				
+				items = slider.children(); 
+				items.css("display", "block").css("float", "left");
+				totalItems = items.length;
+				single = items.filter(':first');
+
+				slider.appendTo(clipPane); // add slider to clip pane
+
+				if (isList) {
+					var dupeAttributes = getAttributes($thisCarrot);
+					var newParent = $('<div/>', dupeAttributes);
+					clipPane.appendTo(newParent);
+					$thisCarrot.replaceWith(newParent);
+					$thisCarrot = newParent;
+				}  else {
+					$thisCarrot.empty();
+					clipPane.appendTo($thisCarrot);
+				}
+
+				$thisCarrot.addClass("carrotCell");
+			};
+
+			/** change internal settings based on external settings
+			*/
+			var updateSettings = function(){
+				if (settings.auto) { settings.infinite = true;  }	
+				if (settings.key) {
+					if (settings.sideways) {
+						settings.keyBack = settings.keyBack || KEY_BACK;
+						settings.keyForward = settings.keyForward || KEY_FORWARD;
+					} else {
+						settings.keyBack = settings.keyBack || KEY_UP;
+						settings.keyForward = settings.keyForward || KEY_DOWN;
+					}
+				}
+				if (!settings.controlScope) {
+					settings.controlScope = $thisCarrot;
+				}
+				if (!settings.sideways) {
+					scrollAxis = "y";
+				}
+			};
+
+			/** start building the carrot cell
+			*/
+			var buildCarrot = function(){
+
+				// is this a touch device?
+				if (('ontouchstart' in window) || (window.DocumentTouch && document instanceof DocumentTouch)){
+					isTouchDevice = true;
+				}
+
+				updateSettings();	// toggle on relevant settings if any
+				makeCarrotFrame();	// make the carrotcell markup framework
+				makePrevNext();		// create controls
+				adjustItemSize();	// make the items fit inside the clippane
+				
+				findMoves();
+				if (moves === 0) { return false; } // got nothing to do
+
+				// handle infinite etc
+				// disable prev
+
+				determinePrevNext(0);
+		
+				prev.addClass(settings.disabledClass);
+				prev.click(moveBack).show();
+				next.click(moveForward).show();
+		
+				// setupTouchSupport();
+				// setupPauseOnHover();
+				// if (settings.navi) { setupNavi(); }
+				// if (settings.key) { setupKeyAdvance(); }
+				// if (settings.auto) { setupAutoAdvance(); } 
+			
+			
+
+				// clipPane.scrollLeft(0); // do i need this??
+				// clipPane.scrollTop(0);
+				
+				// if (isTouchDevice) {
+				// 	$(window).on('orientationchange', windowOrientationChanged);
+				// } else {
+				// 	$(window).on('resize', windowResized);
+				// }
+						
+				// IsThereEnoughToScroll(); // check if we have enough to scroll	
+				// if (enoughToScroll) {
+				// 	setupCarrot();
+				// 	handleCarrotEvents();
+				// } else {
+				// 	debug("can not scroll content, too large or not enough");
+				// }
+			};
+
 			return {
 				init : function(opt) {
 					$.extend(settings, opt); // options over ride settings
-					$this = $(opt.scope);
-					findOutAboutCarrot();
+					$thisCarrot = $(opt.scope);
+					buildCarrot();
 					if ((typeof settings.carrotDone) == "function") { settings.carrotDone(this); } // callback 
 				},
 
@@ -1074,11 +1162,7 @@
 					insertItem(newItem, index);
 					afterInsert(index);				
 					return totalItems; 				// inserted successfully
-				},
-
-				/** set api for internal access for whatever reason
-				*/
-				setAPI : function(newAPI) {  api = newAPI; }
+				}
 			};
 		},
 		
@@ -1086,15 +1170,16 @@
 		*/
 	    init : function( options ) { 	
 			if ( options ) { $.extend(options, methods.defaults); }
+
+			// for every instance of .carrotCell...
 			return this.each(function(){
 				methods.count++;
 				var opt = options || {};
 				opt.scope = this;
-				opt.name = $(opt.scope).attr("id") || ("defaultCarrot" + methods.count);
+				opt.name = $(opt.scope).attr("id") || ("defaultCarrot" + methods.count); // name this instance
 				
 				methods.carrots[opt.name] = new methods.makeCarrot();
 				methods.carrots[opt.name].init(opt);
-				methods.carrots[opt.name].setAPI(methods.carrots[opt.name]);
 
 				// set up the api data to access the object
 				var data = $(this).data('carrotCell');
@@ -1103,17 +1188,13 @@
 		}
 	};
 	
-	/** invoke methods of this plugin  
-		send it to the init if appropriate
+	/** invoke methods of this plugin OR init the plugin
 	*/
 	$.fn.carrotCell = function (method) {
-		// Method calling logic
 	    if ( methods[method] ) {
 	      return methods[ method ].apply( this, Array.prototype.slice.call( arguments, 1 ));
 	    } else if ( typeof method === 'object' || ! method ) {
 	      return methods.init.apply( this, arguments );
-	    } else {
-	      $.error( 'Method ' +  method + ' does not exist on jCarrotCell' );
-	    }
+	    } 
 	};
 })(jQuery);

@@ -19,22 +19,22 @@ html(lang="en")
                 ol
                     li: a(href="https://github.com/yujulia/jCarrotCell", class="cc-github", target="_blank") Github 
                     li: a(href="dist/jcarrotcell.zip", class="cc-download") Download 
-                    li: a(href="", class="cc-lab", target="_blank") Demos 
-                    li: a(href="", class="cc-files") Docs 
+                    li: a(href="demo.html", class="cc-lab", target="_blank") Demos 
+                    li: a(href="doc.html", class="cc-files") Docs 
 
             p.intro.
                 A flexible, responsive, customizable carousel plugin for jQuery. 
 
-        #jcc-home.carrotCell
-            .carrotCellView
-                ol
-                    li.slide-j  
-                    li.slide-carrot 
-                    li.slide-cell 
-                        
+        ul(id="jcc-home")
+            li: img(src="img/j.png", width="100%", alt="j") 
+            li: img(src="img/carrot.png", width="100%", alt="carrot")
+            li: img(src="img/cell.png", width="100%", alt="cell")
 
-            button(class="prev cc-left" type="button" ) previous
-            button(class="next cc-right" type="button" ) next
+
+        //- div(id="jcc-home")
+        //-     div: img(src="img/j.png", width="100%", alt="j") 
+        //-     div: img(src="img/carrot.png", width="100%", alt="carrot")
+        //-     div: img(src="img/cell.png", width="100%", alt="cell")
 
         .content
             section
@@ -50,7 +50,6 @@ html(lang="en")
                     li Arrow key navigation. 
                     li Use touch events when possible, or don't.
                     li Supports orientation change in maxwidth mode.
-
 
             section
                 h2 Setup 
@@ -81,12 +80,6 @@ html(lang="en")
                                 <li>item 1</li>
                                 <li>item 2</li>
                                 <li>item 3</li>
-                                <li>item 4</li>
-                                <li>item 5</li>
-                                <li>item 6</li>
-                                <li>item 7</li>
-                                <li>item 8</li>
-                                <li>item 9</li>
                             </ol>       
                         </div>          
                         <div class="prev">previous</div>

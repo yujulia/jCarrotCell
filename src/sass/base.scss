@@ -140,23 +140,13 @@ pre {
 }
 
 #jcc-home {
-    margin-top: 80px;
+    @extend .nofrill;
+    width: 90%;
+    margin: 80px auto 0 auto;
+    border: solid 1px #000;
 
-    li {
-        background: url(../img/j.png) no-repeat center center;
-        background-size: 100%;
-    }
-
-    .slide-j {
-        background-image: url(../img/j.png)
-    }
-
-    .slide-carrot {
-        background-image: url(../img/carrot.png)
-    }
-
-    .slide-cell {
-        background-image: url(../img/cell.png)
+    img {
+        display: block;
     }
 
     .prev, .next {
@@ -169,6 +159,15 @@ pre {
     .prev:before, .next:before {
         font-size: 30px;
         color: $color-carrot;
+        @extend %beforeCarrotCell;
+    }
+
+    .prev:before {
+        content: "\e00c";
+    }
+
+    .next:before {
+        content: "\e006";
     }
 
     .prev:hover:before, .next:hover:before {
@@ -181,6 +180,26 @@ pre {
 
     .prev:focus:before, .next:focus:before {
         color: $color-leaf;
+    }
+
+    .navi {
+        margin: 20px 0 0 0;
+
+        .naviItem {
+            color: transparent;
+            margin-right: 10px;
+        }
+
+        .naviItem:before {
+            @extend %beforeCarrotCell;
+            content: "\e007";
+            color: $color-text;
+            font-size: 14px;
+        }
+
+        .current:before {
+            color: $color-carrot;
+        }
     }
 
 }

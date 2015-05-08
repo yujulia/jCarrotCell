@@ -5,47 +5,7 @@
 	necessary styles
 */
 .carrotCell {
-  display: block;
-  overflow: hidden;
   position: relative; }
-  .carrotCell .navi {
-    display: block; }
-    .carrotCell .navi li {
-      display: inline-block;
-      cursor: pointer; }
-    .carrotCell .navi .naviItem {
-      display: inline-block; }
-  .carrotCell .carrotCellView {
-    overflow: auto;
-    position: relative; }
-    .carrotCell .carrotCellView ol {
-      display: block; }
-    .carrotCell .carrotCellView li {
-      overflow: hidden;
-      float: left;
-      display: block;
-      position: relative; }
-  .carrotCell .next, .carrotCell .prev, .carrotCell .pause, .carrotCell y, .carrotCell .stop {
-    display: none;
-    z-index: 1;
-    cursor: pointer; }
-
-/** -------------------------------------------------------  
-	change these styles according to your needs
-*/
-.carrotCell {
-  width: 100%;
-  margin: 0 auto; }
-  .carrotCell .disabled {
-    opacity: 0.2; }
-  .carrotCell .invisible {
-    display: none; }
-  .carrotCell .carrotCellView {
-    width: 1644px;
-    height: 400px; }
-    .carrotCell .carrotCellView li {
-      width: 1644px;
-      height: 400px; }
   .carrotCell .prev, .carrotCell .next {
     position: absolute;
     top: 50%;
@@ -54,3 +14,5 @@
   .carrotCell .next {
     left: auto;
     right: 10px; }
+  .carrotCell .disabled {
+    opacity: 0.2; }
