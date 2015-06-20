@@ -29,4 +29,4 @@ require('./jCarrotCell.js');
 // });
 
 var t1 = $('#jcc-home').carrotCell({ something: "something"});
-var t2 = $('#jcc').carrotCell();
+var t2 = $('#jcc-home').carrotCell();
