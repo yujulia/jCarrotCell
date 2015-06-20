@@ -15,6 +15,8 @@
 		KEY_FORWARD = 39,
 		KEY_UP = 38,
 		KEY_DOWN = 40,
+
+		API_NAME = 'carrotAPI',
 		CLASS_CARROT = 'carrotCell',
 		CLASS_CLIP = 'carrotcellClip',
 		CLASS_SLIDER = 'carrotcellStrip',
@@ -34,7 +36,7 @@
 			slider = null,		// sliding panel
 			items = null,		// all frames
 			totalItems = 0,		// how many frames
-			single = null,		// just one frame for measuring
+			itemSizes = [],		// size of individual items
 
 			settings = {
 				observed: 1,	// show 1 frame at a time
@@ -73,59 +75,70 @@
 			return attrs;
 		};
 
-		// --- make the html frame depending on if its a list or divs
+		// --- get the content size of the container (if resized or on load)
 
-		var makeCarrot = function(){	
+		var getScopeSize = function(){
+			width = scope.width();
+			height = scope.height();
+		};
 
-			width = scope.innerWidth();
-			height = scope.innerHeight();
+		// --- set the size of the clipping pane 
 
-			// set up the clipping panel
-
-			clipPane = $('<div/>', { 'class': CLASS_CLIP }).css("overflow", "hidden");
+		var setClipSize = function(){
 			if (settings.sideways){
 				clipPane.css("width", width + "px");
 			} else {
 				clipPane.css("height", height + "px");
 			}
+		};
 
-			// set up the sliding strip
+		// --- get individual content item sizes
+
+		var getItemSizes = function(){
+			items.each(function(i, item){
+				itemSizes.push({
+					cell: item,
+					w: $(item).outerWidth(),
+					h: $(item).outerHeight()
+				});
+
+			});
+		};
+
+		// --- make the html frame depending on if its a list or divs
+
+		var makeFrame = function(){	
+
+			getScopeSize();
+			clipPane = $('<div/>', { 'class': CLASS_CLIP }).css("overflow", "hidden");
+			setClipSize();
+			items = scope.children(); 
+			totalItems = items.length;
 
 			var sliderType = '<div/>';
 			var carrotType = scope.prop('tagName').toUpperCase();
 			var isList = false;
-
-			// is it a list? set the strip type to be divs or lists
-
 			if (carrotType === "UL" || carrotType === "OL"){ 
 				isList = true; 
 				sliderType = '<'+ carrotType + '/>';
 			}
-
-			// make a slider and add children to it
-
 			slider = $(sliderType, { 'class': CLASS_SLIDER });
-			items = scope.children(); 
 			items.appendTo(slider);
-			items.addClass(CLASS_ITEM).css("display", "block").css("float", "left");
-			totalItems = items.length;
-			single = items.filter(':first'); // measure one or measure each?
 			slider.appendTo(clipPane); 
-
 			if (isList) {
-				// make a new div as the container for this list
 				var dupeAttributes = getAttributes(scope);
 				var newParent = $('<div/>', dupeAttributes);
 				clipPane.appendTo(newParent);
 				scope.replaceWith(newParent);
 				scope = newParent;
 			} else {
-				// since its already a div just add stuff into it
 				scope.empty();
 				clipPane.appendTo(scope);
 			}
 
+			items.addClass(CLASS_ITEM).css("display", "block").css("float", "left");
 			scope.addClass(CLASS_CARROT).data(CLASS_CARROT, settings.name);
+			getItemSizes();			
 		};
 
 		// --- update the settings object 
@@ -133,7 +146,6 @@
 		var fixSettings = function(){
 			if (settings.auto) { settings.infinite = true;  }
 			if (!settings.sideways) { scrollAxis = "y"; }
-
 			if (settings.key) {
 				if (settings.sideways) {
 					settings.keyBack = settings.keyBack || KEY_BACK;
@@ -150,7 +162,7 @@
 		setup = function(){
 
 			fixSettings();	// toggle on relevant settings if any
-			makeCarrot(); 	// make the markup
+			makeFrame(); 	// make the markup
 			adjustItemSize();	// make the items fit inside the clippane
 
 			// makePrevNext();		// create controls
@@ -170,12 +182,12 @@
 		};
 
 
-		// --- the public api
-
+		/** ---------------------------------------
+			carrot public api
+		*/
 		var API_Methods = {
 
-			// --------------------------------
-			// initialize the carrot
+			// --- initialize the carrot
 
 			init : function(options){
 				scope = options.scope;
@@ -183,16 +195,14 @@
 				setup();
 			},
 
-			// --------------------------------
-			// update the carrot with new options
+			// --- update the carrot with new options
 
 			update : function(options){
 				$.extend(settings, options);
 				setup();
 			},
 
-			// --------------------------------
-			// return the name of this carrot
+			// --- return the name of this carrot
 
 			getName : function(){
 				return settings.name;
@@ -203,47 +213,42 @@
 	};
 
 	/** ---------------------------------------
-		cells contain carrots
+		keep track of all the carrot cells
 	*/
-	var cell = {
+	var track = {
 		carrots : {}, // track all the carrotcells by name
 		count : 0,
 				
-		/** initialize jcarousel object, note THIS is not cell
-		*/
+		// --- initialize jcarousel object, note THIS is not cell
+	
 	    init : function(options) { 	
 
-			cell.count++;
+			track.count++;
 			if (!options) { options = {}; } // passed in carrotcell options
 			options.scope = $(this); // save this element as the scope
-			options.name = "carrot-" + cell.count + "-" + options.scope.attr("id"); 
-
+			options.name = "carrot-" + track.count + "-" + options.scope.attr("id"); 
 			if (('ontouchstart' in window) || (window.DocumentTouch && document instanceof DocumentTouch)){
 				options.touch = true; // is this touch device?
 			}
+			var newCarrot = new carrot();
+			track.carrots[options.name] = newCarrot; 
+			newCarrot.init(options);
 
-			// cell.carrots[options.name] = new cell.makeCarrot(); 
-
-			cell.carrots[options.name] = new carrot(); 
-			cell.carrots[options.name].init(options);
-
-			options.scope.data('carrotCell', cell.carrots[options.name]); // save carrot as data
-
-			return cell.carrots[options.name]; // return api
+			return newCarrot; // return api
 		}
 	};
 	
 	/** ---------------------------------------
-		add a method to jquery
+		add carrotCell as a jquery function
 	*/
 	$.fn.carrotCell = function() {
 
-		if ($(this).hasClass("carrotCell")){
+		if ($(this).hasClass(CLASS_CARROT)){
 
 			// this carrotcell already exists, update instead of init
 
 			var carrotName = $(this).data(CLASS_CARROT);
-			var carrotAPI = cell.carrots[carrotName];
+			var carrotAPI = track.carrots[carrotName];
 			if (carrotAPI) {
 				carrotAPI.update.apply(this, arguments);
 				return carrotAPI;
@@ -251,14 +256,13 @@
 				console.log("this is not a carrot cell, please remove the " + CLASS_CARROT + " class");
 				return false;
 			}
-
 		} else {
 
 			// make a new carrotcell
 
-			var newCarrot = cell.init.apply(this, arguments);
+			var newCarrot = track.init.apply(this, arguments);
 			var newCarrotName = newCarrot.getName();
-			cell.carrots[newCarrotName] = newCarrot;
+			track.carrots[newCarrotName] = newCarrot;
 			return newCarrot;
 		}	   
 	};
