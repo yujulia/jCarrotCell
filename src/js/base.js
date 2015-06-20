@@ -16,14 +16,17 @@ require('./vendor/velocity.min.js');
 require('./jCarrotCell.js');
 
 
-$('#jcc-home').carrotCell({
-    // observed: 2
-    // useMaxWidth: true
-    // infinite: true,
-    // useMaxWidth: true,
-    // minWidth : 300,
-    // resizeHeight: true,
-    // key: true,
-    // navi: true,
-    // makeNavi: true
-});
+// $('#jcc-home').carrotCell({
+//     // observed: 2
+//     // useMaxWidth: true
+//     // infinite: true,
+//     // useMaxWidth: true,
+//     // minWidth : 300,
+//     // resizeHeight: true,
+//     // key: true,
+//     // navi: true,
+//     // makeNavi: true
+// });
+
+var t1 = $('#jcc-home').carrotCell({ something: "something"});
+var t2 = $('#jcc').carrotCell();

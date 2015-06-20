@@ -8,10 +8,186 @@
  */
 
 (function($){
+
+	/** ---------------------------------------
+		carrot methods
+	*/
+	var carrot = function(){
+
+		// --- CONST
+
+		var KEY_BACK = 37,
+			KEY_FORWARD = 39,
+			KEY_UP = 38,
+			KEY_DOWN = 40,
+			CLASS_CARROT = 'carrotCell',
+			CLASS_CLIP = 'carrotcellClip',
+			CLASS_SLIDER = 'carrotcellStrip',
+			CLASS_ITEM = 'carrotcellItem';
+
+		// --- carrot vars
+
+		var cell = null,		// shorthand for settings.scope
+			width = 0,			// container width
+			height = 0,			// container height
+			clipPane = null,	// clipping box
+			slider = null,		// sliding panel
+			items = null,		// all frames
+			totalItems = 0,		// how many frames
+			single = null,		// just one frame for measuring
+
+			settings = {
+				observed: 1,	// show 1 frame at a time
+				speed: 700,		// scroll speed			
+				sideways: true,	// scroll sideways
+				axis: "x",
+				infinite: false,
+				auto: false,
+				key: false,
+				keyBack: null,
+				keyForward: null,
+				touch: false	// touch device
+			};
+
+		// --- adjust the size of the items and the slider 
+
+		var adjustItemSize = function(){		
+			if (settings.sideways) { 
+				singleSize = width/settings.observed;
+				items.css("width", singleSize + "px");
+				slider.css("width",  singleSize * totalItems + "px"); // set length of slider
+			} else {
+				singleSize = height/settings.observed;
+				items.css("height", singleSize + "px");
+				slider.css("height",  singleSize * totalItems + "px"); // set height of slider
+			}
+		};
+
+		// --- return attributes on some jquery element
+
+		var getAttributes = function(jqElement){
+			var attrs = {}; // 
+			$.each(jqElement[0].attributes, function(id, attr){
+				attrs[attr.nodeName] = attr.nodeValue;
+			});
+			return attrs;
+		};
+
+		// --- make the html frame depending on if its a list or divs
+
+		var makeCarrot = function(){	
+
+			width = cell.innerWidth();
+			height = cell.innerHeight();
+
+			// set up the clipping panel
+
+			clipPane = $('<div/>', { 'class': CLASS_CLIP }).css("overflow", "hidden");
+			if (settings.sideways){
+				clipPane.css("width", width + "px");
+			} else {
+				clipPane.css("height", height + "px");
+			}
+
+			// set up the sliding strip
+
+			var sliderType = '<div/>';
+			var carrotType = cell.prop('tagName').toUpperCase();
+			var isList = false;
+
+			// is it a list? set the strip type to be divs or lists
+
+			if (carrotType === "UL" || carrotType === "OL"){ 
+				isList = true; 
+				sliderType = '<'+ carrotType + '/>';
+			}
+
+			// make a slider and add children to it
+
+			slider = $(sliderType, { 'class': CLASS_SLIDER });
+			items = cell.children(); 
+			items.appendTo(slider);
+			items.addClass(CLASS_ITEM).css("display", "block").css("float", "left");
+			totalItems = items.length;
+			single = items.filter(':first'); // measure one or measure each?
+			slider.appendTo(clipPane); 
+
+			if (isList) {
+				// make a new div as the container for this list
+				var dupeAttributes = getAttributes(cell);
+				var newParent = $('<div/>', dupeAttributes);
+				clipPane.appendTo(newParent);
+				cell.replaceWith(newParent);
+				cell = newParent;
+			} else {
+				// since its already a div just add stuff into it
+				cell.empty();
+				clipPane.appendTo(cell);
+			}
+
+			cell.addClass(CLASS_CARROT);
+		};
+
+		// --- update the settings object 
+
+		var fixSettings = function(){
+			if (settings.auto) { settings.infinite = true;  }
+			if (!settings.sideways) { scrollAxis = "y"; }
+
+			if (settings.key) {
+				if (settings.sideways) {
+					settings.keyBack = settings.keyBack || KEY_BACK;
+					settings.keyForward = settings.keyForward || KEY_FORWARD;
+				} else {
+					settings.keyBack = settings.keyBack || KEY_UP;
+					settings.keyForward = settings.keyForward || KEY_DOWN;
+				}
+			}
+		};
+
+		// --- 
+
+		setup = function(){
+
+			fixSettings();	// toggle on relevant settings if any
+			makeCarrot(); 	// make the markup
+			adjustItemSize();	// make the items fit inside the clippane
+
+			// makePrevNext();		// create controls
+			
+			
+			// findMoves();
+			// if (moves === 0) { return false; } // got nothing to do
+
+			// // handle infinite etc
+			// // disable prev
+
+			// determinePrevNext(0);
 	
-	var methods = {
-		carrots : {},
-		defaults : {},
+			// prev.addClass(settings.disabledClass);
+			// prev.click(moveBack).show();
+			// next.click(moveForward).show();
+		};
+
+
+		// --- the public api
+
+		var API_Methods = {
+			init : function(options){
+				cell = options.scope;
+				$.extend(settings, options); // update settings
+				setup();
+			}
+		};
+
+		return API_Methods;
+	};
+
+	/** ---------------------------------------
+		cells contain carrots
+	*/
+	var cell = {
+		carrots : {}, // track all the carrotcells by name
 		count : 0,
 		
 		makeCarrot : function(){
@@ -80,6 +256,7 @@
 				KEY_FORWARD = 39,
 				KEY_UP = 38,
 				KEY_DOWN = 40,	
+
 				SCROLL_END = "scrollEnd",
 				SCROLL_START = "scrollStart",
 				AT_START = "atStart",
@@ -148,11 +325,15 @@
 			/** get all attributes of some element
 			*/
 			var getAttributes = function(someElement){
+
 				var attrs = {};
+
 				var buildAttrList = function(id, attr){
 					attrs[attr.nodeName] = attr.nodeValue;
 				};
 				$.each(someElement[0].attributes, buildAttrList);
+
+
 				return attrs;
 			};
 
@@ -772,7 +953,6 @@
 			};
 
 
-
 			//-------------------------------------------------------- CHECK
 
 			var scrollHandler = function(){
@@ -901,11 +1081,13 @@
 
 			/** determine if the previous and next buttons should be active based on the next page they will be linking to
 			*/
-			var determinePrevNext = function(nextPage) {			
+			var determinePrevNext = function(nextPage) {	
+
 				if (settings.infinite) { 
 					haveBack = true;
 					haveForward = true;					
 				} else {
+
 					if ((nextPage <= 1) || (currentPage === 1)) { haveBack = false; } else { haveBack = true; }			
 					if (nextPage >= pages) { haveForward = false; } else { haveForward = true; }
 					if (moveByOne) { haveForward = true; }
@@ -1007,13 +1189,15 @@
 				slider = $(sliderType, { 'class': 'carrotcellStrip' });
 
 				// ok now add the content as list items to our strip
-				var appendSlide = function(){
-					$(this).addClass("carrotcellItem").appendTo(slider);
-				};
-				$thisCarrot.children().each(appendSlide);
-				
-				items = slider.children(); 
-				items.css("display", "block").css("float", "left");
+				// var appendSlide = function(){
+				// 	$(this).addClass("carrotcellItem").appendTo(slider);
+				// };
+				// $thisCarrot.children().each(appendSlide);
+
+				items = $thisCarrot.children();
+				items.appendTo(slider);
+
+				items.addClass("carrotcellItem").css("display", "block").css("float", "left");
 				totalItems = items.length;
 				single = items.filter(':first');
 
@@ -1168,33 +1352,40 @@
 		
 		/** initialize jcarousel object
 		*/
-	    init : function( options ) { 	
-			if ( options ) { $.extend(options, methods.defaults); }
+	    init : function(options) { 	
 
-			// for every instance of .carrotCell...
-			return this.each(function(){
-				methods.count++;
-				var opt = options || {};
-				opt.scope = this;
-				opt.name = $(opt.scope).attr("id") || ("defaultCarrot" + methods.count); // name this instance
-				
-				methods.carrots[opt.name] = new methods.makeCarrot();
-				methods.carrots[opt.name].init(opt);
+			cell.count++;
+			if (!options) { options = {}; } // passed in carrotcell options
+			options.scope = $(this); // save this element as the scope
+			options.name = "carrot-" + cell.count + "-" + options.scope.attr("id"); 
 
-				// set up the api data to access the object
-				var data = $(this).data('carrotCell');
-				if (!data) { $(this).data('carrotCell', methods.carrots[opt.name]); }				
-			});
+			if (('ontouchstart' in window) || (window.DocumentTouch && document instanceof DocumentTouch)){
+				options.touch = true; // is this touch device?
+			}
+
+			// cell.carrots[options.name] = new cell.makeCarrot(); 
+
+			cell.carrots[options.name] = new carrot(); 
+			cell.carrots[options.name].init(options);
+
+			options.scope.data('carrotCell', cell.carrots[options.name]); // save carrot as data
+
+			return cell.carrots[options.name]; // return api
 		}
 	};
 	
-	/** invoke methods of this plugin OR init the plugin
+	/** ---------------------------------------
+		add a method to jquery
 	*/
-	$.fn.carrotCell = function (method) {
-	    if ( methods[method] ) {
-	      return methods[ method ].apply( this, Array.prototype.slice.call( arguments, 1 ));
-	    } else if ( typeof method === 'object' || ! method ) {
-	      return methods.init.apply( this, arguments );
-	    } 
+	$.fn.carrotCell = function() {
+
+		if ($(this).hasClass("carrotCell")){
+			console.log("this already has a carrot cell");
+			var data = $(this).data('carrotCell');
+			// data.applynewseetings
+			// reapply
+		} else {
+			return cell.init.apply(this, arguments);
+		}	   
 	};
 })(jQuery);

@@ -31,10 +31,10 @@ html(lang="en")
             li: img(src="img/cell.png", width="100%", alt="cell")
 
 
-        //- div(id="jcc-home")
-        //-     div: img(src="img/j.png", width="100%", alt="j") 
-        //-     div: img(src="img/carrot.png", width="100%", alt="carrot")
-        //-     div: img(src="img/cell.png", width="100%", alt="cell")
+        div(id="jcc")
+            div: img(src="img/j.png", width="100%", alt="j") 
+            div: img(src="img/carrot.png", width="100%", alt="carrot")
+            div: img(src="img/cell.png", width="100%", alt="cell")
 
         .content
             section
@@ -74,23 +74,16 @@ html(lang="en")
                     | on how to use whatever markup you want.
 
                 pre: code(data-language="html").
-                    <div class="carrotCell">         
-                        <div class="carrotCellView">
-                            <ol>
-                                <li>item 1</li>
-                                <li>item 2</li>
-                                <li>item 3</li>
-                            </ol>       
-                        </div>          
-                        <div class="prev">previous</div>
-                        <div class="next">next</div> 
-                    </div>
-
+                    <ol class="my-thing">
+                        <li>item 1</li>
+                        <li>item 2</li>
+                        <li>item 3</li>
+                    </ol>       
 
                 p Invoke the carrotcell with the following:
 
                 pre: code(data-language="js").
-                    $(".carrotCell").carrotCell();
+                    $(".my-thing").carrotCell();
 
         footer 
             .content
