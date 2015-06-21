@@ -9,6 +9,8 @@
 
 (function($){
 
+
+
     // --- CONST
 
     var KEY_BACK = 37,
@@ -17,6 +19,7 @@
         KEY_DOWN = 40,
 
         API_NAME = 'carrotapi',
+        DEBOUNCE_RESIZE = 100,
 
         CLASS_CARROT = 'carrotcell',
         CLASS_CLIP = CLASS_CARROT + '__clip',
@@ -28,6 +31,22 @@
         CLASS_NEXT_ICON = CLASS_ICON + '--iconNext',
         CLASS_NEXT = CLASS_CARROT + '--next',
         CLASS_PREV = CLASS_CARROT + '--prev';
+
+    // --- debounce 
+
+    var debounce = function(callback, ms){
+        var timeout = null;
+
+        return function(){
+            var context = this, args = arguments;
+            var stalled = function(){
+                timeout = null;
+                callback.apply(context, args);
+            }
+            clearTimeout(timeout);
+            timeout = setTimeout(stalled, ms);
+        }
+    };
 
     /** ---------------------------------------
         carrot methods
@@ -146,6 +165,14 @@
             } else {
                 clipPane.css("height", height + "px");
             }
+        };
+
+        // --- resize happened, recalculate
+
+        var resizeCarrot = function(){
+            getScopeSize();
+            setClipSize();
+            adjustItemSize();
         };
 
         // --- calculate the size and offset for one item
@@ -284,6 +311,12 @@
                 setup();
             },
 
+            // --- the window rezied
+
+            resize : function(){
+                resizeCarrot();
+            },
+
             // --- return the name of this carrot
 
             getName : function(){
@@ -301,8 +334,25 @@
         carrots : {}, // track all the carrotcells by name
         count : 0,
                 
-        // --- initialize jcarousel object, note THIS is not cell
+        // --- trigger some function on all carrots
+
+        triggerCarrots : function(someFunc){
+            for (var i in track.carrots) {
+                if (typeof track.carrots[i][someFunc] === "function"){
+                    track.carrots[i][someFunc]();
+                }
+            }
+        },
+        
+        // --- window reized, trigger resize on all carrotcells
+
+        windowResized : debounce(function(){
+            track.triggerCarrots("resize");
+        }, DEBOUNCE_RESIZE),
     
+
+        // --- initialize jcarousel object, note THIS is not cell
+
         init : function(options) {  
 
             track.count++;
@@ -315,6 +365,8 @@
             var newCarrot = new carrot();
             track.carrots[options.name] = newCarrot; 
             newCarrot.init(options);
+
+            $(window).on('resize', track.windowResized);
 
             return newCarrot; // return api
         }
