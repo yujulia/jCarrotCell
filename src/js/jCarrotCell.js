@@ -67,6 +67,7 @@
             prev = null,
             next = null,
             moves = 0,          // how many times before we reach the end
+            moved = 0,          // how many times we moved
             slots = 0,          // how many slots total (including empties)
             emptySlots = 0,     // how many slots empty
             atStart = true,     
@@ -101,13 +102,16 @@
         // --- toggle the prev and next and start/end flags
 
         var setAtStart = function(){
+            setInMiddle();
             atStart = true;
             prev.addClass(CLASS_DISABLED);
         };
 
         var setAtEnd = function(){
+            setInMiddle();
             atEnd = true;
             next.addClass(CLASS_DISABLED);
+            
         }
 
         var setInMiddle = function(){
@@ -124,9 +128,10 @@
         // --- determine where we are in the carousel
 
         var setState = function(){     
-            if (current === 0) {
+            console.log("current ", current, " moves ", moves, " moved ", moved);
+            if (moved === 0) {
                 setAtStart();
-            } else if (current === (totalItems-1)){
+            } else if (moved === moves){
                 setAtEnd();
             } else {
                 setInMiddle();
@@ -136,7 +141,6 @@
         // --- scrolling is done
 
         var doneScrolling = function(item, moveDistance){
-            console.log("done ", item, moveDistance);
             current = item;
             alreadyMoved = moveDistance;
             animating = false;
@@ -148,6 +152,7 @@
 
         var scrollToItem = function(item, direction){
 
+            moved = moved + direction;
             var distance = Math.abs(current - item);
             console.log("in scroll ", alreadyMoved);
             var moveDistance = direction * distance * (oneItem.size + oneItem.offset) + alreadyMoved;
@@ -219,10 +224,11 @@
         // --- find moves
 
         var findMoves = function(){
-            moves = Math.ceil(totalItems/settings.scroll);
-            slots = settings.scroll * moves;
+            moves = Math.ceil(totalItems/settings.scroll) - (settings.show - settings.scroll) - 1;
+            slots = settings.show * (moves+1);
             emptySlots = slots - totalItems;
-            console.log("moves ", moves, " slots ", slots,  " emoty ", emptySlots);
+
+            console.log("moves ", moves, " slots ", slots,  "empty ", emptySlots);
         };
 
         // --- adjust the size of the items and the slider 
