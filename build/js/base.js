@@ -21,7 +21,7 @@ var t1 = $('#jcc-home').carrotCell({
     nextClass : "next",
     prevIconClass : 'cc-left',
     nextIconClass: 'cc-right',
-    show: 1,
+    show: 3,
     scroll: 1
 });
 
@@ -143,19 +143,6 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
 
         // --- toggle the prev and next and start/end flags
 
-        var setAtStart = function(){
-            setInMiddle();
-            atStart = true;
-            prev.addClass(CLASS_DISABLED);
-        };
-
-        var setAtEnd = function(){
-            setInMiddle();
-            atEnd = true;
-            next.addClass(CLASS_DISABLED);
-            
-        }
-
         var setInMiddle = function(){
             if (atStart) {
                 prev.removeClass(CLASS_DISABLED);
@@ -167,6 +154,19 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             }
         }
 
+        var setAtStart = function(){
+            setInMiddle();  // fix previous state
+            atStart = true;
+            prev.addClass(CLASS_DISABLED);
+        };
+
+        var setAtEnd = function(){
+            setInMiddle();  // fix previous state
+            atEnd = true;
+            next.addClass(CLASS_DISABLED);
+            
+        }
+    
         // --- determine where we are in the carousel
 
         var setState = function(){     
@@ -182,9 +182,10 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
 
         // --- scrolling is done
 
-        var doneScrolling = function(item, moveDistance){
+        var doneScrolling = function(item, direction, moveDistance){
             current = item;
             alreadyMoved = moveDistance;
+            moved += direction;
             animating = false;
 
             if (!settings.infinite){ setState(); }
@@ -194,10 +195,7 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
 
         var scrollToItem = function(item, direction){
 
-            moved = moved + direction;
-            var distance = Math.abs(current - item);
-            console.log("in scroll ", alreadyMoved);
-            var moveDistance = direction * distance * (oneItem.size + oneItem.offset) + alreadyMoved;
+            var moveDistance = direction * Math.abs(current - item) * (oneItem.size + oneItem.offset) + alreadyMoved;
 
             animating = true;
 
@@ -206,7 +204,7 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
                 duration: settings.speed, 
                 offset: moveDistance, 
                 container: clipPane, 
-                complete: doneScrolling.bind(this, item, moveDistance),
+                complete: doneScrolling.bind(this, item, direction, moveDistance),
                 easting: "easeOutExpo"
             } );
             // if no velocity use jquery animate
@@ -267,7 +265,10 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
 
         var findMoves = function(){
             moves = Math.ceil(totalItems/settings.scroll) - (settings.show - settings.scroll) - 1;
-            slots = settings.show * (moves+1);
+
+            // these only matter for infinite scroll
+            
+            slots = settings.show * Math.ceil(totalItems/settings.show);
             emptySlots = slots - totalItems;
 
             console.log("moves ", moves, " slots ", slots,  "empty ", emptySlots);

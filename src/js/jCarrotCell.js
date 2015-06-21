@@ -101,19 +101,6 @@
 
         // --- toggle the prev and next and start/end flags
 
-        var setAtStart = function(){
-            setInMiddle();
-            atStart = true;
-            prev.addClass(CLASS_DISABLED);
-        };
-
-        var setAtEnd = function(){
-            setInMiddle();
-            atEnd = true;
-            next.addClass(CLASS_DISABLED);
-            
-        }
-
         var setInMiddle = function(){
             if (atStart) {
                 prev.removeClass(CLASS_DISABLED);
@@ -125,6 +112,19 @@
             }
         }
 
+        var setAtStart = function(){
+            setInMiddle();  // fix previous state
+            atStart = true;
+            prev.addClass(CLASS_DISABLED);
+        };
+
+        var setAtEnd = function(){
+            setInMiddle();  // fix previous state
+            atEnd = true;
+            next.addClass(CLASS_DISABLED);
+            
+        }
+    
         // --- determine where we are in the carousel
 
         var setState = function(){     
@@ -140,9 +140,10 @@
 
         // --- scrolling is done
 
-        var doneScrolling = function(item, moveDistance){
+        var doneScrolling = function(item, direction, moveDistance){
             current = item;
             alreadyMoved = moveDistance;
+            moved += direction;
             animating = false;
 
             if (!settings.infinite){ setState(); }
@@ -152,10 +153,7 @@
 
         var scrollToItem = function(item, direction){
 
-            moved = moved + direction;
-            var distance = Math.abs(current - item);
-            console.log("in scroll ", alreadyMoved);
-            var moveDistance = direction * distance * (oneItem.size + oneItem.offset) + alreadyMoved;
+            var moveDistance = direction * Math.abs(current - item) * (oneItem.size + oneItem.offset) + alreadyMoved;
 
             animating = true;
 
@@ -164,7 +162,7 @@
                 duration: settings.speed, 
                 offset: moveDistance, 
                 container: clipPane, 
-                complete: doneScrolling.bind(this, item, moveDistance),
+                complete: doneScrolling.bind(this, item, direction, moveDistance),
                 easting: "easeOutExpo"
             } );
             // if no velocity use jquery animate
@@ -225,7 +223,10 @@
 
         var findMoves = function(){
             moves = Math.ceil(totalItems/settings.scroll) - (settings.show - settings.scroll) - 1;
-            slots = settings.show * (moves+1);
+
+            // these only matter for infinite scroll
+            
+            slots = settings.show * Math.ceil(totalItems/settings.show);
             emptySlots = slots - totalItems;
 
             console.log("moves ", moves, " slots ", slots,  "empty ", emptySlots);
