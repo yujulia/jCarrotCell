@@ -28,5 +28,6 @@ require('./jCarrotCell.js');
 //     // makeNavi: true
 // });
 
-var t1 = $('#jcc-home').carrotCell({ something: "something"});
+var t1 = $('#jcc-home').carrotCell({ stretch: true });
+
 console.log(t1.getName());

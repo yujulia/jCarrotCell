@@ -4,15 +4,15 @@
 /** ------------------------------------------------------- 
 	necessary styles
 */
-.carrotCell {
+.carrotcell {
   position: relative; }
-  .carrotCell .prev, .carrotCell .next {
+  .carrotcell .prev, .carrotcell .next {
     position: absolute;
     top: 50%;
     left: 10px;
     cursor: pointer; }
-  .carrotCell .next {
+  .carrotcell .next {
     left: auto;
     right: 10px; }
-  .carrotCell .disabled {
+  .carrotcell .disabled {
     opacity: 0.2; }

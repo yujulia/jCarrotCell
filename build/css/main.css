@@ -545,7 +545,8 @@ pre {
 #jcc-home {
   width: 90%;
   margin: 80px auto 0 auto;
-  border: solid 1px #000; }
+  border: solid 3px #000;
+  box-sizing: content-box; }
   #jcc-home img {
     display: block; }
   #jcc-home .prev, #jcc-home .next {
@@ -577,6 +578,11 @@ pre {
       font-size: 14px; }
     #jcc-home .navi .current:before {
       color: #ff9900; }
+
+.jcc-item {
+  width: 1644px;
+  border: solid 2px red;
+  margin: 5px; }
 
 /** RAINBOW related styles
 */
@@ -624,15 +630,15 @@ pre {
 /** ------------------------------------------------------- 
 	necessary styles
 */
-.carrotCell {
+.carrotcell {
   position: relative; }
-  .carrotCell .prev, .carrotCell .next {
+  .carrotcell .prev, .carrotcell .next {
     position: absolute;
     top: 50%;
     left: 10px;
     cursor: pointer; }
-  .carrotCell .next {
+  .carrotcell .next {
     left: auto;
     right: 10px; }
-  .carrotCell .disabled {
+  .carrotcell .disabled {
     opacity: 0.2; }
