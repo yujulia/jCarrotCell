@@ -81,17 +81,14 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             width = 0,          // container width
             height = 0,         // container height
             clipPane = null,    // clipping box
+
             slider = null,      // sliding panel
+            sliderSize = 0,
+
             items = null,       // all frames
             totalItems = 0,     // how many frames
-
             itemSizes = [],     // size of individual items
             oneItem = null,     // shorthand for just one item
-
-            itemLong = 0,
-            itemShort = 0,
-            sliderLong = 0,     // width if sideways, length if not
-            sliderShort = 0,    
 
             settings = {
                 observed: 1,    // show 1 frame at a time
@@ -113,10 +110,10 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
 
             if (settings.sideways) { 
                 items.css("width", width/settings.observed - oneItem.offset + "px");
-                slider.css("width",  sliderLong + "px"); // set length of slider
+                slider.css("width",  sliderSize + "px"); // set length of slider
             } else {
                 items.css("height", height/settings.observed - oneItem.offset + "px");
-                slider.css("height",  sliderLong + "px"); // set height of slider
+                slider.css("height",  sliderSize + "px"); // set height of slider
             }
         };
 
@@ -181,11 +178,9 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
                 itemSizes.push(data);
 
                 if (settings.sideways){
-                    sliderLong += data.w;
-                    if (data.h > sliderShort) { sliderShort = data.h; }
+                    sliderSize += data.w;
                 } else {
-                    sliderLong += data.h;
-                    if (data.w > sliderShort) { sliderShort = data.w; }
+                    sliderSize += data.h;
                 }
             });
 
