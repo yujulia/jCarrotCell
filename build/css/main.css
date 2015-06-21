@@ -317,17 +317,13 @@ table {
 td, th {
   padding: 0; }
 
-ol, ul, button, section, nav, footer, .content {
+section, nav, footer, .content {
   zoom: 1; }
-  ol:before, ul:before, button:before, section:before, nav:before, footer:before, .content:before, ol:after, ul:after, button:after, section:after, nav:after, footer:after, .content:after {
+  section:before, nav:before, footer:before, .content:before, section:after, nav:after, footer:after, .content:after {
     content: "";
     display: table; }
-  ol:after, ul:after, button:after, section:after, nav:after, footer:after, .content:after {
+  section:after, nav:after, footer:after, .content:after {
     clear: both; }
-
-ol, ul, button {
-  margin: 0;
-  padding: 0; }
 
 [data-icon]:before, [class^="cc-"]:before, [class*=" cc-"]:before, [class^="cc-"]:after, [class*=" cc-"]:after, .list li:before {
   font-family: "carrotcell" !important;
@@ -340,17 +336,13 @@ ol, ul, button {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale; }
 
-ol, ul, button, section, nav, footer, .content {
+section, nav, footer, .content {
   zoom: 1; }
-  ol:before, ul:before, button:before, section:before, nav:before, footer:before, .content:before, ol:after, ul:after, button:after, section:after, nav:after, footer:after, .content:after {
+  section:before, nav:before, footer:before, .content:before, section:after, nav:after, footer:after, .content:after {
     content: "";
     display: table; }
-  ol:after, ul:after, button:after, section:after, nav:after, footer:after, .content:after {
+  section:after, nav:after, footer:after, .content:after {
     clear: both; }
-
-ol, ul, button {
-  margin: 0;
-  padding: 0; }
 
 [data-icon]:before, [class^="cc-"]:before, [class*=" cc-"]:before, [class^="cc-"]:after, [class*=" cc-"]:after, .list li:before {
   font-family: "carrotcell" !important;
@@ -447,13 +439,6 @@ ol, ul, button {
 
 .cc-star:before {
   content: "\e010"; }
-
-ol, ul {
-  list-style: none; }
-
-button {
-  background: none;
-  border: none; }
 
 :focus {
   outline: none;
@@ -611,6 +596,18 @@ pre {
 */
 .carrotcell {
   position: relative; }
+  .carrotcell__clip {
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+    border: none; }
+  .carrotcell__strip {
+    margin: 0;
+    padding: 0;
+    list-style: none; }
+  .carrotcell__item {
+    display: block;
+    float: left; }
   .carrotcell--prev, .carrotcell--next {
     position: absolute;
     top: 50%;

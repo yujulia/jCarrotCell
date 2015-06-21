@@ -8,6 +8,24 @@
 .carrotcell {
 	position: relative;
 
+    &__clip {
+        overflow: hidden;
+        margin: 0;
+        padding: 0;
+        border: none;
+    }
+
+    &__strip {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    &__item {
+        display: block;
+        float: left;
+    }
+
 	&--prev, &--next {
         position: absolute;
         top: 50%;

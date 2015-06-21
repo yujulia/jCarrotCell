@@ -5,16 +5,16 @@
 
 // -------------------------------- resets 
 
-ol, ul {
-    @extend %nofrill;
-    list-style: none;
-}
+// ol, ul {
+//     @extend %nofrill;
+//     list-style: none;
+// }
 
-button {
-    @extend %nofrill;
-    background: none;
-    border: none;
-}
+// button {
+//     @extend %nofrill;
+//     background: none;
+//     border: none;
+// }
 
 :focus {
     outline: none;

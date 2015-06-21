@@ -16,24 +16,13 @@ require('./vendor/rainbow-custom.min.js');
 require('./vendor/velocity.min.js');
 require('./jCarrotCell.js');
 
-
-// $('#jcc-home').carrotCell({
-//     // observed: 2
-//     // useMaxWidth: true
-//     // infinite: true,
-//     // useMaxWidth: true,
-//     // minWidth : 300,
-//     // resizeHeight: true,
-//     // key: true,
-//     // navi: true,
-//     // makeNavi: true
-// });
-
 var t1 = $('#jcc-home').carrotCell({ 
     prevClass : "prev",
     nextClass : "next",
     prevIconClass : 'cc-left',
-    nextIconClass: 'cc-right'
+    nextIconClass: 'cc-right',
+    show: 1,
+    scroll: 1
 });
 
 console.log(t1.getName());
@@ -93,24 +82,21 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             width = 0,          // container width
             height = 0,         // container height
             clipPane = null,    // clipping box
-
             slider = null,      // sliding panel
             sliderSize = 0,
-
             items = null,       // all frames
             totalItems = 0,     // how many frames
             itemSizes = [],     // size of individual items
             oneItem = null,     // shorthand for just one item
-
             prev = null,
             next = null,
-
             moves = 0,          // how many times before we reach the end
             slots = 0,          // how many slots total (including empties)
             emptySlots = 0,     // how many slots empty
 
             settings = {
-                observed: 1,    // show 1 frame at a time
+                show: 1,        // show 1 frame at a time
+                scroll: 1,      // scroll 1 frame at a time
                 speed: 700,     // scroll speed         
                 sideways: true, // scroll sideways
 
@@ -154,8 +140,8 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
         // --- find moves
 
         var findMoves = function(){
-            moves = Math.ceil(totalItems/settings.observed);
-            slots = settings.observed * moves;
+            moves = Math.ceil(totalItems/settings.scroll);
+            slots = settings.scroll * moves;
             emptySlots = slots - totalItems;
             console.log("moves ", moves, " slots ", slots,  " emoty ", emptySlots);
         };
@@ -167,11 +153,11 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             var single = 0;
 
             if (settings.sideways) { 
-                single = width/settings.observed;
+                single = width/settings.show;
                 items.css("width", single - oneItem.offset + "px");
                 slider.css("width",  single * totalItems + "px"); // set length of slider
             } else {
-                single = height/settings.observed;
+                single = height/settings.show;
                 items.css("height", single - oneItem.offset + "px");
                 slider.css("height",  single * totalItems + "px"); // set height of slider
             }
@@ -192,8 +178,6 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
         var getScopeSize = function(){
             width = scope.width();
             height = scope.height();
-
-            console.log("get scope width ", width, scope.width(), scope.innerWidth(), scope.outerWidth(), scope.outerWidth(true));
         };
 
         // --- set the size of the clipping pane 
@@ -258,7 +242,7 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
         var makeFrame = function(){ 
 
             getScopeSize();
-            clipPane = $('<div/>', { 'class': CLASS_CLIP }).css("overflow", "hidden");
+            clipPane = $('<div/>', { 'class': CLASS_CLIP });
             setClipSize();
 
             var sliderType = '<div/>';
@@ -282,7 +266,7 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
                 clipPane.appendTo(scope);
             }
 
-            items.addClass(CLASS_ITEM).css("display", "block").css("float", "left");
+            items.addClass(CLASS_ITEM);
             scope.addClass(CLASS_CARROT).data(CLASS_CARROT, settings.name);     
         };
 
@@ -315,23 +299,10 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
 
             // add further functionality if we have something to scroll
 
-            if ((totalItems > settings.observed) && (totalItems > 1)) {
+            if ((totalItems > settings.show) && (totalItems > 1)) {
                 findMoves();        // find out how many times we can scroll
                 createControls();   // make next prev
             }
-
-            // makePrevNext();      // create controls
-            // findMoves();
-            // if (moves === 0) { return false; } // got nothing to do
-
-            // // handle infinite etc
-            // // disable prev
-
-            // determinePrevNext(0);
-    
-            // prev.addClass(settings.disabledClass);
-            // prev.click(moveBack).show();
-            // next.click(moveForward).show();
         };
 
 

@@ -7,6 +7,18 @@
 */
 .carrotcell {
   position: relative; }
+  .carrotcell__clip {
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+    border: none; }
+  .carrotcell__strip {
+    margin: 0;
+    padding: 0;
+    list-style: none; }
+  .carrotcell__item {
+    display: block;
+    float: left; }
   .carrotcell--prev, .carrotcell--next {
     position: absolute;
     top: 50%;
