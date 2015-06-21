@@ -8,15 +8,14 @@
 .carrotcell {
 	position: relative;
 
-
-	.prev, .next {
+	&--prev, &--next {
         position: absolute;
         top: 50%;
         left: 10px;
         cursor: pointer;
     }
 
-    .next {
+    &--next {
         left: auto;
         right: 10px;
     }

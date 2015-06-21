@@ -631,12 +631,12 @@ pre {
 */
 .carrotcell {
   position: relative; }
-  .carrotcell .prev, .carrotcell .next {
+  .carrotcell--prev, .carrotcell--next {
     position: absolute;
     top: 50%;
     left: 10px;
     cursor: pointer; }
-  .carrotcell .next {
+  .carrotcell--next {
     left: auto;
     right: 10px; }
   .carrotcell .disabled {

@@ -17,10 +17,13 @@
         KEY_DOWN = 40,
 
         API_NAME = 'carrotapi',
+
         CLASS_CARROT = 'carrotcell',
         CLASS_CLIP = CLASS_CARROT + '__clip',
         CLASS_SLIDER = CLASS_CARROT + '__strip',
-        CLASS_ITEM = CLASS_CARROT + '__item';
+        CLASS_ITEM = CLASS_CARROT + '__item',
+        CLASS_NEXT = CLASS_CARROT + '--next',
+        CLASS_PREV = CLASS_CARROT + '--prev';
 
     /** ---------------------------------------
         carrot methods
@@ -42,6 +45,13 @@
             itemSizes = [],     // size of individual items
             oneItem = null,     // shorthand for just one item
 
+            prev = null,
+            next = null,
+
+            moves = 0,          // how many times before we reach the end
+            slots = 0,          // how many slots total (including empties)
+            emptySlots = 0,     // how many slots empty
+
             settings = {
                 observed: 1,    // show 1 frame at a time
                 speed: 700,     // scroll speed         
@@ -55,17 +65,35 @@
                 touch: false    // touch device
             };
 
+        var createControls = function(){
+
+            prev = $('<button/>', { 'class': CLASS_PREV, 'text' : 'Previous' });
+            next = $('<button/>', { 'class': CLASS_NEXT, 'text' : 'Next' });
+
+            scope.append(prev).append(next);
+        };
+
+        // --- find moves
+
+        var findMoves = function(){
+            moves = Math.ceil(totalItems/settings.observed);
+            slots = settings.observed * moves;
+            emptySlots = slots - totalItems;
+            console.log("moves ", moves, " slots ", slots,  " emoty ", emptySlots);
+        };
+
         // --- adjust the size of the items and the slider 
 
         var adjustItemSize = function(){    
             getAllItemSizes(); 
+            var single = 0;
 
             if (settings.sideways) { 
-                var single = width/settings.observed;
+                single = width/settings.observed;
                 items.css("width", single - oneItem.offset + "px");
                 slider.css("width",  single * totalItems + "px"); // set length of slider
             } else {
-                var single = height/settings.observed;
+                single = height/settings.observed;
                 items.css("height", single - oneItem.offset + "px");
                 slider.css("height",  single * totalItems + "px"); // set height of slider
             }
@@ -203,14 +231,15 @@
             items = scope.children(); 
             totalItems = items.length;
 
-            fixSettings();  // toggle on relevant settings if any
-            makeFrame();    // make the markup
+            fixSettings();      // toggle on relevant settings if any
+            makeFrame();        // make the markup
             adjustItemSize();   // make the items fit inside the clippane
 
             // add further functionality if we have something to scroll
 
-            if (totalItems > 1) {
-      
+            if ((totalItems > settings.observed) && (totalItems > 1)) {
+                findMoves();        // find out how many times we can scroll
+                createControls();   // make next prev
             }
 
             // makePrevNext();      // create controls
