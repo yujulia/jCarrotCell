@@ -1,3 +1,4 @@
+@charset "UTF-8";
 /*! 
 	CARROT CELL support CSS
 */
@@ -10,9 +11,20 @@
     position: absolute;
     top: 50%;
     left: 10px;
-    cursor: pointer; }
+    cursor: pointer;
+    background: none;
+    border: none;
+    margin: 0;
+    padding: 0; }
   .carrotcell--next {
     left: auto;
     right: 10px; }
+  .carrotcell__icon--iconPrev:before {
+    content: '◀'; }
+  .carrotcell__icon--iconNext:before {
+    content: '▶'; }
+  .carrotcell__accessText {
+    display: inline-block;
+    text-indent: -9999em; }
   .carrotcell .disabled {
     opacity: 0.2; }

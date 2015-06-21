@@ -155,55 +155,34 @@ pre {
     .prev, .next {
         width: 30px;
         height: 30px;
-        margin-top: -15px; 
-        color: transparent;
-    }
-
-    .prev:before, .next:before {
-        font-size: 30px;
         color: $color-carrot;
-        @extend %beforeCarrotCell;
+        font-size: 28px;
     }
 
-    .prev:before {
-        content: "\e00c";
-    }
-
-    .next:before {
-        content: "\e006";
-    }
-
-    .prev:hover:before, .next:hover:before {
+    .prev:hover, .next:hover, .prev:focus, .next:focus {
         color: $color-leaf;
-    }
-
-    .prev:focus, .next:focus {
         background: transparent;
     }
 
-    .prev:focus:before, .next:focus:before {
-        color: $color-leaf;
-    }
+    // .navi {
+    //     margin: 20px 0 0 0;
 
-    .navi {
-        margin: 20px 0 0 0;
+    //     .naviItem {
+    //         color: transparent;
+    //         margin-right: 10px;
+    //     }
 
-        .naviItem {
-            color: transparent;
-            margin-right: 10px;
-        }
+    //     .naviItem:before {
+    //         @extend %beforeCarrotCell;
+    //         content: "\e007";
+    //         color: $color-text;
+    //         font-size: 14px;
+    //     }
 
-        .naviItem:before {
-            @extend %beforeCarrotCell;
-            content: "\e007";
-            color: $color-text;
-            font-size: 14px;
-        }
-
-        .current:before {
-            color: $color-carrot;
-        }
-    }
+    //     .current:before {
+    //         color: $color-carrot;
+    //     }
+    // }
 
 }
 

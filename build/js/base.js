@@ -29,7 +29,12 @@ require('./jCarrotCell.js');
 //     // makeNavi: true
 // });
 
-var t1 = $('#jcc-home').carrotCell({ stretch: true });
+var t1 = $('#jcc-home').carrotCell({ 
+    prevClass : "prev",
+    nextClass : "next",
+    prevIconClass : 'cc-left',
+    nextIconClass: 'cc-right'
+});
 
 console.log(t1.getName());
 },{"./jCarrotCell.js":3,"./vendor/rainbow-custom.min.js":4,"./vendor/velocity.min.js":5,"jquery":2}],2:[function(require,module,exports){
@@ -70,6 +75,10 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
         CLASS_CLIP = CLASS_CARROT + '__clip',
         CLASS_SLIDER = CLASS_CARROT + '__strip',
         CLASS_ITEM = CLASS_CARROT + '__item',
+        CLASS_ACCESS_TEXT = CLASS_CARROT + '__accessText',
+        CLASS_ICON = CLASS_CARROT + '__icon',
+        CLASS_PREV_ICON = CLASS_ICON + '--iconPrev',
+        CLASS_NEXT_ICON = CLASS_ICON + '--iconNext',
         CLASS_NEXT = CLASS_CARROT + '--next',
         CLASS_PREV = CLASS_CARROT + '--prev';
 
@@ -104,20 +113,41 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
                 observed: 1,    // show 1 frame at a time
                 speed: 700,     // scroll speed         
                 sideways: true, // scroll sideways
-                axis: "x",
+
+                prevClass : '',
+                nextClass : '',
+                prevText : 'next',
+                nextText : 'previous',
+                prevIconClass : CLASS_PREV_ICON,
+                nextIconClass : CLASS_NEXT_ICON,
+
+                axis: 'x',
                 infinite: false,
                 auto: false,
                 key: false,
                 keyBack: null,
                 keyForward: null,
+
                 touch: false    // touch device
             };
 
+        // -- create icon prev and next buttons
+
         var createControls = function(){
 
-            prev = $('<button/>', { 'class': CLASS_PREV, 'text' : 'Previous' });
-            next = $('<button/>', { 'class': CLASS_NEXT, 'text' : 'Next' });
+            var prevContent = $('<span/>', { 'class' : CLASS_ACCESS_TEXT, 'text': settings.prevText });
+            var nextContent = $('<span/>', { 'class' : CLASS_ACCESS_TEXT, 'text': settings.nextText });
+            var prevIcon = $('<span/>', { 'class' : CLASS_ICON + ' ' + settings.prevIconClass, 'aria-hidden': true });
+            var nextIcon = $('<span/>', { 'class' : CLASS_ICON + ' ' + settings.nextIconClass, 'aria-hidden': true });
 
+            prev = $('<button/>', { 'class': CLASS_PREV + ' ' + settings.prevClass });
+            next = $('<button/>', { 'class': CLASS_NEXT + ' ' + settings.nextClass });
+     
+            prev.append(prevIcon);
+            prev.append(prevContent);
+            next.append(nextContent);
+            next.append(nextIcon);
+            
             scope.append(prev).append(next);
         };
 

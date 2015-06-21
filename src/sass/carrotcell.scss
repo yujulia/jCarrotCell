@@ -13,11 +13,32 @@
         top: 50%;
         left: 10px;
         cursor: pointer;
+        background: none;
+        border: none;
+        margin: 0;
+        padding: 0;
     }
+
 
     &--next {
         left: auto;
         right: 10px;
+    }
+
+    &__icon {
+
+        &--iconPrev:before {
+            content: '◀';
+        }
+
+        &--iconNext:before {
+            content: '▶';
+        }
+    }
+
+    &__accessText {
+        display: inline-block;
+        text-indent: -9999em;
     }
 
     .disabled {

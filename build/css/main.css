@@ -329,7 +329,7 @@ ol, ul, button {
   margin: 0;
   padding: 0; }
 
-[data-icon]:before, [class^="cc-"]:before, [class*=" cc-"]:before, [class^="cc-"]:after, [class*=" cc-"]:after, .list li:before, #jcc-home .prev:before, #jcc-home .next:before, #jcc-home .navi .naviItem:before {
+[data-icon]:before, [class^="cc-"]:before, [class*=" cc-"]:before, [class^="cc-"]:after, [class*=" cc-"]:after, .list li:before {
   font-family: "carrotcell" !important;
   font-style: normal !important;
   font-weight: normal !important;
@@ -352,7 +352,7 @@ ol, ul, button {
   margin: 0;
   padding: 0; }
 
-[data-icon]:before, [class^="cc-"]:before, [class*=" cc-"]:before, [class^="cc-"]:after, [class*=" cc-"]:after, .list li:before, #jcc-home .prev:before, #jcc-home .next:before, #jcc-home .navi .naviItem:before {
+[data-icon]:before, [class^="cc-"]:before, [class*=" cc-"]:before, [class^="cc-"]:after, [class*=" cc-"]:after, .list li:before {
   font-family: "carrotcell" !important;
   font-style: normal !important;
   font-weight: normal !important;
@@ -552,32 +552,11 @@ pre {
   #jcc-home .prev, #jcc-home .next {
     width: 30px;
     height: 30px;
-    margin-top: -15px;
-    color: transparent; }
-  #jcc-home .prev:before, #jcc-home .next:before {
-    font-size: 30px;
-    color: #ff9900; }
-  #jcc-home .prev:before {
-    content: "\e00c"; }
-  #jcc-home .next:before {
-    content: "\e006"; }
-  #jcc-home .prev:hover:before, #jcc-home .next:hover:before {
-    color: #99cc33; }
-  #jcc-home .prev:focus, #jcc-home .next:focus {
+    color: #ff9900;
+    font-size: 28px; }
+  #jcc-home .prev:hover, #jcc-home .next:hover, #jcc-home .prev:focus, #jcc-home .next:focus {
+    color: #99cc33;
     background: transparent; }
-  #jcc-home .prev:focus:before, #jcc-home .next:focus:before {
-    color: #99cc33; }
-  #jcc-home .navi {
-    margin: 20px 0 0 0; }
-    #jcc-home .navi .naviItem {
-      color: transparent;
-      margin-right: 10px; }
-    #jcc-home .navi .naviItem:before {
-      content: "\e007";
-      color: #aaaaaa;
-      font-size: 14px; }
-    #jcc-home .navi .current:before {
-      color: #ff9900; }
 
 .jcc-item {
   border: solid 2px red;
@@ -623,6 +602,7 @@ pre {
     width: 100%; } }
 
 
+@charset "UTF-8";
 /*! 
 	CARROT CELL support CSS
 */
@@ -635,9 +615,20 @@ pre {
     position: absolute;
     top: 50%;
     left: 10px;
-    cursor: pointer; }
+    cursor: pointer;
+    background: none;
+    border: none;
+    margin: 0;
+    padding: 0; }
   .carrotcell--next {
     left: auto;
     right: 10px; }
+  .carrotcell__icon--iconPrev:before {
+    content: '◀'; }
+  .carrotcell__icon--iconNext:before {
+    content: '▶'; }
+  .carrotcell__accessText {
+    display: inline-block;
+    text-indent: -9999em; }
   .carrotcell .disabled {
     opacity: 0.2; }
