@@ -503,6 +503,8 @@ footer {
   background-color: #404040;
   color: #ffffff;
   padding: 40px 10px; }
+  footer p {
+    font-size: 14px; }
 
 pre {
   -webkit-border-radius: 10px;

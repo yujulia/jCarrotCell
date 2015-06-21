@@ -5,17 +5,6 @@
 
 // -------------------------------- resets 
 
-// ol, ul {
-//     @extend %nofrill;
-//     list-style: none;
-// }
-
-// button {
-//     @extend %nofrill;
-//     background: none;
-//     border: none;
-// }
-
 :focus {
     outline: none;
     background-color: $color-leaf;
@@ -104,6 +93,11 @@ footer {
     background-color: #404040;
     color: #ffffff;
     padding: 40px 10px;
+
+    p {
+        font-size: 14px;
+    }
+    
 }
 
 pre {

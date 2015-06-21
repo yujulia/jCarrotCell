@@ -75,6 +75,7 @@
             current = 0,        // current item scrolled to
             alreadyMoved = 0,   // how far have we moved
             animating = false,  // animation lock
+            axis = "x",
 
             settings = {
                 show: 1,        // show 1 frame at a time
@@ -88,10 +89,11 @@
                 nextText : 'previous',
                 prevIconClass : CLASS_PREV_ICON,
                 nextIconClass : CLASS_NEXT_ICON,
+                controlOnHover : false,
 
-                axis: 'x',
                 infinite: false,
                 auto: false,
+
                 key: false,
                 keyBack: null,
                 keyForward: null,
@@ -122,7 +124,6 @@
             setInMiddle();  // fix previous state
             atEnd = true;
             next.addClass(CLASS_DISABLED);
-            
         }
     
         // --- determine where we are in the carousel
@@ -158,7 +159,7 @@
             animating = true;
 
             slider.velocity('scroll', { 
-                axis: settings.axis, 
+                axis: axis, 
                 duration: settings.speed, 
                 offset: moveDistance, 
                 container: clipPane, 
@@ -216,6 +217,21 @@
             prev.click(moveToPrev);
             next.click(moveToNext);
 
+            // DONT do this for touch
+
+            if (settings.controlOnHover && !settings.touch){
+                next.hide(); 
+                prev.hide();
+                scope.hover(
+                    function(){
+                        next.fadeIn("fast"); prev.fadeIn("fast");
+                    },
+                    function(){
+                        next.fadeOut("fast"); prev.fadeOut("fast");
+                    }
+                );
+            }
+
             scope.append(prev).append(next);
         };
 
@@ -225,7 +241,7 @@
             moves = Math.ceil(totalItems/settings.scroll) - (settings.show - settings.scroll) - 1;
 
             // these only matter for infinite scroll
-            
+
             slots = settings.show * Math.ceil(totalItems/settings.show);
             emptySlots = slots - totalItems;
 
@@ -374,7 +390,7 @@
 
         var fixSettings = function(){
             if (settings.auto) { settings.infinite = true;  }
-            if (settings.sideways) { scrollAxis = "x"; } else { scrollAxis = "y"; }
+            if (settings.sideways) { axis = "x"; } else { axis = "y"; }
             if (settings.key) {
                 if (settings.sideways) {
                     settings.keyBack = settings.keyBack || KEY_BACK;
