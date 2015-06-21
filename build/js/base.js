@@ -253,26 +253,25 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             next.append(nextContent);
             next.append(nextIcon);
 
-            if (atStart) {
-                prev.addClass(CLASS_DISABLED);
-            }
+            if (atStart) { prev.addClass(CLASS_DISABLED); }
             
             prev.click(moveToPrev);
             next.click(moveToNext);
 
-            // DONT do this for touch
+            var showControls = function(){
+                next.fadeIn("fast"); 
+                prev.fadeIn("fast");
+            }
+
+            var hideControls = function(){
+                next.fadeOut("fast"); 
+                prev.fadeOut("fast");
+            }
 
             if (settings.controlOnHover && !settings.touch){
                 next.hide(); 
                 prev.hide();
-                scope.hover(
-                    function(){
-                        next.fadeIn("fast"); prev.fadeIn("fast");
-                    },
-                    function(){
-                        next.fadeOut("fast"); prev.fadeOut("fast");
-                    }
-                );
+                scope.hover(showControls, hideControls);
             }
 
             scope.append(prev).append(next);
