@@ -142,6 +142,7 @@ pre {
 #jcc-home {
     @extend .nofrill;
     width: 90%;
+    // width: 1020px;
     margin: 80px auto 0 auto;
     border: solid 3px #000;
     box-sizing: content-box;
@@ -207,7 +208,7 @@ pre {
 }
 
 .jcc-item {
-    width: 1644px;
+    // width: 1644px;
     border: solid 2px red;
     margin: 5px;
     // box-sizing: border-box;

@@ -106,14 +106,16 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
         // --- adjust the size of the items and the slider 
 
         var adjustItemSize = function(){    
-            getItemSizes(); 
+            getAllItemSizes(); 
 
             if (settings.sideways) { 
-                items.css("width", width/settings.observed - oneItem.offset + "px");
-                slider.css("width",  sliderSize + "px"); // set length of slider
+                var single = width/settings.observed;
+                items.css("width", single - oneItem.offset + "px");
+                slider.css("width",  single * totalItems + "px"); // set length of slider
             } else {
-                items.css("height", height/settings.observed - oneItem.offset + "px");
-                slider.css("height",  sliderSize + "px"); // set height of slider
+                var single = height/settings.observed;
+                items.css("height", single - oneItem.offset + "px");
+                slider.css("height",  single * totalItems + "px"); // set height of slider
             }
         };
 
@@ -146,36 +148,43 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             }
         };
 
+        // --- calculate the size and offset for one item
+
+        var getItemSize = function(item){
+
+            var calcOffset = 0;
+
+            if (settings.sideways){
+                calcOffset = parseInt($(item).css("margin-left"), 10) + parseInt($(item).css("margin-right"), 10);
+            } else {
+                calcOffset = parseInt($(item).css("margin-top"), 10) + parseInt($(item).css("margin-bottom"), 10);
+            }
+
+            if ($(item).css("box-sizing") === "content-box") {
+                if (settings.sideways){
+                    calcOffset += parseInt($(item).css("border-left-width"), 10) + parseInt($(item).css("border-right-width"), 10);
+                } else {
+                    calcOffset += parseInt($(item).css("border-top-width"), 10) + parseInt($(item).css("border-bottom-width"), 10);
+                }
+            } 
+
+            return {
+                w: $(item).outerWidth(true),
+                h: $(item).outerHeight(true),
+                offset: calcOffset
+            };
+
+        };
+
         // --- get individual content item sizes
 
-        var getItemSizes = function(){
+        var getAllItemSizes = function(){
+            itemSizes = []; // clear previous
             items.each(function(i, item){
-                var calcOffset = 0;
-
-                if (settings.sideways){
-                    calcOffset = parseInt($(item).css("margin-left"), 10) + parseInt($(item).css("margin-right"), 10);
-                } else {
-                    calcOffset = parseInt($(item).css("margin-top"), 10) + parseInt($(item).css("margin-bottom"), 10);
-                }
-
-                // -- also subtract border if its content box
-
-                if ($(item).css("box-sizing") === "content-box") {
-                    if (settings.sideways){
-                        calcOffset += parseInt($(item).css("border-left-width"), 10) + parseInt($(item).css("border-right-width"), 10);
-                    } else {
-                        calcOffset += parseInt($(item).css("border-top-width"), 10) + parseInt($(item).css("border-bottom-width"), 10);
-                    }
-                } 
-
-
-                var data = {
-                    w: $(item).outerWidth(true),
-                    h: $(item).outerHeight(true),
-                    offset: calcOffset
-                };
-
+                var data = getItemSize(item);
                 itemSizes.push(data);
+
+                // concat all sizes into slider size as well
 
                 if (settings.sideways){
                     sliderSize += data.w;
@@ -183,8 +192,7 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
                     sliderSize += data.h;
                 }
             });
-
-            oneItem = itemSizes[0];
+            oneItem = itemSizes[0]; // reference item
         };
 
         // --- make the html frame depending on if its a list or divs
@@ -194,8 +202,6 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             getScopeSize();
             clipPane = $('<div/>', { 'class': CLASS_CLIP }).css("overflow", "hidden");
             setClipSize();
-            items = scope.children(); 
-            totalItems = items.length;
 
             var sliderType = '<div/>';
             var carrotType = scope.prop('tagName').toUpperCase();
@@ -242,13 +248,20 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
 
         setup = function(){
 
+            items = scope.children(); 
+            totalItems = items.length;
+
             fixSettings();  // toggle on relevant settings if any
             makeFrame();    // make the markup
             adjustItemSize();   // make the items fit inside the clippane
 
+            // add further functionality if we have something to scroll
+
+            if (totalItems > 1) {
+      
+            }
+
             // makePrevNext();      // create controls
-            
-            
             // findMoves();
             // if (moves === 0) { return false; } // got nothing to do
 
