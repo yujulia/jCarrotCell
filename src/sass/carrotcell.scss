@@ -59,8 +59,9 @@
         text-indent: -9999em;
     }
 
-    .disabled {
+    &--disabled {
     	opacity: 0.2;
+        cursor: default;
     }
 
 	// .navi {

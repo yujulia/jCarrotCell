@@ -9,8 +9,6 @@
 
 (function($){
 
-
-
     // --- CONST
 
     var KEY_BACK = 37,
@@ -29,10 +27,11 @@
         CLASS_ICON = CLASS_CARROT + '__icon',
         CLASS_PREV_ICON = CLASS_ICON + '--iconPrev',
         CLASS_NEXT_ICON = CLASS_ICON + '--iconNext',
+        CLASS_DISABLED = CLASS_CARROT + '--disabled',
         CLASS_NEXT = CLASS_CARROT + '--next',
         CLASS_PREV = CLASS_CARROT + '--prev';
 
-    // --- debounce 
+    // --- debounce helper func
 
     var debounce = function(callback, ms){
         var timeout = null;
@@ -42,10 +41,10 @@
             var stalled = function(){
                 timeout = null;
                 callback.apply(context, args);
-            }
+            };
             clearTimeout(timeout);
             timeout = setTimeout(stalled, ms);
-        }
+        };
     };
 
     /** ---------------------------------------
@@ -70,6 +69,11 @@
             moves = 0,          // how many times before we reach the end
             slots = 0,          // how many slots total (including empties)
             emptySlots = 0,     // how many slots empty
+            atStart = true,     
+            atEnd = false,
+            current = 0,        // current item scrolled to
+            alreadyMoved = 0,   // how far have we moved
+            animating = false,  // animation lock
 
             settings = {
                 show: 1,        // show 1 frame at a time
@@ -94,6 +98,97 @@
                 touch: false    // touch device
             };
 
+        // --- toggle the prev and next and start/end flags
+
+        var setAtStart = function(){
+            atStart = true;
+            prev.addClass(CLASS_DISABLED);
+        };
+
+        var setAtEnd = function(){
+            atEnd = true;
+            next.addClass(CLASS_DISABLED);
+        }
+
+        var setInMiddle = function(){
+            if (atStart) {
+                prev.removeClass(CLASS_DISABLED);
+                atStart = false;
+            }
+            if (atEnd) {
+                next.removeClass(CLASS_DISABLED);
+                atEnd = false;
+            }
+        }
+
+        // --- determine where we are in the carousel
+
+        var setState = function(){     
+            if (current === 0) {
+                setAtStart();
+            } else if (current === (totalItems-1)){
+                setAtEnd();
+            } else {
+                setInMiddle();
+            }
+        };
+
+        // --- scrolling is done
+
+        var doneScrolling = function(item, moveDistance){
+            console.log("done ", item, moveDistance);
+            current = item;
+            alreadyMoved = moveDistance;
+            animating = false;
+
+            if (!settings.infinite){ setState(); }
+        };
+
+        // --- scroll to some time 
+
+        var scrollToItem = function(item, direction){
+
+            var distance = Math.abs(current - item);
+            console.log("in scroll ", alreadyMoved);
+            var moveDistance = direction * distance * (oneItem.size + oneItem.offset) + alreadyMoved;
+
+            animating = true;
+
+            slider.velocity('scroll', { 
+                axis: settings.axis, 
+                duration: settings.speed, 
+                offset: moveDistance, 
+                container: clipPane, 
+                complete: doneScrolling.bind(this, item, moveDistance),
+                easting: "easeOutExpo"
+            } );
+            // if no velocity use jquery animate
+        }
+
+        // -- move to previous scroll
+
+        var moveToPrev = function(e){
+            if (e) { e.preventDefault(); }
+            if (atStart || animating) { return false; }
+            
+            var prevOne = current - settings.scroll;
+
+            console.log("move to prev ", prevOne);
+            scrollToItem(prevOne, -1);
+        };
+
+        // -- move to next scroll
+
+        var moveToNext = function(e){
+            if (e) { e.preventDefault(); }
+            if (atEnd || animating) { return false; }
+     
+            var nextOne = current + settings.scroll;
+
+            console.log("move to next ", nextOne);
+            scrollToItem(nextOne, 1);
+        };
+
         // -- create icon prev and next buttons
 
         var createControls = function(){
@@ -110,7 +205,14 @@
             prev.append(prevContent);
             next.append(nextContent);
             next.append(nextIcon);
+
+            if (atStart) {
+                prev.addClass(CLASS_DISABLED);
+            }
             
+            prev.click(moveToPrev);
+            next.click(moveToNext);
+
             scope.append(prev).append(next);
         };
 
@@ -129,14 +231,16 @@
             getAllItemSizes(); 
             var single = 0;
 
+            var setItemSize = function(single, prop){
+                oneItem.size = single - oneItem.offset; // make room for margin/border
+                items.css(prop, oneItem.size + "px");
+                slider.css(prop,  single * totalItems + "px"); // set length of slider
+            }
+
             if (settings.sideways) { 
-                single = width/settings.show;
-                items.css("width", single - oneItem.offset + "px");
-                slider.css("width",  single * totalItems + "px"); // set length of slider
+                setItemSize(width/settings.show, "width");
             } else {
-                single = height/settings.show;
-                items.css("height", single - oneItem.offset + "px");
-                slider.css("height",  single * totalItems + "px"); // set height of slider
+                setItemSize(height/settings.show, "height");
             }
         };
 
@@ -189,9 +293,13 @@
 
             if ($(item).css("box-sizing") === "content-box") {
                 if (settings.sideways){
-                    calcOffset += parseInt($(item).css("border-left-width"), 10) + parseInt($(item).css("border-right-width"), 10);
+                    var b1 = parseInt($(item).css("border-left-width"), 10),
+                        b2 = parseInt($(item).css("border-right-width"), 10);
+                    calcOffset += b1 + b2;
                 } else {
-                    calcOffset += parseInt($(item).css("border-top-width"), 10) + parseInt($(item).css("border-bottom-width"), 10);
+                    var b3 = parseInt($(item).css("border-top-width"), 10),
+                        b4 = parseInt($(item).css("border-bottom-width"), 10);
+                    calcOffset += b3 + b4;
                 }
             } 
 
@@ -259,7 +367,7 @@
 
         var fixSettings = function(){
             if (settings.auto) { settings.infinite = true;  }
-            if (!settings.sideways) { scrollAxis = "y"; }
+            if (settings.sideways) { scrollAxis = "x"; } else { scrollAxis = "y"; }
             if (settings.key) {
                 if (settings.sideways) {
                     settings.keyBack = settings.keyBack || KEY_BACK;
@@ -269,6 +377,7 @@
                     settings.keyForward = settings.keyForward || KEY_DOWN;
                 }
             }
+            if (settings.infinite) { atStart = false; }
         };
 
         // --- 

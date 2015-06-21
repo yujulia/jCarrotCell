@@ -627,5 +627,6 @@ pre {
   .carrotcell__accessText {
     display: inline-block;
     text-indent: -9999em; }
-  .carrotcell .disabled {
-    opacity: 0.2; }
+  .carrotcell--disabled {
+    opacity: 0.2;
+    cursor: default; }
