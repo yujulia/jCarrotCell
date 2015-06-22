@@ -204,26 +204,20 @@
         var setupPreNext = function(){
             var prevContent = $('<span/>', { 'class' : CLASS_ACCESS_TEXT, 'text': settings.prevText });
             var nextContent = $('<span/>', { 'class' : CLASS_ACCESS_TEXT, 'text': settings.nextText });
-            var prevIcon = $('<span/>', { 'class' : CLASS_ICON + ' ' + settings.prevIconClass, 'aria-hidden': true });
-            var nextIcon = $('<span/>', { 'class' : CLASS_ICON + ' ' + settings.nextIconClass, 'aria-hidden': true });
-
+            var prevIcon = $('<span/>', { 'class' : CLASS_ICON + ' ' + settings.prevIconClass, 'aria-hidden': 'true' });
+            var nextIcon = $('<span/>', { 'class' : CLASS_ICON + ' ' + settings.nextIconClass, 'aria-hidden': 'true' });
             prev = $('<button/>', { 'class': CLASS_PREV + ' ' + settings.prevClass });
             next = $('<button/>', { 'class': CLASS_NEXT + ' ' + settings.nextClass });
-     
-            prev.append(prevIcon);
-            prev.append(prevContent);
-            next.append(nextContent);
-            next.append(nextIcon);
+            prev.append(prevIcon).append(prevContent);
+            next.append(nextContent).append(nextIcon);
 
             if (atStart) { prev.addClass(settings.disabledClass).attr("aria-disabled", "true"); }
             
             prev.click(moveToPrev);
             next.click(moveToNext);
 
-            var blurControls = function(){
-                next.blur(); 
-                prev.blur();
-            }
+            var blurPrev = function(){ prev.blur(); }
+            var blurNext = function(){ next.blur(); }
 
             var showControls = function(){
                 next.removeClass(CLASS_INVIS); 
@@ -231,16 +225,16 @@
             }
 
             var hideControls = function(){
-                next.addClass(CLASS_INVIS); 
-                prev.addClass(CLASS_INVIS);
-                blurControls();
+                next.addClass(CLASS_INVIS).blur(); 
+                prev.addClass(CLASS_INVIS).blur();
             }
 
             if (settings.controlOnHover && !settings.touch){
                 hideControls();
                 scope.hover(showControls, hideControls);
             } else {
-                scope.mouseleave(blurControls);
+                prev.mouseleave(blurPrev);
+                next.mouseleave(blurNext);
             }
 
             scope.append(prev).append(next);
@@ -265,26 +259,6 @@
             console.log("moves ", moves, " slots ", slots,  "empty ", emptySlots);
         };
 
-        // --- adjust the size of the items and the slider 
-
-        var adjustItemSize = function(){    
-            getAllItemSizes(); 
-            var single = 0;
-
-            var setItemSize = function(single, prop){
-                oneItem.size = single - oneItem.offset; // make room for margin/border
-                oneItem.totalSize = oneItem.size + oneItem.offset;
-                items.css(prop, oneItem.size + "px");
-                slider.css(prop,  single * totalItems + oneItem.offset + "px"); // set length of slider
-            }
-
-            if (settings.sideways) { 
-                setItemSize(width/settings.show, "width");
-            } else {
-                setItemSize(height/settings.show, "height");
-            }
-        };
-
         // --- return attributes on some jquery element
 
         var getAttributes = function(jqElement){
@@ -293,41 +267,6 @@
                 attrs[attr.nodeName] = attr.nodeValue;
             });
             return attrs;
-        };
-
-        // --- get the content size of the container (if resized or on load)
-
-        var getScopeSize = function(){
-            width = scope.width();
-            height = scope.height();
-        };
-
-        // --- set the size of the clipping pane 
-
-        var setClipSize = function(){
-            if (settings.sideways){
-                clipPane.css("width", width + "px");
-            } else {
-                clipPane.css("height", height + "px");
-            }
-        };
-
-        // --- resize happened, recalculate
-
-        var resizeCarrot = function(){
-            getScopeSize();
-            setClipSize();
-            adjustItemSize();
-
-            if (moved > 0){
-                slider.velocity('scroll', { 
-                    axis: axis, 
-                    duration: 0, 
-                    offset: moved * oneItem.totalSize, 
-                    container: clipPane
-                } );
-            }
-            
         };
 
         // --- calculate the size and offset for one item
@@ -381,12 +320,45 @@
             oneItem = itemSizes[0]; // reference item
         };
 
+        // --- adjust the size of the items and the slider 
+
+        var adjustItemSize = function(){    
+            getAllItemSizes(); 
+            var single = 0;
+
+            // this will need to change if each item size is different...
+
+            var setItemSize = function(single, prop){
+                oneItem.size = single - oneItem.offset; // make room for margin/border
+                oneItem.totalSize = oneItem.size + oneItem.offset;
+                items.css(prop, oneItem.size + "px");
+                slider.css(prop,  single * totalItems + oneItem.offset + "px"); // set length of slider
+            }
+
+            if (settings.sideways) { 
+                setItemSize(width/settings.show, "width");
+            } else {
+                setItemSize(height/settings.show, "height");
+            }
+        };
+
+        // --- set the size of the clipping pane 
+
+        var setClipSize = function(){
+            width = scope.width();
+            height = scope.height();
+            if (settings.sideways){
+                clipPane.css("width", width + "px");
+            } else {
+                clipPane.css("height", height + "px");
+            }
+        };
+
         // --- make the html frame depending on if its a list or divs
 
         var makeFrame = function(){ 
 
             scope.hide(); // hide this process to avoid any flicker
-            getScopeSize();
             clipPane = $('<div/>', { 'class': CLASS_CLIP });
             setClipSize();
 
@@ -412,7 +384,9 @@
             }
 
             items.addClass(CLASS_ITEM);
-            scope.addClass(CLASS_CARROT).data(CLASS_CARROT, settings.name).show();     
+            scope.addClass(CLASS_CARROT).data(CLASS_CARROT, settings.name).show();   
+
+            adjustItemSize();   // make the items fit inside the clippane  
         };
 
         // --- update the settings object 
@@ -432,6 +406,22 @@
             if (settings.infinite) { atStart = false; }
         };
 
+        // --- resize happened, recalculate
+
+        var resizeCarrot = function(){
+            setClipSize();
+            adjustItemSize();
+
+            if (moved > 0){
+                slider.velocity('scroll', { 
+                    axis: axis, 
+                    duration: 0, 
+                    offset: moved * oneItem.totalSize, 
+                    container: clipPane
+                } );
+            } 
+        };
+
         // --- 
 
         setup = function(){
@@ -441,8 +431,7 @@
 
             fixSettings();      // toggle on relevant settings if any
             makeFrame();        // make the markup
-            adjustItemSize();   // make the items fit inside the clippane
-
+            
             // add further functionality if we have something to scroll
 
             if ((totalItems > settings.show) && (totalItems > 1)) {
