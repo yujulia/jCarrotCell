@@ -17,7 +17,7 @@
         KEY_DOWN = 40,
 
         API_NAME = 'carrotapi',
-        DEBOUNCE_RESIZE = 100,
+        DEBOUNCE_RESIZE = 200,
 
         CLASS_CARROT = 'carrotcell',
         CLASS_CLIP = CLASS_CARROT + '__clip',
@@ -149,6 +149,8 @@
             if (!settings.infinite){ setState(); }
         };
 
+
+
         // --- scroll to some time 
 
         var scrollToItem = function(item, direction){
@@ -163,7 +165,7 @@
                 offset: moveDistance, 
                 container: clipPane, 
                 complete: doneScrolling.bind(this, item, direction),
-                easting: "easeOutExpo"
+                easing: "easeOutExpo"
             } );
             // if no velocity use jquery animate
         }
@@ -306,6 +308,16 @@
             getScopeSize();
             setClipSize();
             adjustItemSize();
+
+            if (moved > 0){
+                slider.velocity('scroll', { 
+                    axis: axis, 
+                    duration: 0, 
+                    offset: moved * oneItem.totalSize, 
+                    container: clipPane
+                } );
+            }
+            
         };
 
         // --- calculate the size and offset for one item
@@ -363,6 +375,7 @@
 
         var makeFrame = function(){ 
 
+            scope.hide(); // hide this process to avoid any flicker
             getScopeSize();
             clipPane = $('<div/>', { 'class': CLASS_CLIP });
             setClipSize();
@@ -389,7 +402,7 @@
             }
 
             items.addClass(CLASS_ITEM);
-            scope.addClass(CLASS_CARROT).data(CLASS_CARROT, settings.name);     
+            scope.addClass(CLASS_CARROT).data(CLASS_CARROT, settings.name).show();     
         };
 
         // --- update the settings object 
