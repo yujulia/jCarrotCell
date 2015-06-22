@@ -225,6 +225,8 @@ pre {
   #jcc-home .prev:hover, #jcc-home .next:hover, #jcc-home .prev:focus, #jcc-home .next:focus {
     color: #99cc33;
     background: transparent; }
+  #jcc-home .disabled {
+    opacity: 0; }
 
 .jcc-item {
   border: solid 2px red;

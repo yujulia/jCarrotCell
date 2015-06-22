@@ -20,6 +20,7 @@ var t1 = $('#jcc-home').carrotCell({
     nextClass : "next",
     prevIconClass : 'cc-left',
     nextIconClass: 'cc-right',
+    disabledClass: 'disabled',
     show: 1,
     scroll: 1,
     // controlOnHover: true

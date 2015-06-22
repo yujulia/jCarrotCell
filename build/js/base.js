@@ -21,6 +21,7 @@ var t1 = $('#jcc-home').carrotCell({
     nextClass : "next",
     prevIconClass : 'cc-left',
     nextIconClass: 'cc-right',
+    disabledClass: 'disabled',
     show: 1,
     scroll: 1,
     // controlOnHover: true
@@ -132,6 +133,7 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
                 nextText : 'previous',
                 prevIconClass : CLASS_PREV_ICON,
                 nextIconClass : CLASS_NEXT_ICON,
+                disabledClass : CLASS_DISABLED,
                 controlOnHover : false,
 
                 infinite: false,
@@ -148,11 +150,11 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
 
         var setInMiddle = function(){
             if (atStart) {
-                prev.removeClass(CLASS_DISABLED).attr("aria-disabled", "false");
+                prev.removeClass(settings.disabledClass).attr("aria-disabled", "false");
                 atStart = false;
             }
             if (atEnd) {
-                next.removeClass(CLASS_DISABLED).attr("aria-disabled", "false");
+                next.removeClass(settings.disabledClass).attr("aria-disabled", "false");
                 atEnd = false;
             }
         }
@@ -160,13 +162,13 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
         var setAtStart = function(){
             setInMiddle();  // fix previous state
             atStart = true;
-            prev.addClass(CLASS_DISABLED).attr("aria-disabled", "true");
+            prev.addClass(settings.disabledClass).attr("aria-disabled", "true");
         };
 
         var setAtEnd = function(){
             setInMiddle();  // fix previous state
             atEnd = true;
-            next.addClass(CLASS_DISABLED).attr("aria-disabled", "true");
+            next.addClass(settings.disabledClass).attr("aria-disabled", "true");
         }
     
         // --- determine where we are in the carousel
@@ -254,7 +256,7 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             next.append(nextContent);
             next.append(nextIcon);
 
-            if (atStart) { prev.addClass(CLASS_DISABLED).attr("aria-disabled", "true"); }
+            if (atStart) { prev.addClass(settings.disabledClass).attr("aria-disabled", "true"); }
             
             prev.click(moveToPrev);
             next.click(moveToNext);
@@ -571,17 +573,16 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
     */
     $.fn.carrotCell = function() {
 
-        if ($(this).hasClass(CLASS_CARROT)){
+        var carrotName = $(this).data(CLASS_CARROT);
+        if (carrotName){
 
             // this carrotcell already exists, update instead of init
-
-            var carrotName = $(this).data(CLASS_CARROT);
             var carrotAPI = track.carrots[carrotName];
             if (carrotAPI) {
                 carrotAPI.update.apply(this, arguments);
                 return carrotAPI;
             } else {
-                console.log("this is not a carrot cell, please remove the " + CLASS_CARROT + " class");
+                console.log("CARROTCELL ERROR: ", carrotName, " is not a registered carrotcell.");
                 return false;
             }
         } else {
