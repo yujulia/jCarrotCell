@@ -152,7 +152,7 @@
         // --- scroll to some time 
 
         var scrollToItem = function(item, direction){
-            
+
             var moveDistance = (direction * Math.abs(current - item) * oneItem.totalSize) + (moved * oneItem.totalSize);
 
             animating = true;
@@ -214,19 +214,27 @@
             prev.click(moveToPrev);
             next.click(moveToNext);
 
+            var blurControls = function(){
+                next.blur(); 
+                prev.blur();
+            }
+
             var showControls = function(){
                 next.removeClass(CLASS_INVIS); 
                 prev.removeClass(CLASS_INVIS);
             }
 
             var hideControls = function(){
-                next.addClass(CLASS_INVIS).blur(); 
-                prev.addClass(CLASS_INVIS).blur();
+                next.addClass(CLASS_INVIS); 
+                prev.addClass(CLASS_INVIS);
+                blurControls();
             }
 
             if (settings.controlOnHover && !settings.touch){
                 hideControls();
                 scope.hover(showControls, hideControls);
+            } else {
+                scope.mouseleave(blurControls);
             }
 
             scope.append(prev).append(next);
