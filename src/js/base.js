@@ -23,7 +23,14 @@ var t1 = $('#jcc-home').carrotCell({
     disabledClass: 'disabled',
     show: 1,
     scroll: 1,
+    key: true
     // controlOnHover: true
 });
 
-console.log(t1.getName());
+// var t2 = $('#jcc').carrotCell({ 
+//     show: 1,
+//     scroll: 1,
+//     key: true
+//     // controlOnHover: true
+// });
+

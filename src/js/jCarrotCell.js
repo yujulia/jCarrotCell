@@ -150,8 +150,6 @@
             if (!settings.infinite){ setState(); }
         };
 
-
-
         // --- scroll to some time 
 
         var scrollToItem = function(item, direction){
@@ -183,7 +181,7 @@
             scrollToItem(prevOne, -1);
         };
 
-        // -- move to next scroll
+        // --- move to next scroll
 
         var moveToNext = function(e){
             if (e) { e.preventDefault(); }
@@ -195,10 +193,16 @@
             scrollToItem(nextOne, 1);
         };
 
-        // -- create icon prev and next buttons
+        // --- a key event we care about happened
 
-        var createControls = function(){
+        var handleKeyPress = function(keyCode){
+            if (keyCode === settings.keyBack) { moveToPrev(); }
+            if (keyCode === settings.keyForward) { moveToNext(); }
+        };
 
+        // --- create the previous and next buttons and attach events
+
+        var setupPreNext = function(){
             var prevContent = $('<span/>', { 'class' : CLASS_ACCESS_TEXT, 'text': settings.prevText });
             var nextContent = $('<span/>', { 'class' : CLASS_ACCESS_TEXT, 'text': settings.nextText });
             var prevIcon = $('<span/>', { 'class' : CLASS_ICON + ' ' + settings.prevIconClass, 'aria-hidden': true });
@@ -241,6 +245,16 @@
             }
 
             scope.append(prev).append(next);
+        };
+
+        // -- create icon prev and next buttons
+
+        var createControls = function(){
+            setupPreNext();
+
+            if (settings.key){
+                track.subscribeKey(settings.name, settings.keyBack, settings.keyForward);
+            }
         };
 
         // --- find moves
@@ -469,6 +483,10 @@
                 resizeCarrot();
             },
 
+            keyPressed : function(keyCode){
+                handleKeyPress(keyCode);
+            },
+
             // --- return the name of this carrot
 
             getName : function(){
@@ -483,8 +501,10 @@
         keep track of all the carrot cells
     */
     var track = {
-        carrots : {}, // track all the carrotcells by name
+        carrots : {},   // track all the carrotcells by name
+        keys : {},      // key events subscribed to by carrots
         count : 0,
+        initialized: false,
                 
         // --- trigger some function on all carrots
 
@@ -495,17 +515,41 @@
                 }
             }
         },
+
+        // --- carrots call this to subscribe keys
+
+        subscribeKey : function(){
+            var args = Array.prototype.slice.call(arguments);
+            var carrotName = args.shift();
+
+            args.forEach(function(subkey){
+                if (subkey in track.keys){
+                    track.keys[subkey].push(carrotName);
+                } else {
+                    track.keys[subkey] = [carrotName];
+                }
+            });
+        },
+
+        // --- a key has been pressed, tell the subbed carrots
+
+        keyPressed : function(e){
+            if (e.keyCode in track.keys) {
+                track.keys[e.keyCode].forEach(function(subbedCarrot){
+                    track.carrots[subbedCarrot].keyPressed(e.keyCode);
+                });
+            } 
+        },
         
         // --- window reized, trigger resize on all carrotcells
 
         windowResized : debounce(function(){
             track.triggerCarrots("resize");
         }, DEBOUNCE_RESIZE),
-    
 
         // --- initialize jcarousel object, note THIS is not cell
 
-        init : function(options) {  
+        makeCarrot : function(options) {  
 
             track.count++;
             if (!options) { options = {}; } // passed in carrotcell options
@@ -518,9 +562,16 @@
             track.carrots[options.name] = newCarrot; 
             newCarrot.init(options);
 
-            $(window).on('resize', track.windowResized);
-
             return newCarrot; // return api
+        },
+
+        // --- init the tracking object
+
+        init : function(){
+            $(window).on('resize', track.windowResized);
+            $(window).keyup(track.keyPressed);
+
+            track.initialize = true;
         }
     };
     
@@ -529,10 +580,13 @@
     */
     $.fn.carrotCell = function() {
 
+        if (!track.initialize) { track.init(); } // first time carrotcelling
+
         var carrotName = $(this).data(CLASS_CARROT);
         if (carrotName){
 
             // this carrotcell already exists, update instead of init
+
             var carrotAPI = track.carrots[carrotName];
             if (carrotAPI) {
                 carrotAPI.update.apply(this, arguments);
@@ -545,7 +599,7 @@
 
             // make a new carrotcell
 
-            var newCarrot = track.init.apply(this, arguments);
+            var newCarrot = track.makeCarrot.apply(this, arguments);
             var newCarrotName = newCarrot.getName();
             track.carrots[newCarrotName] = newCarrot;
             return newCarrot;

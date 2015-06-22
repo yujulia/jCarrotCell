@@ -24,10 +24,18 @@ var t1 = $('#jcc-home').carrotCell({
     disabledClass: 'disabled',
     show: 1,
     scroll: 1,
+    key: true
     // controlOnHover: true
 });
 
-console.log(t1.getName());
+// var t2 = $('#jcc').carrotCell({ 
+//     show: 1,
+//     scroll: 1,
+//     key: true
+//     // controlOnHover: true
+// });
+
+
 },{"./jCarrotCell.js":3,"./vendor/rainbow-custom.min.js":4,"./vendor/velocity.min.js":5,"jquery":2}],2:[function(require,module,exports){
 (function (global){
 ; var __browserify_shim_require__=require;(function browserifyShim(module, exports, require, define, browserify_shim__define__module__export__) {
@@ -194,8 +202,6 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             if (!settings.infinite){ setState(); }
         };
 
-
-
         // --- scroll to some time 
 
         var scrollToItem = function(item, direction){
@@ -227,7 +233,7 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             scrollToItem(prevOne, -1);
         };
 
-        // -- move to next scroll
+        // --- move to next scroll
 
         var moveToNext = function(e){
             if (e) { e.preventDefault(); }
@@ -239,10 +245,16 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             scrollToItem(nextOne, 1);
         };
 
-        // -- create icon prev and next buttons
+        // --- a key event we care about happened
 
-        var createControls = function(){
+        var handleKeyPress = function(keyCode){
+            if (keyCode === settings.keyBack) { moveToPrev(); }
+            if (keyCode === settings.keyForward) { moveToNext(); }
+        };
 
+        // --- create the previous and next buttons and attach events
+
+        var setupPreNext = function(){
             var prevContent = $('<span/>', { 'class' : CLASS_ACCESS_TEXT, 'text': settings.prevText });
             var nextContent = $('<span/>', { 'class' : CLASS_ACCESS_TEXT, 'text': settings.nextText });
             var prevIcon = $('<span/>', { 'class' : CLASS_ICON + ' ' + settings.prevIconClass, 'aria-hidden': true });
@@ -285,6 +297,16 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             }
 
             scope.append(prev).append(next);
+        };
+
+        // -- create icon prev and next buttons
+
+        var createControls = function(){
+            setupPreNext();
+
+            if (settings.key){
+                track.subscribeKey(settings.name, settings.keyBack, settings.keyForward);
+            }
         };
 
         // --- find moves
@@ -513,6 +535,10 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
                 resizeCarrot();
             },
 
+            keyPressed : function(keyCode){
+                handleKeyPress(keyCode);
+            },
+
             // --- return the name of this carrot
 
             getName : function(){
@@ -527,8 +553,10 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
         keep track of all the carrot cells
     */
     var track = {
-        carrots : {}, // track all the carrotcells by name
+        carrots : {},   // track all the carrotcells by name
+        keys : {},      // key events subscribed to by carrots
         count : 0,
+        initialized: false,
                 
         // --- trigger some function on all carrots
 
@@ -539,17 +567,41 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
                 }
             }
         },
+
+        // --- carrots call this to subscribe keys
+
+        subscribeKey : function(){
+            var args = Array.prototype.slice.call(arguments);
+            var carrotName = args.shift();
+
+            args.forEach(function(subkey){
+                if (subkey in track.keys){
+                    track.keys[subkey].push(carrotName);
+                } else {
+                    track.keys[subkey] = [carrotName];
+                }
+            });
+        },
+
+        // --- a key has been pressed, tell the subbed carrots
+
+        keyPressed : function(e){
+            if (e.keyCode in track.keys) {
+                track.keys[e.keyCode].forEach(function(subbedCarrot){
+                    track.carrots[subbedCarrot].keyPressed(e.keyCode);
+                });
+            } 
+        },
         
         // --- window reized, trigger resize on all carrotcells
 
         windowResized : debounce(function(){
             track.triggerCarrots("resize");
         }, DEBOUNCE_RESIZE),
-    
 
         // --- initialize jcarousel object, note THIS is not cell
 
-        init : function(options) {  
+        makeCarrot : function(options) {  
 
             track.count++;
             if (!options) { options = {}; } // passed in carrotcell options
@@ -562,9 +614,16 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             track.carrots[options.name] = newCarrot; 
             newCarrot.init(options);
 
-            $(window).on('resize', track.windowResized);
-
             return newCarrot; // return api
+        },
+
+        // --- init the tracking object
+
+        init : function(){
+            $(window).on('resize', track.windowResized);
+            $(window).keyup(track.keyPressed);
+
+            track.initialize = true;
         }
     };
     
@@ -573,10 +632,13 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
     */
     $.fn.carrotCell = function() {
 
+        if (!track.initialize) { track.init(); } // first time carrotcelling
+
         var carrotName = $(this).data(CLASS_CARROT);
         if (carrotName){
 
             // this carrotcell already exists, update instead of init
+
             var carrotAPI = track.carrots[carrotName];
             if (carrotAPI) {
                 carrotAPI.update.apply(this, arguments);
@@ -589,7 +651,7 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
 
             // make a new carrotcell
 
-            var newCarrot = track.init.apply(this, arguments);
+            var newCarrot = track.makeCarrot.apply(this, arguments);
             var newCarrotName = newCarrot.getName();
             track.carrots[newCarrotName] = newCarrot;
             return newCarrot;
