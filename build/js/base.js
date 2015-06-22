@@ -117,7 +117,6 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             atStart = true,     
             atEnd = false,
             current = 0,        // current item scrolled to
-            alreadyMoved = 0,   // how far have we moved
             animating = false,  // animation lock
             axis = "x",
 
@@ -185,9 +184,8 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
 
         // --- scrolling is done
 
-        var doneScrolling = function(item, direction, moveDistance){
+        var doneScrolling = function(item, direction){
             current = item;
-            alreadyMoved = moveDistance;
             moved += direction;
             animating = false;
 
@@ -197,8 +195,8 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
         // --- scroll to some time 
 
         var scrollToItem = function(item, direction){
-
-            var moveDistance = direction * Math.abs(current - item) * (oneItem.size + oneItem.offset) + alreadyMoved;
+            
+            var moveDistance = (direction * Math.abs(current - item) * oneItem.totalSize) + (moved * oneItem.totalSize);
 
             animating = true;
 
@@ -207,7 +205,7 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
                 duration: settings.speed, 
                 offset: moveDistance, 
                 container: clipPane, 
-                complete: doneScrolling.bind(this, item, direction, moveDistance),
+                complete: doneScrolling.bind(this, item, direction),
                 easting: "easeOutExpo"
             } );
             // if no velocity use jquery animate
@@ -298,6 +296,7 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
 
             var setItemSize = function(single, prop){
                 oneItem.size = single - oneItem.offset; // make room for margin/border
+                oneItem.totalSize = oneItem.size + oneItem.offset;
                 items.css(prop, oneItem.size + "px");
                 slider.css(prop,  single * totalItems + oneItem.offset + "px"); // set length of slider
             }
