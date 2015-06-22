@@ -45,6 +45,8 @@
         padding: 0;
         transition: opacity .25s ease-in-out;
         opacity: 1;
+        font-size: 60px;
+        line-height: 1em;
     }
 
     &--next {
@@ -61,7 +63,8 @@
     }
 
     &__icon {
-
+        display: block;
+        float: left;
 
         &--iconPrev:before {
             content: '\2039';
@@ -73,8 +76,9 @@
     }
 
     &__accessText {
-        display: inline-block;
+        display: block;
         text-indent: -9999em;
+        float: left;
     }
 
     &--disabled {

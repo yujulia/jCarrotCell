@@ -34,7 +34,9 @@
     margin: 0;
     padding: 0;
     transition: opacity .25s ease-in-out;
-    opacity: 1; }
+    opacity: 1;
+    font-size: 60px;
+    line-height: 1em; }
   .carrotcell--next {
     left: auto;
     right: 10px; }
@@ -42,13 +44,17 @@
     opacity: 1; }
   .carrotcell--prev.carrotcell--disabled:focus, .carrotcell--next.carrotcell--disabled:focus {
     opacity: 0.2; }
-  .carrotcell__icon--iconPrev:before {
-    content: '\2039'; }
-  .carrotcell__icon--iconNext:before {
-    content: '\203A'; }
+  .carrotcell__icon {
+    display: block;
+    float: left; }
+    .carrotcell__icon--iconPrev:before {
+      content: '\2039'; }
+    .carrotcell__icon--iconNext:before {
+      content: '\203A'; }
   .carrotcell__accessText {
-    display: inline-block;
-    text-indent: -9999em; }
+    display: block;
+    text-indent: -9999em;
+    float: left; }
   .carrotcell--disabled {
     opacity: 0.2;
     cursor: default; }
