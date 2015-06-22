@@ -28,7 +28,9 @@
     background: none;
     border: none;
     margin: 0;
-    padding: 0; }
+    padding: 0;
+    transition: opacity .25s ease-in-out;
+    opacity: 1; }
   .carrotcell--next {
     left: auto;
     right: 10px; }
@@ -42,3 +44,5 @@
   .carrotcell--disabled {
     opacity: 0.2;
     cursor: default; }
+  .carrotcell--invisible {
+    opacity: 0; }

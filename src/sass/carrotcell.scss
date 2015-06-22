@@ -36,6 +36,8 @@
         border: none;
         margin: 0;
         padding: 0;
+        transition: opacity .25s ease-in-out;
+        opacity: 1;
     }
 
 
@@ -63,6 +65,10 @@
     &--disabled {
     	opacity: 0.2;
         cursor: default;
+    }
+
+    &--invisible {
+        opacity: 0;
     }
 
 	// .navi {

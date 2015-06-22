@@ -156,6 +156,7 @@ pre {
     .prev:hover, .next:hover, .prev:focus, .next:focus {
         color: $color-leaf;
         background: transparent;
+        opacity: 1;
     }
 
     // .navi {

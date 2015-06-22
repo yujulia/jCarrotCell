@@ -543,7 +543,8 @@ pre {
     font-size: 28px; }
   #jcc-home .prev:hover, #jcc-home .next:hover, #jcc-home .prev:focus, #jcc-home .next:focus {
     color: #99cc33;
-    background: transparent; }
+    background: transparent;
+    opacity: 1; }
 
 .jcc-item {
   border: solid 2px red;
@@ -619,7 +620,9 @@ pre {
     background: none;
     border: none;
     margin: 0;
-    padding: 0; }
+    padding: 0;
+    transition: opacity .25s ease-in-out;
+    opacity: 1; }
   .carrotcell--next {
     left: auto;
     right: 10px; }
@@ -633,3 +636,5 @@ pre {
   .carrotcell--disabled {
     opacity: 0.2;
     cursor: default; }
+  .carrotcell--invisible {
+    opacity: 0; }

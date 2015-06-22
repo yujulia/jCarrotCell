@@ -224,7 +224,8 @@ pre {
     font-size: 28px; }
   #jcc-home .prev:hover, #jcc-home .next:hover, #jcc-home .prev:focus, #jcc-home .next:focus {
     color: #99cc33;
-    background: transparent; }
+    background: transparent;
+    opacity: 1; }
 
 .jcc-item {
   border: solid 2px red;

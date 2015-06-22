@@ -70,6 +70,7 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
         CLASS_ICON = CLASS_CARROT + '__icon',
         CLASS_PREV_ICON = CLASS_ICON + '--iconPrev',
         CLASS_NEXT_ICON = CLASS_ICON + '--iconNext',
+        CLASS_INVIS = CLASS_CARROT + "--invisible",
         CLASS_DISABLED = CLASS_CARROT + '--disabled',
         CLASS_NEXT = CLASS_CARROT + '--next',
         CLASS_PREV = CLASS_CARROT + '--prev';
@@ -259,18 +260,17 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             next.click(moveToNext);
 
             var showControls = function(){
-                next.fadeIn("fast"); 
-                prev.fadeIn("fast");
+                next.removeClass(CLASS_INVIS); 
+                prev.removeClass(CLASS_INVIS);
             }
 
             var hideControls = function(){
-                next.fadeOut("fast"); 
-                prev.fadeOut("fast");
+                next.addClass(CLASS_INVIS); 
+                prev.addClass(CLASS_INVIS);
             }
 
             if (settings.controlOnHover && !settings.touch){
-                next.hide(); 
-                prev.hide();
+                hideControls();
                 scope.hover(showControls, hideControls);
             }
 
