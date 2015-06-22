@@ -23,7 +23,7 @@ var t1 = $('#jcc-home').carrotCell({
     nextIconClass: 'cc-right',
     show: 1,
     scroll: 1,
-    controlOnHover: true
+    // controlOnHover: true
 });
 
 console.log(t1.getName());
@@ -149,11 +149,11 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
 
         var setInMiddle = function(){
             if (atStart) {
-                prev.removeClass(CLASS_DISABLED);
+                prev.removeClass(CLASS_DISABLED).attr("aria-disabled", "false");
                 atStart = false;
             }
             if (atEnd) {
-                next.removeClass(CLASS_DISABLED);
+                next.removeClass(CLASS_DISABLED).attr("aria-disabled", "false");
                 atEnd = false;
             }
         }
@@ -161,13 +161,13 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
         var setAtStart = function(){
             setInMiddle();  // fix previous state
             atStart = true;
-            prev.addClass(CLASS_DISABLED);
+            prev.addClass(CLASS_DISABLED).attr("aria-disabled", "true");
         };
 
         var setAtEnd = function(){
             setInMiddle();  // fix previous state
             atEnd = true;
-            next.addClass(CLASS_DISABLED);
+            next.addClass(CLASS_DISABLED).attr("aria-disabled", "true");
         }
     
         // --- determine where we are in the carousel
@@ -254,7 +254,7 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             next.append(nextContent);
             next.append(nextIcon);
 
-            if (atStart) { prev.addClass(CLASS_DISABLED); }
+            if (atStart) { prev.addClass(CLASS_DISABLED).attr("aria-disabled", "true"); }
             
             prev.click(moveToPrev);
             next.click(moveToNext);
@@ -265,8 +265,8 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             }
 
             var hideControls = function(){
-                next.addClass(CLASS_INVIS); 
-                prev.addClass(CLASS_INVIS);
+                next.addClass(CLASS_INVIS).blur(); 
+                prev.addClass(CLASS_INVIS).blur();
             }
 
             if (settings.controlOnHover && !settings.touch){
@@ -299,7 +299,7 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             var setItemSize = function(single, prop){
                 oneItem.size = single - oneItem.offset; // make room for margin/border
                 items.css(prop, oneItem.size + "px");
-                slider.css(prop,  single * totalItems + "px"); // set length of slider
+                slider.css(prop,  single * totalItems + oneItem.offset + "px"); // set length of slider
             }
 
             if (settings.sideways) { 

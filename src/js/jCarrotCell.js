@@ -106,11 +106,11 @@
 
         var setInMiddle = function(){
             if (atStart) {
-                prev.removeClass(CLASS_DISABLED);
+                prev.removeClass(CLASS_DISABLED).attr("aria-disabled", "false");
                 atStart = false;
             }
             if (atEnd) {
-                next.removeClass(CLASS_DISABLED);
+                next.removeClass(CLASS_DISABLED).attr("aria-disabled", "false");
                 atEnd = false;
             }
         }
@@ -118,13 +118,13 @@
         var setAtStart = function(){
             setInMiddle();  // fix previous state
             atStart = true;
-            prev.addClass(CLASS_DISABLED);
+            prev.addClass(CLASS_DISABLED).attr("aria-disabled", "true");
         };
 
         var setAtEnd = function(){
             setInMiddle();  // fix previous state
             atEnd = true;
-            next.addClass(CLASS_DISABLED);
+            next.addClass(CLASS_DISABLED).attr("aria-disabled", "true");
         }
     
         // --- determine where we are in the carousel
@@ -211,7 +211,7 @@
             next.append(nextContent);
             next.append(nextIcon);
 
-            if (atStart) { prev.addClass(CLASS_DISABLED); }
+            if (atStart) { prev.addClass(CLASS_DISABLED).attr("aria-disabled", "true"); }
             
             prev.click(moveToPrev);
             next.click(moveToNext);
@@ -222,8 +222,8 @@
             }
 
             var hideControls = function(){
-                next.addClass(CLASS_INVIS); 
-                prev.addClass(CLASS_INVIS);
+                next.addClass(CLASS_INVIS).blur(); 
+                prev.addClass(CLASS_INVIS).blur();
             }
 
             if (settings.controlOnHover && !settings.touch){
@@ -256,7 +256,7 @@
             var setItemSize = function(single, prop){
                 oneItem.size = single - oneItem.offset; // make room for margin/border
                 items.css(prop, oneItem.size + "px");
-                slider.css(prop,  single * totalItems + "px"); // set length of slider
+                slider.css(prop,  single * totalItems + oneItem.offset + "px"); // set length of slider
             }
 
             if (settings.sideways) { 

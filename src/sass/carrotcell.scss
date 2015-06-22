@@ -18,7 +18,14 @@
     &__strip {
         margin: 0;
         padding: 0;
+        border: none;
         list-style: none;
+
+        &:after {
+            content: ' ';
+            display: table;
+            clear: both;
+        }
     }
 
     &__item {
@@ -40,20 +47,28 @@
         opacity: 1;
     }
 
-
     &--next {
         left: auto;
         right: 10px;
     }
 
+    &--prev:focus, &--next:focus {
+        opacity: 1;
+    }
+
+    &--prev.carrotcell--disabled:focus, &--next.carrotcell--disabled:focus {
+        opacity: 0.2;
+    }
+
     &__icon {
 
+
         &--iconPrev:before {
-            content: '◀';
+            content: '\2039';
         }
 
         &--iconNext:before {
-            content: '▶';
+            content: '\203A';
         }
     }
 
@@ -63,7 +78,7 @@
     }
 
     &--disabled {
-    	opacity: 0.2;
+        opacity: 0.2;
         cursor: default;
     }
 

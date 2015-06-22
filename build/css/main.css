@@ -543,8 +543,7 @@ pre {
     font-size: 28px; }
   #jcc-home .prev:hover, #jcc-home .next:hover, #jcc-home .prev:focus, #jcc-home .next:focus {
     color: #99cc33;
-    background: transparent;
-    opacity: 1; }
+    background: transparent; }
 
 .jcc-item {
   border: solid 2px red;
@@ -590,7 +589,6 @@ pre {
     width: 100%; } }
 
 
-@charset "UTF-8";
 /*! 
 	CARROT CELL support CSS
 */
@@ -607,7 +605,12 @@ pre {
   .carrotcell__strip {
     margin: 0;
     padding: 0;
+    border: none;
     list-style: none; }
+    .carrotcell__strip:after {
+      content: ' ';
+      display: table;
+      clear: both; }
   .carrotcell__item {
     display: block;
     float: left; }
@@ -626,10 +629,14 @@ pre {
   .carrotcell--next {
     left: auto;
     right: 10px; }
+  .carrotcell--prev:focus, .carrotcell--next:focus {
+    opacity: 1; }
+  .carrotcell--prev.carrotcell--disabled:focus, .carrotcell--next.carrotcell--disabled:focus {
+    opacity: 0.2; }
   .carrotcell__icon--iconPrev:before {
-    content: '◀'; }
+    content: '\2039'; }
   .carrotcell__icon--iconNext:before {
-    content: '▶'; }
+    content: '\203A'; }
   .carrotcell__accessText {
     display: inline-block;
     text-indent: -9999em; }
