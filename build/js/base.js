@@ -76,9 +76,11 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
         CLASS_SLIDER = CLASS_CARROT + '__strip',
         CLASS_ITEM = CLASS_CARROT + '__item',
         CLASS_ACCESS_TEXT = CLASS_CARROT + '__accessText',
+
         CLASS_ICON = CLASS_CARROT + '__icon',
         CLASS_PREV_ICON = CLASS_ICON + '--iconPrev',
         CLASS_NEXT_ICON = CLASS_ICON + '--iconNext',
+
         CLASS_INVIS = CLASS_CARROT + "--invisible",
         CLASS_DISABLED = CLASS_CARROT + '--disabled',
         CLASS_NEXT = CLASS_CARROT + '--next',
@@ -134,6 +136,7 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
                 scroll: 1,      // scroll 1 frame at a time
                 speed: 700,     // scroll speed         
                 sideways: true, // scroll sideways
+                tween: "easeOutExpo",
 
                 prevClass : '',
                 nextClass : '',
@@ -216,8 +219,9 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
                 offset: moveDistance, 
                 container: clipPane, 
                 complete: doneScrolling.bind(this, item, direction),
-                easing: "easeOutExpo"
+                easing: settings.tween
             } );
+
             // if no velocity use jquery animate
         }
 
@@ -227,10 +231,7 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             if (e) { e.preventDefault(); }
             if (atStart || animating) { return false; }
             
-            var prevOne = current - settings.scroll;
-
-            console.log("move to prev ", prevOne);
-            scrollToItem(prevOne, -1);
+            scrollToItem(current - settings.scroll, -1);
         };
 
         // --- move to next scroll
@@ -238,11 +239,8 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
         var moveToNext = function(e){
             if (e) { e.preventDefault(); }
             if (atEnd || animating) { return false; }
-     
-            var nextOne = current + settings.scroll;
-
-            console.log("move to next ", nextOne);
-            scrollToItem(nextOne, 1);
+    
+            scrollToItem(current + settings.scroll, 1);
         };
 
         // --- a key event we care about happened
@@ -313,9 +311,6 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
 
         var findMoves = function(){
             moves = Math.ceil(totalItems/settings.scroll) - (settings.show - settings.scroll) - 1;
-
-            // these only matter for infinite scroll
-
             slots = settings.show * Math.ceil(totalItems/settings.show);
             emptySlots = slots - totalItems;
 
@@ -531,19 +526,15 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
 
             // --- the window rezied
 
-            resize : function(){
-                resizeCarrot();
-            },
+            resize : function(){ resizeCarrot(); },
 
-            keyPressed : function(keyCode){
-                handleKeyPress(keyCode);
-            },
+            // --- track triggers this
+
+            keyPressed : function(keyCode){ handleKeyPress(keyCode); },
 
             // --- return the name of this carrot
 
-            getName : function(){
-                return settings.name;
-            }
+            getName : function(){ return settings.name; }
         };
 
         return API_Methods;
