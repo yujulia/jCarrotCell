@@ -61,7 +61,7 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
 
 (function($){
 
-    // --- CONST
+    // --- global constants
 
     var KEY_BACK = 37,
         KEY_FORWARD = 39,
@@ -131,11 +131,15 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             animating = false,  // animation lock
             axis = "x",
 
+            // --- these settings can be over written
+
             settings = {
-                show: 1,        // show 1 frame at a time
-                scroll: 1,      // scroll 1 frame at a time
-                speed: 700,     // scroll speed         
-                sideways: true, // scroll sideways
+                show: 1,                // show 1 frame at a time
+                scroll: 1,              // scroll 1 frame at a time
+                speed: 700,             // scroll speed         
+                sideways: true,         // scroll sideways
+                infinite: false,
+                auto: false,
                 tween: "easeOutExpo",
 
                 prevClass : '',
@@ -146,9 +150,6 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
                 nextIconClass : CLASS_NEXT_ICON,
                 disabledClass : CLASS_DISABLED,
                 controlOnHover : false,
-
-                infinite: false,
-                auto: false,
 
                 key: false,
                 keyBack: null,
@@ -301,7 +302,6 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
 
         var createControls = function(){
             setupPreNext();
-
             if (settings.key){
                 track.subscribeKey(settings.name, settings.keyBack, settings.keyForward);
             }
@@ -546,7 +546,7 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
     var track = {
         carrots : {},   // track all the carrotcells by name
         keys : {},      // key events subscribed to by carrots
-        count : 0,
+        count : 0,      // count carrot cells made
         initialized: false,
                 
         // --- trigger some function on all carrots
@@ -586,11 +586,9 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
         
         // --- window reized, trigger resize on all carrotcells
 
-        windowResized : debounce(function(){
-            track.triggerCarrots("resize");
-        }, DEBOUNCE_RESIZE),
+        windowResized : debounce(function(){ track.triggerCarrots("resize"); }, DEBOUNCE_RESIZE),
 
-        // --- initialize jcarousel object, note THIS is not cell
+        // --- initialize jcarousel object, note THIS is not track object
 
         makeCarrot : function(options) {  
 
