@@ -50,6 +50,20 @@
         };
     };
 
+    // --- see if two objects are roughly the same (shallow)
+
+    var sameObject = function(obj1, obj2){
+        if (Object.keys(obj1).length !== Object.keys(obj2).length){  return false; } // unequal length
+        for (var key in obj1){
+            if (key in obj2){
+                if (obj1[key] !== obj2[key]) {  return false; } // value not euqal
+            } else {
+                return false; // missing key
+            }
+        }
+        return true;
+    };
+
     /** ---------------------------------------
         carrot methods
     */
@@ -100,8 +114,8 @@
                 controlOnHover : false,
 
                 key: false,
-                keyBack: null,
-                keyForward: null
+                keyBack: KEY_BACK,
+                keyForward: KEY_FORWARD
             };
 
         // --- toggle the prev and next and start/end flags
@@ -341,6 +355,7 @@
             } else {
                 setItemSize(height/settings.show, "height");
             }
+
         };
 
         // --- set the size of the clipping pane 
@@ -359,8 +374,7 @@
         // --- make the html frame depending on if its a list or divs
 
         var makeFrame = function(){ 
-
-
+ 
             clipPane = $('<div/>', { 'class': CLASS_CLIP });
             setClipSize();
 
@@ -389,6 +403,7 @@
             scope.addClass(CLASS_CARROT).data(CLASS_CARROT, settings.name);   
 
             adjustItemSize();   // make the items fit inside the clippane  
+
         };
 
         // --- update the settings object 
@@ -460,8 +475,17 @@
 
             update : function(options){
 
+                // dont update if its the same options
+
+                if (sameObject(options, JSON.parse(settings.userOptions))){
+                    return false;
+                }
+
                 $.extend(settings, options);
                 setup();
+
+                // remake controls but dont remake the frame
+
             },
 
             // --- the window rezied
@@ -541,7 +565,8 @@
         makeCarrot : function(options) {  
             track.count++;
             if (!options) { options = {}; }     // passed in carrotcell options
-            options.userOptions = options;      // save user passed options
+            options.userOptions = JSON.stringify(options);      // save user passed options
+
             options.scope = $(this);            // save this element as the scope
             options.name = "carrot-" + track.count + "-" + options.scope.attr("id"); 
             var newCarrot = new carrot();
@@ -573,7 +598,7 @@
         if (carrotName){
 
             // this carrotcell already exists, update instead of init
-
+            console.log("this exists");
             var carrotAPI = track.carrots[carrotName];
             if (carrotAPI) {
                 carrotAPI.update.apply(this, arguments);
@@ -585,6 +610,7 @@
         } else {
 
             // make a new carrotcell
+            console.log("making new");
 
             var newCarrot = track.makeCarrot.apply(this, arguments);
             var newCarrotName = newCarrot.getName();
