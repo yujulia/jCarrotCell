@@ -350,7 +350,6 @@
         var setClipSize = function(){
             width = parseInt(Math.floor(scope.width()), 10);
             height = parseInt(Math.floor(scope.height()), 10);
-            console.log("scope width ", width);
 
             if (settings.sideways){
                 clipPane.css("width", width + "px");
@@ -363,7 +362,7 @@
 
         var makeFrame = function(){ 
 
-            scope.hide(); // hide this process to avoid any flicker
+
             clipPane = $('<div/>', { 'class': CLASS_CLIP });
             setClipSize();
 
@@ -389,7 +388,7 @@
             }
 
             items.addClass(CLASS_ITEM);
-            scope.addClass(CLASS_CARROT).data(CLASS_CARROT, settings.name).show();   
+            scope.addClass(CLASS_CARROT).data(CLASS_CARROT, settings.name);   
 
             adjustItemSize();   // make the items fit inside the clippane  
         };
