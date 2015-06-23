@@ -43,10 +43,19 @@
         border: none;
         margin: 0;
         padding: 0;
-        transition: opacity .25s ease-in-out;
+        transition: opacity .2s ease-in-out;
         opacity: 1;
         font-size: 60px;
         line-height: 1em;
+
+        &:focus {
+            opacity: 1;
+        }
+
+        &:disabled {
+            opacity: 0.2;
+            cursor: default;
+        }
     }
 
     &--next {
@@ -54,13 +63,6 @@
         right: 10px;
     }
 
-    &--prev:focus, &--next:focus {
-        opacity: 1;
-    }
-
-    &--prev.carrotcell--disabled:focus, &--next.carrotcell--disabled:focus {
-        opacity: 0.2;
-    }
 
     &__icon {
         display: block;
@@ -81,10 +83,6 @@
         float: left;
     }
 
-    &--disabled {
-        opacity: 0.2;
-        cursor: default;
-    }
 
     &--invisible {
         opacity: 0;

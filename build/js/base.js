@@ -34,31 +34,12 @@ var t1 = $('#jcc-home').carrotCell({
     nextClass : "next",
     prevIconClass : 'cc-left',
     nextIconClass: 'cc-right',
-    disabledClass: 'disabled',
     show: 1,
     scroll: 1,
     key: true
     // controlOnHover: true
 });
 
-// $('#jcc-home').carrotCell({ 
-//     prevClass : "prev",
-//     nextClass : "next",
-//     prevIconClass : 'cc-left',
-//     nextIconClass: 'cc-right',
-//     disabledClass: 'disabled',
-//     show: 2,
-//     scroll: 1,
-//     key: true
-//     // controlOnHover: true
-// });
-
-// var t2 = $('#jcc').carrotCell({ 
-//     show: 1,
-//     scroll: 1,
-//     key: true
-//     // controlOnHover: true
-// });
 
 
 },{"./jCarrotCell.js":3,"./vendor/rainbow-custom.min.js":4,"./vendor/velocity.min.js":5,"jquery":1}],3:[function(require,module,exports){
@@ -92,9 +73,7 @@ var t1 = $('#jcc-home').carrotCell({
         CLASS_ICON = CLASS_CARROT + '__icon',
         CLASS_PREV_ICON = CLASS_ICON + '--iconPrev',
         CLASS_NEXT_ICON = CLASS_ICON + '--iconNext',
-
         CLASS_INVIS = CLASS_CARROT + "--invisible",
-        CLASS_DISABLED = CLASS_CARROT + '--disabled',
         CLASS_NEXT = CLASS_CARROT + '--next',
         CLASS_PREV = CLASS_CARROT + '--prev';
 
@@ -170,27 +149,26 @@ var t1 = $('#jcc-home').carrotCell({
 
                 prevClass : '',
                 nextClass : '',
-                prevText : 'next',
-                nextText : 'previous',
                 prevIconClass : CLASS_PREV_ICON,
                 nextIconClass : CLASS_NEXT_ICON,
-                disabledClass : CLASS_DISABLED,
+                prevText : 'next',
+                nextText : 'previous',
                 controlOnHover : false,
 
                 key: false,
-                keyBack: KEY_BACK,
-                keyForward: KEY_FORWARD
+                keyBack: '',
+                keyForward: ''
             };
 
         // --- toggle the prev and next and start/end flags
 
         var setInMiddle = function(){
             if (atStart) {
-                prev.removeClass(settings.disabledClass).attr("aria-disabled", "false");
+                prev.prop("disabled", false);
                 atStart = false;
             }
             if (atEnd) {
-                next.removeClass(settings.disabledClass).attr("aria-disabled", "false");
+                next.prop("disabled", false);
                 atEnd = false;
             }
         };
@@ -198,13 +176,13 @@ var t1 = $('#jcc-home').carrotCell({
         var setAtStart = function(){
             setInMiddle();  // fix previous state
             atStart = true;
-            prev.addClass(settings.disabledClass).attr("aria-disabled", "true");
+            prev.prop("disabled", true);
         };
 
         var setAtEnd = function(){
             setInMiddle();  // fix previous state
             atEnd = true;
-            next.addClass(settings.disabledClass).attr("aria-disabled", "true");
+            next.prop("disabled", true);
         };
     
         // --- determine where we are in the carousel
@@ -280,14 +258,14 @@ var t1 = $('#jcc-home').carrotCell({
         var setupPreNext = function(){
             var prevContent = $('<span/>', { 'class' : CLASS_ACCESS_TEXT, 'text': settings.prevText });
             var nextContent = $('<span/>', { 'class' : CLASS_ACCESS_TEXT, 'text': settings.nextText });
-            var prevIcon = $('<span/>', { 'class' : CLASS_ICON + ' ' + settings.prevIconClass, 'aria-hidden': 'true' });
-            var nextIcon = $('<span/>', { 'class' : CLASS_ICON + ' ' + settings.nextIconClass, 'aria-hidden': 'true' });
-            prev = $('<button/>', { 'class': CLASS_PREV + ' ' + settings.prevClass });
-            next = $('<button/>', { 'class': CLASS_NEXT + ' ' + settings.nextClass });
+            var prevIcon = $('<span/>', { 'class' : settings.prevIconClass, 'aria-hidden': 'true' });
+            var nextIcon = $('<span/>', { 'class' : settings.nextIconClass, 'aria-hidden': 'true' });
+            prev = $('<button/>', { 'class': settings.prevClass });
+            next = $('<button/>', { 'class': settings.nextClass });
             prev.append(prevIcon).append(prevContent);
             next.append(nextContent).append(nextIcon);
 
-            if (atStart) { prev.addClass(settings.disabledClass).attr("aria-disabled", "true"); }
+            if (atStart) { prev.prop("disabled", true); }
             
             prev.click(moveToPrev);
             next.click(moveToNext);
@@ -475,6 +453,7 @@ var t1 = $('#jcc-home').carrotCell({
         var fixSettings = function(){
             if (settings.auto) { settings.infinite = true;  }
             if (settings.sideways) { axis = "x"; } else { axis = "y"; }
+
             if (settings.key) {
                 if (settings.sideways) {
                     settings.keyBack = settings.keyBack || KEY_BACK;
@@ -484,6 +463,13 @@ var t1 = $('#jcc-home').carrotCell({
                     settings.keyForward = settings.keyForward || KEY_DOWN;
                 }
             }
+
+            settings.prevClass = CLASS_PREV + ' ' + settings.prevClass;
+            settings.nextClass = CLASS_NEXT + ' ' + settings.nextClass;
+            settings.prevIconClass = CLASS_ICON + ' ' + settings.prevIconClass;
+            settings.nextIconClass = CLASS_ICON + ' ' + settings.nextIconClass;
+   
+
             if (settings.infinite) { atStart = false; }
         };
 

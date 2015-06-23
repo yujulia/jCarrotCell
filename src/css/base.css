@@ -221,11 +221,11 @@ pre {
     height: 30px;
     color: #ff9900;
     font-size: 28px; }
-  #jcc-home .prev:hover, #jcc-home .next:hover, #jcc-home .prev:focus, #jcc-home .next:focus {
-    color: #99cc33;
-    background: transparent; }
-  #jcc-home .disabled {
-    opacity: 0; }
+    #jcc-home .prev:hover, #jcc-home .prev:focus, #jcc-home .next:hover, #jcc-home .next:focus {
+      color: #99cc33;
+      background: transparent; }
+    #jcc-home .prev:disabled, #jcc-home .next:disabled {
+      opacity: 0; }
 
 .jcc-item {
   border: solid 2px red;

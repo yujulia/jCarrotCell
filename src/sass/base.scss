@@ -148,16 +148,17 @@ pre {
         height: 30px;
         color: $color-carrot;
         font-size: 28px;
+
+        &:hover, &:focus {
+            color: $color-leaf;
+            background: transparent;
+        }
+
+        &:disabled {
+            opacity: 0;
+        }
     }
 
-    .prev:hover, .next:hover, .prev:focus, .next:focus {
-        color: $color-leaf;
-        background: transparent;
-    }
-
-    .disabled {
-        opacity: 0;
-    }
 
 
     // .navi {
