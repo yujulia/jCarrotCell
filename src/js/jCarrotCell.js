@@ -101,9 +101,7 @@
 
                 key: false,
                 keyBack: null,
-                keyForward: null,
-
-                touch: false    // touch device
+                keyForward: null
             };
 
         // --- toggle the prev and next and start/end flags
@@ -229,7 +227,7 @@
                 prev.addClass(CLASS_INVIS).blur();
             };
 
-            if (settings.controlOnHover && !settings.touch){
+            if (settings.controlOnHover && !track.touch){
                 hideControls();
                 scope.hover(showControls, hideControls);
             } else {
@@ -461,6 +459,7 @@
             // --- update the carrot with new options
 
             update : function(options){
+
                 $.extend(settings, options);
                 setup();
             },
@@ -489,6 +488,8 @@
         keys : {},      // key events subscribed to by carrots
         count : 0,      // count carrot cells made
         initialized: false,
+        useKey: false,
+        touch: false,
                 
         // --- trigger some function on all carrots
 
@@ -503,6 +504,12 @@
         // --- carrots call this to subscribe keys
 
         subscribeKey : function(){
+
+            if (!track.useKey){ 
+                $(window).keyup(track.keyPressed);
+                track.useKey = true;
+            }
+             
             var args = Array.prototype.slice.call(arguments);
             var carrotName = args.shift();
 
@@ -532,14 +539,11 @@
         // --- initialize jcarousel object, note THIS is not track object
 
         makeCarrot : function(options) {  
-
             track.count++;
-            if (!options) { options = {}; } // passed in carrotcell options
-            options.scope = $(this); // save this element as the scope
+            if (!options) { options = {}; }     // passed in carrotcell options
+            options.userOptions = options;      // save user passed options
+            options.scope = $(this);            // save this element as the scope
             options.name = "carrot-" + track.count + "-" + options.scope.attr("id"); 
-            if (('ontouchstart' in window) || (window.DocumentTouch && document instanceof DocumentTouch)){
-                options.touch = true; // is this touch device?
-            }
             var newCarrot = new carrot();
             track.carrots[options.name] = newCarrot; 
             newCarrot.init(options);
@@ -551,8 +555,9 @@
 
         init : function(){
             $(window).on('resize', track.windowResized);
-            $(window).keyup(track.keyPressed);
-
+            if (('ontouchstart' in window) || (window.DocumentTouch && document instanceof DocumentTouch)){
+                track.touch = true; // is this touch device?
+            }
             track.initialize = true;
         }
     };
