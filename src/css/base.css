@@ -212,9 +212,9 @@ pre {
 
 #jcc-home {
   width: 90%;
-  width: 1000px;
   margin: 80px auto 0 auto;
   border: solid 5px #000;
+  padding: 0;
   box-sizing: border-box; }
   #jcc-home img {
     display: block; }

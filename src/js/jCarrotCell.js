@@ -285,9 +285,7 @@
                 if (settings.sideways){
                     var b1 = parseInt($(item).css("border-left-width"), 10),
                         b2 = parseInt($(item).css("border-right-width"), 10);
-                    console.log(b1, b2);
                     calcOffset += b1 + b2;
-                    console.log("offset ", calcOffset);
                 } else {
                     var b3 = parseInt($(item).css("border-top-width"), 10),
                         b4 = parseInt($(item).css("border-bottom-width"), 10);
