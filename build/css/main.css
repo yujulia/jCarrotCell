@@ -532,8 +532,7 @@ pre {
 #jcc-home {
   width: 90%;
   margin: 80px auto 0 auto;
-  border: solid 3px #000;
-  box-sizing: content-box; }
+  border: solid 3px #000; }
   #jcc-home img {
     display: block; }
   #jcc-home .prev, #jcc-home .next {
