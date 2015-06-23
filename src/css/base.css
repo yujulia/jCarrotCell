@@ -212,8 +212,10 @@ pre {
 
 #jcc-home {
   width: 90%;
+  width: 1000px;
   margin: 80px auto 0 auto;
-  border: solid 3px #000; }
+  border: solid 5px #000;
+  box-sizing: border-box; }
   #jcc-home img {
     display: block; }
   #jcc-home .prev, #jcc-home .next {

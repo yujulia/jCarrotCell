@@ -117,7 +117,7 @@
                 next.removeClass(settings.disabledClass).attr("aria-disabled", "false");
                 atEnd = false;
             }
-        }
+        };
 
         var setAtStart = function(){
             setInMiddle();  // fix previous state
@@ -129,7 +129,7 @@
             setInMiddle();  // fix previous state
             atEnd = true;
             next.addClass(settings.disabledClass).attr("aria-disabled", "true");
-        }
+        };
     
         // --- determine where we are in the carousel
 
@@ -172,7 +172,7 @@
             } );
 
             // if no velocity use jquery animate
-        }
+        };
 
         // -- move to previous scroll
 
@@ -216,18 +216,18 @@
             prev.click(moveToPrev);
             next.click(moveToNext);
 
-            var blurPrev = function(){ prev.blur(); }
-            var blurNext = function(){ next.blur(); }
+            var blurPrev = function(){ prev.blur(); };
+            var blurNext = function(){ next.blur(); };
 
             var showControls = function(){
                 next.removeClass(CLASS_INVIS); 
                 prev.removeClass(CLASS_INVIS);
-            }
+            };
 
             var hideControls = function(){
                 next.addClass(CLASS_INVIS).blur(); 
                 prev.addClass(CLASS_INVIS).blur();
-            }
+            };
 
             if (settings.controlOnHover && !settings.touch){
                 hideControls();
@@ -285,7 +285,9 @@
                 if (settings.sideways){
                     var b1 = parseInt($(item).css("border-left-width"), 10),
                         b2 = parseInt($(item).css("border-right-width"), 10);
+                    console.log(b1, b2);
                     calcOffset += b1 + b2;
+                    console.log("offset ", calcOffset);
                 } else {
                     var b3 = parseInt($(item).css("border-top-width"), 10),
                         b4 = parseInt($(item).css("border-bottom-width"), 10);
@@ -330,10 +332,13 @@
 
             var setItemSize = function(single, prop){
                 oneItem.size = single - oneItem.offset; // make room for margin/border
+
+                console.log("one item ", oneItem.size, " single ", single, " offset ", oneItem.offset);
+
                 oneItem.totalSize = oneItem.size + oneItem.offset;
                 items.css(prop, oneItem.size + "px");
                 slider.css(prop,  single * totalItems + oneItem.offset + "px"); // set length of slider
-            }
+            };
 
             if (settings.sideways) { 
                 setItemSize(width/settings.show, "width");
@@ -345,8 +350,10 @@
         // --- set the size of the clipping pane 
 
         var setClipSize = function(){
-            width = scope.width();
-            height = scope.height();
+            width = parseInt(Math.floor(scope.width()), 10);
+            height = parseInt(Math.floor(scope.height()), 10);
+            console.log("scope width ", width);
+
             if (settings.sideways){
                 clipPane.css("width", width + "px");
             } else {
