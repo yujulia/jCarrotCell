@@ -81,7 +81,6 @@
             sliderSize = 0,
             items = null,       // all frames
             totalItems = 0,     // how many frames
-            itemSizes = [],     // size of individual items
             oneItem = null,     // shorthand for just one item
             prev = null,
             next = null,
@@ -256,14 +255,12 @@
         // if tabbing thorugh with keyboard scroll appropriately
 
         var setupFocusTab = function(){
-
             var gotFocus = function(e){
                 var itemEnum = $(this).data("enum");
                 if ($.isNumeric(itemEnum) && (itemEnum > 0) && (itemEnum !== current)){
                     scrollToItem(itemEnum, 1);
                 } 
             };
-
             items.focus(gotFocus);
         };
 
@@ -332,22 +329,16 @@
         // --- get individual content item sizes
 
         var getAllItemSizes = function(){
-            itemSizes = []; // clear previous
             items.each(function(i, item){
                 item = $(item);
-                item.data("enum", i);           // index items
-                var data = getItemSize(item);
-                itemSizes.push(data);
-
-                // concat all sizes into slider size as well
-
+                item.data("enum", i);          
+                if (i < 1){ oneItem = getItemSize(item); }
                 if (settings.sideways){
-                    sliderSize += data.w;
+                    sliderSize += oneItem.w;
                 } else {
-                    sliderSize += data.h;
+                    sliderSize += oneItem.h;
                 }
             });
-            oneItem = itemSizes[0]; // reference item
         };
 
         // --- adjust the size of the items and the slider 
