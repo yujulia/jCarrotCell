@@ -31,6 +31,7 @@
     &__item {
         display: block;
         float: left;
+        z-index: 1;
     }
 
     &__btn {
@@ -39,6 +40,7 @@
         border: none;
         margin: 0;
         padding: 0;
+        z-index: 2;
 
         &:focus, &:hover:enabled {
             opacity: 1;

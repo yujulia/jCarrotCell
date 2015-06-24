@@ -22,13 +22,15 @@
       clear: both; }
   .carrotcell__item {
     display: block;
-    float: left; }
+    float: left;
+    z-index: 1; }
   .carrotcell__btn {
     cursor: pointer;
     background: none;
     border: none;
     margin: 0;
-    padding: 0; }
+    padding: 0;
+    z-index: 2; }
     .carrotcell__btn:focus, .carrotcell__btn:hover:enabled {
       opacity: 1; }
       .carrotcell__btn:focus .carrotcell__icon--prev, .carrotcell__btn:focus .carrotcell__icon--next, .carrotcell__btn:hover:enabled .carrotcell__icon--prev, .carrotcell__btn:hover:enabled .carrotcell__icon--next {

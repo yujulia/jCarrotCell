@@ -185,7 +185,19 @@ pre {
     // width: 1644px;
     border: solid 2px red;
     margin: 5px;
+    position: relative;
     // box-sizing: border-box;
+
+    .jcc-content {
+        position: absolute;
+        top: 0;
+        left: 50px;
+
+        h2 {
+            color: $color-carrot;
+        }
+        
+    }
 
     &:focus {
         border-color: green;

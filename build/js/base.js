@@ -298,6 +298,20 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             scope.prepend(next).prepend(prev);
         };
 
+        // if tabbing thorugh with keyboard scroll appropriately
+
+        var setupFocusTab = function(){
+
+            var gotFocus = function(e){
+                var itemEnum = $(this).data("enum");
+                if ($.isNumeric(itemEnum) && (itemEnum > 0) && (itemEnum !== current)){
+                    scrollToItem(itemEnum, 1);
+                } 
+            };
+
+            items.focus(gotFocus);
+        };
+
         // -- create icon prev and next buttons
 
         var createControls = function(){
@@ -305,6 +319,7 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             if (settings.key){
                 track.subscribeKey(settings.name, settings.keyBack, settings.keyForward);
             }
+            setupFocusTab();
         };
 
         // --- find moves
@@ -327,33 +342,33 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             return attrs;
         };
 
-        // --- calculate the size and offset for one item
+        // --- calculate the size and offset for one item (jq obj)
 
         var getItemSize = function(item){
 
             var calcOffset = 0;
 
             if (settings.sideways){
-                calcOffset = parseInt($(item).css("margin-left"), 10) + parseInt($(item).css("margin-right"), 10);
+                calcOffset = parseInt(item.css("margin-left"), 10) + parseInt(item.css("margin-right"), 10);
             } else {
-                calcOffset = parseInt($(item).css("margin-top"), 10) + parseInt($(item).css("margin-bottom"), 10);
+                calcOffset = parseInt(item.css("margin-top"), 10) + parseInt(item.css("margin-bottom"), 10);
             }
 
             if ($(item).css("box-sizing") === "content-box") {
                 if (settings.sideways){
-                    var b1 = parseInt($(item).css("border-left-width"), 10),
-                        b2 = parseInt($(item).css("border-right-width"), 10);
+                    var b1 = parseInt(item.css("border-left-width"), 10),
+                        b2 = parseInt(item.css("border-right-width"), 10);
                     calcOffset += b1 + b2;
                 } else {
-                    var b3 = parseInt($(item).css("border-top-width"), 10),
-                        b4 = parseInt($(item).css("border-bottom-width"), 10);
+                    var b3 = parseInt(item.css("border-top-width"), 10),
+                        b4 = parseInt(item.css("border-bottom-width"), 10);
                     calcOffset += b3 + b4;
                 }
             } 
 
             return {
-                w: $(item).outerWidth(true),
-                h: $(item).outerHeight(true),
+                w: item.outerWidth(true),
+                h: item.outerHeight(true),
                 offset: calcOffset
             };
 
@@ -364,6 +379,8 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
         var getAllItemSizes = function(){
             itemSizes = []; // clear previous
             items.each(function(i, item){
+                item = $(item);
+                item.data("enum", i);           // index items
                 var data = getItemSize(item);
                 itemSizes.push(data);
 

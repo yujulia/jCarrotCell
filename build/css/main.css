@@ -547,7 +547,14 @@ pre {
 
 .jcc-item {
   border: solid 2px red;
-  margin: 5px; }
+  margin: 5px;
+  position: relative; }
+  .jcc-item .jcc-content {
+    position: absolute;
+    top: 0;
+    left: 50px; }
+    .jcc-item .jcc-content h2, .jcc-item .jcc-content .intro {
+      color: #ff9900; }
   .jcc-item:focus {
     border-color: green; }
 
@@ -615,13 +622,15 @@ pre {
       clear: both; }
   .carrotcell__item {
     display: block;
-    float: left; }
+    float: left;
+    z-index: 1; }
   .carrotcell__btn {
     cursor: pointer;
     background: none;
     border: none;
     margin: 0;
-    padding: 0; }
+    padding: 0;
+    z-index: 2; }
     .carrotcell__btn:focus, .carrotcell__btn:hover:enabled {
       opacity: 1; }
       .carrotcell__btn:focus .carrotcell__icon--prev, .carrotcell__btn:focus .carrotcell__icon--next, .carrotcell__btn:hover:enabled .carrotcell__icon--prev, .carrotcell__btn:hover:enabled .carrotcell__icon--next {
