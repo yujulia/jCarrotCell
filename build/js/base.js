@@ -209,11 +209,27 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             moved += direction;
             animating = false;
 
-            if (settings.infinite){ 
+            console.log("done scrolling current ", current, " moves ", moves, " item ", item);
 
-                console.log("done scrolling current ", current, " moves ", moves);
+            if (settings.infinite) {
 
-            } else { 
+                // reached the clone at the beginning
+
+                if (item < 0) {
+                    moved = moves;
+                    current = moves;
+                    scrollSlider({ duration: 0, offset: totalItems * oneItem.totalSize });
+                }
+
+                // reached the clone at the end
+
+                if (item > moves) {
+                    moved = 0;
+                    current = 0;
+                    scrollSlider({ duration: 0, offset: settings.show * oneItem.totalSize });
+                }
+
+            } else {
                 setState(); 
             }
         };
@@ -235,16 +251,16 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
         // --- scroll to some time 
 
         var scrollToItem = function(item, direction){
+
             var alreadyMoved = moved * oneItem.totalSize;
             if (settings.infinite) { alreadyMoved += oneItem.totalSize * settings.show; }
             var moveDistance = (direction * Math.abs(current - item) * oneItem.totalSize) + alreadyMoved;
-            animating = true;
-
             var params = {
                 duration: settings.speed,
                 offset: moveDistance,
                 complete: doneScrolling.bind(this, item, direction)
             };
+            animating = true;
             scrollSlider(params);
         };
 
@@ -401,33 +417,23 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
 
         var adjustItemSize = function(){    
             getAllItemSizes(); 
-            var single = 0;
-
-            // this will need to change if each item size is different...
-
+    
             var setItemSize = function(single, prop){
                 oneItem.size = single - oneItem.offset; // make room for margin/border
-
-                console.log("one item ", oneItem.size, " single ", single, " offset ", oneItem.offset);
-
                 oneItem.totalSize = oneItem.size + oneItem.offset;
                 items.css(prop, oneItem.size + "px");
-
                 var sliderItems = totalItems;
-
                 if (settings.infinite){
                     sliderItems += settings.show * 2; // account for clones
                 }
                 slider.css(prop,  single * sliderItems + oneItem.offset + "px"); // set length of slider
             };
 
-
             if (settings.sideways) { 
                 setItemSize(width/settings.show, "width");
             } else {
                 setItemSize(height/settings.show, "height");
             }
-
             if (settings.infinite){
                 var cloneMove = settings.show * oneItem.totalSize;
                 scrollSlider({ duration: 0, offset: settings.show * oneItem.totalSize });

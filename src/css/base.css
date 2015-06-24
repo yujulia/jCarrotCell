@@ -225,9 +225,11 @@ pre {
     #jcc-home .prev:hover, #jcc-home .prev:focus, #jcc-home .next:hover, #jcc-home .next:focus {
       color: #99cc33;
       background: transparent; }
+  #jcc-home .carrotcell__clone {
+    border-color: violet; }
 
 .jcc-item {
-  border: solid 2px red;
+  border: solid 1px red;
   margin: 5px;
   position: relative; }
   .jcc-item .jcc-content {
