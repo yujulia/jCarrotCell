@@ -163,7 +163,13 @@
             moved += direction;
             animating = false;
 
-            if (!settings.infinite){ setState(); }
+            if (settings.infinite){ 
+
+                console.log("done scrolling current ", current, " moves ", moves);
+
+            } else { 
+                setState(); 
+            }
         };
 
         // --- scroll the slider
@@ -184,8 +190,7 @@
 
         var scrollToItem = function(item, direction){
             var alreadyMoved = moved * oneItem.totalSize;
-            if (settings.infinite) { alreadyMoved += oneItem.totalSize; }
-
+            if (settings.infinite) { alreadyMoved += oneItem.totalSize * settings.show; }
             var moveDistance = (direction * Math.abs(current - item) * oneItem.totalSize) + alreadyMoved;
             animating = true;
 
@@ -241,12 +246,10 @@
 
             var blurPrev = function(){ prev.blur(); };
             var blurNext = function(){ next.blur(); };
-
             var showControls = function(){
                 next.removeClass(CLASS_INVIS); 
                 prev.removeClass(CLASS_INVIS);
             };
-
             var hideControls = function(){
                 next.addClass(CLASS_INVIS).blur(); 
                 prev.addClass(CLASS_INVIS).blur();
@@ -293,7 +296,7 @@
             slots = settings.show * Math.ceil(totalItems/settings.show);
             emptySlots = slots - totalItems;
 
-            console.log("moves ", moves, " slots ", slots,  "empty ", emptySlots);
+            console.log("totalitems ", totalItems, " moves ", moves, " slots ", slots,  "empty ", emptySlots);
         };
 
         // --- return attributes on some jquery element
@@ -364,10 +367,12 @@
                 oneItem.totalSize = oneItem.size + oneItem.offset;
                 items.css(prop, oneItem.size + "px");
 
+                var sliderItems = totalItems;
+
                 if (settings.infinite){
-                    totalItems += settings.show * 2; // account for clones
+                    sliderItems += settings.show * 2; // account for clones
                 }
-                slider.css(prop,  single * (totalItems) + oneItem.offset + "px"); // set length of slider
+                slider.css(prop,  single * sliderItems + oneItem.offset + "px"); // set length of slider
             };
 
 
@@ -391,11 +396,9 @@
 
             endSlice.addClass(CLASS_CLONE).attr("tabindex", -1).removeData("enum");
             startSlice.addClass(CLASS_CLONE).attr("tabindex", -1).removeData("enum");
-
             items.filter(':first').before(endSlice);         
             items.filter(':last').after(startSlice);
-
-            items = $("." + CLASS_ITEM, scope); // this includes cloned
+            items = $("." + CLASS_ITEM + ":not(."+ CLASS_CLONE + ")", scope); // this includes cloned
         };
 
         // --- set the size of the clipping pane 
@@ -403,7 +406,6 @@
         var setClipSize = function(){
             width = parseInt(Math.floor(scope.width()), 10);
             height = parseInt(Math.floor(scope.height()), 10);
-
             if (settings.sideways){
                 clipPane.css("width", width + "px");
             } else {
@@ -486,6 +488,7 @@
         setup = function(){
             items = scope.children(); 
             totalItems = items.length;
+
             fixSettings();      // toggle on relevant settings if any
             makeFrame();        // make the markup
             
