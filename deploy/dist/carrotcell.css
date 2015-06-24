@@ -4,53 +4,77 @@
 /** ------------------------------------------------------- 
 	necessary styles
 */
-.carrotCell {
-  display: block;
-  overflow: hidden;
+.carrotcell {
   position: relative; }
-  .carrotCell .navi {
-    display: block; }
-    .carrotCell .navi li {
-      display: inline-block;
-      cursor: pointer; }
-    .carrotCell .navi .naviItem {
-      display: inline-block; }
-  .carrotCell .carrotCellView {
-    overflow: auto;
-    position: relative; }
-    .carrotCell .carrotCellView ol {
-      display: block; }
-    .carrotCell .carrotCellView li {
-      overflow: hidden;
-      float: left;
-      display: block;
-      position: relative; }
-  .carrotCell .next, .carrotCell .prev, .carrotCell .pause, .carrotCell y, .carrotCell .stop {
-    display: none;
-    z-index: 1;
-    cursor: pointer; }
-
-/** -------------------------------------------------------  
-	change these styles according to your needs
-*/
-.carrotCell {
-  width: 100%;
-  margin: 0 auto; }
-  .carrotCell .disabled {
-    opacity: 0.2; }
-  .carrotCell .invisible {
-    display: none; }
-  .carrotCell .carrotCellView {
-    width: 1644px;
-    height: 400px; }
-    .carrotCell .carrotCellView li {
-      width: 1644px;
-      height: 400px; }
-  .carrotCell .prev, .carrotCell .next {
-    position: absolute;
-    top: 50%;
-    left: 10px;
-    cursor: pointer; }
-  .carrotCell .next {
-    left: auto;
-    right: 10px; }
+  .carrotcell__clip {
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+    border: none; }
+  .carrotcell__strip {
+    margin: 0;
+    padding: 0;
+    border: none;
+    list-style: none; }
+    .carrotcell__strip:after {
+      content: ' ';
+      display: table;
+      clear: both; }
+  .carrotcell__item {
+    display: block;
+    float: left;
+    z-index: 1; }
+  .carrotcell__btn {
+    cursor: pointer;
+    background: none;
+    border: none;
+    margin: 0;
+    padding: 0;
+    z-index: 2; }
+    .carrotcell__btn:focus, .carrotcell__btn:hover:enabled {
+      opacity: 1; }
+      .carrotcell__btn:focus .carrotcell__icon--prev, .carrotcell__btn:focus .carrotcell__icon--next, .carrotcell__btn:hover:enabled .carrotcell__icon--prev, .carrotcell__btn:hover:enabled .carrotcell__icon--next {
+        background: #fff;
+        color: #000; }
+    .carrotcell__btn:disabled {
+      opacity: 0.2;
+      cursor: default; }
+    .carrotcell__btn--prev, .carrotcell__btn--next {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      left: 10px;
+      transition: opacity .2s ease-in-out;
+      opacity: 1; }
+      .carrotcell__btn--prev .carrotcell__icon--prev, .carrotcell__btn--prev .carrotcell__icon--next, .carrotcell__btn--next .carrotcell__icon--prev, .carrotcell__btn--next .carrotcell__icon--next {
+        font-size: 30px;
+        border-radius: 100%;
+        background: #666;
+        color: #fff; }
+    .carrotcell__btn--next {
+      left: auto;
+      right: 10px; }
+  .carrotcell__icon {
+    display: block;
+    float: left;
+    margin: 0;
+    padding: 0;
+    line-height: 1em; }
+    .carrotcell__icon--prev::before {
+      content: '\2039';
+      padding: 0 13px 0 12px;
+      display: inline;
+      line-height: 1em;
+      vertical-align: text-top; }
+    .carrotcell__icon--next::before {
+      content: '\203A';
+      padding: 0 12px 0 14px;
+      display: inline;
+      line-height: 1em;
+      vertical-align: text-top; }
+  .carrotcell__accessText {
+    display: block;
+    text-indent: -9999em;
+    float: left; }
+  .carrotcell--invisible {
+    opacity: 0; }

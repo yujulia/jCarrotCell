@@ -21,6 +21,7 @@ var t1 = $('#jcc-home').carrotCell({
     // nextClass : "next",
     // prevIconClass : 'cc-left',
     // nextIconClass: 'cc-right',
+    infinite: true,
     show: 1,
     scroll: 1,
     key: true
@@ -70,7 +71,7 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
         CLASS_ITEM = CLASS_CARROT + '__item',
         
         CLASS_INVIS = CLASS_CARROT + "--invisible",
-
+        CLASS_CLONE = CLASS_CARROT + "__clone",
         CLASS_ICON = CLASS_CARROT + '__icon',
         
         CLASS_NEXT_ICON = CLASS_ICON + '--next',
@@ -211,24 +212,35 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             if (!settings.infinite){ setState(); }
         };
 
+        // --- scroll the slider
+
+        var scrollSlider = function(params){
+            var scrollParams = {
+                axis: axis, 
+                container: clipPane,
+                duration: settings.speed, 
+                easing: settings.tween
+            };
+            $.extend(scrollParams, params); // update settings
+            slider.velocity('scroll', scrollParams);
+            // use jquery animate if no velocity
+        };
+
         // --- scroll to some time 
 
         var scrollToItem = function(item, direction){
+            var alreadyMoved = moved * oneItem.totalSize;
+            if (settings.infinite) { alreadyMoved += oneItem.totalSize; }
 
-            var moveDistance = (direction * Math.abs(current - item) * oneItem.totalSize) + (moved * oneItem.totalSize);
-
+            var moveDistance = (direction * Math.abs(current - item) * oneItem.totalSize) + alreadyMoved;
             animating = true;
 
-            slider.velocity('scroll', { 
-                axis: axis, 
-                duration: settings.speed, 
-                offset: moveDistance, 
-                container: clipPane, 
-                complete: doneScrolling.bind(this, item, direction),
-                easing: settings.tween
-            } );
-
-            // if no velocity use jquery animate
+            var params = {
+                duration: settings.speed,
+                offset: moveDistance,
+                complete: doneScrolling.bind(this, item, direction)
+            };
+            scrollSlider(params);
         };
 
         // -- move to previous scroll
@@ -302,6 +314,7 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
         var setupFocusTab = function(){
             var gotFocus = function(e){
                 var itemEnum = $(this).data("enum");
+                console.log("focus ", itemEnum);
                 if ($.isNumeric(itemEnum) && (itemEnum > 0) && (itemEnum !== current)){
                     scrollToItem(itemEnum, 1);
                 } 
@@ -342,15 +355,12 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
         // --- calculate the size and offset for one item (jq obj)
 
         var getItemSize = function(item){
-
             var calcOffset = 0;
-
             if (settings.sideways){
                 calcOffset = parseInt(item.css("margin-left"), 10) + parseInt(item.css("margin-right"), 10);
             } else {
                 calcOffset = parseInt(item.css("margin-top"), 10) + parseInt(item.css("margin-bottom"), 10);
             }
-
             if ($(item).css("box-sizing") === "content-box") {
                 if (settings.sideways){
                     var b1 = parseInt(item.css("border-left-width"), 10),
@@ -362,13 +372,11 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
                     calcOffset += b3 + b4;
                 }
             } 
-
             return {
                 w: item.outerWidth(true),
                 h: item.outerHeight(true),
                 offset: calcOffset
             };
-
         };
 
         // --- get individual content item sizes
@@ -401,8 +409,13 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
 
                 oneItem.totalSize = oneItem.size + oneItem.offset;
                 items.css(prop, oneItem.size + "px");
-                slider.css(prop,  single * totalItems + oneItem.offset + "px"); // set length of slider
+
+                if (settings.infinite){
+                    totalItems += settings.show * 2; // account for clones
+                }
+                slider.css(prop,  single * (totalItems) + oneItem.offset + "px"); // set length of slider
             };
+
 
             if (settings.sideways) { 
                 setItemSize(width/settings.show, "width");
@@ -410,6 +423,25 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
                 setItemSize(height/settings.show, "height");
             }
 
+            if (settings.infinite){
+                var cloneMove = settings.show * oneItem.totalSize;
+                scrollSlider({ duration: 0, offset: settings.show * oneItem.totalSize });
+            }
+        };
+
+        // --- clone
+
+        var clone = function(){
+            var endSlice = items.slice(-settings.show).clone(),
+                startSlice = items.slice(0, settings.show).clone();
+
+            endSlice.addClass(CLASS_CLONE).attr("tabindex", -1).removeData("enum");
+            startSlice.addClass(CLASS_CLONE).attr("tabindex", -1).removeData("enum");
+
+            items.filter(':first').before(endSlice);         
+            items.filter(':last').after(startSlice);
+
+            items = $("." + CLASS_ITEM, scope); // this includes cloned
         };
 
         // --- set the size of the clipping pane 
@@ -428,10 +460,10 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
         // --- make the html frame depending on if its a list or divs
 
         var makeFrame = function(){ 
- 
+            
             clipPane = $('<div/>', { 'class': CLASS_CLIP });
             setClipSize();
-
+                
             var sliderType = '<div/>';
             var carrotType = scope.prop('tagName').toUpperCase();
             var isList = false;
@@ -440,6 +472,7 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
                 sliderType = '<'+ carrotType + '/>';
             }
             slider = $(sliderType, { 'class': CLASS_SLIDER });
+
             items.appendTo(slider);
             slider.appendTo(clipPane); 
             if (isList) {
@@ -457,7 +490,7 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             scope.addClass(CLASS_CARROT).data(CLASS_CARROT, settings.name);   
 
             adjustItemSize();   // make the items fit inside the clippane  
-
+            if (settings.infinite){ clone(); }    
         };
 
         // --- update the settings object 
@@ -481,7 +514,6 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             settings.prevIconClass = CLASS_ICON + ' ' + settings.prevIconClass;
             settings.nextIconClass = CLASS_ICON + ' ' + settings.nextIconClass;
    
-
             if (settings.infinite) { atStart = false; }
         };
 
@@ -490,29 +522,19 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
         var resizeCarrot = function(){
             setClipSize();
             adjustItemSize();
-
             if (moved > 0){
-                slider.velocity('scroll', { 
-                    axis: axis, 
-                    duration: 0, 
-                    offset: moved * oneItem.totalSize, 
-                    container: clipPane
-                } );
+                scrollSlider({ duration: 0, offset: moved * oneItem.totalSize});
             } 
         };
 
-        // --- 
+        // --- setup the carrot
 
         setup = function(){
-
             items = scope.children(); 
             totalItems = items.length;
-
             fixSettings();      // toggle on relevant settings if any
             makeFrame();        // make the markup
             
-            // add further functionality if we have something to scroll
-
             if ((totalItems > settings.show) && (totalItems > 1)) {
                 findMoves();        // find out how many times we can scroll
                 createControls();   // make next prev
@@ -658,9 +680,6 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
 
         var carrotName = $(this).data(CLASS_CARROT);
         if (carrotName){
-
-            // this carrotcell already exists, update instead of init
-            console.log("this exists");
             var carrotAPI = track.carrots[carrotName];
             if (carrotAPI) {
                 carrotAPI.update.apply(this, arguments);
@@ -670,10 +689,6 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
                 return false;
             }
         } else {
-
-            // make a new carrotcell
-            console.log("making new");
-
             var newCarrot = track.makeCarrot.apply(this, arguments);
             var newCarrotName = newCarrot.getName();
             track.carrots[newCarrotName] = newCarrot;

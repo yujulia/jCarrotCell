@@ -16,8 +16,8 @@
         <ol>
           <li><a href="https://github.com/yujulia/jCarrotCell" target="_blank" class="cc-github">Github </a></li>
           <li><a href="dist/jcarrotcell.zip" class="cc-download">Download </a></li>
-          <li><a href="" target="_blank" class="cc-lab">Demos </a></li>
-          <li><a href="" class="cc-files">Docs </a></li>
+          <li><a href="demo.html" target="_blank" class="cc-lab">Demos </a></li>
+          <li><a href="doc.html" class="cc-files">Docs </a></li>
         </ol>
       </nav>
       <p class="intro">
@@ -25,16 +25,54 @@
         
       </p>
     </div>
-    <div id="jcc-home" class="carrotCell">
-      <div class="carrotCellView">
-        <ol>
-          <li class="slide-j"> </li>
-          <li class="slide-carrot"> </li>
-          <li class="slide-cell"> </li>
-        </ol>
-      </div>
-      <button type="button" class="prev cc-left">previous</button>
-      <button type="button" class="next cc-right">next</button>
+    <ul id="jcc-home">
+      <li class="jcc-item"><img src="img/j.png" width="100%" alt="j">
+        <div class="jcc-content">
+           
+          <h2>1</h2>
+        </div>
+      </li>
+      <li class="jcc-item"><img src="img/carrot.png" width="100%" alt="carrot">
+        <div class="jcc-content">
+           
+          <h2>2</h2>
+        </div>
+      </li>
+      <li class="jcc-item"><img src="img/cell.png" width="100%" alt="cell">
+        <div class="jcc-content">
+           
+          <h2>3</h2>
+        </div>
+      </li>
+      <li class="jcc-item"><img src="img/j.png" width="100%" alt="j">
+        <div class="jcc-content">
+           
+          <h2>4</h2>
+        </div>
+      </li>
+      <li class="jcc-item"><img src="img/carrot.png" width="100%" alt="carrot">
+        <div class="jcc-content">
+           
+          <h2>5</h2>
+        </div>
+      </li>
+      <li class="jcc-item"><img src="img/cell.png" width="100%" alt="cell">
+        <div class="jcc-content">
+           
+          <h2>6</h2>
+        </div>
+      </li>
+      <li class="jcc-item"><img src="img/carrot.png" width="100%" alt="cell">
+        <div class="jcc-content">
+           
+          <h2>7</h2>
+        </div>
+      </li>
+    </ul>
+    <div id="jcc">
+      <div><img src="img/j.png" width="100%" alt="j"></div>
+      <div><img src="img/carrot.png" width="100%" alt="carrot"></div>
+      <div><img src="img/cell.png" width="100%" alt="cell"></div>
     </div>
     <div class="content">
       <section>
@@ -59,36 +97,23 @@
         <p>
            
           The markup should look something like this, see the <a href="" class="cc-files">Documentation </a>on how to use whatever markup you want.
-        </p><code data-language="html" class="rainbow">
-          <span class="support tag"><span class="support tag">&lt;</span><span class="support tag-name">div</span></span> <span class="support attribute">class</span><span class="support operator">=</span><span class="string quote">"</span><span class="string value">carrotCell</span><span class="string quote">"</span><span class="support tag close">&gt;</span>            
-              <span class="support tag"><span class="support tag">&lt;</span><span class="support tag-name">div</span></span> <span class="support attribute">class</span><span class="support operator">=</span><span class="string quote">"</span><span class="string value">carrotCellView</span><span class="string quote">"</span><span class="support tag close">&gt;</span>
-                  <span class="support tag"><span class="support tag">&lt;</span><span class="support tag-name">ol</span></span><span class="support tag close">&gt;</span>
-                      <span class="support tag"><span class="support tag">&lt;</span><span class="support tag-name">li</span></span><span class="support tag close">&gt;</span>item 1<span class="support tag"><span class="support tag">&lt;</span><span class="support tag special">/</span><span class="support tag-name">li</span></span><span class="support tag close">&gt;</span>
-                      <span class="support tag"><span class="support tag">&lt;</span><span class="support tag-name">li</span></span><span class="support tag close">&gt;</span>item 2<span class="support tag"><span class="support tag">&lt;</span><span class="support tag special">/</span><span class="support tag-name">li</span></span><span class="support tag close">&gt;</span>
-                      <span class="support tag"><span class="support tag">&lt;</span><span class="support tag-name">li</span></span><span class="support tag close">&gt;</span>item 3<span class="support tag"><span class="support tag">&lt;</span><span class="support tag special">/</span><span class="support tag-name">li</span></span><span class="support tag close">&gt;</span>
-                      <span class="support tag"><span class="support tag">&lt;</span><span class="support tag-name">li</span></span><span class="support tag close">&gt;</span>item 4<span class="support tag"><span class="support tag">&lt;</span><span class="support tag special">/</span><span class="support tag-name">li</span></span><span class="support tag close">&gt;</span>
-                      <span class="support tag"><span class="support tag">&lt;</span><span class="support tag-name">li</span></span><span class="support tag close">&gt;</span>item 5<span class="support tag"><span class="support tag">&lt;</span><span class="support tag special">/</span><span class="support tag-name">li</span></span><span class="support tag close">&gt;</span>
-                      <span class="support tag"><span class="support tag">&lt;</span><span class="support tag-name">li</span></span><span class="support tag close">&gt;</span>item 6<span class="support tag"><span class="support tag">&lt;</span><span class="support tag special">/</span><span class="support tag-name">li</span></span><span class="support tag close">&gt;</span>
-                      <span class="support tag"><span class="support tag">&lt;</span><span class="support tag-name">li</span></span><span class="support tag close">&gt;</span>item 7<span class="support tag"><span class="support tag">&lt;</span><span class="support tag special">/</span><span class="support tag-name">li</span></span><span class="support tag close">&gt;</span>
-                      <span class="support tag"><span class="support tag">&lt;</span><span class="support tag-name">li</span></span><span class="support tag close">&gt;</span>item 8<span class="support tag"><span class="support tag">&lt;</span><span class="support tag special">/</span><span class="support tag-name">li</span></span><span class="support tag close">&gt;</span>
-                      <span class="support tag"><span class="support tag">&lt;</span><span class="support tag-name">li</span></span><span class="support tag close">&gt;</span>item 9<span class="support tag"><span class="support tag">&lt;</span><span class="support tag special">/</span><span class="support tag-name">li</span></span><span class="support tag close">&gt;</span>
-                  <span class="support tag"><span class="support tag">&lt;</span><span class="support tag special">/</span><span class="support tag-name">ol</span></span><span class="support tag close">&gt;</span>       
-              <span class="support tag"><span class="support tag">&lt;</span><span class="support tag special">/</span><span class="support tag-name">div</span></span><span class="support tag close">&gt;</span>            
-              <span class="support tag"><span class="support tag">&lt;</span><span class="support tag-name">div</span></span> <span class="support attribute">class</span><span class="support operator">=</span><span class="string quote">"</span><span class="string value">prev</span><span class="string quote">"</span><span class="support tag close">&gt;</span>previous<span class="support tag"><span class="support tag">&lt;</span><span class="support tag special">/</span><span class="support tag-name">div</span></span><span class="support tag close">&gt;</span>
-              <span class="support tag"><span class="support tag">&lt;</span><span class="support tag-name">div</span></span> <span class="support attribute">class</span><span class="support operator">=</span><span class="string quote">"</span><span class="string value">next</span><span class="string quote">"</span><span class="support tag close">&gt;</span>next<span class="support tag"><span class="support tag">&lt;</span><span class="support tag special">/</span><span class="support tag-name">div</span></span><span class="support tag close">&gt;</span> 
-          <span class="support tag"><span class="support tag">&lt;</span><span class="support tag special">/</span><span class="support tag-name">div</span></span><span class="support tag close">&gt;</span>
-          
-          </code>
-        <p>Invoke the carrotcell with the following:</p><code data-language="js" class="rainbow">
-          $(<span class="string">'.carrotCell'</span>).<span class="function call">carrotCell</span>();
-          </code>
+        </p>
+        <pre><code data-language="html"><ol class="my-thing">
+    <li>item 1</li>
+    <li>item 2</li>
+    <li>item 3</li>
+</ol>       
+</code></pre>
+        <p>Invoke the carrotcell with the following:</p>
+        <pre><code data-language="js">$(".my-thing").carrotCell();
+</code></pre>
       </section>
     </div>
     <footer> 
       <div class="content">
         <p>
            
-          jCarrotCell Version 2.0 by <a href="http://yujulia.com" class="cc-link">Julia Yu</a>. Started November 10 2011, Last Update May 7, 2015 11 AM PDT
+          jCarrotCell Version 2.0 by <a href="http://yujulia.com" class="cc-link">Julia Yu</a>. First draft November 10, 2011, Last Update Jun 23, 2015 9:20:09 PM PDT
         </p>
         <h2><a href="https://github.com/yujulia/jCarrotCell" target="_blank" class="cc-github">Github </a></h2>
       </div>
