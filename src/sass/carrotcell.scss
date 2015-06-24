@@ -33,47 +33,72 @@
         float: left;
     }
 
-	&--prev, &--next {
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        left: 10px;
+    &__btn {
         cursor: pointer;
         background: none;
         border: none;
         margin: 0;
         padding: 0;
-        transition: opacity .2s ease-in-out;
-        opacity: 1;
-        font-size: 60px;
-        line-height: 1em;
 
-        &:focus {
+        &:focus, &:hover:enabled {
             opacity: 1;
+
+            .carrotcell__icon--prev, .carrotcell__icon--next {
+                background: #fff;
+                color: #000;
+            }
         }
 
         &:disabled {
             opacity: 0.2;
             cursor: default;
         }
-    }
 
-    &--next {
-        left: auto;
-        right: 10px;
-    }
+        &--prev, &--next {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            left: 10px;
+            transition: opacity .2s ease-in-out;
+            opacity: 1;
 
+            .carrotcell__icon--prev, .carrotcell__icon--next {
+                font-size: 30px;
+                border-radius: 100%;
+                background: #666;
+                color: #fff;
+            }
+                    
+        }
+
+        &--next {
+            left: auto;
+            right: 10px;
+        }
+
+    }
 
     &__icon {
         display: block;
         float: left;
-
-        &--iconPrev:before {
+        margin: 0;
+        padding: 0;
+        line-height: 1em;
+        
+        &--prev::before {
             content: '\2039';
+            padding: 0 13px 0 12px;
+            display: inline;
+            line-height: 1em;
+            vertical-align: text-top;
         }
 
-        &--iconNext:before {
+        &--next::before {
             content: '\203A';
+            padding: 0 12px 0 14px;
+            display: inline;
+            line-height: 1em;
+            vertical-align: text-top;
         }
     }
 

@@ -23,14 +23,18 @@
         CLASS_CLIP = CLASS_CARROT + '__clip',
         CLASS_SLIDER = CLASS_CARROT + '__strip',
         CLASS_ITEM = CLASS_CARROT + '__item',
-        CLASS_ACCESS_TEXT = CLASS_CARROT + '__accessText',
+        
+        CLASS_INVIS = CLASS_CARROT + "--invisible",
 
         CLASS_ICON = CLASS_CARROT + '__icon',
-        CLASS_PREV_ICON = CLASS_ICON + '--iconPrev',
-        CLASS_NEXT_ICON = CLASS_ICON + '--iconNext',
-        CLASS_INVIS = CLASS_CARROT + "--invisible",
-        CLASS_NEXT = CLASS_CARROT + '--next',
-        CLASS_PREV = CLASS_CARROT + '--prev';
+        
+        CLASS_NEXT_ICON = CLASS_ICON + '--next',
+        CLASS_PREV_ICON = CLASS_ICON + '--prev',
+        CLASS_ACCESS_TEXT = CLASS_CARROT + '__accessText',
+
+        CLASS_BTN = CLASS_CARROT + '__btn',
+        CLASS_NEXT = CLASS_BTN + '--next',
+        CLASS_PREV = CLASS_BTN + '--prev';
 
     // --- debounce helper func
 
@@ -246,7 +250,7 @@
                 next.mouseleave(blurNext);
             }
 
-            scope.prepend(prev).prepend(next);
+            scope.prepend(next).prepend(prev);
         };
 
         // -- create icon prev and next buttons
@@ -419,8 +423,8 @@
                 }
             }
 
-            settings.prevClass = CLASS_PREV + ' ' + settings.prevClass;
-            settings.nextClass = CLASS_NEXT + ' ' + settings.nextClass;
+            settings.prevClass = CLASS_BTN + ' ' + CLASS_PREV + ' ' + settings.prevClass;
+            settings.nextClass = CLASS_BTN + ' ' + CLASS_NEXT + ' ' + settings.nextClass;
             settings.prevIconClass = CLASS_ICON + ' ' + settings.prevIconClass;
             settings.nextIconClass = CLASS_ICON + ' ' + settings.nextIconClass;
    

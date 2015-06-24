@@ -16,10 +16,10 @@ require('./vendor/velocity.min.js');
 require('./jCarrotCell.js');
 
 var t1 = $('#jcc-home').carrotCell({ 
-    prevClass : "prev",
-    nextClass : "next",
-    prevIconClass : 'cc-left',
-    nextIconClass: 'cc-right',
+    // prevClass : "prev",
+    // nextClass : "next",
+    // prevIconClass : 'cc-left',
+    // nextIconClass: 'cc-right',
     show: 1,
     scroll: 1,
     key: true

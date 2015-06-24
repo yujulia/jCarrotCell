@@ -539,7 +539,8 @@ pre {
     width: 40px;
     height: 40px;
     color: #ff9900;
-    font-size: 38px; }
+    font-size: 38px;
+    background: none; }
     #jcc-home .prev:hover, #jcc-home .prev:focus, #jcc-home .next:hover, #jcc-home .next:focus {
       color: #99cc33;
       background: transparent; }
@@ -615,35 +616,53 @@ pre {
   .carrotcell__item {
     display: block;
     float: left; }
-  .carrotcell--prev, .carrotcell--next {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    left: 10px;
+  .carrotcell__btn {
     cursor: pointer;
     background: none;
     border: none;
     margin: 0;
-    padding: 0;
-    transition: opacity .2s ease-in-out;
-    opacity: 1;
-    font-size: 60px;
-    line-height: 1em; }
-    .carrotcell--prev:focus, .carrotcell--next:focus {
+    padding: 0; }
+    .carrotcell__btn:focus, .carrotcell__btn:hover:enabled {
       opacity: 1; }
-    .carrotcell--prev:disabled, .carrotcell--next:disabled {
+      .carrotcell__btn:focus .carrotcell__icon--prev, .carrotcell__btn:focus .carrotcell__icon--next, .carrotcell__btn:hover:enabled .carrotcell__icon--prev, .carrotcell__btn:hover:enabled .carrotcell__icon--next {
+        background: #fff;
+        color: #000; }
+    .carrotcell__btn:disabled {
       opacity: 0.2;
       cursor: default; }
-  .carrotcell--next {
-    left: auto;
-    right: 10px; }
+    .carrotcell__btn--prev, .carrotcell__btn--next {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      left: 10px;
+      transition: opacity .2s ease-in-out;
+      opacity: 1; }
+      .carrotcell__btn--prev .carrotcell__icon--prev, .carrotcell__btn--prev .carrotcell__icon--next, .carrotcell__btn--next .carrotcell__icon--prev, .carrotcell__btn--next .carrotcell__icon--next {
+        font-size: 30px;
+        border-radius: 100%;
+        background: #666;
+        color: #fff; }
+    .carrotcell__btn--next {
+      left: auto;
+      right: 10px; }
   .carrotcell__icon {
     display: block;
-    float: left; }
-    .carrotcell__icon--iconPrev:before {
-      content: '\2039'; }
-    .carrotcell__icon--iconNext:before {
-      content: '\203A'; }
+    float: left;
+    margin: 0;
+    padding: 0;
+    line-height: 1em; }
+    .carrotcell__icon--prev::before {
+      content: '\2039';
+      padding: 0 13px 0 12px;
+      display: inline;
+      line-height: 1em;
+      vertical-align: text-top; }
+    .carrotcell__icon--next::before {
+      content: '\203A';
+      padding: 0 12px 0 14px;
+      display: inline;
+      line-height: 1em;
+      vertical-align: text-top; }
   .carrotcell__accessText {
     display: block;
     text-indent: -9999em;

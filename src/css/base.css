@@ -220,7 +220,8 @@ pre {
     width: 40px;
     height: 40px;
     color: #ff9900;
-    font-size: 38px; }
+    font-size: 38px;
+    background: none; }
     #jcc-home .prev:hover, #jcc-home .prev:focus, #jcc-home .next:hover, #jcc-home .next:focus {
       color: #99cc33;
       background: transparent; }
