@@ -217,19 +217,19 @@ pre {
   #jcc-home img {
     display: block; }
   #jcc-home .prev, #jcc-home .next {
-    width: 30px;
-    height: 30px;
+    width: 40px;
+    height: 40px;
     color: #ff9900;
-    font-size: 28px; }
+    font-size: 38px; }
     #jcc-home .prev:hover, #jcc-home .prev:focus, #jcc-home .next:hover, #jcc-home .next:focus {
       color: #99cc33;
       background: transparent; }
-    #jcc-home .prev:disabled, #jcc-home .next:disabled {
-      opacity: 0; }
 
 .jcc-item {
   border: solid 2px red;
   margin: 5px; }
+  .jcc-item:focus {
+    border-color: green; }
 
 /** RAINBOW related styles
 */

@@ -246,7 +246,7 @@
                 next.mouseleave(blurNext);
             }
 
-            scope.append(prev).append(next);
+            scope.prepend(prev).prepend(next);
         };
 
         // -- create icon prev and next buttons
@@ -396,7 +396,7 @@
                 clipPane.appendTo(scope);
             }
 
-            items.addClass(CLASS_ITEM);
+            items.addClass(CLASS_ITEM).attr("tabindex", 0);
             scope.addClass(CLASS_CARROT).data(CLASS_CARROT, settings.name);   
 
             adjustItemSize();   // make the items fit inside the clippane  
