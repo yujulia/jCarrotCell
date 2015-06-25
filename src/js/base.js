@@ -20,9 +20,9 @@ var t1 = $('#jcc-home').carrotCell({
     // nextClass : "next",
     // prevIconClass : 'cc-left',
     // nextIconClass: 'cc-right',
-    infinite: true,
-    show: 1,
-    scroll: 1,
+    // infinite: true,
+    show: 3,
+    scroll: 2,
     key: true
     // controlOnHover: true
 });

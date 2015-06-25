@@ -35,7 +35,7 @@
       opacity: 1; }
       .carrotcell__btn:focus .carrotcell__icon--prev, .carrotcell__btn:focus .carrotcell__icon--next, .carrotcell__btn:hover:enabled .carrotcell__icon--prev, .carrotcell__btn:hover:enabled .carrotcell__icon--next {
         background: #fff;
-        color: #000; }
+        color: #ff9900; }
     .carrotcell__btn:disabled {
       opacity: 0.2;
       cursor: default; }
@@ -49,7 +49,7 @@
       .carrotcell__btn--prev .carrotcell__icon--prev, .carrotcell__btn--prev .carrotcell__icon--next, .carrotcell__btn--next .carrotcell__icon--prev, .carrotcell__btn--next .carrotcell__icon--next {
         font-size: 30px;
         border-radius: 100%;
-        background: #666;
+        background: #ff9900;
         color: #fff; }
     .carrotcell__btn--next {
       left: auto;

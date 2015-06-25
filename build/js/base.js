@@ -21,9 +21,9 @@ var t1 = $('#jcc-home').carrotCell({
     // nextClass : "next",
     // prevIconClass : 'cc-left',
     // nextIconClass: 'cc-right',
-    infinite: true,
-    show: 1,
-    scroll: 1,
+    // infinite: true,
+    show: 3,
+    scroll: 2,
     key: true
     // controlOnHover: true
 });
@@ -132,8 +132,6 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             next = null,
             moves = 0,          // how many times before we reach the end
             moved = 0,          // how many times we moved
-            slots = 0,          // how many slots total (including empties)
-            emptySlots = 0,     // how many slots empty
             atStart = true,     
             atEnd = false,
             current = 0,        // current item scrolled to
@@ -209,26 +207,23 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             moved += direction;
             animating = false;
 
-            console.log("done scrolling current ", current, " moves ", moves, " item ", item);
-
             if (settings.infinite) {
+                // if (item < 0) {
+                //     moved = moves;
+                //     current = moves;
 
-                // reached the clone at the beginning
+                //     var moveBackSlots = totalItems + settings.show - settings.scroll;
 
-                if (item < 0) {
-                    moved = moves;
-                    current = moves;
-                    scrollSlider({ duration: 0, offset: totalItems * oneItem.totalSize });
-                }
-
-                // reached the clone at the end
+                //     scrollSlider({ duration: 0, offset: moveBackSlots * oneItem.totalSize });
+                // }
 
                 if (item > moves) {
+                    console.log("ok out of moves we should reset to start current is ", current, " moved ", moved);
+                    var moveForwardSlots = settings.show;
+                    // scrollSlider({ duration: 0, offset: moveForwardSlots * oneItem.totalSize });
                     moved = 0;
                     current = 0;
-                    scrollSlider({ duration: 0, offset: settings.show * oneItem.totalSize });
                 }
-
             } else {
                 setState(); 
             }
@@ -251,15 +246,27 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
         // --- scroll to some time 
 
         var scrollToItem = function(item, direction){
+            
+            var alreadyMoved = moved * settings.scroll;
 
-            var alreadyMoved = moved * oneItem.totalSize;
-            if (settings.infinite) { alreadyMoved += oneItem.totalSize * settings.show; }
-            var moveDistance = (direction * Math.abs(current - item) * oneItem.totalSize) + alreadyMoved;
+            if (settings.infinite) { 
+
+                alreadyMoved = moved * settings.scroll + settings.show; // add the clone offset
+                console.log("infinite moved ", moved, " show ", settings.show);
+            }
+
+            var moveDistance = (direction * settings.scroll * oneItem.totalSize) + alreadyMoved * oneItem.totalSize;
+
+            console.log("item ", item, " move ", moved, "/", moves, " distance ", moveDistance);
+
             var params = {
                 duration: settings.speed,
                 offset: moveDistance,
                 complete: doneScrolling.bind(this, item, direction)
             };
+
+            // if (direction < 0) { params.easing = "easeInExpo"; }
+
             animating = true;
             scrollSlider(params);
         };
@@ -333,7 +340,6 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
         var setupFocusTab = function(){
             var gotFocus = function(e){
                 var itemEnum = $(this).data("enum");
-                console.log("focus ", itemEnum);
                 if ($.isNumeric(itemEnum) && (itemEnum > 0) && (itemEnum !== current)){
                     scrollToItem(itemEnum, 1);
                 } 
@@ -349,16 +355,6 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
                 track.subscribeKey(settings.name, settings.keyBack, settings.keyForward);
             }
             setupFocusTab();
-        };
-
-        // --- find moves
-
-        var findMoves = function(){
-            moves = Math.ceil(totalItems/settings.scroll) - (settings.show - settings.scroll) - 1;
-            slots = settings.show * Math.ceil(totalItems/settings.show);
-            emptySlots = slots - totalItems;
-
-            console.log("totalitems ", totalItems, " moves ", moves, " slots ", slots,  "empty ", emptySlots);
         };
 
         // --- return attributes on some jquery element
@@ -419,14 +415,14 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             getAllItemSizes(); 
     
             var setItemSize = function(single, prop){
+                oneItem.totalSize = single;
                 oneItem.size = single - oneItem.offset; // make room for margin/border
-                oneItem.totalSize = oneItem.size + oneItem.offset;
                 items.css(prop, oneItem.size + "px");
                 var sliderItems = totalItems;
                 if (settings.infinite){
                     sliderItems += settings.show * 2; // account for clones
                 }
-                slider.css(prop,  single * sliderItems + oneItem.offset + "px"); // set length of slider
+                slider.css(prop, single * sliderItems + "px"); // set length of slider
             };
 
             if (settings.sideways) { 
@@ -501,9 +497,28 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             if (settings.infinite){ clone(); }    
         };
 
+        // --- find moves
+
+        var findMoves = function(){
+
+            if (settings.infinite){
+                moves = Math.ceil(totalItems / settings.scroll) - 1 ;
+            } else {
+                moves = Math.ceil((totalItems - (settings.show-settings.scroll)) / settings.scroll) - 1;
+            }
+
+            console.log("totalitems ", totalItems, " moves ", moves);
+        };
+
         // --- update the settings object 
 
         var fixSettings = function(){
+
+            if (settings.show < settings.scroll){
+                settings.scroll = settings.show;
+                console.log("sorry, you cant scroll more items than whats actually showing.");
+            }
+
             if (settings.auto) { settings.infinite = true;  }
             if (settings.sideways) { axis = "x"; } else { axis = "y"; }
 
@@ -547,7 +562,7 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             if ((totalItems > settings.show) && (totalItems > 1)) {
                 findMoves();        // find out how many times we can scroll
                 createControls();   // make next prev
-            }
+            } 
         };
 
 
