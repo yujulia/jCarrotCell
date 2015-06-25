@@ -20,7 +20,7 @@ var t1 = $('#jcc-home').carrotCell({
     // nextClass : "next",
     // prevIconClass : 'cc-left',
     // nextIconClass: 'cc-right',
-    // infinite: true,
+    infinite: true,
     show: 3,
     scroll: 2,
     key: true

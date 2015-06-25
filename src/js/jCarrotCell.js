@@ -89,8 +89,13 @@
             atStart = true,     
             atEnd = false,
             current = 0,        // current item scrolled to
+            cloneStart = [],
+            cloneEnd = [],
+            cloneSkip = 0,
             animating = false,  // animation lock
             axis = "x",
+
+
 
             // --- these settings can be over written
 
@@ -156,13 +161,13 @@
 
         // --- scrolling is done
 
-        var doneScrolling = function(item, direction){
-            current = item;
+        var doneScrolling = function(direction){
+            current = current + direction * settings.scroll;
             moved += direction;
             animating = false;
 
             if (settings.infinite) {
-                // if (item < 0) {
+                // if (current < 0) {
                 //     moved = moves;
                 //     current = moves;
 
@@ -171,12 +176,37 @@
                 //     scrollSlider({ duration: 0, offset: moveBackSlots * oneItem.totalSize });
                 // }
 
-                if (item > moves) {
-                    console.log("ok out of moves we should reset to start current is ", current, " moved ", moved);
-                    var moveForwardSlots = settings.show;
-                    // scrollSlider({ duration: 0, offset: moveForwardSlots * oneItem.totalSize });
+                console.log("DONE current is ", current, " moved is ", moved, "/", moves, " cloneskip ", cloneSkip);
+
+                if (moved >= moves) {
+                    console.log("out of moves current ", current, " moved ", moved, " moves ", moves);
+                    
+                    var startSlots = cloneEnd.indexOf(current);
+                    console.log("going to look up ", current, " in ", cloneEnd, " it is ", startSlots);
+
+                    if (startSlots < 0 ){
+                        console.log("STOP");
+                    } else {
+
+                        current = current - totalItems;
+                        cloneSkip = startSlots;
+                        
+                        // need to recalculate moves
+        
+                        scrollSlider({ duration: 0, offset: startSlots * oneItem.totalSize });
+                        
+                        moved = 0;
+                        
+                        console.log("RESET next current ", current);
+                        console.log("clone skip ", cloneSkip);
+
+                    }
+                }
+
+                if (current == 0){
+                    scrollSlider({ duration: 0, offset: settings.show * oneItem.totalSize });
+                    cloneSkip = settings.show;
                     moved = 0;
-                    current = 0;
                 }
             } else {
                 setState(); 
@@ -199,24 +229,21 @@
 
         // --- scroll to some time 
 
-        var scrollToItem = function(item, direction){
-            
+        var scrollToItem = function(direction){
+
             var alreadyMoved = moved * settings.scroll;
 
             if (settings.infinite) { 
-
-                alreadyMoved = moved * settings.scroll + settings.show; // add the clone offset
-                console.log("infinite moved ", moved, " show ", settings.show);
+                alreadyMoved = moved * settings.scroll + cloneSkip; // add the clone offset
+                console.log("about to scroll CURRENT ", current, " already moved ", alreadyMoved);
             }
 
-            var moveDistance = (direction * settings.scroll * oneItem.totalSize) + alreadyMoved * oneItem.totalSize;
-
-            console.log("item ", item, " move ", moved, "/", moves, " distance ", moveDistance);
+            var moveDistance = direction * settings.scroll * oneItem.totalSize + alreadyMoved * oneItem.totalSize;
 
             var params = {
                 duration: settings.speed,
                 offset: moveDistance,
-                complete: doneScrolling.bind(this, item, direction)
+                complete: doneScrolling.bind(this, direction)
             };
 
             // if (direction < 0) { params.easing = "easeInExpo"; }
@@ -231,7 +258,7 @@
             if (e) { e.preventDefault(); }
             if (atStart || animating) { return false; }
             
-            scrollToItem(current - settings.scroll, -1);
+            scrollToItem(-1);
         };
 
         // --- move to next scroll
@@ -239,8 +266,8 @@
         var moveToNext = function(e){
             if (e) { e.preventDefault(); }
             if (atEnd || animating) { return false; }
-    
-            scrollToItem(current + settings.scroll, 1);
+
+            scrollToItem(1);
         };
 
         // --- a key event we care about happened
@@ -395,6 +422,13 @@
         var clone = function(){
             var endSlice = items.slice(-settings.show).clone(),
                 startSlice = items.slice(0, settings.show).clone();
+
+            // index clone enum for easier lookup
+            for (var i = 0; i < settings.show; i++){
+                cloneStart.push(i);
+                cloneEnd.push(totalItems - settings.show + i);
+            }
+            cloneSkip = settings.show;
 
             endSlice.addClass(CLASS_CLONE).attr("tabindex", -1).removeData("enum");
             startSlice.addClass(CLASS_CLONE).attr("tabindex", -1).removeData("enum");
