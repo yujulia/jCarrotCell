@@ -167,40 +167,33 @@
             animating = false;
 
             if (settings.infinite) {
-                // if (current < 0) {
-                //     moved = moves;
-                //     current = moves;
 
-                //     var moveBackSlots = totalItems + settings.show - settings.scroll;
+                console.log("DONE current is ", current, " moved ", moved, "/", moves, " cloneskip ", cloneSkip);
 
-                //     scrollSlider({ duration: 0, offset: moveBackSlots * oneItem.totalSize });
-                // }
+                if (moved < 0 && ((totalItems + current) >= moves)) {
+                    var realCurrent = totalItems + current;
 
-                console.log("DONE current is ", current, " moved is ", moved, "/", moves, " cloneskip ", cloneSkip);
+                    var endSlots = cloneEnd.indexOf(realCurrent);
+                    console.log("out of prev ", realCurrent, " moved ", moved, "/", moves, " clonend ", cloneEnd, " got ", endSlots);
 
-                if (moved >= moves) {
-                    console.log("out of moves current ", current, " moved ", moved, " moves ", moves);
+                    current = realCurrent;
+                    cloneSkip = settings.show - endSlots;
+                    moved = moves;
+
+                    scrollSlider({ duration: 0, offset: moved * oneItem.totalSize + settings.show * oneItem.totalSize });
+
+                } else if (moved >= moves) {
+                         
+                    // var startSlots = cloneEnd.indexOf(current);
+                    // console.log("out of next ", current, " moved ", moved, "/", moves, " clonend ", cloneEnd, " got ", startSlots);
+
+                    // current = current - totalItems;
+                    // cloneSkip = startSlots;
+                    // moved = 0;
+
+                    // scrollSlider({ duration: 0, offset: startSlots * oneItem.totalSize });
                     
-                    var startSlots = cloneEnd.indexOf(current);
-                    console.log("going to look up ", current, " in ", cloneEnd, " it is ", startSlots);
-
-                    if (startSlots < 0 ){
-                        console.log("STOP");
-                    } else {
-
-                        current = current - totalItems;
-                        cloneSkip = startSlots;
-                        
-                        // need to recalculate moves
-        
-                        scrollSlider({ duration: 0, offset: startSlots * oneItem.totalSize });
-                        
-                        moved = 0;
-                        
-                        console.log("RESET next current ", current);
-                        console.log("clone skip ", cloneSkip);
-
-                    }
+                    // console.log("RESET next current ", current, " clone skip ", cloneSkip);                    
                 }
 
                 if (current == 0){
@@ -208,6 +201,7 @@
                     cloneSkip = settings.show;
                     moved = 0;
                 }
+
             } else {
                 setState(); 
             }
