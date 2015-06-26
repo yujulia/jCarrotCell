@@ -126,6 +126,7 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
 
             slider = null,      // sliding panel
             sliderSize = 0,
+            showing = [],       // what items are actually on screen
 
             items = null,       // all items elements
             total = 0,          // items count
@@ -139,7 +140,7 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             moved = 0,          // how many times we moved
             atStart = true,     
             atEnd = false,
-            current = 0,        // current item scrolled to
+            current = 0,        // current scroll
 
             cloneStart = [],
             cloneEnd = [],
@@ -149,8 +150,6 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
 
             animating = false,  // animation lock
             axis = "x",
-
-
 
             // --- these settings can be over written
 
@@ -216,14 +215,29 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
 
         // --- replace slider at the start with end clone
 
-        var replaceWithEnd = function(){
-
+        var replaceWithEnd = function(cloneOffset){
+            if (!cloneOffset) { cloneOffset = 0; }
+            cloneOffset += total;
+            scrollSlider({ duration: 0, offset: cloneOffset * one.totalSize });
         };
 
-        // --- replace slider at the end with the start clone
+        // --- replace slider at the end with the start clone (infinite reached end)
 
-        var replaceWithStart = function(){
+        var replaceWithStart = function(cloneOffset){
+            if (!cloneOffset) { cloneOffset = 0; }
 
+            scrollSlider({ duration: 0, offset: cloneOffset * one.totalSize });
+            moved = 0;  
+            
+            // usually currently is TOO BIG, sometimes current is jsut 0
+            current = current - total;
+            if (Math.abs(current) == total) {
+                current = 0;
+            }
+
+            cloneSkip = cloneOffset;
+
+            console.log("REPLACED with START current ", current, " cloneskip ", cloneSkip);
         };
 
         // --- scrolling is done
@@ -249,31 +263,27 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
                         moved = moves;
                         current = realCurrent;
 
-                        scrollSlider({ duration: 0, offset: (endSlots + total) * one.totalSize });
+                        replaceWithEnd(endSlots);
+
+                        // scrollSlider({ duration: 0, offset: (endSlots + total) * one.totalSize });
+
                         console.log("RESET PREV cloneskip ", cloneSkip, " moved ", moves, " current ", current);
                     }
 
                 } else if (moved >= moves) {
                          
-                    var startSlots = cloneEnd.indexOf(current);
-                    console.log("out of next ", current, " moved ", moved, "/", moves, " clonend ", cloneEnd, " got ", startSlots);
+                    console.log("moved > moves reached end ", current, " moved ", moved, "/", moves);
+                    replaceWithStart(cloneEnd.indexOf(current));
 
-                    current = current - total;
-                    cloneSkip = startSlots;
-                    moved = 0;
-
-                    scrollSlider({ duration: 0, offset: startSlots * one.totalSize });
-                    
-                    console.log("RESET NEXT current ", current, " clone skip ", cloneSkip);   
                 }    
 
                 // we circled around to the start again...
 
                 if (current == 0){
                     console.log("CURRENT is 0 RESET all the things");
-                    scrollSlider({ duration: 0, offset: settings.show * one.totalSize });
-                    cloneSkip = settings.show;
-                    moved = 0;
+
+                    replaceWithStart(settings.show);
+
                     onCloneStart = false;
                     onCloneEnd = false;
 
@@ -338,8 +348,8 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
 
             if (current < 0 ){
                 console.log("OH SHIT");
+                replaceWithEnd();
             }
-            
             
             scrollToItem(-1);
         };
@@ -349,6 +359,11 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
         var moveToNext = function(e){
             if (e) { e.preventDefault(); }
             if (atEnd || animating) { return false; }
+
+            if (current == total-1){
+                console.log("SHIT NEXT");
+                replaceWithStart(settings.show - 1); // FIX THIS CALC
+            }
 
             scrollToItem(1);
         };
