@@ -22,7 +22,7 @@ var t1 = $('#jcc-home').carrotCell({
     // prevIconClass : 'cc-left',
     // nextIconClass: 'cc-right',
     infinite: true,
-    show: 1,
+    show: 2,
     scroll: 1,
     key: true
     // controlOnHover: true
@@ -216,28 +216,38 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
         // --- replace slider at the start with end clone
 
         var replaceWithEnd = function(cloneOffset){
+            animating = true;
+
             if (!cloneOffset) { cloneOffset = 0; }
-            cloneOffset += total;
+
+            cloneOffset += total - 1 + settings.show;
+            console.log("END REPLACE CLONE OFFSET ", cloneOffset);
             scrollSlider({ duration: 0, offset: cloneOffset * one.totalSize });
+            moved = moves;
+
+            current = total - 1;
+            cloneSkip = settings.show;
+
+            console.log("REPLACED with END REAL current ", current, " cloneskip ", cloneSkip, " moved ", moved);
+
+            animating = false;
         };
 
         // --- replace slider at the end with the start clone (infinite reached end)
 
         var replaceWithStart = function(cloneOffset){
+            animating = true;
+
             if (!cloneOffset) { cloneOffset = 0; }
 
             scrollSlider({ duration: 0, offset: cloneOffset * one.totalSize });
             moved = 0;  
-            
-            // usually currently is TOO BIG, sometimes current is jsut 0
-            current = current - total;
-            if (Math.abs(current) == total) {
-                current = 0;
-            }
-
+            current = current - total; // negative pos of the starting clone
+            if (Math.abs(current) == total) { current = 0; } // first "real" item no longer clone
             cloneSkip = cloneOffset;
 
-            console.log("REPLACED with START current ", current, " cloneskip ", cloneSkip);
+            console.log("REPLACED with START current ", current, " cloneskip ", cloneSkip, " moved ", moved);
+            animating = false;
         };
 
         // --- scrolling is done
@@ -252,23 +262,22 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
 
                 if (moved < 0) {
 
+                    console.log("MOVED NEGATIVE on clone start? ", onCloneStart, " on clone end? ", onCloneEnd);
+
                     // first time back
-                    if (current == -1 * settings.scroll) {
+                    // if (current == -1 * settings.scroll) {
 
-                        var realCurrent = total + current;
-                        var endSlots = cloneEnd.indexOf(realCurrent);
-                        console.log("in prev ", realCurrent, " moved ", moved, "/", moves, " clonend ", cloneEnd, " got ", endSlots);
+                    //     // var realCurrent = total + current;
+                    //     // var endSlots = cloneEnd.indexOf(realCurrent);
+                    //     // console.log("in prev ", realCurrent, " moved ", moved, "/", moves, " clonend ", cloneEnd, " got ", endSlots);
                       
-                        cloneSkip =  endSlots + 1; // HMMM
-                        moved = moves;
-                        current = realCurrent;
+                    //     // cloneSkip =  endSlots + 1; // HMMM
+                    //     // // moved = moves;
+                    //     // current = realCurrent;
 
-                        replaceWithEnd(endSlots);
-
-                        // scrollSlider({ duration: 0, offset: (endSlots + total) * one.totalSize });
-
-                        console.log("RESET PREV cloneskip ", cloneSkip, " moved ", moves, " current ", current);
-                    }
+                    //     console.log("moved > moves ")
+                    //     replaceWithEnd(cloneEnd.indexOf(realCurrent));
+                    // }
 
                 } else if (moved >= moves) {
                          
@@ -346,12 +355,15 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             if (e) { e.preventDefault(); }
             if (atStart || animating) { return false; }
 
-            if (current < 0 ){
-                console.log("OH SHIT");
+            if (onCloneStart){
+                console.log("-------------------------------------");
+                console.log("Changing direction while on Clone Start! Prev");
                 replaceWithEnd();
+            } else {
+                
             }
-            
-            scrollToItem(-1);
+
+            scrollToItem(-1); 
         };
 
         // --- move to next scroll
@@ -360,12 +372,14 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             if (e) { e.preventDefault(); }
             if (atEnd || animating) { return false; }
 
-            if (current == total-1){
-                console.log("SHIT NEXT");
-                replaceWithStart(settings.show - 1); // FIX THIS CALC
-            }
-
-            scrollToItem(1);
+            // if (settings.infinite && (current == total-1)){
+            if (onCloneEnd){
+                console.log("-------------------------------------");
+                console.log("Changing direction while on clone End! next");
+                replaceWithStart(settings.show - settings.scroll); // FIX THIS CALC
+            } else {
+                scrollToItem(1);
+            } 
         };
 
         // --- a key event we care about happened
