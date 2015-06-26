@@ -84,6 +84,7 @@
             oneItem = null,     // shorthand for just one item
             prev = null,
             next = null,
+            saveMoves = 0,
             moves = 0,          // how many times before we reach the end
             moved = 0,          // how many times we moved
             atStart = true,     
@@ -162,49 +163,64 @@
         // --- scrolling is done
 
         var doneScrolling = function(direction){
-            current = current + direction * settings.scroll;
             moved += direction;
-            animating = false;
-
+            current = current + direction * settings.scroll;
+            
             if (settings.infinite) {
 
                 console.log("DONE current is ", current, " moved ", moved, "/", moves, " cloneskip ", cloneSkip);
 
-                if (moved < 0 && ((totalItems + current) >= moves)) {
-                    var realCurrent = totalItems + current;
+                if (moved < 0) {
 
-                    var endSlots = cloneEnd.indexOf(realCurrent);
-                    console.log("out of prev ", realCurrent, " moved ", moved, "/", moves, " clonend ", cloneEnd, " got ", endSlots);
+                    // first time back
+                    if (current == -1 * settings.scroll) {
 
-                    current = realCurrent;
-                    cloneSkip = settings.show - endSlots;
-                    moved = moves;
+                        var realCurrent = totalItems + current;
+                        var endSlots = cloneEnd.indexOf(realCurrent);
+                        console.log("in prev ", realCurrent, " moved ", moved, "/", moves, " clonend ", cloneEnd, " got ", endSlots);
+                        cloneSkip =  endSlots + 1;
+                        moved = moves;
+                        current = realCurrent;
 
-                    scrollSlider({ duration: 0, offset: moved * oneItem.totalSize + settings.show * oneItem.totalSize });
+                        scrollSlider({ duration: 0, offset: (endSlots + totalItems) * oneItem.totalSize });
+                        console.log("RESET PREV cloneskip ", cloneSkip, " moved ", moves, " current ", current);
+                    }
+
+                } else if (moved == 0) {
+
+                    console.log("to the end");
 
                 } else if (moved >= moves) {
                          
-                    // var startSlots = cloneEnd.indexOf(current);
-                    // console.log("out of next ", current, " moved ", moved, "/", moves, " clonend ", cloneEnd, " got ", startSlots);
+                    var startSlots = cloneEnd.indexOf(current);
+                    console.log("out of next ", current, " moved ", moved, "/", moves, " clonend ", cloneEnd, " got ", startSlots);
 
-                    // current = current - totalItems;
-                    // cloneSkip = startSlots;
-                    // moved = 0;
-
-                    // scrollSlider({ duration: 0, offset: startSlots * oneItem.totalSize });
-                    
-                    // console.log("RESET next current ", current, " clone skip ", cloneSkip);                    
-                }
-
-                if (current == 0){
-                    scrollSlider({ duration: 0, offset: settings.show * oneItem.totalSize });
-                    cloneSkip = settings.show;
+                    current = current - totalItems;
+                    cloneSkip = startSlots;
                     moved = 0;
-                }
+
+                    scrollSlider({ duration: 0, offset: startSlots * oneItem.totalSize });
+                    
+                    console.log("RESET NEXT current ", current, " clone skip ", cloneSkip);   
+
+                    if (current == 0){
+                        scrollSlider({ duration: 0, offset: settings.show * oneItem.totalSize });
+                        cloneSkip = settings.show;
+                        moved = 0;
+                        moves = saveMoves;
+                    } else {
+                        moves = moves + settings.show - startSlots;
+                    }
+
+                    
+                }            
+
 
             } else {
                 setState(); 
             }
+
+            animating = false; // lockdown ends now everything is processed
         };
 
         // --- scroll the slider
@@ -229,7 +245,7 @@
 
             if (settings.infinite) { 
                 alreadyMoved = moved * settings.scroll + cloneSkip; // add the clone offset
-                console.log("about to scroll CURRENT ", current, " already moved ", alreadyMoved);
+                console.log("about to scroll CURRENT ", current, " moved ", moved, " already moved ", alreadyMoved);
             }
 
             var moveDistance = direction * settings.scroll * oneItem.totalSize + alreadyMoved * oneItem.totalSize;
@@ -488,6 +504,8 @@
             } else {
                 moves = Math.ceil((totalItems - (settings.show-settings.scroll)) / settings.scroll) - 1;
             }
+
+            saveMoves = moves;
 
             console.log("totalitems ", totalItems, " moves ", moves);
         };
