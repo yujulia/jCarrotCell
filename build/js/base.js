@@ -22,7 +22,7 @@ var t1 = $('#jcc-home').carrotCell({
     // prevIconClass : 'cc-left',
     // nextIconClass: 'cc-right',
     infinite: true,
-    show: 3,
+    show: 1,
     scroll: 1,
     key: true
     // controlOnHover: true
@@ -224,7 +224,8 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
                         var realCurrent = totalItems + current;
                         var endSlots = cloneEnd.indexOf(realCurrent);
                         console.log("in prev ", realCurrent, " moved ", moved, "/", moves, " clonend ", cloneEnd, " got ", endSlots);
-                        cloneSkip =  endSlots + 1;
+                      
+                        cloneSkip =  endSlots + 1; // HMMM
                         moved = moves;
                         current = realCurrent;
 
@@ -249,17 +250,18 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
                     
                     console.log("RESET NEXT current ", current, " clone skip ", cloneSkip);   
 
-                    if (current == 0){
-                        scrollSlider({ duration: 0, offset: settings.show * oneItem.totalSize });
-                        cloneSkip = settings.show;
-                        moved = 0;
-                        moves = saveMoves;
-                    } else {
-                        moves = moves + settings.show - startSlots;
-                    }
-
                     
-                }            
+                }    
+
+                // we circled around to the start again...
+
+                if (current == 0){
+                    console.log("CURRENT is 0 RESET all the things");
+                    scrollSlider({ duration: 0, offset: settings.show * oneItem.totalSize });
+                    cloneSkip = settings.show;
+                    moved = 0;
+                    moves = saveMoves;
+                }         
 
 
             } else {

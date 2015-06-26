@@ -178,7 +178,8 @@
                         var realCurrent = totalItems + current;
                         var endSlots = cloneEnd.indexOf(realCurrent);
                         console.log("in prev ", realCurrent, " moved ", moved, "/", moves, " clonend ", cloneEnd, " got ", endSlots);
-                        cloneSkip =  endSlots + 1;
+                      
+                        cloneSkip =  endSlots + 1; // HMMM
                         moved = moves;
                         current = realCurrent;
 
@@ -203,17 +204,18 @@
                     
                     console.log("RESET NEXT current ", current, " clone skip ", cloneSkip);   
 
-                    if (current == 0){
-                        scrollSlider({ duration: 0, offset: settings.show * oneItem.totalSize });
-                        cloneSkip = settings.show;
-                        moved = 0;
-                        moves = saveMoves;
-                    } else {
-                        moves = moves + settings.show - startSlots;
-                    }
-
                     
-                }            
+                }    
+
+                // we circled around to the start again...
+
+                if (current == 0){
+                    console.log("CURRENT is 0 RESET all the things");
+                    scrollSlider({ duration: 0, offset: settings.show * oneItem.totalSize });
+                    cloneSkip = settings.show;
+                    moved = 0;
+                    moves = saveMoves;
+                }         
 
 
             } else {

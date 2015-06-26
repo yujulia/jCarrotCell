@@ -32,6 +32,7 @@
         display: block;
         float: left;
         z-index: 1;
+        -webkit-backface-visibility: hidden;
     }
 
     &__btn {

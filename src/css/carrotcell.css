@@ -23,7 +23,8 @@
   .carrotcell__item {
     display: block;
     float: left;
-    z-index: 1; }
+    z-index: 1;
+    -webkit-backface-visibility: hidden; }
   .carrotcell__btn {
     cursor: pointer;
     background: none;
