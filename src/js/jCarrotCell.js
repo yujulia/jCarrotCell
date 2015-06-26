@@ -77,22 +77,30 @@
             width = 0,          // container width
             height = 0,         // container height
             clipPane = null,    // clipping box
+
             slider = null,      // sliding panel
             sliderSize = 0,
-            items = null,       // all frames
-            totalItems = 0,     // how many frames
-            oneItem = null,     // shorthand for just one item
+
+            items = null,       // all items elements
+            total = 0,          // items count
+            one = null,         // 1 item
+
             prev = null,
             next = null,
-            saveMoves = 0,
+            direction = 1,      // assume going NEXT
+
             moves = 0,          // how many times before we reach the end
             moved = 0,          // how many times we moved
             atStart = true,     
             atEnd = false,
             current = 0,        // current item scrolled to
+
             cloneStart = [],
             cloneEnd = [],
             cloneSkip = 0,
+            onCloneStart = false,
+            onCloneEnd = false,
+
             animating = false,  // animation lock
             axis = "x",
 
@@ -160,9 +168,21 @@
             }
         };
 
+        // --- replace slider at the start with end clone
+
+        var replaceWithEnd = function(){
+
+        };
+
+        // --- replace slider at the end with the start clone
+
+        var replaceWithStart = function(){
+
+        };
+
         // --- scrolling is done
 
-        var doneScrolling = function(direction){
+        var doneScrolling = function(){
             moved += direction;
             current = current + direction * settings.scroll;
             
@@ -175,7 +195,7 @@
                     // first time back
                     if (current == -1 * settings.scroll) {
 
-                        var realCurrent = totalItems + current;
+                        var realCurrent = total + current;
                         var endSlots = cloneEnd.indexOf(realCurrent);
                         console.log("in prev ", realCurrent, " moved ", moved, "/", moves, " clonend ", cloneEnd, " got ", endSlots);
                       
@@ -183,39 +203,39 @@
                         moved = moves;
                         current = realCurrent;
 
-                        scrollSlider({ duration: 0, offset: (endSlots + totalItems) * oneItem.totalSize });
+                        scrollSlider({ duration: 0, offset: (endSlots + total) * one.totalSize });
                         console.log("RESET PREV cloneskip ", cloneSkip, " moved ", moves, " current ", current);
                     }
-
-                } else if (moved == 0) {
-
-                    console.log("to the end");
 
                 } else if (moved >= moves) {
                          
                     var startSlots = cloneEnd.indexOf(current);
                     console.log("out of next ", current, " moved ", moved, "/", moves, " clonend ", cloneEnd, " got ", startSlots);
 
-                    current = current - totalItems;
+                    current = current - total;
                     cloneSkip = startSlots;
                     moved = 0;
 
-                    scrollSlider({ duration: 0, offset: startSlots * oneItem.totalSize });
+                    scrollSlider({ duration: 0, offset: startSlots * one.totalSize });
                     
                     console.log("RESET NEXT current ", current, " clone skip ", cloneSkip);   
-
-                    
                 }    
 
                 // we circled around to the start again...
 
                 if (current == 0){
                     console.log("CURRENT is 0 RESET all the things");
-                    scrollSlider({ duration: 0, offset: settings.show * oneItem.totalSize });
+                    scrollSlider({ duration: 0, offset: settings.show * one.totalSize });
                     cloneSkip = settings.show;
                     moved = 0;
-                    moves = saveMoves;
-                }         
+                    onCloneStart = false;
+                    onCloneEnd = false;
+
+                } else if (current < 0) {
+                    onCloneStart = true;
+                } else {
+                    onCloneStart = false;
+                }
 
 
             } else {
@@ -241,7 +261,9 @@
 
         // --- scroll to some time 
 
-        var scrollToItem = function(direction){
+        var scrollToItem = function(dir){
+
+            direction = dir;
 
             var alreadyMoved = moved * settings.scroll;
 
@@ -250,15 +272,13 @@
                 console.log("about to scroll CURRENT ", current, " moved ", moved, " already moved ", alreadyMoved);
             }
 
-            var moveDistance = direction * settings.scroll * oneItem.totalSize + alreadyMoved * oneItem.totalSize;
+            var moveDistance = direction * settings.scroll * one.totalSize + alreadyMoved * one.totalSize;
 
             var params = {
                 duration: settings.speed,
                 offset: moveDistance,
-                complete: doneScrolling.bind(this, direction)
+                complete: doneScrolling
             };
-
-            // if (direction < 0) { params.easing = "easeInExpo"; }
 
             animating = true;
             scrollSlider(params);
@@ -269,6 +289,11 @@
         var moveToPrev = function(e){
             if (e) { e.preventDefault(); }
             if (atStart || animating) { return false; }
+
+            if (current < 0 ){
+                console.log("OH SHIT");
+            }
+            
             
             scrollToItem(-1);
         };
@@ -393,11 +418,11 @@
             items.each(function(i, item){
                 item = $(item);
                 item.data("enum", i);          
-                if (i < 1){ oneItem = getItemSize(item); }
+                if (i < 1){ one = getItemSize(item); }
                 if (settings.sideways){
-                    sliderSize += oneItem.w;
+                    sliderSize += one.w;
                 } else {
-                    sliderSize += oneItem.h;
+                    sliderSize += one.h;
                 }
             });
         };
@@ -408,10 +433,10 @@
             getAllItemSizes(); 
     
             var setItemSize = function(single, prop){
-                oneItem.totalSize = single;
-                oneItem.size = single - oneItem.offset; // make room for margin/border
-                items.css(prop, oneItem.size + "px");
-                var sliderItems = totalItems;
+                one.totalSize = single;
+                one.size = single - one.offset; // make room for margin/border
+                items.css(prop, one.size + "px");
+                var sliderItems = total;
                 if (settings.infinite){
                     sliderItems += settings.show * 2; // account for clones
                 }
@@ -424,8 +449,8 @@
                 setItemSize(height/settings.show, "height");
             }
             if (settings.infinite){
-                var cloneMove = settings.show * oneItem.totalSize;
-                scrollSlider({ duration: 0, offset: settings.show * oneItem.totalSize });
+                var cloneMove = settings.show * one.totalSize;
+                scrollSlider({ duration: 0, offset: settings.show * one.totalSize });
             }
         };
 
@@ -438,7 +463,7 @@
             // index clone enum for easier lookup
             for (var i = 0; i < settings.show; i++){
                 cloneStart.push(i);
-                cloneEnd.push(totalItems - settings.show + i);
+                cloneEnd.push(total - settings.show + i);
             }
             cloneSkip = settings.show;
 
@@ -502,14 +527,12 @@
         var findMoves = function(){
 
             if (settings.infinite){
-                moves = Math.ceil(totalItems / settings.scroll) - 1 ;
+                moves = Math.ceil(total / settings.scroll) - 1 ;
             } else {
-                moves = Math.ceil((totalItems - (settings.show-settings.scroll)) / settings.scroll) - 1;
+                moves = Math.ceil((total - (settings.show-settings.scroll)) / settings.scroll) - 1;
             }
 
-            saveMoves = moves;
-
-            console.log("totalitems ", totalItems, " moves ", moves);
+            console.log("total ", total, " moves ", moves);
         };
 
         // --- update the settings object 
@@ -548,7 +571,7 @@
             setClipSize();
             adjustItemSize();
             if (moved > 0){
-                scrollSlider({ duration: 0, offset: moved * oneItem.totalSize});
+                scrollSlider({ duration: 0, offset: moved * one.totalSize});
             } 
         };
 
@@ -556,12 +579,12 @@
 
         setup = function(){
             items = scope.children(); 
-            totalItems = items.length;
+            total = items.length;
 
             fixSettings();      // toggle on relevant settings if any
             makeFrame();        // make the markup
             
-            if ((totalItems > settings.show) && (totalItems > 1)) {
+            if ((total > settings.show) && (total > 1)) {
                 findMoves();        // find out how many times we can scroll
                 createControls();   // make next prev
             } 
