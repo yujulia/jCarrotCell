@@ -80,7 +80,6 @@
 
             slider = null,      // sliding panel
             sliderSize = 0,
-            showing = [],       // what items are actually on screen
 
             items = null,       // all items elements
             total = 0,          // items count
@@ -95,9 +94,9 @@
             moves = 0,          // how many times before we reach the end
             moved = 0,          // how many times we moved
             record = 0,         // how many items to be moved
-
             current = 0,        // current scroll
-
+            showing = [],       // what items are actually on screen
+            cloneShowing = 0,   // how many clones currently showing
             cloneStart = [],
             cloneEnd = [],
             cloneSkip = 0,
@@ -169,11 +168,21 @@
             }
         };
 
-        var findInfiniteMoves = function(cloneOffset){
+        // --- update what is showing on the screen after a scroll happened
 
-            var newTotal = total + Math.abs(cloneOffset);
-            var testmoves = Math.ceil( newTotal / settings.scroll) - 1 ;
-            console.log("- NEW MOVES ", testmoves, " new total ", newTotal);
+        var updateShowing = function(){
+            cloneShowing = 0;
+            for (var k = 0; k < settings.show; k++){
+                showing[k] = current + k;
+                if (showing[k] < 0) { cloneShowing++; }
+            }
+        };
+
+        // --- find out how many moves in infinite scroll
+
+        var findInfiniteMoves = function(cloneOffset){
+            moves = Math.ceil( (total + cloneShowing) / settings.scroll) - 1 ;
+            console.log("- Infinite moves ", moves);
         };
 
         // --- replace slider at the start with end clone
@@ -196,7 +205,11 @@
 
             record = settings.show + current;
 
-            console.log("* REPLACED with END REAL current ", current, " cloneskip ", cloneSkip, " moved ", moved);
+            findInfiniteMoves(cloneOffset);
+
+            console.log("* REPLACED with END current ", current, " cloneskip ", cloneSkip, " moved ", moved, " showing ", showing);
+
+            
 
             animating = false;
         };
@@ -212,7 +225,7 @@
             moved = 0;  
 
             console.log("clone offset is ", cloneOffset);
-            findInfiniteMoves(cloneOffset);
+            
 
             var saveCurrent = current;
 
@@ -224,7 +237,12 @@
 
             record = settings.show + current; // ALREADY SCROLLED is clone count subtract curernt clone
 
-            console.log("X REPLACED with START current ", current, " cloneskip ", cloneSkip, " moved ", moved);
+            updateShowing();
+
+            console.log("X REPLACED with START current ", current, " cloneskip ", cloneSkip, " moved ", moved, " showing ", showing);
+
+            findInfiniteMoves(cloneOffset);
+
             animating = false;
         };
 
@@ -235,8 +253,6 @@
             current = current + direction * settings.scroll;
             record += direction * settings.scroll; // update how far we scrolled
 
-
-            
             if (settings.infinite) {
 
                 console.log("DONE current is ", current, " moved ", moved, "/", moves, " cloneskip ", cloneSkip);
@@ -275,12 +291,9 @@
                 setState(); 
             }
 
-            for (var k = 0; k < settings.show; k++){
-                showing[k] = current + k;
-            }
+            updateShowing();
 
-
-            console.log(showing);
+            console.log("scrolling DONE showing is ", showing);
 
             animating = false; // lockdown ends now everything is processed
         };
@@ -586,12 +599,12 @@
         var findMoves = function(){
 
             if (settings.infinite){
-                moves = Math.ceil(total / settings.scroll) - 1 ;
+                findInfiniteMoves();
             } else {
                 moves = Math.ceil((total - (settings.show-settings.scroll)) / settings.scroll) - 1;
             }
 
-            for (var k = 0; k < settings.show; k++){ showing.push(k); }
+            updateShowing();
 
             console.log("total ", total, " moves ", moves, "showing", showing);
         };
