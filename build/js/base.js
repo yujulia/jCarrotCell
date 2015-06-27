@@ -22,7 +22,7 @@ var t1 = $('#jcc-home').carrotCell({
     // prevIconClass : 'cc-left',
     // nextIconClass: 'cc-right',
     infinite: true,
-    show: 2,
+    show: 3,
     scroll: 2,
     key: true
     // controlOnHover: true
@@ -215,6 +215,13 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             }
         };
 
+        var findInfiniteMoves = function(cloneOffset){
+
+            var newTotal = total + Math.abs(cloneOffset);
+            var testmoves = Math.ceil( newTotal / settings.scroll) - 1 ;
+            console.log("- NEW MOVES ", testmoves, " new total ", newTotal);
+        };
+
         // --- replace slider at the start with end clone
 
         var replaceWithEnd = function(cloneOffset){
@@ -249,9 +256,17 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
 
             scrollSlider({ duration: 0, offset: cloneOffset * one.totalSize });
             moved = 0;  
-            current = current - total; // negative pos of the starting clone
-            if (Math.abs(current) == total) { current = 0; } // first "real" item no longer clone
+
+            console.log("clone offset is ", cloneOffset);
+            findInfiniteMoves(cloneOffset);
+
+            var saveCurrent = current;
+
             cloneSkip = cloneOffset;
+
+            current = current - total; // negative pos of the starting clone
+
+            if (Math.abs(current) >= total) { current = 0; } // first "real" item no longer clone
 
             record = settings.show + current; // ALREADY SCROLLED is clone count subtract curernt clone
 
@@ -265,6 +280,8 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             moved += direction;
             current = current + direction * settings.scroll;
             record += direction * settings.scroll; // update how far we scrolled
+
+
             
             if (settings.infinite) {
 
@@ -277,9 +294,10 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
 
                 } else if (moved >= moves) {
                          
-                    console.log("moved > moves reached end ", current, " moved ", moved, "/", moves);
+                    console.log(moved, "/", moves, " moved > moves reached end current ", current, " moved ", moved, "/", moves);
+                    console.log("looking in ", cloneEnd);
                     replaceWithStart(cloneEnd.indexOf(current));
-
+                    
                 }    
 
                 // we circled around to the start again...
@@ -302,6 +320,13 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             } else {
                 setState(); 
             }
+
+            for (var k = 0; k < settings.show; k++){
+                showing[k] = current + k;
+            }
+
+
+            console.log(showing);
 
             animating = false; // lockdown ends now everything is processed
         };
@@ -339,7 +364,6 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             // var moveDistance = direction * settings.scroll * one.totalSize + alreadyMoved * one.totalSize;
             var moveDistance = direction * settings.scroll * one.totalSize + record * one.totalSize;
 
-            console.log("distance ", moveDistance);
 
             var params = {
                 duration: settings.speed,
@@ -364,11 +388,6 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             } else {
                 
             }
-            // if (current == 2 ) {
-
-            // } else {
-            //     scrollToItem(-1);
-            // }
 
              scrollToItem(-1);
         };
@@ -385,8 +404,10 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
                 console.log("Changing direction while on clone End! next");
                 replaceWithStart(settings.show - settings.scroll); // FIX THIS CALC
             } else {
-                scrollToItem(1);
+                
             } 
+            scrollToItem(1);
+            
         };
 
         // --- a key event we care about happened
@@ -616,7 +637,9 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
                 moves = Math.ceil((total - (settings.show-settings.scroll)) / settings.scroll) - 1;
             }
 
-            console.log("total ", total, " moves ", moves);
+            for (var k = 0; k < settings.show; k++){ showing.push(k); }
+
+            console.log("total ", total, " moves ", moves, "showing", showing);
         };
 
         // --- update the settings object 

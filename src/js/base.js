@@ -21,7 +21,7 @@ var t1 = $('#jcc-home').carrotCell({
     // prevIconClass : 'cc-left',
     // nextIconClass: 'cc-right',
     infinite: true,
-    show: 2,
+    show: 3,
     scroll: 2,
     key: true
     // controlOnHover: true
