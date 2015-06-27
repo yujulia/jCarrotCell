@@ -22,7 +22,7 @@ var t1 = $('#jcc-home').carrotCell({
     // nextIconClass: 'cc-right',
     infinite: true,
     show: 2,
-    scroll: 1,
+    scroll: 2,
     key: true
     // controlOnHover: true
 });
