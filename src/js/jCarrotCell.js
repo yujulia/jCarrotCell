@@ -97,6 +97,8 @@
             current = 0,        // current scroll
             showing = [],       // what items are actually on screen
             cloneShowing = 0,   // how many clones currently showing
+            findFor = 1,
+
             cloneStart = [],
             cloneEnd = [],
             cloneSkip = 0,
@@ -171,18 +173,43 @@
         // --- update what is showing on the screen after a scroll happened
 
         var updateShowing = function(){
-            cloneShowing = 0;
+            cloneShowing = 0;           // reset
+            onCloneStart = false;
+            onCloneEnd = false;
+
             for (var k = 0; k < settings.show; k++){
                 showing[k] = current + k;
-                if ((showing[k]) < 0 || (showing[k] > total-1 )) { cloneShowing++; }
+
+                if (showing[k] < 0 ) { 
+                    cloneShowing++; 
+                    onCloneStart = true;
+                    onCloneEnd = false;
+                }
+
+                if (showing[k] > total-1 ) { 
+                    cloneShowing++; 
+                    onCloneStart = false;
+                    onCloneEnd = true;
+                }
             }
         };
 
         // --- find out how many moves in infinite scroll
 
-        var findInfiniteMoves = function(cloneOffset){
-            moves = Math.ceil( (total + cloneShowing) / settings.scroll) - 1 ;
-            console.log("// Infinite moves ", moves, " clone showing ", cloneShowing);
+        var findInfiniteMoves = function(){
+            var additional = cloneShowing;
+
+            if (findFor == -1) {
+                console.log("// previous ");
+                additional = settings.show - cloneShowing;
+            } else {
+                console.log("// next ");
+            }
+
+            moves = Math.ceil( (total + additional) / settings.scroll) - 1 ;
+
+
+            console.log("// moves ", moves, " ", showing, " adding ", additional, " dir ", findFor);
         };
 
         // --- replace slider at the start with end clone
@@ -194,18 +221,17 @@
 
             // cloneOffset += total + settings.show + current;
             cloneOffset += total + current + settings.show;
-            console.log("END REPLACE CLONE OFFSET ", cloneOffset, " current ", current);
+            // console.log("END REPLACE CLONE OFFSET ", cloneOffset, " current ", current);
             scrollSlider({ duration: 0, offset: cloneOffset * one.totalSize });
-            moved = moves;
-
-
+            
             current = total + current;
             // cloneSkip = total - current -1;
             cloneSkip = settings.show;
-
             alreadyMoved = settings.show + current;
 
-            findInfiniteMoves(cloneOffset);
+            findInfiniteMoves();
+
+            moved = moves;
 
             console.log("* REPLACED with END current ", current, " cloneskip ", cloneSkip, " moved ", moved, " showing ", showing);
 
@@ -220,26 +246,31 @@
             animating = true;
 
             if (!cloneOffset) { cloneOffset = 0; }
-
-            scrollSlider({ duration: 0, offset: cloneOffset * one.totalSize });
-            moved = 0;  
-
             console.log("clone offset is ", cloneOffset);
             
 
-            var saveCurrent = current;
-
-            cloneSkip = cloneOffset;
-
             current = current - total; // negative pos of the starting clone
 
-            if (Math.abs(current) >= total) { current = 0; } // first "real" item no longer clone
+            if (Math.abs(current) >= total) { 
+                console.log("ZZZ current is too big");
+                current = 0;
+                
+            } // first "real" item no longer clone
 
+            if (current == 0){
+                console.log("XXX reset to start ");
+                cloneSkip = settings.show;
+            } else {
+                cloneSkip = cloneOffset; 
+            }
+
+            scrollSlider({ duration: 0, offset: cloneSkip * one.totalSize });
+            moved = 0;
             alreadyMoved = settings.show + current; // ALREADY SCROLLED is clone count subtract curernt clone
 
             updateShowing();
 
-            console.log("X REPLACED with START current ", current, " cloneskip ", cloneSkip, " moved ", moved, " showing ", showing);
+            console.log("X REPLACED with START current ", current, " cloneskip ", cloneSkip, " moved ", moved, "already ", alreadyMoved, " showing ", showing);
 
             findInfiniteMoves(cloneOffset);
 
@@ -258,32 +289,33 @@
                 console.log("DONE current is ", current, " moved ", moved, "/", moves, " cloneskip ", cloneSkip);
 
                 if (moved < 0) {
-
+                    findFor = -1;
                     console.log("-", moved, "/", moves, " moved < 0 on ", current);
                     replaceWithEnd();
 
                 } else if (moved >= moves) {
                          
                     console.log("+", moved, "/", moves, " moved > moves on ", current);
+                    findFor = 1;
                     replaceWithStart(cloneEnd.indexOf(current));
                     
                 }    
 
                 // we circled around to the start again...
 
-                if (current == 0){
-                    console.log("CURRENT is 0 RESET all the things");
+                // if (current == 0){
+                //     console.log("CURRENT is 0 RESET all the things");
 
-                    replaceWithStart(settings.show);
+                //     replaceWithStart(settings.show);
 
-                    onCloneStart = false;
-                    onCloneEnd = false;
+                //     onCloneStart = false;
+                //     onCloneEnd = false;
 
-                } else if (current < 0) {
-                    onCloneStart = true;
-                } else {
-                    onCloneStart = false;
-                }
+                // } else if (current < 0) {
+                //     onCloneStart = true;
+                // } else {
+                //     onCloneStart = false;
+                // }
 
 
             } else {
@@ -292,9 +324,10 @@
 
             updateShowing();
 
-            console.log("scrolling DONE showing is ", showing, " clone showing ", cloneShowing);
+            console.log("scrolling DONE showing is ", showing, " clone showing ", cloneShowing, " moved ", moved, "/", moves);
 
             animating = false; // lockdown ends now everything is processed
+            console.log("==========");
         };
 
         // --- scroll the slider
@@ -339,15 +372,19 @@
             if (e) { e.preventDefault(); }
             if (atStart || animating) { return false; }
 
+            findFor = -1;
+
             if (onCloneStart){
                 console.log("-------------------------------------");
                 console.log("Changing direction while on Clone Start! Prev");
+                
                 replaceWithEnd();
             } else {
                 
             }
 
              scrollToItem(-1);
+
         };
 
         // --- move to next scroll
@@ -356,10 +393,13 @@
             if (e) { e.preventDefault(); }
             if (atEnd || animating) { return false; }
 
+            findFor = 1;
+
             // if (settings.infinite && (current == total-1)){
             if (onCloneEnd){
                 console.log("******************************************");
                 console.log("Changing direction while on clone End! next");
+                
                 replaceWithStart(settings.show - settings.scroll); // FIX THIS CALC
             } else {
                 
