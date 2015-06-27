@@ -139,7 +139,7 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
 
             moves = 0,          // how many times before we reach the end
             moved = 0,          // how many times we moved
-            record = 0,         // how many items to be moved
+            alreadyMoved = 0,         // how many items to be moved
             current = 0,        // current scroll
             showing = [],       // what items are actually on screen
             cloneShowing = 0,   // how many clones currently showing
@@ -220,7 +220,7 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             cloneShowing = 0;
             for (var k = 0; k < settings.show; k++){
                 showing[k] = current + k;
-                if (showing[k] < 0) { cloneShowing++; }
+                if ((showing[k]) < 0 || (showing[k] > total-1 )) { cloneShowing++; }
             }
         };
 
@@ -228,7 +228,7 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
 
         var findInfiniteMoves = function(cloneOffset){
             moves = Math.ceil( (total + cloneShowing) / settings.scroll) - 1 ;
-            console.log("- Infinite moves ", moves);
+            console.log("// Infinite moves ", moves, " clone showing ", cloneShowing);
         };
 
         // --- replace slider at the start with end clone
@@ -249,7 +249,7 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             // cloneSkip = total - current -1;
             cloneSkip = settings.show;
 
-            record = settings.show + current;
+            alreadyMoved = settings.show + current;
 
             findInfiniteMoves(cloneOffset);
 
@@ -281,7 +281,7 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
 
             if (Math.abs(current) >= total) { current = 0; } // first "real" item no longer clone
 
-            record = settings.show + current; // ALREADY SCROLLED is clone count subtract curernt clone
+            alreadyMoved = settings.show + current; // ALREADY SCROLLED is clone count subtract curernt clone
 
             updateShowing();
 
@@ -297,7 +297,7 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
         var doneScrolling = function(){
             moved += direction;
             current = current + direction * settings.scroll;
-            record += direction * settings.scroll; // update how far we scrolled
+            alreadyMoved += direction * settings.scroll; // update how far we scrolled
 
             if (settings.infinite) {
 
@@ -305,13 +305,12 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
 
                 if (moved < 0) {
 
-                    console.log("moved back into previous ");
+                    console.log("-", moved, "/", moves, " moved < 0 on ", current);
                     replaceWithEnd();
 
                 } else if (moved >= moves) {
                          
-                    console.log(moved, "/", moves, " moved > moves reached end current ", current, " moved ", moved, "/", moves);
-                    console.log("looking in ", cloneEnd);
+                    console.log("+", moved, "/", moves, " moved > moves on ", current);
                     replaceWithStart(cloneEnd.indexOf(current));
                     
                 }    
@@ -339,7 +338,7 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
 
             updateShowing();
 
-            console.log("scrolling DONE showing is ", showing);
+            console.log("scrolling DONE showing is ", showing, " clone showing ", cloneShowing);
 
             animating = false; // lockdown ends now everything is processed
         };
@@ -364,18 +363,10 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
 
             direction = dir;
 
-            var alreadyMoved = moved * settings.scroll;
-
-            if (settings.infinite) { 
-
-                alreadyMoved = moved * settings.scroll + cloneSkip; // add the clone offset
-
-                console.log("about to scroll CURRENT ", current, " moved ", moved, " already moved ", alreadyMoved, " dir ", direction);
-
-            }
+            console.log("SCROLL ", current, " alreadyscrolled ", alreadyMoved);
 
             // var moveDistance = direction * settings.scroll * one.totalSize + alreadyMoved * one.totalSize;
-            var moveDistance = direction * settings.scroll * one.totalSize + record * one.totalSize;
+            var moveDistance = direction * settings.scroll * one.totalSize + alreadyMoved * one.totalSize;
 
 
             var params = {
@@ -589,7 +580,7 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             items.filter(':last').after(startSlice);
             items = $("." + CLASS_ITEM + ":not(."+ CLASS_CLONE + ")", scope); // this includes cloned
 
-            record = settings.show;
+            alreadyMoved = settings.show;
         };
 
         // --- set the size of the clipping pane 
