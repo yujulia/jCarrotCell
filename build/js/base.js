@@ -86,7 +86,6 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
 
     var debounce = function(callback, ms){
         var timeout = null;
-
         return function(){
             var context = this, args = arguments;
             var stalled = function(){
@@ -96,20 +95,6 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             clearTimeout(timeout);
             timeout = setTimeout(stalled, ms);
         };
-    };
-
-    // --- see if two objects are roughly the same (shallow)
-
-    var sameObject = function(obj1, obj2){
-        if (Object.keys(obj1).length !== Object.keys(obj2).length){  return false; } // unequal length
-        for (var key in obj1){
-            if (key in obj2){
-                if (obj1[key] !== obj2[key]) {  return false; } // value not euqal
-            } else {
-                return false; // missing key
-            }
-        }
-        return true;
     };
 
     /** ---------------------------------------
@@ -133,23 +118,23 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
 
             prev = null,
             next = null,
-            direction = 1,      // assume going NEXT
-            atStart = true,     
-            atEnd = false,
 
-            moves = 0,          // how many times before we reach the end
-            moved = 0,          // how many times we moved
-            alreadyMoved = 0,         // how many items to be moved
-            current = 0,        // current scroll
-            showing = [],       // what items are actually on screen
+            moves = 0,          // how many clicks before we reach the end
+            moved = 0,          // how many clicks we moved
+            alreadyMoved = 0,   // how many items already moved past
+            current = 0,        // current item scrolled to
+            showing = [],       // what items are visible
             cloneShowing = 0,   // how many clones currently showing
-            findFor = 1,
 
-            cloneStart = [],
-            cloneEnd = [],
-            cloneSkip = 0,
-            onCloneStart = false,
-            onCloneEnd = false,
+            atStart = true,     // no more in prev
+            atEnd = false,      // no more in next
+
+            direction = 1,      // direction we scrolling
+            findFor = 1,        // look up previous or next similar to direction ARE THESE SAME???
+
+            cloneEnd = [],          // save the clones at the end for lookup
+            cloneSkip = 0,          // how many items to skip when sliding infinitely
+            onCloneStart = false,   // are we on a starting clone (negative number)
 
             animating = false,  // animation lock
             axis = "x",
@@ -206,7 +191,6 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
         // --- determine where we are in the carousel
 
         var setState = function(){     
-            console.log("current ", current, " moves ", moves, " moved ", moved);
             if (moved === 0) {
                 setAtStart();
             } else if (moved === moves){
@@ -219,23 +203,17 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
         // --- update what is showing on the screen after a scroll happened
 
         var updateShowing = function(){
-            cloneShowing = 0;           // reset
-            onCloneStart = false;
-            onCloneEnd = false;
+            cloneShowing = 0;          
+            onCloneStart = false;       
 
             for (var k = 0; k < settings.show; k++){
                 showing[k] = current + k;
-
                 if (showing[k] < 0 ) { 
-                    cloneShowing++; 
+                    cloneShowing++;         
                     onCloneStart = true;
-                    onCloneEnd = false;
                 }
-
                 if (showing[k] > total-1 ) { 
                     cloneShowing++; 
-                    onCloneStart = false;
-                    onCloneEnd = true;
                 }
             }
         };
@@ -244,46 +222,28 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
 
         var findInfiniteMoves = function(){
             var additional = cloneShowing;
-
-            if (findFor == -1) {
-                console.log("// previous ");
-                additional = settings.show - cloneShowing;
-            } else {
-                console.log("// next ");
-            }
-
+            if (findFor == -1) { additional = settings.show - cloneShowing; } 
             moves = Math.ceil( (total + additional) / settings.scroll) - 1 ;
 
-
-            console.log("// moves ", moves, " ", showing, " adding ", additional, " dir ", findFor);
+            console.log("// moves ", moves, " ", showing, " adding ", additional, " dir ", findFor, " direction ", direction);
         };
 
         // --- replace slider at the start with end clone
 
-        var replaceWithEnd = function(cloneOffset){
+        var replaceWithEnd = function(){
             animating = true;
-
-            if (!cloneOffset) { cloneOffset = 0; }
-
-            // cloneOffset += total + settings.show + current;
-            cloneOffset += total + current + settings.show;
-            // console.log("END REPLACE CLONE OFFSET ", cloneOffset, " current ", current);
-            scrollSlider({ duration: 0, offset: cloneOffset * one.totalSize });
-            
-            current = total + current;
-            // cloneSkip = total - current -1;
             cloneSkip = settings.show;
-            alreadyMoved = settings.show + current;
+            current = total + current;          // new "real" current at the end
+            alreadyMoved = cloneSkip + current; 
+            scrollSlider({ duration: 0, offset: (current + cloneSkip) * one.totalSize });
 
+            console.log("// replace with end called find moves");
             findInfiniteMoves();
 
             moved = moves;
+            animating = false;
 
             console.log("* REPLACED with END current ", current, " cloneskip ", cloneSkip, " moved ", moved, " showing ", showing);
-
-            
-
-            animating = false;
         };
 
         // --- replace slider at the end with the start clone (infinite reached end)
@@ -403,7 +363,7 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             findFor = -1;
 
             if (onCloneStart){
-                console.log("------------------------------------- DIR CHANGE PREV");
+                console.log("------------------------------------- DIR CHANGE PREV current ", current);
                 replaceWithEnd();
             } 
 
@@ -575,7 +535,6 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
 
             // index clone enum for easier lookup
             for (var i = 0; i < settings.show; i++){
-                cloneStart.push(i);
                 cloneEnd.push(total - settings.show + i);
             }
             cloneSkip = settings.show;
@@ -726,10 +685,6 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             update : function(options){
 
                 // dont update if its the same options
-
-                if (sameObject(options, JSON.parse(settings.userOptions))){
-                    return false;
-                }
 
                 $.extend(settings, options);
                 setup();
