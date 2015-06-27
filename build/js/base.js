@@ -23,7 +23,7 @@ var t1 = $('#jcc-home').carrotCell({
     // nextIconClass: 'cc-right',
     infinite: true,
     show: 3,
-    scroll: 1,
+    scroll: 2,
     key: true
     // controlOnHover: true
 });
@@ -403,16 +403,11 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             findFor = -1;
 
             if (onCloneStart){
-                console.log("-------------------------------------");
-                console.log("Changing direction while on Clone Start! Prev");
-                
+                console.log("------------------------------------- DIR CHANGE PREV");
                 replaceWithEnd();
-            } else {
-                
-            }
+            } 
 
-             scrollToItem(-1);
-
+            scrollToItem(findFor);
         };
 
         // --- move to next scroll
@@ -422,18 +417,7 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             if (atEnd || animating) { return false; }
 
             findFor = 1;
-
-            // // if (settings.infinite && (current == total-1)){
-            // if (onCloneEnd){
-            //     console.log("******************************************");
-            //     console.log("Changing direction while on clone End! next");
-                
-            //     replaceWithStart(settings.show - settings.scroll); // FIX THIS CALC
-            // } else {
-                
-            // } 
-            scrollToItem(1);
-            
+            scrollToItem(findFor);
         };
 
         // --- a key event we care about happened

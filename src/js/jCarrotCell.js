@@ -357,16 +357,11 @@
             findFor = -1;
 
             if (onCloneStart){
-                console.log("-------------------------------------");
-                console.log("Changing direction while on Clone Start! Prev");
-                
+                console.log("------------------------------------- DIR CHANGE PREV");
                 replaceWithEnd();
-            } else {
-                
-            }
+            } 
 
-             scrollToItem(-1);
-
+            scrollToItem(findFor);
         };
 
         // --- move to next scroll
@@ -376,18 +371,7 @@
             if (atEnd || animating) { return false; }
 
             findFor = 1;
-
-            // // if (settings.infinite && (current == total-1)){
-            // if (onCloneEnd){
-            //     console.log("******************************************");
-            //     console.log("Changing direction while on clone End! next");
-                
-            //     replaceWithStart(settings.show - settings.scroll); // FIX THIS CALC
-            // } else {
-                
-            // } 
-            scrollToItem(1);
-            
+            scrollToItem(findFor);
         };
 
         // --- a key event we care about happened
