@@ -248,7 +248,6 @@
             if (!cloneOffset) { cloneOffset = 0; }
             console.log("clone offset is ", cloneOffset);
             
-
             current = current - total; // negative pos of the starting clone
 
             if (Math.abs(current) >= total) { 
@@ -300,23 +299,6 @@
                     replaceWithStart(cloneEnd.indexOf(current));
                     
                 }    
-
-                // we circled around to the start again...
-
-                // if (current == 0){
-                //     console.log("CURRENT is 0 RESET all the things");
-
-                //     replaceWithStart(settings.show);
-
-                //     onCloneStart = false;
-                //     onCloneEnd = false;
-
-                // } else if (current < 0) {
-                //     onCloneStart = true;
-                // } else {
-                //     onCloneStart = false;
-                // }
-
 
             } else {
                 setState(); 
@@ -395,15 +377,15 @@
 
             findFor = 1;
 
-            // if (settings.infinite && (current == total-1)){
-            if (onCloneEnd){
-                console.log("******************************************");
-                console.log("Changing direction while on clone End! next");
+            // // if (settings.infinite && (current == total-1)){
+            // if (onCloneEnd){
+            //     console.log("******************************************");
+            //     console.log("Changing direction while on clone End! next");
                 
-                replaceWithStart(settings.show - settings.scroll); // FIX THIS CALC
-            } else {
+            //     replaceWithStart(settings.show - settings.scroll); // FIX THIS CALC
+            // } else {
                 
-            } 
+            // } 
             scrollToItem(1);
             
         };

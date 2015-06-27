@@ -22,7 +22,7 @@ var t1 = $('#jcc-home').carrotCell({
     // prevIconClass : 'cc-left',
     // nextIconClass: 'cc-right',
     infinite: true,
-    show: 1,
+    show: 3,
     scroll: 1,
     key: true
     // controlOnHover: true
@@ -294,7 +294,6 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             if (!cloneOffset) { cloneOffset = 0; }
             console.log("clone offset is ", cloneOffset);
             
-
             current = current - total; // negative pos of the starting clone
 
             if (Math.abs(current) >= total) { 
@@ -346,23 +345,6 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
                     replaceWithStart(cloneEnd.indexOf(current));
                     
                 }    
-
-                // we circled around to the start again...
-
-                // if (current == 0){
-                //     console.log("CURRENT is 0 RESET all the things");
-
-                //     replaceWithStart(settings.show);
-
-                //     onCloneStart = false;
-                //     onCloneEnd = false;
-
-                // } else if (current < 0) {
-                //     onCloneStart = true;
-                // } else {
-                //     onCloneStart = false;
-                // }
-
 
             } else {
                 setState(); 
@@ -441,15 +423,15 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
 
             findFor = 1;
 
-            // if (settings.infinite && (current == total-1)){
-            if (onCloneEnd){
-                console.log("******************************************");
-                console.log("Changing direction while on clone End! next");
+            // // if (settings.infinite && (current == total-1)){
+            // if (onCloneEnd){
+            //     console.log("******************************************");
+            //     console.log("Changing direction while on clone End! next");
                 
-                replaceWithStart(settings.show - settings.scroll); // FIX THIS CALC
-            } else {
+            //     replaceWithStart(settings.show - settings.scroll); // FIX THIS CALC
+            // } else {
                 
-            } 
+            // } 
             scrollToItem(1);
             
         };
