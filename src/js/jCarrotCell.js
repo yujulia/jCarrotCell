@@ -20,18 +20,23 @@
         DEBOUNCE_RESIZE = 200,
 
         CLASS_CARROT = 'carrotcell',
+
+        DATA_ENUM = CLASS_CARROT + '__enum',
+
         CLASS_CLIP = CLASS_CARROT + '__clip',
         CLASS_SLIDER = CLASS_CARROT + '__strip',
         CLASS_ITEM = CLASS_CARROT + '__item',
         
         CLASS_INVIS = CLASS_CARROT + "--invisible",
         CLASS_CLONE = CLASS_CARROT + "__clone",
+
         CLASS_ICON = CLASS_CARROT + '__icon',
-        
         CLASS_NEXT_ICON = CLASS_ICON + '--next',
         CLASS_PREV_ICON = CLASS_ICON + '--prev',
+        CLASS_PAUSE_ICON = CLASS_ICON + '--pause',
+        CLASS_PLAY_ICON = CLASS_ICON + '--play',
         CLASS_ACCESS_TEXT = CLASS_CARROT + '__accessText',
-
+        
         CLASS_BTN = CLASS_CARROT + '__btn',
         CLASS_NEXT = CLASS_BTN + '--next',
         CLASS_PREV = CLASS_BTN + '--prev';
@@ -63,18 +68,18 @@
             height = 0,         // container height
             clipPane = null,    // clipping box
 
-
             slider = null,      // sliding panel
             sliderSize = 0,
 
+            clones = null,      // clones for infinite scroll
             items = null,       // all items elements
             total = 0,          // items count
             one = null,         // 1 item
 
             prev = null,
             next = null,
-            stop = null,
-            go = null,
+            pause = null,
+            play = null,
 
             moves = 0,          // how many clicks before we reach the end
             moved = 0,          // how many clicks we moved
@@ -110,12 +115,12 @@
                 stopOnHover : true,     // stop auto advance on hover
                 controlOnHover : false, // show controls on hover only
 
-                stopClass: '',
-                stopIconClass : '',
-                stopText : 'pause carousel scroll',
-                goClass : '',
-                goIconClass : '',
-                goText : 'resume carousel scroll',
+                pauseClass: '',
+                pauseIconClass : CLASS_PAUSE_ICON,
+                pauseText : 'pause carousel scroll',
+                playClass : '',
+                playIconClass : CLASS_PLAY_ICON,
+                playText : 'resume carousel scroll',
                 prevClass : '',
                 prevIconClass : CLASS_PREV_ICON,
                 prevText : 'next carousel slide',
@@ -173,10 +178,12 @@
 
             for (var k = 0; k < settings.show; k++){
                 showing[k] = current + k;
+
                 if (showing[k] < 0 ) { 
                     cloneShowing++;         
                     onCloneStart = true;
                 }
+
                 if (showing[k] > total-1 ) { 
                     cloneShowing++; 
                 }
@@ -204,15 +211,14 @@
 
         var replaceWithEnd = function(){
             animating = true;
+
             cloneSkip = settings.show;
-            current = total + current;          // new "real" current at the end
+            current = total + current;          // find current in end clone
             alreadyMoved = cloneSkip + current; 
             scrollSlider({ duration: 0, offset: (current + cloneSkip) * one.totalSize });
-
-            console.log("// replace with end called find moves");
+            updateShowing(); 
             findInfiniteMoves();
-
-            moved = moves;
+            moved = moves;  // we just found the new moves
             animating = false;
 
             console.log("* REPLACED with END current ", current, " cloneskip ", cloneSkip, " moved ", moved, " showing ", showing);
@@ -224,18 +230,10 @@
             animating = true;
 
             if (!cloneOffset) { cloneOffset = 0; }
-            console.log("clone offset is ", cloneOffset);
-            
-            current = current - total; // negative pos of the starting clone
-
-            if (Math.abs(current) >= total) { 
-                console.log("ZZZ current is too big");
-                current = 0;
-                
-            } // first "real" item no longer clone
+            current = current - total; // find current in starting clone
 
             if (current === 0){
-                console.log("XXX reset to start ");
+                console.log("XXX Current is 0 clone offset is ", cloneOffset);
                 cloneSkip = settings.show;
             } else {
                 cloneSkip = cloneOffset; 
@@ -244,23 +242,18 @@
             scrollSlider({ duration: 0, offset: cloneSkip * one.totalSize });
             moved = 0;
             alreadyMoved = settings.show + current; // ALREADY SCROLLED is clone count subtract curernt clone
-
             updateShowing();
-
-            console.log("X REPLACED with START current ", current);
-            console.log(" cloneskip ", cloneSkip, " moved ", moved, "already ", alreadyMoved, " showing ", showing);
-
-            console.log("// replace with start called find moves ");
             findInfiniteMoves(cloneOffset);
-
             animating = false;
+
+            console.log("X REPLACED w/START skip ", cloneSkip, " moved ", moved, "already ", alreadyMoved, " current ", current);
         };
 
-        // --- scrolling is done
+        // --- scrolling animation complete from scrollToItem
 
         var doneScrolling = function(){
-            moved += direction;
-            current = current + direction * settings.scroll;
+            moved += direction; // update moves + or -
+            current = current + direction * settings.scroll; // update new current
             alreadyMoved += direction * settings.scroll; // update how far we scrolled
 
             if (settings.infinite) {
@@ -272,24 +265,25 @@
                     console.log("+NEXT ", moved, "/", moves, " moved > moves on ", current);
                     direction = 1;
                     replaceWithStart(cloneEnd.indexOf(current));
-                }    
+                } else {
+                    updateShowing(); 
+                }
 
             } else {
-                setState(); 
+                updateShowing(); 
+                setState(); // non infinite, check if we disable prev or next
             }
-
-            updateShowing();
 
             console.log("scrolling DONE ", " moved ", moved, "/", moves);
 
             animating = false; // lockdown ends now everything is processed
-            console.log("==========");
+            console.log("===========================", showing);
         };
 
-
-        // --- scroll to some time 
+        // --- calculate the scroll
 
         var scrollToItem = function(){
+            animating = true;
 
             var params = {
                 duration: settings.speed,
@@ -298,8 +292,6 @@
             };
 
             console.log("SCROLL ", current, " by ", direction * settings.scroll, " already moved ", alreadyMoved);
-
-            animating = true;
             scrollSlider(params);
         };
 
@@ -313,7 +305,7 @@
 
             if (onCloneStart){
                 console.log("------------------------------------- DIR CHANGE PREV current ", current);
-                replaceWithEnd();
+                replaceWithEnd(); // cant go prev as we are on a clone, replace
             } 
 
             scrollToItem();
@@ -379,7 +371,7 @@
 
         var setupFocusTab = function(){
             var gotFocus = function(e){
-                var itemEnum = $(this).data("enum");
+                var itemEnum = $(this).data(DATA_ENUM);
                 if ($.isNumeric(itemEnum) && (itemEnum > 0) && (itemEnum !== current)){
                     scrollToItem(itemEnum, 1);
                 } 
@@ -391,10 +383,15 @@
 
         var createControls = function(){
             setupPreNext();
+            setupFocusTab();
+
             if (settings.key){
                 track.subscribeKey(settings.name, settings.keyBack, settings.keyForward);
             }
-            setupFocusTab();
+
+            if (settings.auto) {
+                // set up pause and play
+            }
         };
 
         // --- return attributes on some jquery element
@@ -411,11 +408,13 @@
 
         var getItemSize = function(item){
             var calcOffset = 0;
+
             if (settings.sideways){
                 calcOffset = parseInt(item.css("margin-left"), 10) + parseInt(item.css("margin-right"), 10);
             } else {
                 calcOffset = parseInt(item.css("margin-top"), 10) + parseInt(item.css("margin-bottom"), 10);
             }
+
             if ($(item).css("box-sizing") === "content-box") {
                 if (settings.sideways){
                     var b1 = parseInt(item.css("border-left-width"), 10),
@@ -427,6 +426,7 @@
                     calcOffset += b3 + b4;
                 }
             } 
+
             return {
                 w: item.outerWidth(true),
                 h: item.outerHeight(true),
@@ -437,16 +437,14 @@
         // --- get individual content item sizes
 
         var getAllItemSizes = function(){
-            items.each(function(i, item){
-                item = $(item);
-                item.data("enum", i);          
-                if (i < 1){ one = getItemSize(item); }
-                if (settings.sideways){
-                    sliderSize += one.w;
-                } else {
-                    sliderSize += one.h;
-                }
-            });
+            one = getItemSize($(items[0])); // the size of one item
+            items.each(function(i, item){ $(item).data(DATA_ENUM, i); }); // add data to item
+
+            if (settings.sideways){
+                sliderSize = one.w * total;
+            } else {
+                sliderSize = one.h * total;
+            }
         };
 
         // --- adjust the size of the items and the slider 
@@ -454,19 +452,20 @@
         var adjustItemSize = function(){    
             getAllItemSizes(); 
     
+            // --- set the size of items based on passed in size
+
             var setItemSize = function(single, prop){
+                var sliderItems = total;
                 one.totalSize = single;
                 one.size = single - one.offset; // make room for margin/border
                 items.css(prop, one.size + "px");
-                var sliderItems = total;
 
                 if (settings.infinite){
-                    // RESIZE CLONES
-
-                    sliderItems += settings.show * 2; // account for clones
+                    clones.css(prop, one.size + "px");
+                    sliderItems += settings.show * 2; // make room for clones
                 }
 
-                slider.css(prop, single * sliderItems + "px"); // set length of slider
+                slider.css(prop, one.totalSize * sliderItems + "px"); // set length of slider
             };
 
             if (settings.sideways) { 
@@ -474,31 +473,32 @@
             } else {
                 setItemSize(height/settings.show, "height");
             }
+
             if (settings.infinite){
-                var cloneMove = settings.show * one.totalSize;
-                scrollSlider({ duration: 0, offset: settings.show * one.totalSize });
+                scrollSlider({ duration: 0, offset: settings.show * one.totalSize }); // move clones
             }
         };
 
-        // --- clone
+        // --- make clones for infinite scroll
 
         var clone = function(){
             var endSlice = items.slice(-settings.show).clone(),
                 startSlice = items.slice(0, settings.show).clone();
+            endSlice.addClass(CLASS_CLONE).attr("tabindex", -1).removeData(DATA_ENUM);
+            startSlice.addClass(CLASS_CLONE).attr("tabindex", -1).removeData(DATA_ENUM);
 
-            // index clone enum for easier lookup
-            for (var i = 0; i < settings.show; i++){
-                cloneEnd.push(total - settings.show + i);
-            }
-            cloneSkip = settings.show;
-
-            endSlice.addClass(CLASS_CLONE).attr("tabindex", -1).removeData("enum");
-            startSlice.addClass(CLASS_CLONE).attr("tabindex", -1).removeData("enum");
             items.filter(':first').before(endSlice);         
             items.filter(':last').after(startSlice);
-            items = $("." + CLASS_ITEM + ":not(."+ CLASS_CLONE + ")", scope); // this includes cloned
 
-            alreadyMoved = settings.show;
+            items = $("." + CLASS_ITEM + ":not(."+ CLASS_CLONE + ")", scope); 
+            clones = $("." + CLASS_CLONE, scope);
+
+            cloneSkip = settings.show;
+            alreadyMoved = cloneSkip;
+
+            for (var i = 0; i < settings.show; i++){
+                cloneEnd.push(total - settings.show + i); // lookup end clones later
+            }
         };
 
         // --- set the size of the clipping pane 
@@ -506,6 +506,7 @@
         var setClipSize = function(){
             width = parseInt(Math.floor(scope.width()), 10);
             height = parseInt(Math.floor(scope.height()), 10);
+
             if (settings.sideways){
                 clipPane.css("width", width + "px");
             } else {
@@ -516,21 +517,23 @@
         // --- make the html frame depending on if its a list or divs
 
         var makeFrame = function(){ 
-            
             clipPane = $('<div/>', { 'class': CLASS_CLIP });
             setClipSize();
                 
             var sliderType = '<div/>';
             var carrotType = scope.prop('tagName').toUpperCase();
             var isList = false;
+
             if (carrotType === "UL" || carrotType === "OL"){ 
                 isList = true; 
                 sliderType = '<'+ carrotType + '/>';
             }
+
             slider = $(sliderType, { 'class': CLASS_SLIDER });
 
             items.appendTo(slider);
             slider.appendTo(clipPane); 
+
             if (isList) {
                 var dupeAttributes = getAttributes(scope);
                 var newParent = $('<div/>', dupeAttributes);
@@ -545,8 +548,9 @@
             items.addClass(CLASS_ITEM).attr("tabindex", 0);
             scope.addClass(CLASS_CARROT).data(CLASS_CARROT, settings.name);   
 
+            if (settings.infinite){ clone(); }  // pad with clones
+
             adjustItemSize();   // make the items fit inside the clippane  
-            if (settings.infinite){ clone(); }    
         };
 
         // --- find out how many moves in infinite scroll
