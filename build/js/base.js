@@ -22,8 +22,8 @@ var t1 = $('#jcc-home').carrotCell({
     // prevIconClass : 'cc-left',
     // nextIconClass: 'cc-right',
     infinite: true,
-    show: 3,
-    scroll: 2,
+    show: 1,
+    scroll: 1,
     key: true
     // controlOnHover: true
 });
@@ -109,6 +109,7 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             height = 0,         // container height
             clipPane = null,    // clipping box
 
+
             slider = null,      // sliding panel
             sliderSize = 0,
 
@@ -118,6 +119,8 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
 
             prev = null,
             next = null,
+            stop = null,
+            go = null,
 
             moves = 0,          // how many clicks before we reach the end
             moved = 0,          // how many clicks we moved
@@ -130,7 +133,6 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             atEnd = false,      // no more in next
 
             direction = 1,      // direction we scrolling
-            findFor = 1,        // look up previous or next similar to direction ARE THESE SAME???
 
             cloneEnd = [],          // save the clones at the end for lookup
             cloneSkip = 0,          // how many items to skip when sliding infinitely
@@ -146,17 +148,26 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
                 scroll: 1,              // scroll 1 frame at a time
                 speed: 700,             // scroll speed         
                 sideways: true,         // scroll sideways
-                infinite: false,
-                auto: false,
-                tween: "easeOutExpo",
+                tween: "easeOutExpo",   // slide tween
+   
+                force : true,           // force item size to be width/show
+                infinite : false,       // infinite scroll
+                auto : false,           // auto loop if circular
+                stopOnHover : true,     // stop auto advance on hover
+                controlOnHover : false, // show controls on hover only
 
+                stopClass: '',
+                stopIconClass : '',
+                stopText : 'pause carousel scroll',
+                goClass : '',
+                goIconClass : '',
+                goText : 'resume carousel scroll',
                 prevClass : '',
-                nextClass : '',
                 prevIconClass : CLASS_PREV_ICON,
+                prevText : 'next carousel slide',
+                nextClass : '',
                 nextIconClass : CLASS_NEXT_ICON,
-                prevText : 'next',
-                nextText : 'previous',
-                controlOnHover : false,
+                nextText : 'previous carousel slide',
 
                 key: false,
                 keyBack: '',
@@ -200,7 +211,7 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             }
         };
 
-        // --- update what is showing on the screen after a scroll happened
+        // --- update record on what is actually shown on screen
 
         var updateShowing = function(){
             cloneShowing = 0;          
@@ -216,16 +227,23 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
                     cloneShowing++; 
                 }
             }
+
+            console.log("[ showing updated ] ", showing, ' clones showing ', cloneShowing, ' on clone start? ', onCloneStart);
         };
 
-        // --- find out how many moves in infinite scroll
+        // --- scroll the actual slider
 
-        var findInfiniteMoves = function(){
-            var additional = cloneShowing;
-            if (findFor == -1) { additional = settings.show - cloneShowing; } 
-            moves = Math.ceil( (total + additional) / settings.scroll) - 1 ;
+        var scrollSlider = function(params){
+            var scrollParams = {
+                axis: axis, 
+                container: clipPane,
+                duration: settings.speed, 
+                easing: settings.tween
+            };
+            $.extend(scrollParams, params); // update settings
+            slider.velocity('scroll', scrollParams);
 
-            console.log("// moves ", moves, " ", showing, " adding ", additional, " dir ", findFor, " direction ", direction);
+            // use jquery animate if no velocity
         };
 
         // --- replace slider at the start with end clone
@@ -262,7 +280,7 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
                 
             } // first "real" item no longer clone
 
-            if (current == 0){
+            if (current === 0){
                 console.log("XXX reset to start ");
                 cloneSkip = settings.show;
             } else {
@@ -275,8 +293,10 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
 
             updateShowing();
 
-            console.log("X REPLACED with START current ", current, " cloneskip ", cloneSkip, " moved ", moved, "already ", alreadyMoved, " showing ", showing);
+            console.log("X REPLACED with START current ", current);
+            console.log(" cloneskip ", cloneSkip, " moved ", moved, "already ", alreadyMoved, " showing ", showing);
 
+            console.log("// replace with start called find moves ");
             findInfiniteMoves(cloneOffset);
 
             animating = false;
@@ -290,20 +310,14 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             alreadyMoved += direction * settings.scroll; // update how far we scrolled
 
             if (settings.infinite) {
-
-                console.log("DONE current is ", current, " moved ", moved, "/", moves, " cloneskip ", cloneSkip);
-
                 if (moved < 0) {
-                    findFor = -1;
-                    console.log("-", moved, "/", moves, " moved < 0 on ", current);
+                    direction = -1;
+                    console.log("+PREV ", moved, "/", moves, " moved < 0 on ", current);
                     replaceWithEnd();
-
-                } else if (moved >= moves) {
-                         
-                    console.log("+", moved, "/", moves, " moved > moves on ", current);
-                    findFor = 1;
+                } else if (moved >= moves) { 
+                    console.log("+NEXT ", moved, "/", moves, " moved > moves on ", current);
+                    direction = 1;
                     replaceWithStart(cloneEnd.indexOf(current));
-                    
                 }    
 
             } else {
@@ -312,43 +326,24 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
 
             updateShowing();
 
-            console.log("scrolling DONE showing is ", showing, " clone showing ", cloneShowing, " moved ", moved, "/", moves);
+            console.log("scrolling DONE ", " moved ", moved, "/", moves);
 
             animating = false; // lockdown ends now everything is processed
             console.log("==========");
         };
 
-        // --- scroll the slider
-
-        var scrollSlider = function(params){
-            var scrollParams = {
-                axis: axis, 
-                container: clipPane,
-                duration: settings.speed, 
-                easing: settings.tween
-            };
-            $.extend(scrollParams, params); // update settings
-            slider.velocity('scroll', scrollParams);
-            // use jquery animate if no velocity
-        };
 
         // --- scroll to some time 
 
-        var scrollToItem = function(dir){
-
-            direction = dir;
-
-            console.log("SCROLL ", current, " alreadyscrolled ", alreadyMoved);
-
-            // var moveDistance = direction * settings.scroll * one.totalSize + alreadyMoved * one.totalSize;
-            var moveDistance = direction * settings.scroll * one.totalSize + alreadyMoved * one.totalSize;
-
+        var scrollToItem = function(){
 
             var params = {
                 duration: settings.speed,
-                offset: moveDistance,
+                offset: direction * settings.scroll * one.totalSize + alreadyMoved * one.totalSize,
                 complete: doneScrolling
             };
+
+            console.log("SCROLL ", current, " by ", direction * settings.scroll, " already moved ", alreadyMoved);
 
             animating = true;
             scrollSlider(params);
@@ -360,14 +355,14 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             if (e) { e.preventDefault(); }
             if (atStart || animating) { return false; }
 
-            findFor = -1;
+            direction = -1;
 
             if (onCloneStart){
                 console.log("------------------------------------- DIR CHANGE PREV current ", current);
                 replaceWithEnd();
             } 
 
-            scrollToItem(findFor);
+            scrollToItem();
         };
 
         // --- move to next scroll
@@ -376,8 +371,8 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             if (e) { e.preventDefault(); }
             if (atEnd || animating) { return false; }
 
-            findFor = 1;
-            scrollToItem(findFor);
+            direction = 1;
+            scrollToItem();
         };
 
         // --- a key event we care about happened
@@ -510,9 +505,13 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
                 one.size = single - one.offset; // make room for margin/border
                 items.css(prop, one.size + "px");
                 var sliderItems = total;
+
                 if (settings.infinite){
+                    // RESIZE CLONES
+
                     sliderItems += settings.show * 2; // account for clones
                 }
+
                 slider.css(prop, single * sliderItems + "px"); // set length of slider
             };
 
@@ -596,19 +595,25 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             if (settings.infinite){ clone(); }    
         };
 
+        // --- find out how many moves in infinite scroll
+
+        var findInfiniteMoves = function(){
+            var additional = cloneShowing;
+            if (direction == -1) { additional = settings.show - cloneShowing; } 
+            moves = Math.ceil( (total + additional) / settings.scroll) - 1 ;
+
+            console.log("// moves ", moves, " adding ", additional, " direction ", direction);
+        };
+
         // --- find moves
 
         var findMoves = function(){
-
             if (settings.infinite){
                 findInfiniteMoves();
             } else {
                 moves = Math.ceil((total - (settings.show-settings.scroll)) / settings.scroll) - 1;
             }
-
             updateShowing();
-
-            console.log("total ", total, " moves ", moves, "showing", showing);
         };
 
         // --- update the settings object 
@@ -621,6 +626,7 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             }
 
             if (settings.auto) { settings.infinite = true;  }
+
             if (settings.sideways) { axis = "x"; } else { axis = "y"; }
 
             if (settings.key) {
@@ -647,7 +653,11 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             setClipSize();
             adjustItemSize();
             if (moved > 0){
-                scrollSlider({ duration: 0, offset: moved * one.totalSize});
+                if (settings.infinite){
+
+                } else {
+                    scrollSlider({ duration: 0, offset: moved * one.totalSize});
+                }
             } 
         };
 
@@ -687,8 +697,8 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
                 // dont update if its the same options
 
                 $.extend(settings, options);
-                setup();
 
+               // setup();
                 // remake controls but dont remake the frame
 
             },
@@ -733,7 +743,6 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
         // --- carrots call this to subscribe keys
 
         subscribeKey : function(){
-
             if (!track.useKey){ 
                 $(window).keyup(track.keyPressed);
                 track.useKey = true;
