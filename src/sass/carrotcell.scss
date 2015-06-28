@@ -81,7 +81,6 @@
             left: auto;
             right: 8px;
         }
-
     }
 
     &__icon {
@@ -121,5 +120,26 @@
         opacity: 0;
     }
 
+    // ------------------------ vertical scroll
+
+    &--vertical {
+
+        .carrotcell__btn {
+
+            &--prev, &--next {
+                left: 50%;
+                top: 8px;
+                transform: translateX(-50%);
+            }
+
+            &--next {
+                top: auto;
+                bottom: 8px;
+            }
+        }
+
+    }
 }
+
+
 

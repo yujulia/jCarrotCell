@@ -23,6 +23,8 @@
 
         DATA_ENUM = CLASS_CARROT + '__enum',
 
+        CLASS_VERTICAL = CLASS_CARROT + '--vertical',
+
         CLASS_CLIP = CLASS_CARROT + '__clip',
         CLASS_SLIDER = CLASS_CARROT + '__strip',
         CLASS_ITEM = CLASS_CARROT + '__item',
@@ -196,7 +198,6 @@
         // --- scroll the actual slider
 
         var scrollSlider = function(newParams){
-
             var params = {
                 axis: axis, 
                 container: clipPane,
@@ -554,6 +555,10 @@
 
             items.addClass(CLASS_ITEM).attr("tabindex", 0);
             scope.addClass(CLASS_CARROT).data(CLASS_CARROT, settings.name);   
+
+            if (!settings.sideways) {
+                scope.addClass(CLASS_VERTICAL);
+            }
 
             if (settings.infinite){ clone(); }  // pad with clones
 

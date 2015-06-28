@@ -21,15 +21,29 @@ require('./jCarrotCell.js');
 // });
 
 
-var demo1 = $('#demo--1').carrotCell({ 
+// var demo1 = $('#demo--1').carrotCell({ 
+//     // prevClass : "prev",
+//     // nextClass : "next",
+//     // prevIconClass : 'cc-left',
+//     // nextIconClass: 'cc-right',
+//     infinite: true,
+//     easing: 'easeOutExpo',
+//     show: 4,
+//     scroll: 3,
+//     key: true
+//     // controlOnHover: true
+// });
+
+var demo2 = $('#demo--2').carrotCell({ 
     // prevClass : "prev",
     // nextClass : "next",
     // prevIconClass : 'cc-left',
     // nextIconClass: 'cc-right',
-    infinite: true,
+    // infinite: true,
+    sideways: false,
     easing: 'easeOutExpo',
-    show: 3,
-    scroll: 3,
+    show: 1,
+    scroll: 1,
     key: true
     // controlOnHover: true
 });

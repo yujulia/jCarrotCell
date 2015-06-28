@@ -22,19 +22,32 @@ require('./jCarrotCell.js');
 // });
 
 
-var demo1 = $('#demo--1').carrotCell({ 
+// var demo1 = $('#demo--1').carrotCell({ 
+//     // prevClass : "prev",
+//     // nextClass : "next",
+//     // prevIconClass : 'cc-left',
+//     // nextIconClass: 'cc-right',
+//     infinite: true,
+//     easing: 'easeOutExpo',
+//     show: 4,
+//     scroll: 3,
+//     key: true
+//     // controlOnHover: true
+// });
+
+var demo2 = $('#demo--2').carrotCell({ 
     // prevClass : "prev",
     // nextClass : "next",
     // prevIconClass : 'cc-left',
     // nextIconClass: 'cc-right',
-    infinite: true,
+    // infinite: true,
+    sideways: false,
     easing: 'easeOutExpo',
-    show: 3,
-    scroll: 3,
+    show: 1,
+    scroll: 1,
     key: true
     // controlOnHover: true
 });
-
 },{"./jCarrotCell.js":3,"./vendor/jquery.easing.1.3.js":4,"./vendor/rainbow-custom.min.js":5,"./vendor/velocity.min.js":6,"jquery":2}],2:[function(require,module,exports){
 (function (global){
 ; var __browserify_shim_require__=require;(function browserifyShim(module, exports, require, define, browserify_shim__define__module__export__) {
@@ -73,6 +86,8 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
         CLASS_CARROT = 'carrotcell',
 
         DATA_ENUM = CLASS_CARROT + '__enum',
+
+        CLASS_VERTICAL = CLASS_CARROT + '--vertical',
 
         CLASS_CLIP = CLASS_CARROT + '__clip',
         CLASS_SLIDER = CLASS_CARROT + '__strip',
@@ -247,7 +262,6 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
         // --- scroll the actual slider
 
         var scrollSlider = function(newParams){
-
             var params = {
                 axis: axis, 
                 container: clipPane,
@@ -605,6 +619,10 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
 
             items.addClass(CLASS_ITEM).attr("tabindex", 0);
             scope.addClass(CLASS_CARROT).data(CLASS_CARROT, settings.name);   
+
+            if (!settings.sideways) {
+                scope.addClass(CLASS_VERTICAL);
+            }
 
             if (settings.infinite){ clone(); }  // pad with clones
 
