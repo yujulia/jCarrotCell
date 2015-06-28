@@ -561,10 +561,10 @@ pre {
     border-color: green; }
 
 .demo {
-  width: 890px;
+  width: 880px;
   background: #f9f9f9;
   margin: 20px auto;
-  padding: 10px 35px; }
+  padding: 10px 40px; }
   .demo__item {
     background: #efefef;
     color: #000;
@@ -573,7 +573,7 @@ pre {
     position: relative;
     border: solid 3px #ccc;
     float: left;
-    margin: 10px; }
+    margin: 3px; }
     .demo__item h2, .demo__item .intro {
       margin: -10px 0 0 0;
       font-family: code;
@@ -594,9 +594,9 @@ pre {
       display: inline; }
 
 .vertical {
-  width: 326px;
-  height: 176px;
-  padding: 35px 10px; }
+  width: 312px;
+  height: 162px;
+  padding: 40px 10px; }
 
 /** RAINBOW related styles
 */

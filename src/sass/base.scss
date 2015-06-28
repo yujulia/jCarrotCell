@@ -255,6 +255,7 @@ pre {
 .vertical {
     width: $item-w + $item-margin * 2 + $item-border * 2;
     height: $item-h + $item-margin * 2 + $item-border * 2;
+    // box-sizing: border-box;
     // height: 300px;
 
     padding: $pad-button 10px;
