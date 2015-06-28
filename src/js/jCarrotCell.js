@@ -21,6 +21,7 @@
 
         CLASS_CARROT = 'carrotcell',
 
+        DATA_API = CLASS_CARROT + '__api',
         DATA_ENUM = CLASS_CARROT + '__enum',
 
         CLASS_VERTICAL = CLASS_CARROT + '--vertical',
@@ -173,6 +174,24 @@
             }
         };
 
+        // --- fix the clones to be a real index
+
+        var getShowing = function(cloneIndex){
+            if (cloneIndex) { return showing; }
+
+            var fixShowing = showing.map(function(i){
+                if (i < 0) {
+                    return total + i;
+                } else if (i > total) {
+                    return total - i;
+                } else {
+                    return i;
+                }
+            });
+
+            return fixShowing;
+        };
+            
         // --- update record on what is actually shown on screen
 
         var updateShowing = function(){
@@ -605,7 +624,7 @@
                 console.log("sorry, you cant scroll more items than whats actually showing.");
             }
 
-            useVelocity = $(scope).velocity == undefined ? false : true;
+            useVelocity = $(scope).velocity === undefined ? false : true;
 
             if (!useVelocity && ($.easing[settings.easing] === undefined)) {
                 console.log(settings.easing, " is not supported, please include a jquery easing plugin or velocity");
@@ -680,14 +699,9 @@
             // --- update the carrot with new options
 
             update : function(options){
-
-                // dont update if its the same options
-
                 $.extend(settings, options);
-
-               // setup();
+                // setup();
                 // remake controls but dont remake the frame
-
             },
 
             // --- the window rezied
@@ -698,9 +712,21 @@
 
             keyPressed : function(keyCode){ handleKeyPress(keyCode); },
 
-            // --- return the name of this carrot
+            // --- return STR the name of this carrot
 
-            getName : function(){ return settings.name; }
+            getName : function(){ return settings.name; },
+
+            // --- return INT how many items are in the carrotcell
+
+            getCount : function() { return total; },
+
+            // --- return ARRAY of INT, with clone index if TRUE
+
+            getShowing : function(cloneIndex) { return getShowing(cloneIndex); },
+
+            // --- return current INT index
+
+            getCurrent : function(cloneIndex){ return getShowing(cloneIndex)[0]; }
         };
 
         return API_Methods;
@@ -795,20 +821,15 @@
 
         if (!track.initialize) { track.init(); } // first time carrotcelling
 
-        var carrotName = $(this).data(CLASS_CARROT);
-        if (carrotName){
-            var carrotAPI = track.carrots[carrotName];
-            if (carrotAPI) {
-                carrotAPI.update.apply(this, arguments);
-                return carrotAPI;
-            } else {
-                console.log("CARROTCELL ERROR: ", carrotName, " is not a registered carrotcell.");
-                return false;
-            }
+        var carrotAPI = $(this).data(DATA_API); // is this already a carrotcell?
+        if (carrotAPI) {
+            carrotAPI.update.apply(this, arguments); // update with new params
+            return carrotAPI;
         } else {
             var newCarrot = track.makeCarrot.apply(this, arguments);
             var newCarrotName = newCarrot.getName();
             track.carrots[newCarrotName] = newCarrot;
+            $(this).data(DATA_API, newCarrot); // save the api on this element...
             return newCarrot;
         }      
     };
