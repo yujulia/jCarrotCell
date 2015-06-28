@@ -7,6 +7,7 @@
 */
 .carrotcell {
 	position: relative;
+    overflow: auto;
 
     &__clip {
         overflow: hidden;
@@ -121,9 +122,6 @@
     // ------------------------ vertical scroll
 
     &--vertical {
-        .carrotcell__item {
-            // float: none;
-        }
 
         .carrotcell__btn {
 

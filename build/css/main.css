@@ -564,11 +564,11 @@ pre {
   width: 880px;
   background: #f9f9f9;
   margin: 20px auto;
-  padding: 10px 40px; }
+  padding: 40px; }
   .demo__item {
     background: #efefef;
     color: #000;
-    width: 300px;
+    width: 281.33333px;
     height: 150px;
     position: relative;
     border: solid 3px #ccc;
@@ -594,9 +594,10 @@ pre {
       display: inline; }
 
 .vertical {
-  width: 312px;
+  width: 293.33333px;
   height: 162px;
-  padding: 40px 10px; }
+  overflow: hidden;
+  overflow-y: scroll; }
 
 /** RAINBOW related styles
 */
@@ -645,7 +646,8 @@ pre {
 	necessary styles
 */
 .carrotcell {
-  position: relative; }
+  position: relative;
+  overflow: auto; }
   .carrotcell__clip {
     overflow: hidden;
     margin: 0 auto;

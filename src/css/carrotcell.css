@@ -5,7 +5,8 @@
 	necessary styles
 */
 .carrotcell {
-  position: relative; }
+  position: relative;
+  overflow: auto; }
   .carrotcell__clip {
     overflow: hidden;
     margin: 0 auto;

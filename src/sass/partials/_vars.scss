@@ -19,11 +19,12 @@ $color-leaf: #99cc33;
 $content-w: 960px;
 $pad-button: 40px;
 
-$item-w: 300px;
-$item-h: 150px;
-
 $item-border: 3px;
 $item-margin: 3px;
+$item-w: ($content-w - $pad-button * 2 )/3 - $item-border * 2 - $item-margin * 2;
+$item-h: 150px;
+
+
 
 
 // ----------------------------------------------- extendables

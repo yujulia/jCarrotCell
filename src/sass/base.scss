@@ -213,7 +213,7 @@ pre {
     width: $content-w - $pad-button * 2;
     background: #f9f9f9;
     margin: 20px auto;
-    padding: 10px $pad-button;
+    padding: $pad-button;
     // box-sizing: border-box;
 
     &__item {
@@ -256,8 +256,8 @@ pre {
 .vertical {
     width: $item-w + $item-margin * 2 + $item-border * 2;
     height: $item-h + $item-margin * 2 + $item-border * 2;
-    padding: $pad-button 10px;
-
+    overflow: hidden;
+    overflow-y: scroll;
 }
 
 @import "partials/rainbow";
