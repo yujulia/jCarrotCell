@@ -10,9 +10,11 @@
 
     &__clip {
         overflow: hidden;
-        margin: 0;
+        margin: 0 auto;
         padding: 0;
         border: none;
+        position: relative;
+        // border: solid 1px red;
     }
 
     &__strip {
@@ -20,6 +22,8 @@
         padding: 0;
         border: none;
         list-style: none;
+        top: 0;
+        left: 0;
 
         &:after {
             content: ' ';
@@ -47,8 +51,7 @@
             opacity: 1;
 
             .carrotcell__icon--prev, .carrotcell__icon--next {
-                background: #fff;
-                color: #ff9900;
+                background: #666;
             }
         }
 
@@ -61,12 +64,12 @@
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
-            left: 10px;
+            left: 8px;
             transition: opacity .2s ease-in-out;
             opacity: 1;
 
             .carrotcell__icon--prev, .carrotcell__icon--next {
-                font-size: 30px;
+                font-size: 20px;
                 border-radius: 100%;
                 background: #ff9900;
                 color: #fff;
@@ -76,7 +79,7 @@
 
         &--next {
             left: auto;
-            right: 10px;
+            right: 8px;
         }
 
     }
@@ -90,7 +93,8 @@
         
         &--prev::before {
             content: '\2039';
-            padding: 0 13px 0 12px;
+            // padding: 0 13px 0 12px;
+            padding: 0 9px;
             display: inline;
             line-height: 1em;
             vertical-align: text-top;
@@ -98,7 +102,8 @@
 
         &--next::before {
             content: '\203A';
-            padding: 0 12px 0 14px;
+            // padding: 0 12px 0 14px;
+            padding: 0 9px;
             display: inline;
             line-height: 1em;
             vertical-align: text-top;

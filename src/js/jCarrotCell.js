@@ -97,7 +97,8 @@
             cloneSkip = 0,          // how many items to skip when sliding infinitely
             onCloneStart = false,   // are we on a starting clone (negative number)
 
-            animating = false,  // animation lock
+            useVelocity = false,    // use velocity to animate?
+            animating = false,      // animation lock
             axis = "x",
 
             // --- these settings can be over written
@@ -105,9 +106,9 @@
             settings = {
                 show: 1,                // show 1 frame at a time
                 scroll: 1,              // scroll 1 frame at a time
-                speed: 700,             // scroll speed         
+                duration: 500,          // scroll animation duration         
                 sideways: true,         // scroll sideways
-                tween: "easeOutExpo",   // slide tween
+                easing: "swing",        // slide easing method
    
                 force : true,           // force item size to be width/show
                 infinite : false,       // infinite scroll
@@ -194,17 +195,22 @@
 
         // --- scroll the actual slider
 
-        var scrollSlider = function(params){
-            var scrollParams = {
+        var scrollSlider = function(newParams){
+
+            var params = {
                 axis: axis, 
                 container: clipPane,
                 duration: settings.speed, 
-                easing: settings.tween
+                easing: settings.easing
             };
-            $.extend(scrollParams, params); // update settings
-            slider.velocity('scroll', scrollParams);
 
-            // use jquery animate if no velocity
+            $.extend(params, newParams); // update settings
+
+            if (useVelocity) {
+                slider.velocity('scroll', params);
+            } else {
+                clipPane.animate( { scrollLeft: params.offset }, params.duration, params.easing, params.complete );
+            }
         };
 
         // --- replace slider at the start with end clone
@@ -233,7 +239,6 @@
             current = current - total; // find current in starting clone
 
             if (current === 0){
-                console.log("XXX Current is 0 clone offset is ", cloneOffset);
                 cloneSkip = settings.show;
             } else {
                 cloneSkip = cloneOffset; 
@@ -286,11 +291,11 @@
             animating = true;
 
             var params = {
-                duration: settings.speed,
                 offset: direction * settings.scroll * one.totalSize + alreadyMoved * one.totalSize,
                 complete: doneScrolling
             };
 
+            console.log("SCROLL distance", params.offset);
             console.log("SCROLL ", current, " by ", direction * settings.scroll, " already moved ", alreadyMoved);
             scrollSlider(params);
         };
@@ -507,6 +512,8 @@
             width = parseInt(Math.floor(scope.width()), 10);
             height = parseInt(Math.floor(scope.height()), 10);
 
+            console.log("width ", width);
+
             if (settings.sideways){
                 clipPane.css("width", width + "px");
             } else {
@@ -583,9 +590,16 @@
                 console.log("sorry, you cant scroll more items than whats actually showing.");
             }
 
-            if (settings.auto) { settings.infinite = true;  }
+            useVelocity = $(scope).velocity == undefined ? false : true;
+
+            if (!useVelocity && ($.easing[settings.easing] === undefined)) {
+                console.log(settings.easing, " is not supported, please include a jquery easing plugin or velocity");
+                settings.easing = "swing";
+            }
 
             if (settings.sideways) { axis = "x"; } else { axis = "y"; }
+
+            if (settings.auto) { settings.infinite = true;  }
 
             if (settings.key) {
                 if (settings.sideways) {

@@ -317,12 +317,12 @@ table {
 td, th {
   padding: 0; }
 
-section, nav, footer, .content {
+section, nav, footer, .content, .demo, .demo__item {
   zoom: 1; }
-  section:before, nav:before, footer:before, .content:before, section:after, nav:after, footer:after, .content:after {
+  section:before, nav:before, footer:before, .content:before, .demo:before, .demo__item:before, section:after, nav:after, footer:after, .content:after, .demo:after, .demo__item:after {
     content: "";
     display: table; }
-  section:after, nav:after, footer:after, .content:after {
+  section:after, nav:after, footer:after, .content:after, .demo:after, .demo__item:after {
     clear: both; }
 
 [data-icon]:before, [class^="cc-"]:before, [class*=" cc-"]:before, [class^="cc-"]:after, [class*=" cc-"]:after, .list li:before {
@@ -336,12 +336,12 @@ section, nav, footer, .content {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale; }
 
-section, nav, footer, .content {
+section, nav, footer, .content, .demo, .demo__item {
   zoom: 1; }
-  section:before, nav:before, footer:before, .content:before, section:after, nav:after, footer:after, .content:after {
+  section:before, nav:before, footer:before, .content:before, .demo:before, .demo__item:before, section:after, nav:after, footer:after, .content:after, .demo:after, .demo__item:after {
     content: "";
     display: table; }
-  section:after, nav:after, footer:after, .content:after {
+  section:after, nav:after, footer:after, .content:after, .demo:after, .demo__item:after {
     clear: both; }
 
 [data-icon]:before, [class^="cc-"]:before, [class*=" cc-"]:before, [class^="cc-"]:after, [class*=" cc-"]:after, .list li:before {
@@ -560,6 +560,39 @@ pre {
   .jcc-item:focus {
     border-color: green; }
 
+.demo {
+  width: 890px;
+  background: #f9f9f9;
+  margin: 20px auto;
+  padding: 10px 35px; }
+  .demo__item {
+    background: #efefef;
+    color: #000;
+    width: 300px;
+    height: 100px;
+    position: relative;
+    border: solid 3px #ccc;
+    float: left;
+    margin: 3px; }
+    .demo__item h2, .demo__item .intro {
+      margin: 0;
+      font-family: code;
+      font-size: 80px;
+      font-weight: bold;
+      color: #fff;
+      position: absolute;
+      bottom: 0px;
+      right: 10px; }
+    .demo__item figure {
+      position: relative;
+      margin: 5px;
+      text-align: center;
+      top: 50%;
+      transform: translateY(-50%); }
+    .demo__item .cc-carrot {
+      font-size: 30px;
+      display: inline; }
+
 /** RAINBOW related styles
 */
 .comment {
@@ -610,14 +643,17 @@ pre {
   position: relative; }
   .carrotcell__clip {
     overflow: hidden;
-    margin: 0;
+    margin: 0 auto;
     padding: 0;
-    border: none; }
+    border: none;
+    position: relative; }
   .carrotcell__strip {
     margin: 0;
     padding: 0;
     border: none;
-    list-style: none; }
+    list-style: none;
+    top: 0;
+    left: 0; }
     .carrotcell__strip:after {
       content: ' ';
       display: table;
@@ -637,8 +673,7 @@ pre {
     .carrotcell__btn:focus, .carrotcell__btn:hover:enabled {
       opacity: 1; }
       .carrotcell__btn:focus .carrotcell__icon--prev, .carrotcell__btn:focus .carrotcell__icon--next, .carrotcell__btn:hover:enabled .carrotcell__icon--prev, .carrotcell__btn:hover:enabled .carrotcell__icon--next {
-        background: #fff;
-        color: #ff9900; }
+        background: #666; }
     .carrotcell__btn:disabled {
       opacity: 0.2;
       cursor: default; }
@@ -646,17 +681,17 @@ pre {
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
-      left: 10px;
+      left: 8px;
       transition: opacity .2s ease-in-out;
       opacity: 1; }
       .carrotcell__btn--prev .carrotcell__icon--prev, .carrotcell__btn--prev .carrotcell__icon--next, .carrotcell__btn--next .carrotcell__icon--prev, .carrotcell__btn--next .carrotcell__icon--next {
-        font-size: 30px;
+        font-size: 20px;
         border-radius: 100%;
         background: #ff9900;
         color: #fff; }
     .carrotcell__btn--next {
       left: auto;
-      right: 10px; }
+      right: 8px; }
   .carrotcell__icon {
     display: block;
     float: left;
@@ -665,13 +700,13 @@ pre {
     line-height: 1em; }
     .carrotcell__icon--prev::before {
       content: '\2039';
-      padding: 0 13px 0 12px;
+      padding: 0 9px;
       display: inline;
       line-height: 1em;
       vertical-align: text-top; }
     .carrotcell__icon--next::before {
       content: '\203A';
-      padding: 0 12px 0 14px;
+      padding: 0 9px;
       display: inline;
       line-height: 1em;
       vertical-align: text-top; }

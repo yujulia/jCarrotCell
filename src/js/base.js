@@ -3,28 +3,33 @@
 **/
 $ = require('jquery');
 
-/** console.log wrapper for debugging
-*/
-var debug = function(debugString) {
-    console.log(debugString); 
-};
-
-window.debug = debug;
-
 require('./vendor/rainbow-custom.min.js');
 require('./vendor/velocity.min.js');
+require('./vendor/jquery.easing.1.3.js');
 require('./jCarrotCell.js');
 
-var t1 = $('#jcc-home').carrotCell({ 
+// var t1 = $('#jcc-home').carrotCell({ 
+//     // prevClass : "prev",
+//     // nextClass : "next",
+//     // prevIconClass : 'cc-left',
+//     // nextIconClass: 'cc-right',
+//     infinite: true,
+//     show: 3,
+//     scroll: 2,
+//     key: true
+//     // controlOnHover: true
+// });
+
+
+var demo1 = $('#demo--1').carrotCell({ 
     // prevClass : "prev",
     // nextClass : "next",
     // prevIconClass : 'cc-left',
     // nextIconClass: 'cc-right',
     infinite: true,
+    easing: 'easeOutExpo',
     show: 3,
-    scroll: 2,
+    scroll: 3,
     key: true
     // controlOnHover: true
 });
-
-

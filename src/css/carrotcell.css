@@ -8,14 +8,17 @@
   position: relative; }
   .carrotcell__clip {
     overflow: hidden;
-    margin: 0;
+    margin: 0 auto;
     padding: 0;
-    border: none; }
+    border: none;
+    position: relative; }
   .carrotcell__strip {
     margin: 0;
     padding: 0;
     border: none;
-    list-style: none; }
+    list-style: none;
+    top: 0;
+    left: 0; }
     .carrotcell__strip:after {
       content: ' ';
       display: table;
@@ -35,8 +38,7 @@
     .carrotcell__btn:focus, .carrotcell__btn:hover:enabled {
       opacity: 1; }
       .carrotcell__btn:focus .carrotcell__icon--prev, .carrotcell__btn:focus .carrotcell__icon--next, .carrotcell__btn:hover:enabled .carrotcell__icon--prev, .carrotcell__btn:hover:enabled .carrotcell__icon--next {
-        background: #fff;
-        color: #ff9900; }
+        background: #666; }
     .carrotcell__btn:disabled {
       opacity: 0.2;
       cursor: default; }
@@ -44,17 +46,17 @@
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
-      left: 10px;
+      left: 8px;
       transition: opacity .2s ease-in-out;
       opacity: 1; }
       .carrotcell__btn--prev .carrotcell__icon--prev, .carrotcell__btn--prev .carrotcell__icon--next, .carrotcell__btn--next .carrotcell__icon--prev, .carrotcell__btn--next .carrotcell__icon--next {
-        font-size: 30px;
+        font-size: 20px;
         border-radius: 100%;
         background: #ff9900;
         color: #fff; }
     .carrotcell__btn--next {
       left: auto;
-      right: 10px; }
+      right: 8px; }
   .carrotcell__icon {
     display: block;
     float: left;
@@ -63,13 +65,13 @@
     line-height: 1em; }
     .carrotcell__icon--prev::before {
       content: '\2039';
-      padding: 0 13px 0 12px;
+      padding: 0 9px;
       display: inline;
       line-height: 1em;
       vertical-align: text-top; }
     .carrotcell__icon--next::before {
       content: '\203A';
-      padding: 0 12px 0 14px;
+      padding: 0 9px;
       display: inline;
       line-height: 1em;
       vertical-align: text-top; }
