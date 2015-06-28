@@ -214,6 +214,7 @@ pre {
     background: #f9f9f9;
     margin: 20px auto;
     padding: 10px $pad-button;
+    // box-sizing: border-box;
 
     &__item {
         @extend %clearfix;
@@ -255,9 +256,6 @@ pre {
 .vertical {
     width: $item-w + $item-margin * 2 + $item-border * 2;
     height: $item-h + $item-margin * 2 + $item-border * 2;
-    // box-sizing: border-box;
-    // height: 300px;
-
     padding: $pad-button 10px;
 
 }

@@ -425,8 +425,9 @@
                 var m3 = parseInt(item.css("margin-top"), 10),
                     m4 = parseInt(item.css("margin-bottom"), 10);
 
-                calcOffset = (m3 > m4) ? m3 : m4;                   // take largest margin bc of margin-collapse
-                scope.css("height", height + calcOffset + "px");    // bc of collapse we need to increase height...
+                calcOffset = m3 + m4;
+                // calcOffset = (m3 > m4) ? m3 : m4;                   // take largest margin bc of margin-collapse
+                // scope.css("height", height + calcOffset + "px");    // bc of collapse we need to increase height...
             }
 
             if ($(item).css("box-sizing") === "content-box") {

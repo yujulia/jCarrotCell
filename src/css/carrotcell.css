@@ -82,8 +82,6 @@
     float: left; }
   .carrotcell--invisible {
     opacity: 0; }
-  .carrotcell--vertical .carrotcell__item {
-    float: none; }
   .carrotcell--vertical .carrotcell__btn--prev, .carrotcell--vertical .carrotcell__btn--next {
     left: 50%;
     top: 8px;
