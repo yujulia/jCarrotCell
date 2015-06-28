@@ -445,6 +445,10 @@ section, nav, footer, .content, .demo, .demo__item {
   background-color: #99cc33;
   color: #fff; }
 
+ul, ol, li {
+  list-style: none;
+  margin: 0; }
+
 body {
   color: #aaaaaa;
   font-family: PT;
@@ -719,9 +723,12 @@ pre {
       display: block;
       vertical-align: text-top; }
   .carrotcell__accessText {
-    display: block;
-    text-indent: -9999em;
-    float: left; }
+    position: absolute;
+    left: -10000px;
+    top: auto;
+    width: 1px;
+    height: 1px;
+    overflow: hidden; }
   .carrotcell--invisible {
     opacity: 0; }
   .carrotcell--vertical .carrotcell__btn--prev, .carrotcell--vertical .carrotcell__btn--next {

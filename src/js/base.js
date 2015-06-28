@@ -30,6 +30,7 @@ var demo1 = $('#demo--1').carrotCell({
 });
 
 var demo2 = $('#demo--2').carrotCell({ 
+    infinite: true,
     sideways: false,
     easing: 'easeOutExpo',
     show: 2,

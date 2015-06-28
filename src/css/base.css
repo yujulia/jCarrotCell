@@ -126,6 +126,10 @@ section, nav, footer, .content, .demo, .demo__item {
   background-color: #99cc33;
   color: #fff; }
 
+ul, ol, li {
+  list-style: none;
+  margin: 0; }
+
 body {
   color: #aaaaaa;
   font-family: PT;
