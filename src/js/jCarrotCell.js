@@ -210,7 +210,9 @@
             if (useVelocity) {
                 slider.velocity('scroll', params);
             } else {
-                clipPane.animate( { scrollLeft: params.offset }, params.duration, params.easing, params.complete );
+                var scrollProp = { scrollTop: params.offset };
+                if (settings.sideways) { scrollProp ={ scrollLeft: params.offset }; } 
+                clipPane.animate( scrollProp, params.duration, params.easing, params.complete );
             }
         };
 
@@ -416,9 +418,15 @@
             var calcOffset = 0;
 
             if (settings.sideways){
-                calcOffset = parseInt(item.css("margin-left"), 10) + parseInt(item.css("margin-right"), 10);
+                var m1 = parseInt(item.css("margin-left"), 10),
+                    m2 = parseInt(item.css("margin-right"), 10);
+
+                calcOffset = m1 + m2;
             } else {
-                calcOffset = parseInt(item.css("margin-top"), 10) + parseInt(item.css("margin-bottom"), 10);
+                var m3 = parseInt(item.css("margin-top"), 10),
+                    m4 = parseInt(item.css("margin-bottom"), 10);
+
+                calcOffset = (m3 > m4) ? m3 : m4; // take largest margin bc of margin-collapse
             }
 
             if ($(item).css("box-sizing") === "content-box") {
@@ -430,8 +438,10 @@
                     var b3 = parseInt(item.css("border-top-width"), 10),
                         b4 = parseInt(item.css("border-bottom-width"), 10);
                     calcOffset += b3 + b4;
+                    console.log("border offset ", b3, b4);
                 }
             } 
+            console.log("h ", item.outerHeight(true), "offset ", calcOffset);
 
             return {
                 w: item.outerWidth(true),
@@ -464,6 +474,7 @@
                 var sliderItems = total;
                 one.totalSize = single;
                 one.size = single - one.offset; // make room for margin/border
+
                 items.css(prop, one.size + "px");
 
                 if (settings.infinite){
@@ -512,8 +523,6 @@
         var setClipSize = function(){
             width = parseInt(Math.floor(scope.width()), 10);
             height = parseInt(Math.floor(scope.height()), 10);
-
-            console.log("width ", width);
 
             if (settings.sideways){
                 clipPane.css("width", width + "px");

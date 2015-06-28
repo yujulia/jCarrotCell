@@ -254,19 +254,19 @@ pre {
     position: relative;
     border: solid 3px #ccc;
     float: left;
-    margin: 3px; }
+    margin: 10px; }
     .demo__item h2, .demo__item .intro {
-      margin: 0;
+      margin: -10px 0 0 0;
       font-family: code;
-      font-size: 80px;
-      font-weight: bold;
+      font-weight: 700;
+      font-size: 30px;
       color: #fff;
       position: absolute;
-      bottom: 0px;
+      top: 50%;
       right: 10px; }
     .demo__item figure {
       position: relative;
-      margin: 5px 50px 5px 5px;
+      margin: 5px;
       text-align: center;
       top: 50%;
       transform: translateY(-50%); }
@@ -275,11 +275,9 @@ pre {
       display: inline; }
 
 .vertical {
-  width: 312px;
-  height: 162px;
+  width: 326px;
+  height: 176px;
   padding: 35px 10px; }
-  .vertical .demo__item {
-    float: none; }
 
 /** RAINBOW related styles
 */

@@ -4,7 +4,7 @@
 $ = require('jquery');
 
 require('./vendor/rainbow-custom.min.js');
-require('./vendor/velocity.min.js');
+// require('./vendor/velocity.min.js');
 require('./vendor/jquery.easing.1.3.js');
 require('./jCarrotCell.js');
 
@@ -42,7 +42,7 @@ var demo2 = $('#demo--2').carrotCell({
     // infinite: true,
     sideways: false,
     easing: 'easeOutExpo',
-    show: 1,
+    show: 2,
     scroll: 1,
     key: true
     // controlOnHover: true

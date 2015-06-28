@@ -14,7 +14,6 @@
         padding: 0;
         border: none;
         position: relative;
-        // border: solid 1px red;
     }
 
     &__strip {
@@ -89,22 +88,21 @@
         margin: 0;
         padding: 0;
         line-height: 1em;
-        
+        height: 26px;
+        width: 26px;
+        text-align: center;
+
         &--prev::before {
             content: '\2039';
-            // padding: 0 13px 0 12px;
-            padding: 0 9px;
-            display: inline;
-            line-height: 1em;
+            padding: 1px 0 0px 0px;
+            display: block;
             vertical-align: text-top;
         }
 
         &--next::before {
             content: '\203A';
-            // padding: 0 12px 0 14px;
-            padding: 0 9px;
-            display: inline;
-            line-height: 1em;
+            padding: 1px 0 0px 1px;
+            display: block;
             vertical-align: text-top;
         }
     }
@@ -123,18 +121,22 @@
     // ------------------------ vertical scroll
 
     &--vertical {
+        .carrotcell__item {
+            float: none;
+        }
 
         .carrotcell__btn {
 
             &--prev, &--next {
                 left: 50%;
                 top: 8px;
-                transform: translateX(-50%);
+                transform: translateX(-50%) rotate(90deg);
             }
 
             &--next {
                 top: auto;
                 bottom: 8px;
+
             }
         }
 

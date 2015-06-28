@@ -227,19 +227,19 @@ pre {
         margin: $item-margin;
 
         h2 {
-            margin: 0;
+            margin: -10px 0 0 0;
             font-family: code;
-            font-size: 80px;
-            font-weight: bold;
+            font-weight: $bold;
+            font-size: 30px;
             color: #fff;
             position: absolute;
-            bottom: 0px;
+            top: 50%;
             right: 10px;    
         }
 
         figure {
             position: relative;
-            margin: 5px 50px 5px 5px;
+            margin: 5px;
             text-align: center;
             top: 50%;
             transform: translateY(-50%);
@@ -255,12 +255,10 @@ pre {
 .vertical {
     width: $item-w + $item-margin * 2 + $item-border * 2;
     height: $item-h + $item-margin * 2 + $item-border * 2;
+    // height: 300px;
 
     padding: $pad-button 10px;
 
-    .demo__item {
-        float: none;
-    }
 }
 
 @import "partials/rainbow";
