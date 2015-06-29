@@ -281,23 +281,35 @@
 
         // --- scrolling animation complete from scrollToItem
 
-        var doneScrolling = function(){
-            
-            if (scrollBy < settings.scroll) {
-                customMoved += scrollBy;
-                if (customMoved >= settings.scroll) {
-                    customMoved = settings.scroll - customMoved;
-                    moved++;
-                } 
-            } else if (scrollBy > settings.scroll) {
+        var doneScrolling = function(itemIndex){
 
-                // see how many moves that actually is
+            if (itemIndex) {
+
+                if (scrollBy < settings.scroll) {
+
+                    customMoved += scrollBy; 
+
+                    if (customMoved >= settings.scroll) {
+                        customMoved = settings.scroll - customMoved;
+                        moved++;
+                    } 
+
+                } else if (scrollBy > settings.scroll) {
+
+                    // console.log("scrolled more than settings");
+                    moved += Math.floor(scrollBy / settings.scroll);
+
+                    // see how many moves that actually is
+                } 
+
+                current = itemIndex;
 
             } else {
                 moved += direction; // update moves + or -
+                current = current + direction * scrollBy; // update new current
             }
-
-            current = current + direction * scrollBy; // update new current
+            
+            
             alreadyMoved += direction * scrollBy; // update how far we scrolled
 
             // MOVED -
@@ -333,24 +345,55 @@
 
         var scrollToItem = function(itemIndex){
             animating = true;
-            var params;
+       
+            if (itemIndex === parseInt(itemIndex, 10)) {
 
-            if (itemIndex) {
-                scrollBy = Math.abs(current - itemIndex);
-                console.log("#### item index ", itemIndex, " scroll by ", scrollBy);
+                var realCurrent = getShowing()[0]; // no clone
+                if (realCurrent === itemIndex) { return false; } // already on this
+
+                var distance = realCurrent - itemIndex;
+                console.log("current " , realCurrent, " i ", itemIndex, " dis ", distance);
+
+                if (realCurrent > itemIndex){ direction = -1; } else { direction = 1; }
+
+                scrollBy = Math.abs(distance);
+
+                console.log("#### item index ", itemIndex, " current is ", current, " scroll by ", scrollBy, " dir ", direction);
 
             } else {
                 scrollBy = settings.scroll;
             }
 
-            params = {
+            var params = {
                 offset: direction * scrollBy * one.totalSize + alreadyMoved * one.totalSize,
-                complete: doneScrolling
+                complete: doneScrolling.bind(this, itemIndex)
             };
 
-            // console.log("SCROLL distance", params.offset);
+            console.log("SCROLL distance", params.offset);
             // console.log("SCROLL ", current, " by ", direction * settings.scroll, " already moved ", alreadyMoved);
             scrollSlider(params);
+        };
+
+        // --- since this is coming from api, validate item index is legit before moving
+
+        var validateThenMove = function(itemIndex){
+
+            if (itemIndex === parseInt(itemIndex, 10)) {
+
+                // check if itemindex is within bounds
+                if (itemIndex >= 0 && itemIndex <= total) {
+                    if (itemIndex === total) { itemIndex = total-1; } // assume last item which is total-1
+                    scrollToItem(itemIndex);
+                } else {
+                    console.log("itemindex is out of bounds, please pass in something between 0 and ", total-1);
+                    return false;
+                }
+
+            } else {
+                console.log("can not move carousel itemindex is not an integer");
+                return false;
+            }
+
         };
 
         // -- move to previous scroll
@@ -434,7 +477,6 @@
             var gotFocus = function(e){
                 var itemEnum = $(this).data(DATA_ENUM);
                 if ($.isNumeric(itemEnum) && (itemEnum > 0) && (itemEnum !== current)){
-                    direction = 1;
                     scrollToItem(itemEnum);
                 } 
                 console.log("FOCUS ", itemEnum);
@@ -745,6 +787,10 @@
             // --- track triggers this
 
             keyPressed : function(keyCode){ handleKeyPress(keyCode); },
+
+            // --- move the carousel to an index
+
+            moveToItem : function(itemIndex) { validateThenMove(itemIndex); },
 
             // --- return STR the name of this carrot
 

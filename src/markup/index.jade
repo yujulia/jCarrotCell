@@ -3,12 +3,10 @@
 mixin demoItem(index)
     div.demo__item
         figure 
-            //- figcaption= index
-            -var z = index + 1
+            figcaption= index
+            -var z = index
             while (z--)
                 .cc-carrot
-
-
 
 doctype html
 html(lang="en")
