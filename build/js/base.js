@@ -25,8 +25,8 @@ require('./jCarrotCell.js');
 var demo1 = $('#demo--1').carrotCell({ 
     // infinite: true,
     easing: 'easeOutExpo',
-    show: 1,
-    scroll: 1,
+    show: 2,
+    scroll: 2,
     // controlOnHover: true,
     key: true
 });
@@ -114,6 +114,23 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
         };
     };
 
+    // --- check if something is an integer
+
+    var isInteger = function(input) {
+        if (input === parseInt(input, 10)) {
+            return true;
+        } else {
+            return false;
+        }
+    };
+
+    // --- check if something is in array
+
+    var inArray = function(someArray, someItem){
+        var index = someArray.indexOf(someItem);
+        if (index < 0) { return false; } else { return true; }
+    };
+
     /** ---------------------------------------
         carrot methods
     */
@@ -194,6 +211,12 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
                 keyForward: ''
             };
 
+        var error = function(){
+            var args = Array.prototype.slice.call(arguments);
+            args.unshift(settings.name);
+            track.error.apply(null, args);
+        };
+
         // --- toggle the prev and next and start/end flags
 
         var setInMiddle = function(){
@@ -255,7 +278,7 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             cloneShowing = 0;          
             onCloneStart = false;       
 
-            console.log("update showing ", current);
+            console.log("update showing for ", current);
             for (var k = 0; k < settings.show; k++){
                 showing[k] = current + k;
 
@@ -269,7 +292,13 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
                 }
             }
 
-            // console.log("[ showing updated ] ", showing, ' clones showing ', cloneShowing, ' on clone start? ', onCloneStart);
+            // are we showing the last slide? if so DONE
+            // if (showing[settings.show-1] === total-1) {
+            //     current = showing[0];
+            //     moved = moves;
+            // }
+
+            console.log("[ showing updated ] ", showing, ' clones showing ', cloneShowing, ' on clone start? ', onCloneStart);
         };
 
         // --- scroll the actual slider
@@ -338,7 +367,7 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
 
         var doneScrolling = function(itemIndex){
 
-            if (itemIndex == parseInt(itemIndex, 10)) {
+            if (isInteger(itemIndex)) {
 
                 if (scrollBy < settings.scroll) {
 
@@ -347,6 +376,7 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
                     if (customMoved >= settings.scroll) {
                         customMoved = settings.scroll - customMoved;
                         moved += direction;
+                        if (moved > moves) { moved = moves; } 
                     } 
 
                     console.log("smaller ", direction);
@@ -356,6 +386,7 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
                     // scrolling might contain several moves
 
                     customMoved += scrollBy; // add leftovers
+                    console.log("custom moved ", customMoved);
 
                     var newMoves = Math.floor(customMoved / settings.scroll) * direction;
 
@@ -368,7 +399,10 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
                         customMoved = 0;
                     }
 
+                    console.log("new moves calced ", newMoves);
+
                     moved += newMoves;
+                    if (moved > moves) { moved = moves; }
 
                     // moved += Math.floor(scrollBy / settings.scroll) * direction;
 
@@ -408,8 +442,6 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
                 setState(); // non infinite, check if we disable prev or next
             }
 
-            // console.log("scrolling DONE ", " moved ", moved, "/", moves);
-
             animating = false; // lockdown ends now everything is processed
             console.log("===========================", showing, " ", moved, "/", moves);
         };
@@ -420,10 +452,16 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
         var scrollToItem = function(itemIndex){
             animating = true;
        
-            if (itemIndex === parseInt(itemIndex, 10)) {
+            // an itemindex was passed in, we are ignoring settings.scroll to scroll to something
+
+            if (isInteger(itemIndex)) {
+
+                if (inArray(showing, itemIndex)) {
+                    error("already showing item at ", itemIndex);
+                    return false; 
+                } 
 
                 var realCurrent = getShowing()[0]; // no clone
-                if (realCurrent === itemIndex) { return false; } // already on this
 
                 if (realCurrent > itemIndex){ 
                     direction = -1; 
@@ -453,19 +491,24 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
 
         var validateThenMove = function(itemIndex){
 
-            if (itemIndex === parseInt(itemIndex, 10)) {
+            if (isInteger(itemIndex)) {
 
                 // check if itemindex is within bounds
                 if (itemIndex >= 0 && itemIndex <= total) {
                     if (itemIndex === total) { itemIndex = total-1; } // assume last item which is total-1
+
+                    if (itemIndex >= total - settings.scroll) {
+                        itemIndex = total-settings.scroll -1; // the first item already in view
+                    }
+
                     scrollToItem(itemIndex);
                 } else {
-                    console.log("itemindex is out of bounds, please pass in something between 0 and ", total-1);
+                    error("itemindex is out of bounds, please pass in something between 0 and ", total-1);
                     return false;
                 }
 
             } else {
-                console.log("can not move carousel itemindex is not an integer");
+                error("can not move carousel itemindex is not an integer");
                 return false;
             }
 
@@ -773,13 +816,13 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
 
             if (settings.show < settings.scroll){
                 settings.scroll = settings.show;
-                console.log("sorry, you cant scroll more items than whats actually showing.");
+                error("sorry, you cant scroll more items than whats actually showing.");
             }
 
             useVelocity = $(scope).velocity === undefined ? false : true;
 
             if (!useVelocity && ($.easing[settings.easing] === undefined)) {
-                console.log(settings.easing, " is not supported, please include a jquery easing plugin or velocity");
+                error(settings.easing, " is not supported, please include a jquery easing plugin or velocity");
                 settings.easing = "swing";
             }
 
@@ -882,7 +925,7 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
 
             // --- return current INT index
 
-            getCurrent : function(cloneIndex){ return getShowing(cloneIndex)[0]; }
+            getFirstShowing : function(cloneIndex){ return getShowing(cloneIndex)[0]; }
         };
 
         return API_Methods;
@@ -898,6 +941,14 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
         initialized: false,
         useKey: false,
         touch: false,
+
+        // --- log carrotcell errors
+
+        error : function(){
+            var args = Array.prototype.slice.call(arguments);
+            args.unshift("[ CARROTCELL ERROR ]");
+            console.log.apply(null, args);
+        },
                 
         // --- trigger some function on all carrots
 
@@ -976,7 +1027,7 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
     $.fn.carrotCell = function() {
 
         if (this.length === 0) {
-            console.log("Nothing to call CarrotCell on, check your jquery selector.");
+            track.error("Nothing to call CarrotCell on, check your jquery selector.");
             return false;
         }
 
