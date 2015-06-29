@@ -25,7 +25,7 @@ var demo1 = $('#demo--1').carrotCell({
     // infinite: true,
     easing: 'easeOutExpo',
     show: 2,
-    scroll: 2,
+    scroll: 1,
     // controlOnHover: true,
     key: true
 });

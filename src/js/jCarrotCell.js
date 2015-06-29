@@ -101,11 +101,12 @@
             pause = null,
             play = null,
 
+            showing = [],       // what items are visible
+
             moves = 0,          // how many clicks before we reach the end
             moved = 0,          // how many clicks we moved
             alreadyMoved = 0,   // how many items already moved past
             current = 0,        // current item scrolled to
-            showing = [],       // what items are visible
             cloneShowing = 0,   // how many clones currently showing
             scrollBy = 0,
             customMoved = 0,
@@ -162,40 +163,18 @@
             track.error.apply(null, args);
         };
 
-        // --- toggle the prev and next and start/end flags
+        // --- toggle prev and next controls
 
-        var setInMiddle = function(){
+        var setState = function(){   
             if (atStart) {
-                prev.prop("disabled", false);
-                atStart = false;
-            }
-            if (atEnd) {
-                next.prop("disabled", false);
-                atEnd = false;
-            }
-        };
-
-        var setAtStart = function(){
-            setInMiddle();  // fix previous state
-            atStart = true;
-            prev.prop("disabled", true);
-        };
-
-        var setAtEnd = function(){
-            setInMiddle();  // fix previous state
-            atEnd = true;
-            next.prop("disabled", true);
-        };
-    
-        // --- determine where we are in the carousel
-
-        var setState = function(){     
-            if (moved === 0) {
-                setAtStart();
-            } else if (moved === moves){
-                setAtEnd();
+                prev.prop("disabled", true);
+                if (next.prop("disabled")) { next.prop("disabled", false); }
+            } else if (atEnd){
+                next.prop("disabled", true);
+                if (prev.prop("disabled")) { prev.prop("disabled", false); }
             } else {
-                setInMiddle();
+                if (prev.prop("disabled")) { prev.prop("disabled", false); }
+                if (next.prop("disabled")) { next.prop("disabled", false); }
             }
         };
 
@@ -222,19 +201,19 @@
         var updateShowing = function(){
             cloneShowing = 0;          
             onCloneStart = false;       
+            atStart = false;
+            atEnd = false;
 
-            console.log("update showing for ", current);
             for (var k = 0; k < settings.show; k++){
                 showing[k] = current + k;
 
+                if (showing[k] <= 0) { atStart = true; } // showing first item
+                if (showing[k] >= total-1 ) { atEnd = true; } // showing last item
                 if (showing[k] < 0 ) { 
-                    cloneShowing++;         
-                    onCloneStart = true;
+                    cloneShowing++;         // start clones showing
+                    onCloneStart = true;    // WE PROBABLY KNOW THIS AT START
                 }
-
-                if (showing[k] > total-1 ) { 
-                    cloneShowing++; 
-                }
+                if (showing[k] > total-1 ) {  cloneShowing++; } // end clones showing
             }
 
             // are we showing the last slide? if so DONE
@@ -244,6 +223,7 @@
             // }
 
             console.log("[ showing updated ] ", showing, ' clones showing ', cloneShowing, ' on clone start? ', onCloneStart);
+            console.log("at start? ", atStart, " at end? ", atEnd);
         };
 
         // --- scroll the actual slider
