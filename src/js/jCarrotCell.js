@@ -156,6 +156,8 @@
                 keyForward: ''
             };
 
+        // --- send error msg to track with this carrotcell name
+
         var error = function(){
             var args = Array.prototype.slice.call(arguments);
             args.unshift(settings.name);
@@ -183,13 +185,9 @@
             if (cloneIndex) { return showing; }
 
             var fixShowing = showing.map(function(i){
-                if (i < 0) {
-                    return total + i;
-                } else if (i > total) {
-                    return total - i;
-                } else {
-                    return i;
-                }
+                if (i < 0) { return total + i; } 
+                else if (i > total) { return total - i; } 
+                else { return i; }
             });
 
             return fixShowing;
@@ -225,7 +223,6 @@
                 duration: settings.speed, 
                 easing: settings.easing
             };
-
             $.extend(params, newParams); // update settings
 
             if (useVelocity) {
@@ -242,16 +239,15 @@
         var replaceWithEnd = function(){
             animating = true;
 
-            cloneSkip = settings.show;
-            current = total + current;          // find current in end clone
-            alreadyMoved = cloneSkip + current; 
-            scrollSlider({ duration: 0, offset: (current + cloneSkip) * one.totalSize });
+            current = total + current;                  // find current in end clone
 
+            alreadyMoved = settings.show + current;     
+            scrollSlider({ duration: 0, offset: alreadyMoved * one.totalSize });
             updateShowing(); 
 
             animating = false;
 
-            // console.log("* REPLACED with END current ", current, " cloneskip ", cloneSkip, " moved ", moved, " showing ", showing);
+            console.log("* REPLACED w/END current ", current, " moved ", alreadyMoved, " showing ", showing);
         };
 
         // --- replace slider at the end with the start clone (infinite reached end)
@@ -259,22 +255,15 @@
         var replaceWithStart = function(cloneOffset){
             animating = true;
 
-            current = showing[0];
-            console.log("current is ", current, showing);
-            cloneSkip = settings.show;
-            current = current - total;
-
-            console.log("moving slider to ", cloneSkip + current);
-
-            scrollSlider({ duration: 0, offset: (cloneSkip + current) * one.totalSize });
-
+            current = showing[0] - total;           // current is first in view
+            
             alreadyMoved = settings.show + current; // ALREADY SCROLLED is clone count subtract curernt clone
+            scrollSlider({ duration: 0, offset: alreadyMoved * one.totalSize });
             updateShowing();
 
             animating = false;
 
-
-            console.log("X2 REPLACED w/START skip ", cloneSkip,  "already ", alreadyMoved, " current ", current);
+            console.log("* REPLACED w/START current ", current,  " moved ", alreadyMoved, " showing ", showing);
         };
 
 
