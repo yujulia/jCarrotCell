@@ -25,7 +25,7 @@ require('./jCarrotCell.js');
 var demo1 = $('#demo--1').carrotCell({ 
     infinite: true,
     easing: 'easeOutExpo',
-    show: 3,
+    show: 4,
     scroll: 3,
     // controlOnHover: true,
     key: true
@@ -158,23 +158,21 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
 
             showing = [],       // what items are visible
 
-            moves = 0,          // how many clicks before we reach the end
-            moved = 0,          // how many clicks we moved
-            alreadyMoved = 0,   // how many items already moved past
             current = 0,        // current item scrolled to
-            cloneShowing = 0,   // how many clones currently showing
+            alreadyMoved = 0,   // how many items already moved past
             scrollBy = 0,
-            customMoved = 0,
 
             atStart = true,     // no more in prev
             atEnd = false,      // no more in next
-
             direction = 1,      // direction we scrolling
 
-            cloneEnd = [],          // save the clones at the end for lookup
-            cloneSkip = 0,          // how many items to skip when sliding infinitely
+            cloneEnd = [],          // save the clones at the end for lookup // REMOVE??
+            cloneSkip = 0,          // how many items to skip when sliding infinitely // REMOVE??
+
             onCloneStart = false,   // are we on a starting clone (negative number)
             onCloneEnd = false,
+
+            moves = 0,              // how many clicks before we reach the end
 
             useVelocity = false,    // use velocity to animate?
             animating = false,      // animation lock
@@ -255,7 +253,6 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
         // --- update record on what is actually shown on screen
 
         var updateShowing = function(){
-            cloneShowing = 0;          
             onCloneStart = false;      
             onCloneEnd = false; 
             atStart = false;
@@ -266,17 +263,11 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
 
                 if (showing[k] <= 0) { atStart = true; } // showing first item
                 if (showing[k] >= total-1 ) { atEnd = true; } // showing last item
-                if (showing[k] < 0 ) { 
-                    cloneShowing++;         // start clones showing
-                    onCloneStart = true;    // WE PROBABLY KNOW THIS AT START
-                }
-                if (showing[k] > total-1 ) {  
-                    cloneShowing++;         // end clones showing
-                    onCloneEnd = true;
-                } 
+                if (showing[k] < 0 ) { onCloneStart = true; } 
+                if (showing[k] > total-1 ) { onCloneEnd = true; } 
             }
 
-            // console.log("[ showing updated ] ", showing, ' clones showing ', cloneShowing, ' on clone start? ', onCloneStart);
+            // console.log("[ showing updated ] ", showing, ' on clone start? ', onCloneStart);
             // console.log("at start? ", atStart, " at end? ", atEnd);
         };
 
@@ -312,8 +303,7 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             scrollSlider({ duration: 0, offset: (current + cloneSkip) * one.totalSize });
 
             updateShowing(); 
-            findInfiniteMoves();
-            moved = moves;  // we just found the new moves
+
             animating = false;
 
             // console.log("* REPLACED with END current ", current, " cloneskip ", cloneSkip, " moved ", moved, " showing ", showing);
@@ -324,7 +314,6 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
         var replaceWithStart = function(cloneOffset){
             animating = true;
 
-
             current = showing[0];
             console.log("current is ", current, showing);
             cloneSkip = settings.show;
@@ -333,14 +322,14 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             console.log("moving slider to ", cloneSkip + current);
 
             scrollSlider({ duration: 0, offset: (cloneSkip + current) * one.totalSize });
-            moved = 0;
+
             alreadyMoved = settings.show + current; // ALREADY SCROLLED is clone count subtract curernt clone
             updateShowing();
-            findInfiniteMoves(cloneOffset);
+
             animating = false;
 
 
-            console.log("X2 REPLACED w/START skip ", cloneSkip, " moved ", moved, "already ", alreadyMoved, " current ", current);
+            console.log("X2 REPLACED w/START skip ", cloneSkip,  "already ", alreadyMoved, " current ", current);
         };
 
 
@@ -377,7 +366,7 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             }
 
             animating = false; // lockdown ends now everything is processed
-            console.log("===========================", showing, " ", moved, "/", moves, " current ", current);
+            console.log("===========================", showing, " current ", current);
         };
 
         // --- stop scrolling to out of bounds in non infinite mode
@@ -745,25 +734,13 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             adjustItemSize();   // make the items fit inside the clippane  
         };
 
-        // --- find out how many moves in infinite scroll
-
-        var findInfiniteMoves = function(){
-            var additional = cloneShowing;
-            if (direction == -1) { additional = settings.show - cloneShowing; } 
-            moves = Math.ceil( (total + additional) / settings.scroll) - 1 ;
-
-            console.log("// moves ", moves, " adding ", additional, " direction ", direction);
-        };
-
         // --- find moves
 
         var findMoves = function(){
-            if (settings.infinite){
-                findInfiniteMoves();
-            } else {
-                moves = Math.ceil((total - (settings.show-settings.scroll)) / settings.scroll) - 1;
-                console.log("moves ", moves);
-            }
+
+            moves = Math.ceil((total - (settings.show-settings.scroll)) / settings.scroll) - 1;
+            console.log("moves ", moves);
+        
             updateShowing();
         };
 
@@ -810,13 +787,13 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
         var resizeCarrot = function(){
             setClipSize();
             adjustItemSize();
-            if (moved > 0){
-                if (settings.infinite){
+            // if (moved > 0){
+            //     if (settings.infinite){
 
-                } else {
-                    scrollSlider({ duration: 0, offset: moved * one.totalSize});
-                }
-            } 
+            //     } else {
+            //         scrollSlider({ duration: 0, offset: moved * one.totalSize});
+            //     }
+            // } 
         };
 
         // --- setup the carrot

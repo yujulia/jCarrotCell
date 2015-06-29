@@ -24,7 +24,7 @@ require('./jCarrotCell.js');
 var demo1 = $('#demo--1').carrotCell({ 
     infinite: true,
     easing: 'easeOutExpo',
-    show: 3,
+    show: 4,
     scroll: 3,
     // controlOnHover: true,
     key: true
