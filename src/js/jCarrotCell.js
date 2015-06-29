@@ -283,7 +283,7 @@
 
         var doneScrolling = function(itemIndex){
 
-            if (itemIndex) {
+            if (itemIndex == parseInt(itemIndex, 10)) {
 
                 if (scrollBy < settings.scroll) {
 
@@ -291,16 +291,39 @@
 
                     if (customMoved >= settings.scroll) {
                         customMoved = settings.scroll - customMoved;
-                        moved++;
+                        moved += direction;
                     } 
+
+                    console.log("smaller ", direction);
 
                 } else if (scrollBy > settings.scroll) {
 
-                    // console.log("scrolled more than settings");
-                    moved += Math.floor(scrollBy / settings.scroll);
+                    // scrolling might contain several moves
+
+                    customMoved += scrollBy; // add leftovers
+
+                    var newMoves = Math.floor(customMoved / settings.scroll) * direction;
+
+                    // customMoved += settings.scroll - estimate * settings.scroll;
+                    var remainder = customMoved % settings.scroll;
+                    if (remainder) {
+                        console.log("there was remainder ", remainder);
+                        customMoved += remainder;
+                    } else {
+                        customMoved = 0;
+                    }
+
+                    moved += newMoves;
+
+                    // moved += Math.floor(scrollBy / settings.scroll) * direction;
+
+                    console.log("scroll larger than setting new moves ", newMoves);
 
                     // see how many moves that actually is
-                } 
+                } else {
+                    console.log("! scrollby is equal to scroll");
+                    moved += direction;
+                }
 
                 current = itemIndex;
 
@@ -308,13 +331,9 @@
                 moved += direction; // update moves + or -
                 current = current + direction * scrollBy; // update new current
             }
-            
-            
+                        
             alreadyMoved += direction * scrollBy; // update how far we scrolled
 
-            // MOVED -
-
-            console.log("current set to ", current, " already scrolled ", alreadyMoved, " moved ", moved);
 
             if (settings.infinite) {
                 if (moved < 0) {
@@ -337,7 +356,7 @@
             // console.log("scrolling DONE ", " moved ", moved, "/", moves);
 
             animating = false; // lockdown ends now everything is processed
-            console.log("===========================", showing);
+            console.log("===========================", showing, " ", moved, "/", moves);
         };
 
 
@@ -351,12 +370,13 @@
                 var realCurrent = getShowing()[0]; // no clone
                 if (realCurrent === itemIndex) { return false; } // already on this
 
-                var distance = realCurrent - itemIndex;
-                console.log("current " , realCurrent, " i ", itemIndex, " dis ", distance);
-
-                if (realCurrent > itemIndex){ direction = -1; } else { direction = 1; }
-
-                scrollBy = Math.abs(distance);
+                if (realCurrent > itemIndex){ 
+                    direction = -1; 
+                    scrollBy = realCurrent - itemIndex;
+                } else { 
+                    direction = 1; 
+                    scrollBy = itemIndex - realCurrent;
+                }
 
                 console.log("#### item index ", itemIndex, " current is ", current, " scroll by ", scrollBy, " dir ", direction);
 
@@ -369,7 +389,7 @@
                 complete: doneScrolling.bind(this, itemIndex)
             };
 
-            console.log("SCROLL distance", params.offset);
+            // console.log("SCROLL distance", params.offset);
             // console.log("SCROLL ", current, " by ", direction * settings.scroll, " already moved ", alreadyMoved);
             scrollSlider(params);
         };
@@ -687,6 +707,7 @@
                 findInfiniteMoves();
             } else {
                 moves = Math.ceil((total - (settings.show-settings.scroll)) / settings.scroll) - 1;
+                console.log("moves ", moves);
             }
             updateShowing();
         };
