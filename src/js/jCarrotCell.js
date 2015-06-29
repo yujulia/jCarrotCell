@@ -16,35 +16,35 @@
         KEY_UP = 38,
         KEY_DOWN = 40,
 
-        API_NAME = 'carrotapi',
         DEBOUNCE_RESIZE = 200,
 
-        CLASS_CARROT = 'carrotcell',
+        ROOT = 'carrotcell',
 
-        DATA_API = CLASS_CARROT + '__api',
-        DATA_ENUM = CLASS_CARROT + '__enum',
+        DATA_API = ROOT + '__api',
+        DATA_ENUM = ROOT + '__enum',
 
-        CLASS_VERTICAL = CLASS_CARROT + '--vertical',
+        // CSS class names used
 
-        CLASS_CLIP = CLASS_CARROT + '__clip',
-        CLASS_SLIDER = CLASS_CARROT + '__strip',
-        CLASS_ITEM = CLASS_CARROT + '__item',
-        
-        CLASS_INVIS = CLASS_CARROT + "--invisible",
-        CLASS_CLONE = CLASS_CARROT + "__clone",
+        CLASS_VERTICAL = ROOT + '--vertical',
+        CLASS_INVIS = ROOT + "--invisible",
 
-        CLASS_ICON = CLASS_CARROT + '__icon',
+        CLASS_CLIP = ROOT + '__clip',
+        CLASS_SLIDER = ROOT + '__strip',
+        CLASS_ITEM = ROOT + '__item',
+        CLASS_CLONE = ROOT + "__clone",
+        CLASS_ACCESS_TEXT = ROOT + '__accessText',
+
+        CLASS_ICON = ROOT + '__icon',
         CLASS_NEXT_ICON = CLASS_ICON + '--next',
         CLASS_PREV_ICON = CLASS_ICON + '--prev',
         CLASS_PAUSE_ICON = CLASS_ICON + '--pause',
         CLASS_PLAY_ICON = CLASS_ICON + '--play',
-        CLASS_ACCESS_TEXT = CLASS_CARROT + '__accessText',
         
-        CLASS_BTN = CLASS_CARROT + '__btn',
+        CLASS_BTN = ROOT + '__btn',
         CLASS_NEXT = CLASS_BTN + '--next',
         CLASS_PREV = CLASS_BTN + '--prev';
 
-    // --- debounce helper func
+    // --- debounce helper 
 
     var debounce = function(callback, ms){
         var timeout = null;
@@ -81,8 +81,6 @@
     */
     var carrot = function(){
 
-        // --- carrot vars
-
         var scope = null,       // shorthand for settings.scope
             width = 0,          // container width
             height = 0,         // container height
@@ -110,9 +108,6 @@
             atStart = true,     // no more in prev
             atEnd = false,      // no more in next
             direction = 1,      // direction we scrolling
-
-            cloneEnd = [],          // save the clones at the end for lookup // REMOVE??
-            cloneSkip = 0,          // how many items to skip when sliding infinitely // REMOVE??
 
             onCloneStart = false,   // are we on a starting clone (negative number)
             onCloneEnd = false,
@@ -256,7 +251,7 @@
             animating = true;
 
             current = showing[0] - total;           // current is first in view
-            
+
             alreadyMoved = settings.show + current; // ALREADY SCROLLED is clone count subtract curernt clone
             scrollSlider({ duration: 0, offset: alreadyMoved * one.totalSize });
             updateShowing();
@@ -290,7 +285,7 @@
                     replaceWithEnd();
                 } else if (onCloneEnd) {
                     direction = 1;
-                    replaceWithStart(cloneEnd.indexOf(current));
+                    replaceWithStart();
                 }
 
             // --- non infinite scroll
@@ -604,12 +599,8 @@
             items = $("." + CLASS_ITEM + ":not(."+ CLASS_CLONE + ")", scope); 
             clones = $("." + CLASS_CLONE, scope);
 
-            cloneSkip = settings.show;
-            alreadyMoved = cloneSkip;
+            alreadyMoved = settings.show;
 
-            for (var i = 0; i < settings.show; i++){
-                cloneEnd.push(total - settings.show + i); // lookup end clones later
-            }
         };
 
         // --- set the size of the clipping pane 
@@ -657,7 +648,7 @@
             }
 
             items.addClass(CLASS_ITEM).attr("tabindex", 0);
-            scope.addClass(CLASS_CARROT).data(CLASS_CARROT, settings.name);   
+            scope.addClass(ROOT).data(ROOT, settings.name);   
 
             if (!settings.sideways) {
                 scope.addClass(CLASS_VERTICAL);
