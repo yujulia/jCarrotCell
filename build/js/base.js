@@ -25,8 +25,8 @@ require('./jCarrotCell.js');
 var demo1 = $('#demo--1').carrotCell({ 
     // infinite: true,
     easing: 'easeOutExpo',
-    show: 2,
-    scroll: 1,
+    show: 3,
+    scroll: 3,
     // controlOnHover: true,
     key: true
 });
@@ -277,8 +277,8 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             //     moved = moves;
             // }
 
-            console.log("[ showing updated ] ", showing, ' clones showing ', cloneShowing, ' on clone start? ', onCloneStart);
-            console.log("at start? ", atStart, " at end? ", atEnd);
+            // console.log("[ showing updated ] ", showing, ' clones showing ', cloneShowing, ' on clone start? ', onCloneStart);
+            // console.log("at start? ", atStart, " at end? ", atEnd);
         };
 
         // --- scroll the actual slider
@@ -423,9 +423,27 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             }
 
             animating = false; // lockdown ends now everything is processed
-            console.log("===========================", showing, " ", moved, "/", moves);
+            console.log("===========================", showing, " ", moved, "/", moves, " current ", current);
         };
 
+        // --- stop scrolling to out of bounds in non infinite mode
+
+        var fixScrollRange = function(){
+
+            var destination = scrollBy * direction + alreadyMoved; // about to scroll to this item
+            var firstOfEnd = total - settings.scroll; // the first item in the ending view
+
+            console.log("FIX dest ", destination, " scrollby ", scrollBy, " already moved ", alreadyMoved, " dir ", direction);
+
+            if (destination > firstOfEnd) { 
+                return firstOfEnd;              // first item in end view
+            } else if (destination < 0) {
+                return scrollBy + destination;  // first item ever
+            } else {
+                return scrollBy;                // no change
+            }
+
+        };
 
         // --- calculate the scroll
 
@@ -451,10 +469,16 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
                     scrollBy = itemIndex - realCurrent;
                 }
 
+                if (!settings.infinite){ scrollBy = fixScrollRange(); }
+
                 console.log("#### item index ", itemIndex, " current is ", current, " scroll by ", scrollBy, " dir ", direction);
 
             } else {
+
                 scrollBy = settings.scroll;
+                if (!settings.infinite){ scrollBy = fixScrollRange(); }
+                
+                console.log("XXX scroll by ", scrollBy, " moved ", alreadyMoved, " current ", current);
             }
 
             var params = {
@@ -475,12 +499,16 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
 
                 // check if itemindex is within bounds
                 if (itemIndex >= 0 && itemIndex <= total) {
-                    if (itemIndex === total) { itemIndex = total-1; } // assume last item which is total-1
+                    if (itemIndex >= total) { 
+                        error("adjusting ", itemIndex, " to be max length ", total);
+                        itemIndex = total-1; 
+                    } // assume last item which is total-1
 
-                    if (itemIndex >= total - settings.scroll) {
-                        itemIndex = total-settings.scroll -1; // the first item already in view
-                    }
+                    // if (itemIndex >= total - settings.scroll) {
+                    //     itemIndex = total - settings.scroll -1; // the first item already in view
+                    // }
 
+                    console.log("validate ", itemIndex);
                     scrollToItem(itemIndex);
                 } else {
                     error("itemindex is out of bounds, please pass in something between 0 and ", total-1);
