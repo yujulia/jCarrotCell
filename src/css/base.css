@@ -250,6 +250,8 @@ pre {
   background: #f9f9f9;
   margin: 20px auto;
   padding: 40px; }
+  .demo .carrotcell__clone {
+    border-color: #fff; }
   .demo__item {
     background: #efefef;
     color: #000;

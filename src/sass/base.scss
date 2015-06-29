@@ -221,6 +221,10 @@ pre {
     padding: $pad-button;
     // box-sizing: border-box;
 
+    .carrotcell__clone {
+        border-color: #fff;
+    }
+
     &__item {
         @extend %clearfix;
         background: #efefef;

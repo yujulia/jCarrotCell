@@ -221,12 +221,6 @@
                 } 
             }
 
-            // are we showing the last slide? if so DONE
-            // if (showing[settings.show-1] === total-1) {
-            //     current = showing[0];
-            //     moved = moves;
-            // }
-
             // console.log("[ showing updated ] ", showing, ' clones showing ', cloneShowing, ' on clone start? ', onCloneStart);
             // console.log("at start? ", atStart, " at end? ", atEnd);
         };
@@ -275,24 +269,25 @@
         var replaceWithStart = function(cloneOffset){
             animating = true;
 
-            if (!cloneOffset) { cloneOffset = 0; }
-            current = current - total; // find current in starting clone
 
-            if (current === 0){
-                cloneSkip = settings.show;
-            } else {
-                cloneSkip = cloneOffset; 
-            }
+            current = showing[0];
+            console.log("current is ", current, showing);
+            cloneSkip = settings.show;
+            current = current - total;
 
-            scrollSlider({ duration: 0, offset: cloneSkip * one.totalSize });
+            console.log("moving slider to ", cloneSkip + current);
+
+            scrollSlider({ duration: 0, offset: (cloneSkip + current) * one.totalSize });
             moved = 0;
             alreadyMoved = settings.show + current; // ALREADY SCROLLED is clone count subtract curernt clone
             updateShowing();
             findInfiniteMoves(cloneOffset);
             animating = false;
 
-            // console.log("X REPLACED w/START skip ", cloneSkip, " moved ", moved, "already ", alreadyMoved, " current ", current);
+
+            console.log("X2 REPLACED w/START skip ", cloneSkip, " moved ", moved, "already ", alreadyMoved, " current ", current);
         };
+
 
         // --- scrolling animation complete from scrollToItem
 
@@ -319,28 +314,6 @@
                     direction = 1;
                     replaceWithStart(cloneEnd.indexOf(current));
                 }
-
-                // if (moved < 0) {
-                //     direction = -1;
-                //     // console.log("+PREV ", moved, "/", moves, " moved < 0 on ", current);
-                //     replaceWithEnd();
-                // } else if (moved >= moves) { 
-                //     // console.log("+NEXT ", moved, "/", moves, " moved > moves on ", current);
-                //     direction = 1;
-                //     replaceWithStart(cloneEnd.indexOf(current));
-                // } 
-
-                // if (moved < 0) {
-                //     direction = -1;
-                //     // console.log("+PREV ", moved, "/", moves, " moved < 0 on ", current);
-                //     replaceWithEnd();
-                // } else if (moved >= moves) { 
-                //     // console.log("+NEXT ", moved, "/", moves, " moved > moves on ", current);
-                //     direction = 1;
-                //     replaceWithStart(cloneEnd.indexOf(current));
-                // } else {
-                //     updateShowing(); 
-                // }
 
             // --- non infinite scroll
 
@@ -462,7 +435,9 @@
             if (onCloneEnd){
                 console.log("------------------------------------- DIR CHANGE NEXT current ", current);
                 replaceWithStart(); // cant go prev as we are on a clone, replace
-            } 
+            } else {
+                // scrollToItem();
+            }
 
             scrollToItem();
         };
