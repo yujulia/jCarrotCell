@@ -283,15 +283,12 @@
 
         var doneScrolling = function(){
             
-
             if (scrollBy < settings.scroll) {
-
                 customMoved += scrollBy;
                 if (customMoved >= settings.scroll) {
-                    customMoved = 0;
-                    moved ++;
+                    customMoved = settings.scroll - customMoved;
+                    moved++;
                 } 
-
             } else if (scrollBy > settings.scroll) {
 
                 // see how many moves that actually is
@@ -855,6 +852,11 @@
         add carrotCell as a jquery function
     */
     $.fn.carrotCell = function() {
+
+        if (this.length === 0) {
+            console.log("Nothing to call CarrotCell on, check your jquery selector.");
+            return false;
+        }
 
         if (!track.initialize) { track.init(); } // first time carrotcelling
 

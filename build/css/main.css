@@ -579,22 +579,19 @@ pre {
     float: left;
     margin: 3px; }
     .demo__item:focus {
-      border-color: #000; }
-    .demo__item h2, .demo__item .intro {
-      margin: -10px 0 0 0;
-      font-family: code;
-      font-weight: 700;
-      font-size: 30px;
-      color: #fff;
-      position: absolute;
-      top: 50%;
-      right: 10px; }
+      border-color: #999; }
     .demo__item figure {
       position: relative;
       margin: 5px;
       text-align: center;
       top: 50%;
       transform: translateY(-50%); }
+      .demo__item figure figcaption {
+        font-family: code;
+        font-weight: 700;
+        font-size: 30px;
+        color: #666;
+        display: inline; }
     .demo__item .cc-carrot {
       font-size: 30px;
       display: inline; }

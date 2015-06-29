@@ -1,5 +1,15 @@
 -var addMin = (dev == true) ? "" : ".min"
 
+mixin demoItem(index)
+    div.demo__item
+        figure 
+            //- figcaption= index
+            -var z = index + 1
+            while (z--)
+                .cc-carrot
+
+
+
 doctype html
 html(lang="en")
     head
@@ -28,99 +38,22 @@ html(lang="en")
         //- ul(id="jcc-home")
         //-     li.jcc-item.i1
         //-         img(src="img/j.png", width="100%", alt="j") 
-        //-         .jcc-content 
-        //-             <h2>1</h2>
         //-     li.jcc-item.i2
         //-         img(src="img/carrot.png", width="100%", alt="carrot")
-        //-         .jcc-content 
-        //-             <h2>2</h2>
         //-     li.jcc-item.i3
         //-         img(src="img/cell.png", width="100%", alt="cell")
-        //-         .jcc-content 
-        //-             <h2>3</h2>
-        //-     li.jcc-item.i4
-        //-         img(src="img/j.png", width="100%", alt="j") 
-        //-         .jcc-content 
-        //-             <h2>4</h2>
-        //-     li.jcc-item.i5
-        //-         img(src="img/carrot.png", width="100%", alt="carrot")
-        //-         .jcc-content 
-        //-             <h2>5</h2>
-            //- li.jcc-item.i6
-            //-     img(src="img/cell.png", width="100%", alt="cell")
-            //-     .jcc-content 
-            //-         <h2>6</h2>
-            //- li.jcc-item.i7
-            //-     img(src="img/carrot.png", width="100%", alt="cell")
-            //-     .jcc-content 
-            //-         <h2>7</h2>
 
-
+        -var n = 0
         div(id="demo--1", class="demo")
-            div.demo__item
-                h2 1
-                figure 
-                    .cc-carrot 
-            div.demo__item
-                h2 2
-                figure 
-                    .cc-carrot 
-                    .cc-carrot 
-            div.demo__item
-                h2 3
-                figure 
-                    .cc-carrot 
-                    .cc-carrot 
-                    .cc-carrot 
-            div.demo__item
-                h2 4
-                figure 
-                    .cc-carrot 
-                    .cc-carrot 
-                    .cc-carrot 
-                    .cc-carrot 
-            div.demo__item
-                h2 5
-                figure 
-                    .cc-carrot 
-                    .cc-carrot 
-                    .cc-carrot 
-                    .cc-carrot 
-                    .cc-carrot 
+            while n < 5
+                +demoItem(n++)
 
+        //- -var j = 0
         //- div(id="demo--2", class="demo vertical")
-        //-     div.demo__item
-        //-         h2 1
-        //-         figure 
-        //-             .cc-carrot 
-        //-     div.demo__item
-        //-         h2 2
-        //-         figure 
-        //-             .cc-carrot 
-        //-             .cc-carrot 
-        //-     div.demo__item
-        //-         h2 3
-        //-         figure 
-        //-             .cc-carrot 
-        //-             .cc-carrot 
-        //-             .cc-carrot 
-        //-     div.demo__item
-        //-         h2 4
-        //-         figure 
-        //-             .cc-carrot 
-        //-             .cc-carrot 
-        //-             .cc-carrot 
-        //-             .cc-carrot 
-        //-     div.demo__item
-        //-         h2 5
-        //-         figure 
-        //-             .cc-carrot 
-        //-             .cc-carrot 
-        //-             .cc-carrot 
-        //-             .cc-carrot 
-        //-             .cc-carrot 
+        //-     while j < 5
+        //-         +demoItem(j++)
 
-      
+    
         .content
             section
                 h2 Features

@@ -23,11 +23,11 @@ require('./jCarrotCell.js');
 
 
 var demo1 = $('#demo--1').carrotCell({ 
-    infinite: true,
+    // infinite: true,
     easing: 'easeOutExpo',
-    show: 3,
-    scroll: 3,
-    controlOnHover: true,
+    show: 2,
+    scroll: 2,
+    // controlOnHover: true,
     key: true
 });
 
@@ -338,15 +338,12 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
 
         var doneScrolling = function(){
             
-
             if (scrollBy < settings.scroll) {
-
                 customMoved += scrollBy;
                 if (customMoved >= settings.scroll) {
-                    customMoved = 0;
-                    moved ++;
+                    customMoved = settings.scroll - customMoved;
+                    moved++;
                 } 
-
             } else if (scrollBy > settings.scroll) {
 
                 // see how many moves that actually is
@@ -910,6 +907,11 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
         add carrotCell as a jquery function
     */
     $.fn.carrotCell = function() {
+
+        if (this.length === 0) {
+            console.log("Nothing to call CarrotCell on, check your jquery selector.");
+            return false;
+        }
 
         if (!track.initialize) { track.init(); } // first time carrotcelling
 
