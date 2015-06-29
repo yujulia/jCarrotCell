@@ -22,7 +22,7 @@ require('./jCarrotCell.js');
 
 
 var demo1 = $('#demo--1').carrotCell({ 
-    // infinite: true,
+    infinite: true,
     easing: 'easeOutExpo',
     show: 3,
     scroll: 3,

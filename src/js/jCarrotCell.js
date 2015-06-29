@@ -119,6 +119,7 @@
             cloneEnd = [],          // save the clones at the end for lookup
             cloneSkip = 0,          // how many items to skip when sliding infinitely
             onCloneStart = false,   // are we on a starting clone (negative number)
+            onCloneEnd = false,
 
             useVelocity = false,    // use velocity to animate?
             animating = false,      // animation lock
@@ -200,7 +201,8 @@
 
         var updateShowing = function(){
             cloneShowing = 0;          
-            onCloneStart = false;       
+            onCloneStart = false;      
+            onCloneEnd = false; 
             atStart = false;
             atEnd = false;
 
@@ -213,7 +215,10 @@
                     cloneShowing++;         // start clones showing
                     onCloneStart = true;    // WE PROBABLY KNOW THIS AT START
                 }
-                if (showing[k] > total-1 ) {  cloneShowing++; } // end clones showing
+                if (showing[k] > total-1 ) {  
+                    cloneShowing++;         // end clones showing
+                    onCloneEnd = true;
+                } 
             }
 
             // are we showing the last slide? if so DONE
@@ -256,6 +261,7 @@
             current = total + current;          // find current in end clone
             alreadyMoved = cloneSkip + current; 
             scrollSlider({ duration: 0, offset: (current + cloneSkip) * one.totalSize });
+
             updateShowing(); 
             findInfiniteMoves();
             moved = moves;  // we just found the new moves
@@ -293,77 +299,52 @@
         var doneScrolling = function(itemIndex){
 
             if (isInteger(itemIndex)) {
-
-                if (scrollBy < settings.scroll) {
-
-                    customMoved += scrollBy; 
-
-                    if (customMoved >= settings.scroll) {
-                        customMoved = settings.scroll - customMoved;
-                        moved += direction;
-                        if (moved > moves) { moved = moves; } 
-                    } 
-
-                    console.log("smaller ", direction);
-
-                } else if (scrollBy > settings.scroll) {
-
-                    // scrolling might contain several moves
-
-                    customMoved += scrollBy; // add leftovers
-                    console.log("custom moved ", customMoved);
-
-                    var newMoves = Math.floor(customMoved / settings.scroll) * direction;
-
-                    // customMoved += settings.scroll - estimate * settings.scroll;
-                    var remainder = customMoved % settings.scroll;
-                    if (remainder) {
-                        console.log("there was remainder ", remainder);
-                        customMoved += remainder;
-                    } else {
-                        customMoved = 0;
-                    }
-
-                    console.log("new moves calced ", newMoves);
-
-                    moved += newMoves;
-                    if (moved > moves) { moved = moves; }
-
-                    // moved += Math.floor(scrollBy / settings.scroll) * direction;
-
-                    console.log("scroll larger than setting new moves ", newMoves);
-
-                    // see how many moves that actually is
-                } else {
-                    console.log("! scrollby is equal to scroll");
-                    moved += direction;
-                }
-
                 current = itemIndex;
-
             } else {
-                moved += direction; // update moves + or -
                 current = current + direction * scrollBy; // update new current
-            }
-                        
+            }       
             alreadyMoved += direction * scrollBy; // update how far we scrolled
 
+            updateShowing(); 
+            console.log("scroll done ", showing);
+
+            // --- infinite scroll shenanigans
 
             if (settings.infinite) {
-                if (moved < 0) {
+
+                if (onCloneStart) {
                     direction = -1;
-                    // console.log("+PREV ", moved, "/", moves, " moved < 0 on ", current);
                     replaceWithEnd();
-                } else if (moved >= moves) { 
-                    // console.log("+NEXT ", moved, "/", moves, " moved > moves on ", current);
+                } else if (onCloneEnd) {
                     direction = 1;
                     replaceWithStart(cloneEnd.indexOf(current));
-                } else {
-                    updateShowing(); 
                 }
 
+                // if (moved < 0) {
+                //     direction = -1;
+                //     // console.log("+PREV ", moved, "/", moves, " moved < 0 on ", current);
+                //     replaceWithEnd();
+                // } else if (moved >= moves) { 
+                //     // console.log("+NEXT ", moved, "/", moves, " moved > moves on ", current);
+                //     direction = 1;
+                //     replaceWithStart(cloneEnd.indexOf(current));
+                // } 
+
+                // if (moved < 0) {
+                //     direction = -1;
+                //     // console.log("+PREV ", moved, "/", moves, " moved < 0 on ", current);
+                //     replaceWithEnd();
+                // } else if (moved >= moves) { 
+                //     // console.log("+NEXT ", moved, "/", moves, " moved > moves on ", current);
+                //     direction = 1;
+                //     replaceWithStart(cloneEnd.indexOf(current));
+                // } else {
+                //     updateShowing(); 
+                // }
+
+            // --- non infinite scroll
+
             } else {
-                updateShowing(); 
                 setState(); // non infinite, check if we disable prev or next
             }
 
@@ -391,7 +372,7 @@
         var scrollToItem = function(itemIndex){
             animating = true;
        
-            // an itemindex was passed in, we are ignoring settings.scroll to scroll to something
+            // --- an itemindex was passed in, we are ignoring settings.scroll to scroll to something
 
             if (isInteger(itemIndex)) {
 
@@ -401,7 +382,6 @@
                 } 
 
                 var realCurrent = getShowing()[0]; // get first item showing
-
                 if (realCurrent > itemIndex){ 
                     direction = -1; 
                     scrollBy = realCurrent - itemIndex;
@@ -411,6 +391,8 @@
                 }
 
                 console.log("#### item index ", itemIndex, " current is ", current, " scroll by ", scrollBy, " dir ", direction);
+
+            // --- normal scroll without itemindex
 
             } else {
                 scrollBy = settings.scroll;
@@ -457,12 +439,12 @@
 
         var moveToPrev = function(e){
             if (e) { e.preventDefault(); }
-            if (atStart || animating) { return false; }
+            if ((atStart && !settings.infinite) || animating) { return false; }
 
             direction = -1;
 
             if (onCloneStart){
-                // console.log("------------------------------------- DIR CHANGE PREV current ", current);
+                console.log("------------------------------------- DIR CHANGE PREV current ", current);
                 replaceWithEnd(); // cant go prev as we are on a clone, replace
             } 
 
@@ -473,9 +455,15 @@
 
         var moveToNext = function(e){
             if (e) { e.preventDefault(); }
-            if (atEnd || animating) { return false; }
+            if ((atEnd && !settings.infinite) || animating) { return false; }
 
             direction = 1;
+
+            if (onCloneEnd){
+                console.log("------------------------------------- DIR CHANGE NEXT current ", current);
+                replaceWithStart(); // cant go prev as we are on a clone, replace
+            } 
+
             scrollToItem();
         };
 
@@ -498,7 +486,7 @@
             prev.append(prevIcon).append(prevContent);
             next.append(nextContent).append(nextIcon);
 
-            if (atStart) { prev.prop("disabled", true); }
+            if (atStart && !settings.infinite) { prev.prop("disabled", true); }
             
             prev.click(moveToPrev);
             next.click(moveToNext);
