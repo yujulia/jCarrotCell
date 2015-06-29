@@ -304,6 +304,8 @@
             var destination = scrollBy * direction + alreadyMoved; // about to scroll to this item
             var firstOfEnd = total - settings.scroll; // the first item in the ending view
 
+            console.log("this is fix range ", current);
+
             if (destination > firstOfEnd) { 
                 return scrollBy - (destination - firstOfEnd);     
             } else if (destination < 0) {
@@ -328,6 +330,10 @@
                 } 
 
                 var realCurrent = getShowing()[0]; // get first item showing
+                if (!settings.infinite){ scrollBy = fixScrollRange(); }
+                
+                console.log("real current ", realCurrent);
+
                 if (realCurrent > itemIndex){ 
                     direction = -1; 
                     scrollBy = realCurrent - itemIndex;
@@ -342,8 +348,9 @@
 
             } else {
                 scrollBy = settings.scroll;
+
                 if (!settings.infinite){ scrollBy = fixScrollRange(); }
-                
+
                 console.log("XXX scroll by ", scrollBy, " moved ", alreadyMoved, " current ", current);
             }
 
@@ -358,27 +365,21 @@
         // --- since this is coming from api, validate item index is legit before moving
 
         var validateThenMove = function(itemIndex){
-
             if (isInteger(itemIndex)) {
-
-                // check if itemindex is within bounds
                 if (itemIndex >= 0 && itemIndex <= total) {
                     if (itemIndex >= total) { 
-                        error("adjusting ", itemIndex, " to be max length ", total);
+                        error("adjusting ", itemIndex, " to be last index ", total - 1);
                         itemIndex = total-1; 
-                    } // assume last item which is total-1
-
+                    } 
                     scrollToItem(itemIndex);
                 } else {
                     error("itemindex is out of bounds, please pass in something between 0 and ", total-1);
                     return false;
                 }
-
             } else {
                 error("can not move carousel itemindex is not an integer");
                 return false;
             }
-
         };
 
         // -- move to previous scroll
