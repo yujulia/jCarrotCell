@@ -26,14 +26,15 @@ var demo1 = $('#demo--1').carrotCell({
     easing: 'easeOutExpo',
     show: 3,
     scroll: 3,
+    controlOnHover: true,
     key: true
 });
 
-var demo2 = $('#demo--2').carrotCell({ 
-    infinite: true,
-    sideways: false,
-    easing: 'easeOutExpo',
-    show: 2,
-    scroll: 1,
-    key: true
-});
+// var demo2 = $('#demo--2').carrotCell({ 
+//     infinite: true,
+//     sideways: false,
+//     easing: 'easeOutExpo',
+//     show: 2,
+//     scroll: 1,
+//     key: true
+// });

@@ -27,17 +27,18 @@ var demo1 = $('#demo--1').carrotCell({
     easing: 'easeOutExpo',
     show: 3,
     scroll: 3,
+    controlOnHover: true,
     key: true
 });
 
-var demo2 = $('#demo--2').carrotCell({ 
-    infinite: true,
-    sideways: false,
-    easing: 'easeOutExpo',
-    show: 2,
-    scroll: 1,
-    key: true
-});
+// var demo2 = $('#demo--2').carrotCell({ 
+//     infinite: true,
+//     sideways: false,
+//     easing: 'easeOutExpo',
+//     show: 2,
+//     scroll: 1,
+//     key: true
+// });
 },{"./jCarrotCell.js":3,"./vendor/jquery.easing.1.3.js":4,"./vendor/rainbow-custom.min.js":5,"./vendor/velocity.min.js":6,"jquery":2}],2:[function(require,module,exports){
 (function (global){
 ; var __browserify_shim_require__=require;(function browserifyShim(module, exports, require, define, browserify_shim__define__module__export__) {
@@ -144,6 +145,8 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             current = 0,        // current item scrolled to
             showing = [],       // what items are visible
             cloneShowing = 0,   // how many clones currently showing
+            scrollBy = 0,
+            customMoved = 0,
 
             atStart = true,     // no more in prev
             atEnd = false,      // no more in next
@@ -252,6 +255,7 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             cloneShowing = 0;          
             onCloneStart = false;       
 
+            console.log("update showing ", current);
             for (var k = 0; k < settings.show; k++){
                 showing[k] = current + k;
 
@@ -265,7 +269,7 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
                 }
             }
 
-            console.log("[ showing updated ] ", showing, ' clones showing ', cloneShowing, ' on clone start? ', onCloneStart);
+            // console.log("[ showing updated ] ", showing, ' clones showing ', cloneShowing, ' on clone start? ', onCloneStart);
         };
 
         // --- scroll the actual slider
@@ -303,7 +307,7 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             moved = moves;  // we just found the new moves
             animating = false;
 
-            console.log("* REPLACED with END current ", current, " cloneskip ", cloneSkip, " moved ", moved, " showing ", showing);
+            // console.log("* REPLACED with END current ", current, " cloneskip ", cloneSkip, " moved ", moved, " showing ", showing);
         };
 
         // --- replace slider at the end with the start clone (infinite reached end)
@@ -327,23 +331,44 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             findInfiniteMoves(cloneOffset);
             animating = false;
 
-            console.log("X REPLACED w/START skip ", cloneSkip, " moved ", moved, "already ", alreadyMoved, " current ", current);
+            // console.log("X REPLACED w/START skip ", cloneSkip, " moved ", moved, "already ", alreadyMoved, " current ", current);
         };
 
         // --- scrolling animation complete from scrollToItem
 
         var doneScrolling = function(){
-            moved += direction; // update moves + or -
-            current = current + direction * settings.scroll; // update new current
-            alreadyMoved += direction * settings.scroll; // update how far we scrolled
+            
+
+            if (scrollBy < settings.scroll) {
+
+                customMoved += scrollBy;
+                if (customMoved >= settings.scroll) {
+                    customMoved = 0;
+                    moved ++;
+                } 
+
+            } else if (scrollBy > settings.scroll) {
+
+                // see how many moves that actually is
+
+            } else {
+                moved += direction; // update moves + or -
+            }
+
+            current = current + direction * scrollBy; // update new current
+            alreadyMoved += direction * scrollBy; // update how far we scrolled
+
+            // MOVED -
+
+            console.log("current set to ", current, " already scrolled ", alreadyMoved, " moved ", moved);
 
             if (settings.infinite) {
                 if (moved < 0) {
                     direction = -1;
-                    console.log("+PREV ", moved, "/", moves, " moved < 0 on ", current);
+                    // console.log("+PREV ", moved, "/", moves, " moved < 0 on ", current);
                     replaceWithEnd();
                 } else if (moved >= moves) { 
-                    console.log("+NEXT ", moved, "/", moves, " moved > moves on ", current);
+                    // console.log("+NEXT ", moved, "/", moves, " moved > moves on ", current);
                     direction = 1;
                     replaceWithStart(cloneEnd.indexOf(current));
                 } else {
@@ -355,24 +380,34 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
                 setState(); // non infinite, check if we disable prev or next
             }
 
-            console.log("scrolling DONE ", " moved ", moved, "/", moves);
+            // console.log("scrolling DONE ", " moved ", moved, "/", moves);
 
             animating = false; // lockdown ends now everything is processed
             console.log("===========================", showing);
         };
 
+
         // --- calculate the scroll
 
-        var scrollToItem = function(){
+        var scrollToItem = function(itemIndex){
             animating = true;
+            var params;
 
-            var params = {
-                offset: direction * settings.scroll * one.totalSize + alreadyMoved * one.totalSize,
+            if (itemIndex) {
+                scrollBy = Math.abs(current - itemIndex);
+                console.log("#### item index ", itemIndex, " scroll by ", scrollBy);
+
+            } else {
+                scrollBy = settings.scroll;
+            }
+
+            params = {
+                offset: direction * scrollBy * one.totalSize + alreadyMoved * one.totalSize,
                 complete: doneScrolling
             };
 
-            console.log("SCROLL distance", params.offset);
-            console.log("SCROLL ", current, " by ", direction * settings.scroll, " already moved ", alreadyMoved);
+            // console.log("SCROLL distance", params.offset);
+            // console.log("SCROLL ", current, " by ", direction * settings.scroll, " already moved ", alreadyMoved);
             scrollSlider(params);
         };
 
@@ -385,7 +420,7 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             direction = -1;
 
             if (onCloneStart){
-                console.log("------------------------------------- DIR CHANGE PREV current ", current);
+                // console.log("------------------------------------- DIR CHANGE PREV current ", current);
                 replaceWithEnd(); // cant go prev as we are on a clone, replace
             } 
 
@@ -439,7 +474,10 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
 
             if (settings.controlOnHover && !track.touch){
                 hideControls();
+
+                // debounce these
                 scope.hover(showControls, hideControls);
+
             } else {
                 prev.mouseleave(blurPrev);
                 next.mouseleave(blurNext);
@@ -454,8 +492,10 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             var gotFocus = function(e){
                 var itemEnum = $(this).data(DATA_ENUM);
                 if ($.isNumeric(itemEnum) && (itemEnum > 0) && (itemEnum !== current)){
-                    scrollToItem(itemEnum, 1);
+                    direction = 1;
+                    scrollToItem(itemEnum);
                 } 
+                console.log("FOCUS ", itemEnum);
             };
             items.focus(gotFocus);
         };
@@ -512,10 +552,8 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
                     var b3 = parseInt(item.css("border-top-width"), 10),
                         b4 = parseInt(item.css("border-bottom-width"), 10);
                     calcOffset += b3 + b4;
-                    console.log("border offset ", b3, b4);
                 }
             } 
-            console.log("h ", item.outerHeight(true), "offset ", calcOffset);
 
             return {
                 w: item.outerWidth(true),

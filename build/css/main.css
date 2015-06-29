@@ -578,6 +578,8 @@ pre {
     border: solid 3px #ccc;
     float: left;
     margin: 3px; }
+    .demo__item:focus {
+      border-color: #000; }
     .demo__item h2, .demo__item .intro {
       margin: -10px 0 0 0;
       font-family: code;
