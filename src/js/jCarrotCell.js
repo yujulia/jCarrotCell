@@ -176,8 +176,11 @@
                 nextText : 'previous item set',
 
                 key: false,
-                keyBack: '',
-                keyForward: ''
+                keys: {
+                    back: '',
+                    forward: '',
+                    toggle: KEY_TOGGLE
+                }
             };
 
         // --- send error msg to track with this carrotcell name
@@ -442,13 +445,6 @@
             scrollToItem();
         };
 
-        // --- a key event we care about happened
-
-        var handleKeyPress = function(keyCode){
-            if (keyCode === settings.keyBack) { moveToPrev(); }
-            if (keyCode === settings.keyForward) { moveToNext(); }
-        };
-
         // --- start auto play
 
         var startAutoPlay = function(){
@@ -490,6 +486,14 @@
             console.log("auto is now ", playing);
         };
 
+        // --- a key event we care about happened
+
+        var handleKeyPress = function(keyCode){
+            if (keyCode === settings.keys.back) { moveToPrev(); }
+            if (keyCode === settings.keys.forward) { moveToNext(); }
+            if (keyCode === settings.keys.toggle) { toggleAuto(); }
+        };
+
         // --- setup hover triggered actions
 
         var setupHover = function(){
@@ -506,6 +510,7 @@
             offCarrotCell();
             scope.hover(onCarrotCell, offCarrotCell);
         };
+
 
         // --- create the previous and next buttons and attach events
 
@@ -610,7 +615,15 @@
             if (settings.usePrevNext) { setupPreNext(); }
             
             if (settings.key){
-                track.subscribeKey(settings.name, settings.keyBack, settings.keyForward);
+                var keyArray = [ settings.name ];
+                if (settings.usePrevNext) {
+                    keyArray.push(settings.keys.back);
+                    keyArray.push(settings.keys.forward);
+                }
+                if (settings.usePausePlay) {
+                    keyArray.push(settings.keys.toggle)
+                }
+                track.subscribeKey(keyArray);
             }
             if (settings.useDots){ setupDots(); } 
             if (settings.auto) { 
@@ -812,11 +825,11 @@
 
             if (settings.key) {
                 if (settings.sideways) {
-                    settings.keyBack = settings.keyBack || KEY_BACK;
-                    settings.keyForward = settings.keyForward || KEY_FORWARD;
+                    settings.keys.back = settings.keys.back || KEY_BACK;
+                    settings.keys.forward = settings.keys.forward || KEY_FORWARD;
                 } else {
-                    settings.keyBack = settings.keyBack || KEY_UP;
-                    settings.keyForward = settings.keyForward || KEY_DOWN;
+                    settings.keys.back = settings.keys.back || KEY_UP;
+                    settings.keys.forward = settings.key.forward || KEY_DOWN;
                 }
             }
 
@@ -962,16 +975,15 @@
 
         // --- carrots call this to subscribe keys
 
-        subscribeKey : function(){
+        subscribeKey : function(keyArray){
             if (!track.useKey){ 
                 $(window).keyup(track.keyPressed);
                 track.useKey = true;
             }
              
-            var args = Array.prototype.slice.call(arguments);
-            var carrotName = args.shift();
+            var carrotName = keyArray.shift();
 
-            args.forEach(function(subkey){
+            keyArray.forEach(function(subkey){
                 if (subkey in track.keys){
                     track.keys[subkey].push(carrotName);
                 } else {

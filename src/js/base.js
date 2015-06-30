@@ -33,8 +33,8 @@ var demo1 = $('#demo--1').carrotCell({
     duration: 1000,
     show: 1,
     scroll: 1,
-    // stopOnHover: true,
-    // controlOnHover: true,
+    stopOnHover: true,
+    controlOnHover: true,
     key: true
 });
 
