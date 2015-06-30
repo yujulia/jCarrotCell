@@ -23,14 +23,14 @@ require('./jCarrotCell.js');
 
 
 var demo1 = $('#demo--1').carrotCell({ 
-    // infinite: true,
+    infinite: true,
     // dotButtonClass : 'dot',
     // dotIconClass : 'cc-star',
     useDots : true,
     easing: 'easeOutExpo',
     duration: 1000,
-    show: 1,
-    scroll: 1,
+    show: 2,
+    scroll: 2,
     // controlOnHover: true,
     key: true
 });
@@ -255,6 +255,20 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             }
         };
 
+        // --- toggle on the dots that are visible;
+
+        var updateDots = function(selectedDots){
+            dots.removeClass(settings.onClass);
+            console.log("showing ", selectedDots, " in ", setItems);
+
+            var toggleSelectedDot = function(dotIndex){
+                var index = setItems.indexOf(dotIndex);
+                $(dots[index]).addClass(settings.onClass);
+            };
+            
+            selectedDots.forEach(toggleSelectedDot);
+        };
+
         // --- fix the clones to be a real index
 
         var getShowing = function(cloneIndex){
@@ -262,26 +276,11 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
 
             var fixShowing = showing.map(function(i){
                 if (i < 0) { return total + i; } 
-                else if (i > total) { return total - i; } 
+                else if (i >= total) { return total - i; } 
                 else { return i; }
             });
 
             return fixShowing;
-        };
-
-        // --- toggle on the dots that are visible;
-
-        var updateDots = function(selectedDots){
-
-            dots.removeClass(settings.onClass);
-
-            console.log("showing ", selectedDots, " in ", setItems);
-
-            var toggleSelectedDot = function(dotIndex){
-                $(dots[dotIndex]).addClass(settings.onClass);
-            };
-
-            selectedDots.forEach(toggleSelectedDot);
         };
             
         // --- update record on what is actually shown on screen
@@ -295,22 +294,23 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             var selectedDots = [];
 
             for (var k = 0; k < settings.show; k++){
-                var iShowing = current + k
-                showing[k] = iShowing;
-
-                if (iShowing <= 0) { atStart = true; } // showing first item
-                if (iShowing >= total-1 ) { atEnd = true; } // showing last item
-                if (iShowing < 0 ) { onCloneStart = true; } 
-                if (iShowing > total-1 ) { onCloneEnd = true; } 
-
-                if (settings.useDots && setItems.length) {
-                    if (inArray(setItems, iShowing)){
-                        selectedDots.push(iShowing);
-                    }
-                }
+                showing[k] = current + k;
+                if (showing[k] <= 0) { atStart = true; } // showing first item
+                if (showing[k] >= total-1 ) { atEnd = true; } // showing last item
+                if (showing[k] < 0 ) { onCloneStart = true; } 
+                if (showing[k] > total-1 ) { onCloneEnd = true; } 
             }
 
             if (settings.useDots && setItems.length) {
+                var fixedShowing = getShowing(); // no clones
+                console.log("FIXED ", fixedShowing);
+
+                for (var j = 0; j < settings.show; j++){
+                    // console.log("checking ", j, fixedShowing[j]);
+                    if (inArray(setItems, fixedShowing[j])){
+                        selectedDots.push(fixedShowing[j]);
+                    }
+                }
                 updateDots(selectedDots);
             }
 

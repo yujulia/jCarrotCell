@@ -36,7 +36,6 @@
         display: block;
         float: left;
         z-index: 1;
-        -webkit-backface-visibility: hidden;
     }
 
     &__navi {
@@ -149,6 +148,7 @@
                 line-height: 0.7em;
                 padding: 0 4px 2px;
                 vertical-align: text-top;
+                transition: 0.2s ease-in-out;
             }
         }
     }

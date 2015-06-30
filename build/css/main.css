@@ -679,8 +679,7 @@ pre {
   .carrotcell__item {
     display: block;
     float: left;
-    z-index: 1;
-    -webkit-backface-visibility: hidden; }
+    z-index: 1; }
   .carrotcell__navi {
     text-align: center;
     margin: 10px 0 0 0;
@@ -756,7 +755,8 @@ pre {
         display: block;
         line-height: 0.7em;
         padding: 0 4px 2px;
-        vertical-align: text-top; }
+        vertical-align: text-top;
+        transition: 0.2s ease-in-out; }
   .carrotcell__accessText {
     position: absolute;
     left: -10000px;
