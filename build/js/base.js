@@ -26,11 +26,12 @@ var demo1 = $('#demo--1').carrotCell({
     infinite: true,
     // dotButtonClass : 'dot',
     // dotIconClass : 'cc-star',
-    useDots : true,
+    auto: true,
+    useDots: true,
     easing: 'easeOutExpo',
     duration: 1000,
-    show: 2,
-    scroll: 2,
+    show: 1,
+    scroll: 1,
     // controlOnHover: true,
     key: true
 });
@@ -187,6 +188,8 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             animating = false,      // animation lock
             axis = "x",
 
+            playing = false,        // playing or paused if auto
+
             // --- these settings can be over written
 
             settings = {
@@ -213,7 +216,6 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
                 pauseClass: '',
                 pauseIconClass : CLASS_PAUSE_ICON,
                 pauseText : 'pause carousel scroll',
-
                 playClass : '',
                 playIconClass : CLASS_PLAY_ICON,
                 playText : 'resume carousel scroll',
@@ -221,7 +223,6 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
                 prevClass : '',
                 prevIconClass : CLASS_PREV_ICON,
                 prevText : 'next carousel slide',
-
                 nextClass : '',
                 nextIconClass : CLASS_NEXT_ICON,
                 nextText : 'previous carousel slide',
@@ -265,7 +266,7 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
                 var index = setItems.indexOf(dotIndex);
                 $(dots[index]).addClass(settings.onClass);
             };
-            
+
             selectedDots.forEach(toggleSelectedDot);
         };
 
@@ -303,7 +304,7 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
 
             if (settings.useDots && setItems.length) {
                 var fixedShowing = getShowing(); // no clones
-                console.log("FIXED ", fixedShowing);
+                console.log("FIXED ", fixedShowing, " normal ", showing);
 
                 for (var j = 0; j < settings.show; j++){
                     // console.log("checking ", j, fixedShowing[j]);
@@ -314,7 +315,6 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
                 updateDots(selectedDots);
             }
 
-            
             // console.log("[ showing updated ] ", showing, ' on clone start? ', onCloneStart);
             // console.log("at start? ", atStart, " at end? ", atEnd);
         };
@@ -556,14 +556,8 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
 
         var goToDotItem = function(e){
             if (e) { e.preventDefault(); }
-
             var dotEnum = $(this).data(DATA_ENUM);
-
-            if (current === dotEnum) {
-                console.log("already on this dot");
-                return false;
-            }
-            
+            if (current === dotEnum) { return false; }
             scrollToItem(dotEnum);  
             dots.removeClass(CLASS_ON);
             $(this).addClass(CLASS_ON);
@@ -598,6 +592,38 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             // console.log("setItems ", setItems, " dots ", dots);
         };
 
+        // --- make pause and play buttons
+
+        var setupPausePlay = function(){
+            var pauseIcon = $('<span/>', { 'class' : settings.pauseIconClass, 'aria-hidden': 'true' });
+            var playIcon = $('<span/>', { 'class' : settings.playIconClass, 'aria-hidden': 'true' });
+            var pauseContent = $('<span/>', { 'class' : CLASS_ACCESS_TEXT, 'text': settings.pauseText });
+            var playContent = $('<span/>', { 'class' : CLASS_ACCESS_TEXT, 'text': settings.playText });
+            pause = $('<button/>', { 'class': settings.pauseClass });
+            play = $('<button/>', { 'class': settings.playClass });
+            pause.append(pauseIcon).append(pauseContent);
+            play.append(playIcon).append(playContent);
+
+            // toggle play or auto
+            var toggleAuto = function(){
+                if (playing) {
+                    play.hide();
+                    pause.show().focus();
+                } else {
+                    pause.hide();
+                    play.show().focus();
+                }
+                playing = !playing;
+
+                console.log("auto is now ", playing);
+            };
+
+            play.click(toggleAuto);
+            pause.click(toggleAuto);
+
+            scope.prepend(pause).prepend(play);
+        };
+
         // --- if tabbing thorugh with keyboard scroll appropriately
 
         var setupFocusTab = function(){
@@ -624,7 +650,7 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             }
 
             if (settings.auto) {
-                // set up pause and play
+                setupPausePlay();
             }
         };
 
@@ -869,18 +895,13 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             makeFrame();        // make the markup
             
             if ((total > settings.show) && (total > 1)) {
-
-                // sets = Math.ceil((total - (settings.show-settings.scroll)) / settings.scroll);
                 sets = Math.ceil(total/settings.scroll);
                 firstOfEnd = total - settings.show; // the first item in the ending view
                 updateShowing();
-
                 console.log("sets ", sets, " first of end ", firstOfEnd, " total ", total, " show ", settings.show, showing);
-    
                 createControls();   // make next prev
             } 
         };
-
 
         /** ---------------------------------------
             carrot public api

@@ -71,6 +71,15 @@
     .carrotcell__btn--next {
       left: auto;
       right: 8px; }
+    .carrotcell__btn--pause, .carrotcell__btn--play {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translateY(-50%) translateX(-50%);
+      transition: opacity .2s ease-in-out;
+      opacity: 1; }
+      .carrotcell__btn--pause:disabled, .carrotcell__btn--play:disabled {
+        opacity: 0; }
   .carrotcell__icon {
     display: block;
     float: left;
@@ -93,6 +102,14 @@
     .carrotcell__icon--next::before {
       content: '\203A';
       padding: 1px 0 0px 1px; }
+    .carrotcell__icon--pause::before {
+      content: '| |';
+      font-size: 11px;
+      padding: 3px 0 0; }
+    .carrotcell__icon--play::before {
+      content: '▷';
+      font-size: 13px;
+      padding: 3px 0 0 2px; }
     .carrotcell__icon--dot {
       display: block;
       margin: 0;

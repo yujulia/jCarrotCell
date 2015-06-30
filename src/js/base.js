@@ -25,11 +25,12 @@ var demo1 = $('#demo--1').carrotCell({
     infinite: true,
     // dotButtonClass : 'dot',
     // dotIconClass : 'cc-star',
-    useDots : true,
+    auto: true,
+    useDots: true,
     easing: 'easeOutExpo',
     duration: 1000,
-    show: 2,
-    scroll: 2,
+    show: 1,
+    scroll: 1,
     // controlOnHover: true,
     key: true
 });

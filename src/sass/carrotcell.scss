@@ -104,6 +104,19 @@
             left: auto;
             right: 8px;
         }
+
+        &--pause, &--play {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translateY(-50%) translateX(-50%);
+            transition: opacity .2s ease-in-out;
+            opacity: 1;      
+
+            &:disabled {
+                opacity: 0;
+            }
+        }
     }
 
     &__icon {
@@ -133,6 +146,18 @@
         &--next::before {
             content: '\203A';
             padding: 1px 0 0px 1px;
+        }
+
+        &--pause::before {
+            content: '| |';
+            font-size: 11px;
+            padding: 3px 0 0;
+        }
+
+        &--play::before {
+            content: '▷';
+            font-size: 13px;
+            padding: 3px 0 0 2px;
         }
 
         &--dot {
