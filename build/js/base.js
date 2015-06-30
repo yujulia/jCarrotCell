@@ -24,6 +24,8 @@ require('./jCarrotCell.js');
 
 var demo1 = $('#demo--1').carrotCell({ 
     // infinite: true,
+    // dotButtonClass : 'dot',
+    // dotIconClass : 'cc-star',
     useDots : true,
     easing: 'easeOutExpo',
     duration: 1000,
@@ -82,6 +84,7 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
 
         // CSS class names used
 
+        CLASS_ON = ROOT + '--on',
         CLASS_VERTICAL = ROOT + '--vertical',
         CLASS_INVIS = ROOT + "--invisible",
 
@@ -157,9 +160,6 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             total = 0,              // items count
             one = null,             // 1 item
 
-            navi = null,            // contains dots
-            dots = null,            // each dot
-
             prev = null,
             next = null,
             pause = null,
@@ -178,7 +178,10 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             onCloneStart = false,   // are we on a starting clone (negative number)
             onCloneEnd = false,
 
-            sets = 0,              // how many clicks before we reach the end
+            navi = null,            // contains dots
+            dots = null,
+            sets = 0,               // how many clicks before we reach the end
+            setItems = [],          // what each dot maps to
 
             useVelocity = false,    // use velocity to animate?
             animating = false,      // animation lock
@@ -204,6 +207,8 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
                 dotClass : '',
                 dotIconClass : CLASS_DOT_ICON,
                 dotButtonClass : '',
+                dotText : 'scroll to item ',
+                onClass : CLASS_ON,
 
                 pauseClass: '',
                 pauseIconClass : CLASS_PAUSE_ICON,
@@ -525,19 +530,29 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             navi = $('<ol/>', { 'class': CLASS_NAVI });
 
             for (var z=0; z < sets; z++){
+
                 var relatedItem = z * settings.scroll;
+                if (relatedItem > firstOfEnd) { relatedItem = firstOfEnd; }
 
                 var listItem = $('<li/>', { 'class': settings.dotClass });
                 var dot = $('<button/>', { 'class': settings.dotButtonClass });
                 var dotIcon = $('<span/>', { 'class' : settings.dotIconClass, 'aria-hidden': 'true' });
-                var dotContent = $('<span/>', { 'class' : CLASS_ACCESS_TEXT, 'text': 'scroll to item ' + relatedItem });
-                dot.append(dotIcon).append(dotContent);
+                var dotContent = $('<span/>', { 'class' : CLASS_ACCESS_TEXT, 'text': settings.dotText + relatedItem });
+
+                if (z === 0) { dot.addClass(settings.onClass); }
+
+                dot.data(DATA_ENUM, relatedItem).append(dotIcon).append(dotContent);
                 listItem.append(dot);
                 navi.append(listItem);
+
+                setItems.push(relatedItem);
             }
+
+            dots = $("."+CLASS_DOT_BTN, navi);
 
             scope.append(navi);
 
+            console.log("setItems ", setItems, " dots ", dots);
         };
 
         // --- if tabbing thorugh with keyboard scroll appropriately
@@ -771,8 +786,7 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             settings.nextClass = CLASS_BTN + ' ' + CLASS_NEXT + ' ' + settings.nextClass;
             settings.pauseClass = CLASS_BTN + ' ' + CLASS_PAUSE + ' ' + settings.pauseClass;
             settings.playClass = CLASS_BTN + ' ' + CLASS_PLAY + ' ' + settings.playClass;
-            settings.dotButtonClass = CLASS_BTN + ' ' + CLASS_DOT_BTN + ' ' + settings.dotButtonClass;
-
+            
             settings.prevIconClass = CLASS_ICON + ' ' + settings.prevIconClass;
             settings.nextIconClass = CLASS_ICON + ' ' + settings.nextIconClass;
             settings.pauseIconClass = CLASS_ICON + ' ' + settings.pauseIconClass;
@@ -780,6 +794,7 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
 
             settings.naviClass = CLASS_NAVI + ' ' + settings.naviClass;
             settings.dotClass = CLASS_DOT + ' ' + settings.dotClass;
+            settings.dotButtonClass = CLASS_BTN + ' ' + CLASS_DOT_BTN + ' ' + settings.dotButtonClass;
 
             if (settings.infinite) { atStart = false; }
         };

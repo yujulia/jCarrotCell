@@ -705,7 +705,7 @@ pre {
     .carrotcell__btn:disabled {
       opacity: 0.2;
       cursor: default; }
-    .carrotcell__btn.on .carrotcell__icon--dot {
+    .carrotcell__btn.carrotcell--on .carrotcell__icon--dot {
       color: #ff9900; }
     .carrotcell__btn--dot {
       display: block;
