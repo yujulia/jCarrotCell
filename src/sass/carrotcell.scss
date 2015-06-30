@@ -188,7 +188,7 @@
     }
 
 
-    &--invisible {
+    &--invisible, &--invisible:disabled {
         opacity: 0;
     }
 

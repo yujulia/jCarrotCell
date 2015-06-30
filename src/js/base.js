@@ -22,16 +22,16 @@ require('./jCarrotCell.js');
 
 
 var demo1 = $('#demo--1').carrotCell({ 
-    infinite: true,
+    // infinite: true,
     // dotButtonClass : 'dot',
     // dotIconClass : 'cc-star',
-    auto: true,
+    // auto: true,
     useDots: true,
     easing: 'easeOutExpo',
     duration: 1000,
     show: 1,
     scroll: 1,
-    // controlOnHover: true,
+    controlOnHover: true,
     key: true
 });
 

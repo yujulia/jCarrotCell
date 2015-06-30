@@ -781,7 +781,7 @@ pre {
     width: 1px;
     height: 1px;
     overflow: hidden; }
-  .carrotcell--invisible {
+  .carrotcell--invisible, .carrotcell--invisible:disabled {
     opacity: 0; }
   .carrotcell--vertical .carrotcell__btn--prev, .carrotcell--vertical .carrotcell__btn--next {
     left: 50%;

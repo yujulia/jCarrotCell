@@ -23,16 +23,16 @@ require('./jCarrotCell.js');
 
 
 var demo1 = $('#demo--1').carrotCell({ 
-    infinite: true,
+    // infinite: true,
     // dotButtonClass : 'dot',
     // dotIconClass : 'cc-star',
-    auto: true,
+    // auto: true,
     useDots: true,
     easing: 'easeOutExpo',
     duration: 1000,
     show: 1,
     scroll: 1,
-    // controlOnHover: true,
+    controlOnHover: true,
     key: true
 });
 
@@ -71,10 +71,11 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
 
     // --- global constants
 
-    var KEY_BACK = 37,
-        KEY_FORWARD = 39,
-        KEY_UP = 38,
-        KEY_DOWN = 40,
+    var KEY_BACK = 37,          // left arrow
+        KEY_FORWARD = 39,       // right arrow
+        KEY_UP = 38,            // up arrow
+        KEY_DOWN = 40,          // down arrow
+        KEY_TOGGLE = 32,        // space bar
 
         DEBOUNCE_RESIZE = 200,
 
@@ -165,6 +166,7 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             next = null,
             pause = null,
             play = null,
+            controls = $(),          // all the controls
 
             showing = [],           // what items are visible
 
@@ -215,18 +217,17 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
 
                 pauseClass: '',
                 pauseIconClass : CLASS_PAUSE_ICON,
-                pauseText : 'pause carousel scroll',
+                pauseText : 'pause auto scroll',
                 playClass : '',
                 playIconClass : CLASS_PLAY_ICON,
-                playText : 'resume carousel scroll',
+                playText : 'resume auto scroll',
 
                 prevClass : '',
                 prevIconClass : CLASS_PREV_ICON,
-                prevText : 'next carousel slide',
+                prevText : 'next item set',
                 nextClass : '',
                 nextIconClass : CLASS_NEXT_ICON,
-                nextText : 'previous carousel slide',
-
+                nextText : 'previous item set',
 
                 key: false,
                 keyBack: '',
@@ -509,6 +510,22 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             if (keyCode === settings.keyForward) { moveToNext(); }
         };
 
+        // --- setup hover triggered things
+
+        var setupHover = function(){
+
+            var showControls = function(){
+                controls.removeClass(CLASS_INVIS)
+            };
+
+            var hideControls = function(){
+                controls.addClass(CLASS_INVIS).blur();
+            };
+
+            hideControls();
+            scope.hover(showControls, hideControls);
+        };
+
         // --- create the previous and next buttons and attach events
 
         var setupPreNext = function(){
@@ -527,29 +544,41 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             prev.click(moveToPrev);
             next.click(moveToNext);
 
-            var blurPrev = function(){ prev.blur(); };
-            var blurNext = function(){ next.blur(); };
-            var showControls = function(){
-                next.removeClass(CLASS_INVIS); 
-                prev.removeClass(CLASS_INVIS);
-            };
-            var hideControls = function(){
-                next.addClass(CLASS_INVIS).blur(); 
-                prev.addClass(CLASS_INVIS).blur();
-            };
-
-            if (settings.controlOnHover && !track.touch){
-                hideControls();
-
-                // debounce these
-                scope.hover(showControls, hideControls);
-
-            } else {
-                prev.mouseleave(blurPrev);
-                next.mouseleave(blurNext);
-            }
-
             scope.prepend(next).prepend(prev);
+            controls = controls.add(prev).add(next);
+        };
+
+        // --- make pause and play buttons
+
+        var setupPausePlay = function(){
+            var pauseIcon = $('<span/>', { 'class' : settings.pauseIconClass, 'aria-hidden': 'true' });
+            var playIcon = $('<span/>', { 'class' : settings.playIconClass, 'aria-hidden': 'true' });
+            var pauseContent = $('<span/>', { 'class' : CLASS_ACCESS_TEXT, 'text': settings.pauseText });
+            var playContent = $('<span/>', { 'class' : CLASS_ACCESS_TEXT, 'text': settings.playText });
+            pause = $('<button/>', { 'class': settings.pauseClass });
+            play = $('<button/>', { 'class': settings.playClass });
+            pause.append(pauseIcon).append(pauseContent);
+            play.append(playIcon).append(playContent);
+
+            // toggle play or auto
+            var toggleAuto = function(){
+                if (playing) {
+                    play.hide();
+                    pause.show().focus();
+                } else {
+                    pause.hide();
+                    play.show().focus();
+                }
+                playing = !playing;
+
+                console.log("auto is now ", playing);
+            };
+
+            play.click(toggleAuto);
+            pause.click(toggleAuto);
+
+            scope.prepend(pause).prepend(play);
+            controls = controls.add(play).add(pause);
         };
 
         // --- a dot has been clicked, go to that item
@@ -592,38 +621,6 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             // console.log("setItems ", setItems, " dots ", dots);
         };
 
-        // --- make pause and play buttons
-
-        var setupPausePlay = function(){
-            var pauseIcon = $('<span/>', { 'class' : settings.pauseIconClass, 'aria-hidden': 'true' });
-            var playIcon = $('<span/>', { 'class' : settings.playIconClass, 'aria-hidden': 'true' });
-            var pauseContent = $('<span/>', { 'class' : CLASS_ACCESS_TEXT, 'text': settings.pauseText });
-            var playContent = $('<span/>', { 'class' : CLASS_ACCESS_TEXT, 'text': settings.playText });
-            pause = $('<button/>', { 'class': settings.pauseClass });
-            play = $('<button/>', { 'class': settings.playClass });
-            pause.append(pauseIcon).append(pauseContent);
-            play.append(playIcon).append(playContent);
-
-            // toggle play or auto
-            var toggleAuto = function(){
-                if (playing) {
-                    play.hide();
-                    pause.show().focus();
-                } else {
-                    pause.hide();
-                    play.show().focus();
-                }
-                playing = !playing;
-
-                console.log("auto is now ", playing);
-            };
-
-            play.click(toggleAuto);
-            pause.click(toggleAuto);
-
-            scope.prepend(pause).prepend(play);
-        };
-
         // --- if tabbing thorugh with keyboard scroll appropriately
 
         var setupFocusTab = function(){
@@ -640,18 +637,15 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
 
         var createControls = function(){
             setupPreNext();
-            setupFocusTab();
-
+            
             if (settings.key){
                 track.subscribeKey(settings.name, settings.keyBack, settings.keyForward);
             }
-            if (settings.useDots){
-                setupDots();
-            }
+            if (settings.useDots){ setupDots(); } 
+            if (settings.auto) { setupPausePlay(); } 
+            if (settings.controlOnHover && !track.touch){ setupHover(); }
 
-            if (settings.auto) {
-                setupPausePlay();
-            }
+            setupFocusTab();
         };
 
         // --- return attributes on some jquery element
