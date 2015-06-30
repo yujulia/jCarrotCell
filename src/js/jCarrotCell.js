@@ -131,6 +131,7 @@
             axis = "x",
 
             playing = false,        // playing or paused if auto
+            timer = null,           
 
             // --- these settings can be over written
 
@@ -144,6 +145,8 @@
                 force : true,           // force item size to be width/show
                 infinite : false,       // infinite scroll
                 auto : false,           // auto loop if circular
+                autoDuration : 5000,    // how long to pause on an item
+
                 stopOnHover : true,     // stop auto advance on hover
                 controlOnHover : false, // show controls on hover only
 
@@ -245,10 +248,7 @@
 
             if (settings.useDots && setItems.length) {
                 var fixedShowing = getShowing(); // no clones
-                console.log("FIXED ", fixedShowing, " normal ", showing);
-
                 for (var j = 0; j < settings.show; j++){
-                    // console.log("checking ", j, fixedShowing[j]);
                     if (inArray(setItems, fixedShowing[j])){
                         selectedDots.push(fixedShowing[j]);
                     }
@@ -450,17 +450,11 @@
             if (keyCode === settings.keyForward) { moveToNext(); }
         };
 
-        // --- setup hover triggered things
+        // --- setup hover triggered actions
 
         var setupHover = function(){
-
-            var showControls = function(){
-                controls.removeClass(CLASS_INVIS);
-            };
-
-            var hideControls = function(){
-                controls.addClass(CLASS_INVIS).blur();
-            };
+            var showControls = function(){ controls.removeClass(CLASS_INVIS); };
+            var hideControls = function(){ controls.addClass(CLASS_INVIS).blur(); };
 
             hideControls();
             scope.hover(showControls, hideControls);
@@ -469,7 +463,6 @@
         // --- create the previous and next buttons and attach events
 
         var setupPreNext = function(){
-            
             var prevIcon = $('<span/>', { 'class' : settings.prevIconClass, 'aria-hidden': 'true' });
             var nextIcon = $('<span/>', { 'class' : settings.nextIconClass, 'aria-hidden': 'true' });
             var prevContent = $('<span/>', { 'class' : CLASS_ACCESS_TEXT, 'text': settings.prevText });
@@ -488,6 +481,28 @@
             controls = controls.add(prev).add(next);
         };
 
+        // --- one move
+
+        var autoPlayed = function(){
+            moveToNext();
+            if (playing) {
+                startAutoPlay();
+            }
+        };
+
+        // --- start auto play
+
+        var startAutoPlay = function(){
+            if (timer) { clearTimeout(timer); }
+            timer = setTimeout(autoPlayed, settings.autoDuration);
+            playing = true;
+        };
+
+        var stopAutoPlay = function(){
+            if (timer) { clearTimeout(timer); }
+            playing = false;
+        };
+
         // --- make pause and play buttons
 
         var setupPausePlay = function(){
@@ -504,6 +519,7 @@
             // toggle play or auto
             var toggleAuto = function(){
                 if (playing) {
+                    console.log("it was playing");
                     play.prop("disabled", true).hide();
                     pause.prop("disabled", false).show().focus();
                 } else {
@@ -523,6 +539,8 @@
 
             scope.prepend(pause).prepend(play);
             controls = controls.add(play).add(pause);
+
+            startAutoPlay();
         };
 
         // --- a dot has been clicked, go to that item
@@ -700,7 +718,6 @@
             clones = $("." + CLASS_CLONE, scope);
 
             alreadyMoved = settings.show;
-
         };
 
         // --- set the size of the clipping pane 
@@ -777,7 +794,9 @@
 
             if (settings.sideways) { axis = "x"; } else { axis = "y"; }
 
-            if (settings.auto) { settings.infinite = true;  }
+            if (settings.auto) { 
+                settings.infinite = true;             
+            }
 
             if (settings.key) {
                 if (settings.sideways) {
