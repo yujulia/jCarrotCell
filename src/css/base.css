@@ -265,19 +265,24 @@ pre {
       border-color: #999; }
     .demo__item figure {
       position: relative;
-      margin: 5px;
+      margin: 5px 20px;
       text-align: center;
       top: 50%;
       transform: translateY(-50%); }
-      .demo__item figure figcaption {
-        font-family: code;
-        font-weight: 700;
-        font-size: 20px;
-        color: #666;
-        display: inline; }
+    .demo__item figcaption {
+      font-family: code;
+      font-weight: 700;
+      font-size: 12px;
+      color: #666;
+      display: inline-block;
+      position: absolute;
+      top: 10px;
+      right: 10px; }
     .demo__item .cc-carrot {
       font-size: 30px;
       display: inline; }
+    .demo__item .zero-carrot {
+      opacity: 0.1; }
 
 .vertical {
   width: 293.33333px;

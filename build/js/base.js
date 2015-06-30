@@ -25,8 +25,8 @@ require('./jCarrotCell.js');
 var demo1 = $('#demo--1').carrotCell({ 
     // infinite: true,
     easing: 'easeOutExpo',
-    show: 2,
-    scroll: 1,
+    show: 4,
+    scroll: 2,
     // controlOnHover: true,
     key: true
 });
@@ -136,34 +136,34 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
     */
     var carrot = function(){
 
-        var scope = null,       // shorthand for settings.scope
-            width = 0,          // container width
-            height = 0,         // container height
-            clipPane = null,    // clipping box
+        var scope = null,           // shorthand for settings.scope
+            width = 0,              // container width
+            height = 0,             // container height
+            clipPane = null,        // clipping box
 
-            slider = null,      // sliding panel
+            slider = null,          // sliding panel
             sliderSize = 0,
 
-            clones = null,      // clones for infinite scroll
-            items = null,       // all items elements
-            total = 0,          // items count
-            one = null,         // 1 item
+            clones = null,          // clones for infinite scroll
+            items = null,           // all items elements
+            total = 0,              // items count
+            one = null,             // 1 item
 
             prev = null,
             next = null,
             pause = null,
             play = null,
 
-            showing = [],       // what items are visible
+            showing = [],           // what items are visible
 
-            current = 0,        // current item scrolled to
-            alreadyMoved = 0,   // how many items already moved past
+            current = 0,            // current item scrolled to
+            alreadyMoved = 0,       // how many items already moved past
             scrollBy = 0,
 
-            atStart = true,     // no more in prev
-            atEnd = false,      // no more in next
-            direction = 1,      // direction we scrolling
-
+            atStart = true,         // no more in prev
+            atEnd = false,          // no more in next
+            direction = 1,          // direction we scrolling
+            firstOfEnd = 0,         // first item in end view
             onCloneStart = false,   // are we on a starting clone (negative number)
             onCloneEnd = false,
 
@@ -323,6 +323,7 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
 
             if (isInteger(itemIndex)) {
                 current = itemIndex;
+                console.log("done scrolling item ", itemIndex);
             } else {
                 current = current + direction * scrollBy; // update new current
             }       
@@ -355,18 +356,32 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
 
         // --- stop scrolling to out of bounds in non infinite mode
 
-        var fixScrollRange = function(){
-            var destination = scrollBy * direction + alreadyMoved; // about to scroll to this item
-            var firstOfEnd = total - settings.scroll; // the first item in the ending view
+        var fixScrollRange = function(itemIndex){
 
-            console.log("this is fix range ", current);
-
-            if (destination > firstOfEnd) { 
-                return scrollBy - (destination - firstOfEnd);     
-            } else if (destination < 0) {
-                return scrollBy + destination;  // first item ever
+            if (isInteger(itemIndex)) {
+                var firstCurrent = getShowing()[0]; // get first item showing
+                if (firstCurrent === itemIndex) {
+                    error("already has ", itemIndex, " as the current value");
+                    return false;
+                } else if (firstCurrent > itemIndex){ 
+                    direction = -1; 
+                    scrollBy = firstCurrent - itemIndex;
+                } else {  
+                    if (!settings.infinite && (itemIndex > firstOfEnd)) {  
+                        itemIndex = firstOfEnd;  
+                    }
+                    direction = 1; 
+                    scrollBy = itemIndex - firstCurrent;
+                }
             } else {
-                return scrollBy;                // no change
+                var destination = settings.scroll * direction + alreadyMoved; 
+                if (destination > firstOfEnd) { 
+                    scrollBy = settings.scroll - (destination - firstOfEnd);     
+                } else if (destination < 0) {
+                    scrollBy = settings.scroll + destination;  
+                } else {
+                    scrollBy = settings.scroll;
+                }
             }
         };
 
@@ -377,37 +392,34 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
        
             // --- an itemindex was passed in, we are ignoring settings.scroll to scroll to something
 
-            if (isInteger(itemIndex)) {
+            // if (isInteger(itemIndex)) {
 
-                if (inArray(showing, itemIndex)) {
-                    error("already showing item at ", itemIndex, showing);
-                    return false; 
-                } 
+            //     var firstCurrent = getShowing()[0]; // get first item showing
+            //     if (firstCurrent === itemIndex) {
+            //         error("already has ", itemIndex, " as the current value");
+            //         return false;
+            //     } else if (firstCurrent > itemIndex){ 
+            //         direction = -1; 
+            //         scrollBy = firstCurrent - itemIndex;
+            //     } else {  
+            //         if (!settings.infinite && (itemIndex > firstOfEnd)) {  
+            //             itemIndex = firstOfEnd;  
+            //         }
+            //         direction = 1; 
+            //         scrollBy = itemIndex - firstCurrent;
+            //     }
 
-                var realCurrent = getShowing()[0]; // get first item showing
-                if (!settings.infinite){ scrollBy = fixScrollRange(); }
-                
-                console.log("real current ", realCurrent);
+            //     // console.log("#### item index ", itemIndex, " current is ", firstCurrent, " scroll by ", scrollBy, " dir ", direction);
 
-                if (realCurrent > itemIndex){ 
-                    direction = -1; 
-                    scrollBy = realCurrent - itemIndex;
-                } else { 
-                    direction = 1; 
-                    scrollBy = itemIndex - realCurrent;
-                }
+            // // --- normal scroll without itemindex
 
-                console.log("#### item index ", itemIndex, " current is ", current, " scroll by ", scrollBy, " dir ", direction);
+            // } else {
+            //     // scrollBy = settings.scroll; // default scroll
+            //     if (!settings.infinite){ fixScrollRange(); } // see if default takes us out of range
+            //     // console.log("XXX scroll by ", scrollBy, " moved ", alreadyMoved, " current ", current);
+            // }
 
-            // --- normal scroll without itemindex
-
-            } else {
-                scrollBy = settings.scroll;
-
-                if (!settings.infinite){ scrollBy = fixScrollRange(); }
-
-                console.log("XXX scroll by ", scrollBy, " moved ", alreadyMoved, " current ", current);
-            }
+            fixScrollRange();
 
             var params = {
                 offset: direction * scrollBy * one.totalSize + alreadyMoved * one.totalSize,
@@ -720,7 +732,9 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
         var findMoves = function(){
 
             moves = Math.ceil((total - (settings.show-settings.scroll)) / settings.scroll) - 1;
-            console.log("moves ", moves);
+            firstOfEnd = total - settings.show; // the first item in the ending view
+
+            console.log("moves ", moves, " first of end ", firstOfEnd, " total ", total, " show ", settings.show);
         
             updateShowing();
         };
