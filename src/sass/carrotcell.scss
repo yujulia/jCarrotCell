@@ -80,6 +80,10 @@
             .carrotcell__icon--dot {
                 color: #ff9900;
             }
+
+            &:focus .carrotcell__icon--dot {
+                color: #666;
+            }
         }
 
         &--dot {

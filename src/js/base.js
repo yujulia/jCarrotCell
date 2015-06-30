@@ -28,8 +28,8 @@ var demo1 = $('#demo--1').carrotCell({
     useDots : true,
     easing: 'easeOutExpo',
     duration: 1000,
-    show: 2,
-    scroll: 2,
+    show: 1,
+    scroll: 1,
     // controlOnHover: true,
     key: true
 });

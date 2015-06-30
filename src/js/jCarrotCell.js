@@ -148,7 +148,7 @@
                 dotClass : '',
                 dotIconClass : CLASS_DOT_ICON,
                 dotButtonClass : '',
-                dotText : 'scroll to item ',
+                dotText : 'item set ',
                 onClass : CLASS_ON,
 
                 pauseClass: '',
@@ -209,6 +209,21 @@
 
             return fixShowing;
         };
+
+        // --- toggle on the dots that are visible;
+
+        var updateDots = function(selectedDots){
+
+            dots.removeClass(settings.onClass);
+
+            console.log("showing ", selectedDots, " in ", setItems);
+
+            var toggleSelectedDot = function(dotIndex){
+                $(dots[dotIndex]).addClass(settings.onClass);
+            };
+
+            selectedDots.forEach(toggleSelectedDot);
+        };
             
         // --- update record on what is actually shown on screen
 
@@ -218,15 +233,29 @@
             atStart = false;
             atEnd = false;
 
-            for (var k = 0; k < settings.show; k++){
-                showing[k] = current + k;
+            var selectedDots = [];
 
-                if (showing[k] <= 0) { atStart = true; } // showing first item
-                if (showing[k] >= total-1 ) { atEnd = true; } // showing last item
-                if (showing[k] < 0 ) { onCloneStart = true; } 
-                if (showing[k] > total-1 ) { onCloneEnd = true; } 
+            for (var k = 0; k < settings.show; k++){
+                var iShowing = current + k
+                showing[k] = iShowing;
+
+                if (iShowing <= 0) { atStart = true; } // showing first item
+                if (iShowing >= total-1 ) { atEnd = true; } // showing last item
+                if (iShowing < 0 ) { onCloneStart = true; } 
+                if (iShowing > total-1 ) { onCloneEnd = true; } 
+
+                if (settings.useDots && setItems.length) {
+                    if (inArray(setItems, iShowing)){
+                        selectedDots.push(iShowing);
+                    }
+                }
             }
 
+            if (settings.useDots && setItems.length) {
+                updateDots(selectedDots);
+            }
+
+            
             // console.log("[ showing updated ] ", showing, ' on clone start? ', onCloneStart);
             // console.log("at start? ", atStart, " at end? ", atEnd);
         };
@@ -464,36 +493,50 @@
             scope.prepend(next).prepend(prev);
         };
 
+        // --- a dot has been clicked, go to that item
+
+        var goToDotItem = function(e){
+            if (e) { e.preventDefault(); }
+
+            var dotEnum = $(this).data(DATA_ENUM);
+
+            if (current === dotEnum) {
+                console.log("already on this dot");
+                return false;
+            }
+            
+            scrollToItem(dotEnum);  
+            dots.removeClass(CLASS_ON);
+            $(this).addClass(CLASS_ON);
+        };
+
         // --- setup dots
 
         var setupDots = function(){
-            // a list of buttons
             navi = $('<ol/>', { 'class': CLASS_NAVI });
+            var prevItem = null;
 
             for (var z=0; z < sets; z++){
-
                 var relatedItem = z * settings.scroll;
                 if (relatedItem > firstOfEnd) { relatedItem = firstOfEnd; }
-
-                var listItem = $('<li/>', { 'class': settings.dotClass });
-                var dot = $('<button/>', { 'class': settings.dotButtonClass });
-                var dotIcon = $('<span/>', { 'class' : settings.dotIconClass, 'aria-hidden': 'true' });
-                var dotContent = $('<span/>', { 'class' : CLASS_ACCESS_TEXT, 'text': settings.dotText + relatedItem });
-
-                if (z === 0) { dot.addClass(settings.onClass); }
-
-                dot.data(DATA_ENUM, relatedItem).append(dotIcon).append(dotContent);
-                listItem.append(dot);
-                navi.append(listItem);
-
-                setItems.push(relatedItem);
+                if (prevItem !== relatedItem) {
+                    var listItem = $('<li/>', { 'class': settings.dotClass });
+                    var dot = $('<button/>', { 'class': settings.dotButtonClass });
+                    var dotIcon = $('<span/>', { 'class' : settings.dotIconClass, 'aria-hidden': 'true' });
+                    var dotContent = $('<span/>', { 'class' : CLASS_ACCESS_TEXT, 'text': settings.dotText + z });
+                    dot.data(DATA_ENUM, relatedItem).append(dotIcon).append(dotContent);
+                    dot.click(goToDotItem);
+                    listItem.append(dot);
+                    navi.append(listItem);
+                    setItems.push(relatedItem);
+                    prevItem = relatedItem;
+                }
             }
 
             dots = $("."+CLASS_DOT_BTN, navi);
-
             scope.append(navi);
-
-            console.log("setItems ", setItems, " dots ", dots);
+            updateShowing(); // toggle on the dots
+            // console.log("setItems ", setItems, " dots ", dots);
         };
 
         // --- if tabbing thorugh with keyboard scroll appropriately

@@ -707,6 +707,8 @@ pre {
       cursor: default; }
     .carrotcell__btn.carrotcell--on .carrotcell__icon--dot {
       color: #ff9900; }
+    .carrotcell__btn.carrotcell--on:focus .carrotcell__icon--dot {
+      color: #666; }
     .carrotcell__btn--dot {
       display: block;
       padding: 0;
