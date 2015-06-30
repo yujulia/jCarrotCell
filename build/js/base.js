@@ -26,7 +26,7 @@ var demo1 = $('#demo--1').carrotCell({
     // infinite: true,
     // dotButtonClass : 'dot',
     // dotIconClass : 'cc-star',
-    // auto: true,
+    auto: true,
     useDots: true,
     easing: 'easeOutExpo',
     duration: 1000,
@@ -515,7 +515,7 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
         var setupHover = function(){
 
             var showControls = function(){
-                controls.removeClass(CLASS_INVIS)
+                controls.removeClass(CLASS_INVIS);
             };
 
             var hideControls = function(){
@@ -559,23 +559,27 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             play = $('<button/>', { 'class': settings.playClass });
             pause.append(pauseIcon).append(pauseContent);
             play.append(playIcon).append(playContent);
+            var toggleSet = $().add(play).add(pause);
 
             // toggle play or auto
             var toggleAuto = function(){
                 if (playing) {
-                    play.hide();
-                    pause.show().focus();
+                    play.prop("disabled", true).hide();
+                    pause.prop("disabled", false).show().focus();
                 } else {
-                    pause.hide();
-                    play.show().focus();
+                    pause.prop("disabled", true).hide();
+                    play.prop("disabled", false).show().focus();
                 }
                 playing = !playing;
 
                 console.log("auto is now ", playing);
             };
 
+            var blurToggleSet = function(){ toggleSet.blur(); }
+
             play.click(toggleAuto);
             pause.click(toggleAuto);
+            toggleSet.mouseleave(blurToggleSet);
 
             scope.prepend(pause).prepend(play);
             controls = controls.add(play).add(pause);

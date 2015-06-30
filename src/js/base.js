@@ -25,7 +25,7 @@ var demo1 = $('#demo--1').carrotCell({
     // infinite: true,
     // dotButtonClass : 'dot',
     // dotIconClass : 'cc-star',
-    // auto: true,
+    auto: true,
     useDots: true,
     easing: 'easeOutExpo',
     duration: 1000,
