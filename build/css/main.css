@@ -568,7 +568,7 @@ pre {
   width: 90%;
   background: #f9f9f9;
   margin: 20px auto;
-  padding: 40px 40px 10px 40px; }
+  padding: 40px; }
   .demo .carrotcell__clone {
     border-color: #bbb; }
   .demo__item {
@@ -684,7 +684,10 @@ pre {
     text-align: center;
     margin: 10px 0 0 0;
     padding: 0;
-    width: 100%; }
+    width: 100%;
+    position: absolute;
+    bottom: 5px;
+    left: 0; }
   .carrotcell__dot {
     display: inline-block;
     margin: 0; }

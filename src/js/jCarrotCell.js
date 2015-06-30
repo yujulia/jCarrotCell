@@ -131,6 +131,7 @@
             axis = "x",
 
             playing = false,        // playing or paused if auto
+            paused = false,
             timer = null,           
 
             // --- these settings can be over written
@@ -145,7 +146,7 @@
                 force : true,           // force item size to be width/show
                 infinite : false,       // infinite scroll
                 auto : false,           // auto loop if circular
-                autoDuration : 5000,    // how long to pause on an item
+                autoDuration : 2000,    // how long to pause on an item
 
                 stopOnHover : true,     // stop auto advance on hover
                 controlOnHover : false, // show controls on hover only
@@ -158,6 +159,7 @@
                 dotText : 'item set ',
                 onClass : CLASS_ON,
 
+                usePausePlay : true,
                 pauseClass: '',
                 pauseIconClass : CLASS_PAUSE_ICON,
                 pauseText : 'pause auto scroll',
@@ -165,6 +167,7 @@
                 playIconClass : CLASS_PLAY_ICON,
                 playText : 'resume auto scroll',
 
+                usePrevNext : true,
                 prevClass : '',
                 prevIconClass : CLASS_PREV_ICON,
                 prevText : 'next item set',
@@ -422,10 +425,7 @@
             if ((atStart && !settings.infinite) || animating) { return false; }
 
             direction = -1;
-            if (onCloneStart){
-                console.log("------------------------------------- DIR CHANGE PREV current ", current);
-                replaceWithEnd(); // cant go prev as we are on a clone, replace
-            } 
+            if (onCloneStart){ replaceWithEnd(); } 
             scrollToItem();
         };
 
@@ -437,7 +437,6 @@
 
             direction = 1;
             if (onCloneEnd){
-                console.log("------------------------------------- DIR CHANGE NEXT current ", current);
                 replaceWithStart(); // cant go prev as we are on a clone, replace
             } 
             scrollToItem();
@@ -450,14 +449,62 @@
             if (keyCode === settings.keyForward) { moveToNext(); }
         };
 
+        // --- start auto play
+
+        var startAutoPlay = function(){
+            if (timer) { clearTimeout(timer); }
+            timer = setTimeout(autoPlayed, settings.autoDuration);
+        };
+
+        // --- stop auto play
+
+        var stopAutoPlay = function(){
+            if (timer) { clearTimeout(timer); }    
+        };
+
+        // --- auto play moved once
+
+        var autoPlayed = function(){
+            if (!paused) { moveToNext(); }
+            if (playing) { startAutoPlay(); }
+        };
+
+        // --- toggle play or auto
+
+        var toggleAuto = function(){
+            playing = !playing;
+            if (playing) {
+                if (settings.usePausePlay && play) {
+                    play.prop("disabled", true).hide();
+                    pause.prop("disabled", false).show().focus();
+                }
+                startAutoPlay();
+            } else {
+                if (settings.usePausePlay && play) {
+                    pause.prop("disabled", true).hide();
+                    play.prop("disabled", false).show().focus();
+                }
+                stopAutoPlay(); 
+            }
+
+            console.log("auto is now ", playing);
+        };
+
         // --- setup hover triggered actions
 
         var setupHover = function(){
-            var showControls = function(){ controls.removeClass(CLASS_INVIS); };
-            var hideControls = function(){ controls.addClass(CLASS_INVIS).blur(); };
 
-            hideControls();
-            scope.hover(showControls, hideControls);
+            var onCarrotCell = function(){ 
+                if (settings.controlOnHover) { controls.removeClass(CLASS_INVIS); }
+                paused = true;
+            };
+            var offCarrotCell = function(){ 
+                if (settings.controlOnHover) { controls.addClass(CLASS_INVIS).blur(); }
+                paused = false;
+            };
+
+            offCarrotCell();
+            scope.hover(onCarrotCell, offCarrotCell);
         };
 
         // --- create the previous and next buttons and attach events
@@ -481,28 +528,6 @@
             controls = controls.add(prev).add(next);
         };
 
-        // --- one move
-
-        var autoPlayed = function(){
-            moveToNext();
-            if (playing) {
-                startAutoPlay();
-            }
-        };
-
-        // --- start auto play
-
-        var startAutoPlay = function(){
-            if (timer) { clearTimeout(timer); }
-            timer = setTimeout(autoPlayed, settings.autoDuration);
-            playing = true;
-        };
-
-        var stopAutoPlay = function(){
-            if (timer) { clearTimeout(timer); }
-            playing = false;
-        };
-
         // --- make pause and play buttons
 
         var setupPausePlay = function(){
@@ -516,31 +541,15 @@
             play.append(playIcon).append(playContent);
             var toggleSet = $().add(play).add(pause);
 
-            // toggle play or auto
-            var toggleAuto = function(){
-                if (playing) {
-                    console.log("it was playing");
-                    play.prop("disabled", true).hide();
-                    pause.prop("disabled", false).show().focus();
-                } else {
-                    pause.prop("disabled", true).hide();
-                    play.prop("disabled", false).show().focus();
-                }
-                playing = !playing;
-
-                console.log("auto is now ", playing);
-            };
-
             var blurToggleSet = function(){ toggleSet.blur(); }
 
             play.click(toggleAuto);
             pause.click(toggleAuto);
+
             toggleSet.mouseleave(blurToggleSet);
 
             scope.prepend(pause).prepend(play);
             controls = controls.add(play).add(pause);
-
-            startAutoPlay();
         };
 
         // --- a dot has been clicked, go to that item
@@ -598,14 +607,17 @@
         // -- create icon prev and next buttons
 
         var createControls = function(){
-            setupPreNext();
+            if (settings.usePrevNext) { setupPreNext(); }
             
             if (settings.key){
                 track.subscribeKey(settings.name, settings.keyBack, settings.keyForward);
             }
             if (settings.useDots){ setupDots(); } 
-            if (settings.auto) { setupPausePlay(); } 
-            if (settings.controlOnHover && !track.touch){ setupHover(); }
+            if (settings.auto) { 
+                if (settings.usePausePlay) { setupPausePlay(); }
+                toggleAuto();
+            } 
+            if (!track.touch){ setupHover(); }
 
             setupFocusTab();
         };
@@ -808,19 +820,25 @@
                 }
             }
 
-            settings.prevClass = CLASS_BTN + ' ' + CLASS_PREV + ' ' + settings.prevClass;
-            settings.nextClass = CLASS_BTN + ' ' + CLASS_NEXT + ' ' + settings.nextClass;
-            settings.pauseClass = CLASS_BTN + ' ' + CLASS_PAUSE + ' ' + settings.pauseClass;
-            settings.playClass = CLASS_BTN + ' ' + CLASS_PLAY + ' ' + settings.playClass;
-            
-            settings.prevIconClass = CLASS_ICON + ' ' + settings.prevIconClass;
-            settings.nextIconClass = CLASS_ICON + ' ' + settings.nextIconClass;
-            settings.pauseIconClass = CLASS_ICON + ' ' + settings.pauseIconClass;
-            settings.playIconClass = CLASS_ICON + ' ' + settings.playIconClass;
+            if (settings.usePrevNext) {
+                settings.prevClass = CLASS_BTN + ' ' + CLASS_PREV + ' ' + settings.prevClass;
+                settings.nextClass = CLASS_BTN + ' ' + CLASS_NEXT + ' ' + settings.nextClass;
+                settings.prevIconClass = CLASS_ICON + ' ' + settings.prevIconClass;
+                settings.nextIconClass = CLASS_ICON + ' ' + settings.nextIconClass;
+            }
 
-            settings.naviClass = CLASS_NAVI + ' ' + settings.naviClass;
-            settings.dotClass = CLASS_DOT + ' ' + settings.dotClass;
-            settings.dotButtonClass = CLASS_BTN + ' ' + CLASS_DOT_BTN + ' ' + settings.dotButtonClass;
+            if (settings.usePausePlay) {
+                settings.pauseClass = CLASS_BTN + ' ' + CLASS_PAUSE + ' ' + settings.pauseClass;
+                settings.playClass = CLASS_BTN + ' ' + CLASS_PLAY + ' ' + settings.playClass;
+                settings.pauseIconClass = CLASS_ICON + ' ' + settings.pauseIconClass;
+                settings.playIconClass = CLASS_ICON + ' ' + settings.playIconClass;
+            }
+            
+            if (settings.useDots) {
+                settings.naviClass = CLASS_NAVI + ' ' + settings.naviClass;
+                settings.dotClass = CLASS_DOT + ' ' + settings.dotClass;
+                settings.dotButtonClass = CLASS_BTN + ' ' + CLASS_DOT_BTN + ' ' + settings.dotButtonClass;
+            }
 
             if (settings.infinite) { atStart = false; }
         };
