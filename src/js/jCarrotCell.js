@@ -299,72 +299,46 @@
             console.log("===========================", showing, " current ", current);
         };
 
-        // --- stop scrolling to out of bounds in non infinite mode
+        // --- calculate the scroll
 
-        var fixScrollRange = function(itemIndex){
+        var scrollToItem = function(itemIndex){
+            animating = true;
+    
+            if (isInteger(itemIndex)) {      
 
-            if (isInteger(itemIndex)) {
+                // --- scrolling to an item index 
+
                 var firstCurrent = getShowing()[0]; // get first item showing
                 if (firstCurrent === itemIndex) {
-                    error("already has ", itemIndex, " as the current value");
+                    error(itemIndex, " is currently shown.");
                     return false;
                 } else if (firstCurrent > itemIndex){ 
                     direction = -1; 
-                    scrollBy = firstCurrent - itemIndex;
+                    scrollBy = firstCurrent - itemIndex; // scroll backwards
                 } else {  
                     if (!settings.infinite && (itemIndex > firstOfEnd)) {  
                         itemIndex = firstOfEnd;  
                     }
                     direction = 1; 
-                    scrollBy = itemIndex - firstCurrent;
+                    scrollBy = itemIndex - firstCurrent; 
                 }
             } else {
-                var destination = settings.scroll * direction + alreadyMoved; 
-                if (destination > firstOfEnd) { 
-                    scrollBy = settings.scroll - (destination - firstOfEnd);     
-                } else if (destination < 0) {
-                    scrollBy = settings.scroll + destination;  
-                } else {
+                
+                // ---- only none infinite scroll needs a range fix
+
+                if (settings.infinite) {
                     scrollBy = settings.scroll;
+                } else {
+                    var destination = settings.scroll * direction + alreadyMoved; 
+                    if (destination > firstOfEnd) { 
+                        scrollBy = settings.scroll - (destination - firstOfEnd);     
+                    } else if (destination < 0) {
+                        scrollBy = settings.scroll + destination;  
+                    } else {
+                        scrollBy = settings.scroll;
+                    }
                 }
             }
-        };
-
-        // --- calculate the scroll
-
-        var scrollToItem = function(itemIndex){
-            animating = true;
-       
-            // --- an itemindex was passed in, we are ignoring settings.scroll to scroll to something
-
-            // if (isInteger(itemIndex)) {
-
-            //     var firstCurrent = getShowing()[0]; // get first item showing
-            //     if (firstCurrent === itemIndex) {
-            //         error("already has ", itemIndex, " as the current value");
-            //         return false;
-            //     } else if (firstCurrent > itemIndex){ 
-            //         direction = -1; 
-            //         scrollBy = firstCurrent - itemIndex;
-            //     } else {  
-            //         if (!settings.infinite && (itemIndex > firstOfEnd)) {  
-            //             itemIndex = firstOfEnd;  
-            //         }
-            //         direction = 1; 
-            //         scrollBy = itemIndex - firstCurrent;
-            //     }
-
-            //     // console.log("#### item index ", itemIndex, " current is ", firstCurrent, " scroll by ", scrollBy, " dir ", direction);
-
-            // // --- normal scroll without itemindex
-
-            // } else {
-            //     // scrollBy = settings.scroll; // default scroll
-            //     if (!settings.infinite){ fixScrollRange(); } // see if default takes us out of range
-            //     // console.log("XXX scroll by ", scrollBy, " moved ", alreadyMoved, " current ", current);
-            // }
-
-            fixScrollRange();
 
             var params = {
                 offset: direction * scrollBy * one.totalSize + alreadyMoved * one.totalSize,
