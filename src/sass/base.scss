@@ -219,7 +219,7 @@ pre {
     width: 90%;
     background: #f9f9f9;
     margin: 20px auto;
-    padding: $pad-button;
+    padding: $pad-button $pad-button 10px $pad-button;
     // box-sizing: border-box;
 
     .carrotcell__clone {

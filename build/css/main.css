@@ -568,7 +568,7 @@ pre {
   width: 90%;
   background: #f9f9f9;
   margin: 20px auto;
-  padding: 40px; }
+  padding: 40px 40px 10px 40px; }
   .demo .carrotcell__clone {
     border-color: #bbb; }
   .demo__item {
@@ -649,6 +649,7 @@ pre {
     width: 100%; } }
 
 
+@charset "UTF-8";
 /*! 
 	CARROT CELL support CSS
 */
@@ -680,6 +681,14 @@ pre {
     float: left;
     z-index: 1;
     -webkit-backface-visibility: hidden; }
+  .carrotcell__navi {
+    text-align: center;
+    margin: 10px 0 0 0;
+    padding: 0;
+    width: 100%; }
+  .carrotcell__dot {
+    display: inline-block;
+    margin: 0; }
   .carrotcell__btn {
     cursor: pointer;
     background: none;
@@ -689,11 +698,19 @@ pre {
     z-index: 2; }
     .carrotcell__btn:focus, .carrotcell__btn:hover:enabled {
       opacity: 1; }
-      .carrotcell__btn:focus .carrotcell__icon--prev, .carrotcell__btn:focus .carrotcell__icon--next, .carrotcell__btn:hover:enabled .carrotcell__icon--prev, .carrotcell__btn:hover:enabled .carrotcell__icon--next {
+      .carrotcell__btn:focus .carrotcell__icon, .carrotcell__btn:hover:enabled .carrotcell__icon {
         background: #666; }
+      .carrotcell__btn:focus .carrotcell__icon--dot, .carrotcell__btn:hover:enabled .carrotcell__icon--dot {
+        color: #666; }
     .carrotcell__btn:disabled {
       opacity: 0.2;
       cursor: default; }
+    .carrotcell__btn.on .carrotcell__icon--dot {
+      color: #ff9900; }
+    .carrotcell__btn--dot {
+      display: block;
+      padding: 0;
+      margin: 0; }
     .carrotcell__btn--prev, .carrotcell__btn--next {
       position: absolute;
       top: 50%;
@@ -701,11 +718,6 @@ pre {
       left: 8px;
       transition: opacity .2s ease-in-out;
       opacity: 1; }
-      .carrotcell__btn--prev .carrotcell__icon--prev, .carrotcell__btn--prev .carrotcell__icon--next, .carrotcell__btn--next .carrotcell__icon--prev, .carrotcell__btn--next .carrotcell__icon--next {
-        font-size: 20px;
-        border-radius: 100%;
-        background: #ff9900;
-        color: #fff; }
     .carrotcell__btn--next {
       left: auto;
       right: 8px; }
@@ -717,17 +729,32 @@ pre {
     line-height: 1em;
     height: 26px;
     width: 26px;
-    text-align: center; }
+    text-align: center;
+    font-size: 20px;
+    border-radius: 100%;
+    background: #ff9900;
+    color: #fff; }
+    .carrotcell__icon::before {
+      display: block;
+      vertical-align: text-top; }
     .carrotcell__icon--prev::before {
       content: '\2039';
-      padding: 1px 0 0px 0px;
-      display: block;
-      vertical-align: text-top; }
+      padding: 1px 0 0px 0px; }
     .carrotcell__icon--next::before {
       content: '\203A';
-      padding: 1px 0 0px 1px;
+      padding: 1px 0 0px 1px; }
+    .carrotcell__icon--dot {
       display: block;
-      vertical-align: text-top; }
+      margin: 0;
+      padding: 0; }
+      .carrotcell__icon--dot::before {
+        content: '•';
+        font-size: 30px;
+        padding: 1px;
+        display: block;
+        line-height: 0.7em;
+        padding: 0 4px 2px;
+        vertical-align: text-top; }
   .carrotcell__accessText {
     position: absolute;
     left: -10000px;

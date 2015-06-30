@@ -33,16 +33,22 @@
         CLASS_ITEM = ROOT + '__item',
         CLASS_CLONE = ROOT + "__clone",
         CLASS_ACCESS_TEXT = ROOT + '__accessText',
+        CLASS_NAVI = ROOT + "__navi",
+        CLASS_DOT = ROOT + "__dot",
 
         CLASS_ICON = ROOT + '__icon',
         CLASS_NEXT_ICON = CLASS_ICON + '--next',
         CLASS_PREV_ICON = CLASS_ICON + '--prev',
         CLASS_PAUSE_ICON = CLASS_ICON + '--pause',
         CLASS_PLAY_ICON = CLASS_ICON + '--play',
-        
+        CLASS_DOT_ICON = CLASS_ICON + '--dot',
+
         CLASS_BTN = ROOT + '__btn',
         CLASS_NEXT = CLASS_BTN + '--next',
-        CLASS_PREV = CLASS_BTN + '--prev';
+        CLASS_PREV = CLASS_BTN + '--prev',
+        CLASS_PAUSE = CLASS_BTN + '--pause',
+        CLASS_PLAY = CLASS_BTN + '--play',
+        CLASS_DOT_BTN = CLASS_BTN + '--dot';
 
     // --- debounce helper 
 
@@ -94,6 +100,9 @@
             total = 0,              // items count
             one = null,             // 1 item
 
+            navi = null,            // contains dots
+            dots = null,            // each dot
+
             prev = null,
             next = null,
             pause = null,
@@ -112,7 +121,7 @@
             onCloneStart = false,   // are we on a starting clone (negative number)
             onCloneEnd = false,
 
-            moves = 0,              // how many clicks before we reach the end
+            sets = 0,              // how many clicks before we reach the end
 
             useVelocity = false,    // use velocity to animate?
             animating = false,      // animation lock
@@ -133,18 +142,28 @@
                 stopOnHover : true,     // stop auto advance on hover
                 controlOnHover : false, // show controls on hover only
 
+                useDots : false,
+                naviClass : '',
+                dotClass : '',
+                dotIconClass : CLASS_DOT_ICON,
+                dotButtonClass : '',
+
                 pauseClass: '',
                 pauseIconClass : CLASS_PAUSE_ICON,
                 pauseText : 'pause carousel scroll',
+
                 playClass : '',
                 playIconClass : CLASS_PLAY_ICON,
                 playText : 'resume carousel scroll',
+
                 prevClass : '',
                 prevIconClass : CLASS_PREV_ICON,
                 prevText : 'next carousel slide',
+
                 nextClass : '',
                 nextIconClass : CLASS_NEXT_ICON,
                 nextText : 'previous carousel slide',
+
 
                 key: false,
                 keyBack: '',
@@ -235,7 +254,6 @@
             animating = true;
 
             current = total + current;                  // find current in end clone
-
             alreadyMoved = settings.show + current;     
             scrollSlider({ duration: 0, offset: alreadyMoved * one.totalSize });
             updateShowing(); 
@@ -251,7 +269,6 @@
             animating = true;
 
             current = showing[0] - total;           // current is first in view
-
             alreadyMoved = settings.show + current; // ALREADY SCROLLED is clone count subtract curernt clone
             scrollSlider({ duration: 0, offset: alreadyMoved * one.totalSize });
             updateShowing();
@@ -260,7 +277,6 @@
 
             console.log("* REPLACED w/START current ", current,  " moved ", alreadyMoved, " showing ", showing);
         };
-
 
         // --- scrolling animation complete from scrollToItem
 
@@ -374,12 +390,10 @@
             if ((atStart && !settings.infinite) || animating) { return false; }
 
             direction = -1;
-
             if (onCloneStart){
                 console.log("------------------------------------- DIR CHANGE PREV current ", current);
                 replaceWithEnd(); // cant go prev as we are on a clone, replace
             } 
-
             scrollToItem();
         };
 
@@ -390,14 +404,10 @@
             if ((atEnd && !settings.infinite) || animating) { return false; }
 
             direction = 1;
-
             if (onCloneEnd){
                 console.log("------------------------------------- DIR CHANGE NEXT current ", current);
                 replaceWithStart(); // cant go prev as we are on a clone, replace
-            } else {
-                // scrollToItem();
-            }
-
+            } 
             scrollToItem();
         };
 
@@ -411,10 +421,11 @@
         // --- create the previous and next buttons and attach events
 
         var setupPreNext = function(){
-            var prevContent = $('<span/>', { 'class' : CLASS_ACCESS_TEXT, 'text': settings.prevText });
-            var nextContent = $('<span/>', { 'class' : CLASS_ACCESS_TEXT, 'text': settings.nextText });
+            
             var prevIcon = $('<span/>', { 'class' : settings.prevIconClass, 'aria-hidden': 'true' });
             var nextIcon = $('<span/>', { 'class' : settings.nextIconClass, 'aria-hidden': 'true' });
+            var prevContent = $('<span/>', { 'class' : CLASS_ACCESS_TEXT, 'text': settings.prevText });
+            var nextContent = $('<span/>', { 'class' : CLASS_ACCESS_TEXT, 'text': settings.nextText });
             prev = $('<button/>', { 'class': settings.prevClass });
             next = $('<button/>', { 'class': settings.nextClass });
             prev.append(prevIcon).append(prevContent);
@@ -450,7 +461,29 @@
             scope.prepend(next).prepend(prev);
         };
 
-        // if tabbing thorugh with keyboard scroll appropriately
+        // --- setup dots
+
+        var setupDots = function(){
+            // a list of buttons
+            navi = $('<ol/>', { 'class': CLASS_NAVI });
+
+            for (var z=0; z < sets; z++){
+                var relatedItem = z * settings.scroll;
+
+                var listItem = $('<li/>', { 'class': settings.dotClass });
+                var dot = $('<button/>', { 'class': settings.dotButtonClass });
+                var dotIcon = $('<span/>', { 'class' : settings.dotIconClass, 'aria-hidden': 'true' });
+                var dotContent = $('<span/>', { 'class' : CLASS_ACCESS_TEXT, 'text': 'scroll to item ' + relatedItem });
+                dot.append(dotIcon).append(dotContent);
+                listItem.append(dot);
+                navi.append(listItem);
+            }
+
+            scope.append(navi);
+
+        };
+
+        // --- if tabbing thorugh with keyboard scroll appropriately
 
         var setupFocusTab = function(){
             var gotFocus = function(e){
@@ -458,7 +491,6 @@
                 if ($.isNumeric(itemEnum) && (itemEnum > 0) && (itemEnum !== current)){
                     scrollToItem(itemEnum);
                 } 
-                console.log("FOCUS ", itemEnum);
             };
             items.focus(gotFocus);
         };
@@ -471,6 +503,9 @@
 
             if (settings.key){
                 track.subscribeKey(settings.name, settings.keyBack, settings.keyForward);
+            }
+            if (settings.useDots){
+                setupDots();
             }
 
             if (settings.auto) {
@@ -645,18 +680,6 @@
             adjustItemSize();   // make the items fit inside the clippane  
         };
 
-        // --- find moves
-
-        var findMoves = function(){
-
-            moves = Math.ceil((total - (settings.show-settings.scroll)) / settings.scroll) - 1;
-            firstOfEnd = total - settings.show; // the first item in the ending view
-
-            console.log("moves ", moves, " first of end ", firstOfEnd, " total ", total, " show ", settings.show);
-        
-            updateShowing();
-        };
-
         // --- update the settings object 
 
         var fixSettings = function(){
@@ -689,9 +712,18 @@
 
             settings.prevClass = CLASS_BTN + ' ' + CLASS_PREV + ' ' + settings.prevClass;
             settings.nextClass = CLASS_BTN + ' ' + CLASS_NEXT + ' ' + settings.nextClass;
+            settings.pauseClass = CLASS_BTN + ' ' + CLASS_PAUSE + ' ' + settings.pauseClass;
+            settings.playClass = CLASS_BTN + ' ' + CLASS_PLAY + ' ' + settings.playClass;
+            settings.dotButtonClass = CLASS_BTN + ' ' + CLASS_DOT_BTN + ' ' + settings.dotButtonClass;
+
             settings.prevIconClass = CLASS_ICON + ' ' + settings.prevIconClass;
             settings.nextIconClass = CLASS_ICON + ' ' + settings.nextIconClass;
-   
+            settings.pauseIconClass = CLASS_ICON + ' ' + settings.pauseIconClass;
+            settings.playIconClass = CLASS_ICON + ' ' + settings.playIconClass;
+
+            settings.naviClass = CLASS_NAVI + ' ' + settings.naviClass;
+            settings.dotClass = CLASS_DOT + ' ' + settings.dotClass;
+
             if (settings.infinite) { atStart = false; }
         };
 
@@ -722,7 +754,14 @@
             makeFrame();        // make the markup
             
             if ((total > settings.show) && (total > 1)) {
-                findMoves();        // find out how many times we can scroll
+
+                // sets = Math.ceil((total - (settings.show-settings.scroll)) / settings.scroll);
+                sets = Math.ceil(total/settings.scroll);
+                firstOfEnd = total - settings.show; // the first item in the ending view
+                updateShowing();
+
+                console.log("sets ", sets, " first of end ", firstOfEnd, " total ", total, " show ", settings.show, showing);
+    
                 createControls();   // make next prev
             } 
         };
