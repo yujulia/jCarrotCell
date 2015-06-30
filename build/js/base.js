@@ -78,7 +78,7 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
         KEY_FORWARD = 39,       // right arrow
         KEY_UP = 38,            // up arrow
         KEY_DOWN = 40,          // down arrow
-        KEY_TOGGLE = 32,        // space bar
+        KEY_TOGGLE = 80,        // p
 
         DEBOUNCE_RESIZE = 200,
 
