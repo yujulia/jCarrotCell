@@ -275,12 +275,10 @@
             alreadyMoved += direction * scrollBy; // update how far we scrolled
 
             updateShowing(); 
-            console.log("scroll done ", showing);
 
             // --- infinite scroll shenanigans
 
             if (settings.infinite) {
-
                 if (onCloneStart) {
                     direction = -1;
                     replaceWithEnd();
@@ -322,8 +320,9 @@
                     direction = 1; 
                     scrollBy = itemIndex - firstCurrent; 
                 }
+
             } else {
-                
+
                 // ---- only none infinite scroll needs a range fix
 
                 if (settings.infinite) {
@@ -701,13 +700,16 @@
         var resizeCarrot = function(){
             setClipSize();
             adjustItemSize();
-            // if (moved > 0){
-            //     if (settings.infinite){
 
-            //     } else {
-            //         scrollSlider({ duration: 0, offset: moved * one.totalSize});
-            //     }
-            // } 
+            if (settings.infinite){
+                scrollSlider({ duration: 0, offset: (current + settings.show) * one.totalSize});
+            } else {
+                if (showing[0] === 0) {
+                    return false; // do nothing since at start 
+                } else {
+                    scrollSlider({ duration: 0, offset: current * one.totalSize}); // move slider
+                }
+            }
         };
 
         // --- setup the carrot

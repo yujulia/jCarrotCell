@@ -25,7 +25,8 @@ require('./jCarrotCell.js');
 var demo1 = $('#demo--1').carrotCell({ 
     infinite: true,
     easing: 'easeOutExpo',
-    show: 3,
+    duration: 1000,
+    show: 2,
     scroll: 2,
     // controlOnHover: true,
     key: true
@@ -330,12 +331,10 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             alreadyMoved += direction * scrollBy; // update how far we scrolled
 
             updateShowing(); 
-            console.log("scroll done ", showing);
 
             // --- infinite scroll shenanigans
 
             if (settings.infinite) {
-
                 if (onCloneStart) {
                     direction = -1;
                     replaceWithEnd();
@@ -377,8 +376,9 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
                     direction = 1; 
                     scrollBy = itemIndex - firstCurrent; 
                 }
+
             } else {
-                
+
                 // ---- only none infinite scroll needs a range fix
 
                 if (settings.infinite) {
@@ -756,13 +756,16 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
         var resizeCarrot = function(){
             setClipSize();
             adjustItemSize();
-            // if (moved > 0){
-            //     if (settings.infinite){
 
-            //     } else {
-            //         scrollSlider({ duration: 0, offset: moved * one.totalSize});
-            //     }
-            // } 
+            if (settings.infinite){
+                scrollSlider({ duration: 0, offset: (current + settings.show) * one.totalSize});
+            } else {
+                if (showing[0] === 0) {
+                    return false; // do nothing since at start 
+                } else {
+                    scrollSlider({ duration: 0, offset: current * one.totalSize}); // move slider
+                }
+            }
         };
 
         // --- setup the carrot
