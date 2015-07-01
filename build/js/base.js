@@ -27,24 +27,24 @@ var demo1 = $('#demo--1').carrotCell({
     useDots: true,
     easing: 'easeOutExpo',
     duration: 1000,
-    show: 1,
+    show: 2,
     scroll: 1,
-    stopOnHover: true,
-    controlOnHover: true,
-    dotsOnHover: true,
+    // stopOnHover: true,
+    // controlOnHover: true,
+    // dotsOnHover: true,
     key: true
 });
 
-var demo2 = $('#demo--2').carrotCell({ 
-    controlOnHover: true,
-    useDots: true,
-    infinite: true,
-    sideways: false,
-    easing: 'easeOutExpo',
-    show: 2,
-    scroll: 1,
-    key: true
-});
+// var demo2 = $('#demo--2').carrotCell({ 
+//     controlOnHover: true,
+//     useDots: true,
+//     infinite: true,
+//     sideways: false,
+//     easing: 'easeOutExpo',
+//     show: 2,
+//     scroll: 1,
+//     key: true
+// });
 },{"./jCarrotCell.js":3,"./vendor/jquery.easing.1.3.js":4,"./vendor/rainbow-custom.min.js":5,"./vendor/velocity.min.js":6,"jquery":2}],2:[function(require,module,exports){
 (function (global){
 ; var __browserify_shim_require__=require;(function browserifyShim(module, exports, require, define, browserify_shim__define__module__export__) {
@@ -254,6 +254,27 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             track.error.apply(null, args);
         };
 
+        // --- check if index is in the range of these items
+
+        var inRange = function(index){
+            var errString = '"' + index + '" is not a valid index. Please use a integer between 0 and ' + total;
+
+            if (isInteger(index)) {
+                if (index < 0){
+                    error(errString);
+                    return false;
+                } else if (index >= total) {
+                    error(errString);
+                    return false;
+                } else {
+                    return true;
+                }
+            } else {
+                error(errString);
+                return false;
+            }
+        };
+
         // --- toggle prev and next controls
 
         var setState = function(){   
@@ -385,7 +406,6 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
 
             if (isInteger(itemIndex)) {
                 current = itemIndex;
-                console.log("done scrolling item ", itemIndex);
             } else {
                 current = current + direction * scrollBy; // update new current
             }       
@@ -467,19 +487,10 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
         // --- since this is coming from api, validate item index is legit before moving
 
         var validateThenMove = function(itemIndex){
-            if (isInteger(itemIndex)) {
-                if (itemIndex >= 0 && itemIndex <= total) {
-                    if (itemIndex >= total) { 
-                        error("adjusting ", itemIndex, " to be last index ", total - 1);
-                        itemIndex = total-1; 
-                    } 
-                    scrollToItem(itemIndex);
-                } else {
-                    error("itemindex is out of bounds, please pass in something between 0 and ", total-1);
-                    return false;
-                }
+            if (inRange(itemIndex)) {
+                scrollToItem(itemIndex);
+                return true;
             } else {
-                error("can not move carousel itemindex is not an integer");
                 return false;
             }
         };
@@ -654,12 +665,16 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
         // --- setup dots
 
         var setupDots = function(){
+            var existingNavi = $("." + CLASS_NAVI, scope);
+            if (existingNavi.length) { existingNavi.remove(); }
+
             navi = $('<ol/>', { 'class': CLASS_NAVI });
             var prevItem = null;
 
             for (var z=0; z < sets; z++){
                 var relatedItem = z * settings.scroll;
                 if (relatedItem > firstOfEnd) { relatedItem = firstOfEnd; }
+
                 if (prevItem !== relatedItem) {
                     var listItem = $('<li/>', { 'class': settings.dotClass });
                     var dot = $('<button/>', { 'class': settings.dotButtonClass });
@@ -677,7 +692,7 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             dots = $("."+CLASS_DOT_BTN, navi);
             scope.append(navi);
             updateShowing(); // toggle on the dots
-            // console.log("setItems ", setItems, " dots ", dots);
+            console.log("setItems ", setItems, " dots ", dots);
         };
 
         // --- if tabbing thorugh with keyboard scroll appropriately
@@ -818,14 +833,67 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
                 startSlice = items.slice(0, settings.show).clone();
             endSlice.addClass(CLASS_CLONE).attr("tabindex", -1).removeData(DATA_ENUM);
             startSlice.addClass(CLASS_CLONE).attr("tabindex", -1).removeData(DATA_ENUM);
-
             items.filter(':first').before(endSlice);         
             items.filter(':last').after(startSlice);
-
             items = $("." + CLASS_ITEM + ":not(."+ CLASS_CLONE + ")", scope); 
             clones = $("." + CLASS_CLONE, scope);
-
             alreadyMoved = settings.show;
+        };
+
+        // --- figure out how many sets and the last item is
+
+        var calcFromTotal = function(){
+            sets = Math.ceil(total/settings.scroll);
+            firstOfEnd = total - settings.show; // the first item in the ending view
+            updateShowing();
+            console.log("sets ", sets, " first of end ", firstOfEnd, " total ", total, " show ", settings.show, showing);
+        };
+
+        // --- insert an item
+
+        var insertItem = function(newItem, index) {
+
+            if ((newItem !== null) && ((typeof newItem === "string") || (typeof newItem === "object"))) {
+
+                if (!inRange(index)){ index = total-1; } // no index add at end
+
+                console.log("insert into ", index);
+
+                var temp  = $('<div/>').append(newItem);   // add this so it becomes a dom node
+                var addedItem = temp.children();        // get the added (might be multi)
+                total += addedItem.length;
+                addedItem.addClass(CLASS_ITEM).attr("tabindex", 0);
+
+                if (index === total-1) {
+                    addedItem.appendTo(slider);
+                } else {
+                    addedItem.insertBefore(items[index]);
+                }
+                
+                items = $("."+CLASS_ITEM, scope); // get all items including new ones items
+                adjustItemSize(); 
+                calcFromTotal(); // recalculate the sets and what is end slice
+
+                if (settings.useDots) { setupDots(); } // rebuild the dot list
+                if (settings.infinite) {
+
+                }
+                
+            } else {
+                error("Unable to insert that kind of item. Please use a string or jquery object");
+                return false;
+            }
+
+        };
+
+        // --- remove an item based on index
+
+        var removeItem = function(index) {
+            if (inRange(index)){
+
+            } else {
+                return false;
+            }
         };
 
         // --- set the size of the clipping pane 
@@ -967,10 +1035,7 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             makeFrame();        // make the markup
             
             if ((total > settings.show) && (total > 1)) {
-                sets = Math.ceil(total/settings.scroll);
-                firstOfEnd = total - settings.show; // the first item in the ending view
-                updateShowing();
-                console.log("sets ", sets, " first of end ", firstOfEnd, " total ", total, " show ", settings.show, showing);
+                calcFromTotal();
                 createControls();   // make next prev
             } 
         };
@@ -990,13 +1055,21 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
 
             // --- update the carrot with new options
 
-            update : function(options){
+            update : function(options) {
                 $.extend(settings, options);
                 // setup();
                 // remake controls but dont remake the frame
             },
 
-            // --- the window rezied
+            // --- insert an item
+
+            insert : function(newItem, insertIndex) { return insertItem(newItem, insertIndex); },
+
+            // --- remove an item
+
+            remove : function(removeIndex) { return removeItem(); },
+
+            // --- the window has changed sizes
 
             resize : function(){ resizeCarrot(); },
 

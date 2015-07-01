@@ -26,21 +26,21 @@ var demo1 = $('#demo--1').carrotCell({
     useDots: true,
     easing: 'easeOutExpo',
     duration: 1000,
-    show: 1,
+    show: 2,
     scroll: 1,
-    stopOnHover: true,
-    controlOnHover: true,
-    dotsOnHover: true,
+    // stopOnHover: true,
+    // controlOnHover: true,
+    // dotsOnHover: true,
     key: true
 });
 
-var demo2 = $('#demo--2').carrotCell({ 
-    controlOnHover: true,
-    useDots: true,
-    infinite: true,
-    sideways: false,
-    easing: 'easeOutExpo',
-    show: 2,
-    scroll: 1,
-    key: true
-});
+// var demo2 = $('#demo--2').carrotCell({ 
+//     controlOnHover: true,
+//     useDots: true,
+//     infinite: true,
+//     sideways: false,
+//     easing: 'easeOutExpo',
+//     show: 2,
+//     scroll: 1,
+//     key: true
+// });
