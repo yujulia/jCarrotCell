@@ -804,6 +804,10 @@
             if (inRange(indexStart)){
                 if (inRange(indexEnd)) { 
                     // remove more than 1 item
+                    for (var q = indexStart; q <= indexEnd; q++) {
+                        items[q].remove();
+                        total--;
+                    }
 
                 } else {
                     items[indexStart].remove();

@@ -867,6 +867,10 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             if (inRange(indexStart)){
                 if (inRange(indexEnd)) { 
                     // remove more than 1 item
+                    for (var q = indexStart; q <= indexEnd; q++) {
+                        items[q].remove();
+                        total--;
+                    }
 
                 } else {
                     items[indexStart].remove();
