@@ -24,6 +24,7 @@ require('./jCarrotCell.js');
 var demo1 = $('#demo--1').carrotCell({ 
     // auto: true,
     // infinite: true,
+    focusable: false,
     useDots: true,
     easing: 'easeOutExpo',
     duration: 1000,

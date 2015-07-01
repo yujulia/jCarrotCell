@@ -90,48 +90,45 @@
     */
     var carrot = function(){
 
-        var thisCarrot = null,
-            scope = null,           // shorthand for settings.scope
-            width = 0,              // container width
-            height = 0,             // container height
-            clipPane = null,        // clipping box
-            slider = null,          // sliding panel
-            adjustProperty = "width",   // animate this property
-            clones = null,          // clones for infinite scroll
-            items = null,           // all items elements
-            total = 0,              // items count
-            one = null,             // 1 item
+        var scope = null,               // shorthand for settings.scope
+            width = 0,                  // container width
+            height = 0,                 // container height
+            clipPane = null,            // clipping box
+            slider = null,              // sliding panel
+            clones = null,              // clones for infinite scroll
+            items = null,               // all items elements
+            total = 0,                  // items count
+            one = null,                 // 1 item
 
             prev = null,
             next = null,
             pause = null,
             play = null,
-            controls = $(),          // all the controls
+            controls = $(),             // all the controls
 
-            showing = [],           // what items are visible
-
-            current = 0,            // current item scrolled to
-            alreadyMoved = 0,       // how many items already moved past
+            showing = [],               // what items are visible
+            current = 0,                // current item scrolled to
+            alreadyMoved = 0,           // how many items already moved past
             scrollBy = 0,
 
-            atStart = true,         // no more in prev
-            atEnd = false,          // no more in next
-            direction = 1,          // direction we scrolling
-            firstOfEnd = 0,         // first item in end view
-            onCloneStart = false,   // are we on a starting clone (negative number)
+            atStart = true,             // no more in prev
+            atEnd = false,              // no more in next
+            direction = 1,              // direction we scrolling
+            firstOfEnd = 0,             // first item in end view
+            onCloneStart = false,       // are we on a starting clone (negative number)
             onCloneEnd = false,
 
-            navi = null,            // contains dots
-            dots = null,            // all the dot buttons
-            sets = 0,               // how many clicks before we reach the end
-            setItems = [],          // what each dot maps to
+            navi = null,                // contains dots
+            dots = null,                // all the dot buttons
+            sets = 0,                   // how many clicks before we reach the end
+            setItems = [],              // what each dot maps to
 
-            useVelocity = false,    // use velocity to animate?
-            animating = false,      // animation lock
+            useVelocity = false,        // use velocity to animate?
+            animating = false,          // animation lock
             axis = "x",
+            adjustProperty = "width",   // animate this property
 
-            hoverOK = false,
-            playing = false,        // playing or paused if auto
+            playing = false,           
             paused = false,
             timer = null,           
 
@@ -151,7 +148,7 @@
                 stopOnHover : true,     // stop auto advance on hover
                 controlOnHover : false, // show controls on hover only
                 dotsOnHover: false,     // show dots on hover
-
+  
                 useDots : false,
                 naviClass : '',
                 dotClass : '',
@@ -231,13 +228,10 @@
 
         var updateDots = function(selectedDots){
             dots.removeClass(settings.onClass);
-            console.log("showing ", selectedDots, " in ", setItems);
-
             var toggleSelectedDot = function(dotIndex){
                 var index = setItems.indexOf(dotIndex);
                 $(dots[index]).addClass(settings.onClass);
             };
-
             selectedDots.forEach(toggleSelectedDot);
         };
 
@@ -282,9 +276,6 @@
                 }
                 updateDots(selectedDots);
             }
-
-            // console.log("[ showing updated ] ", showing, ' on clone start? ', onCloneStart);
-            // console.log("at start? ", atStart, " at end? ", atEnd);
         };
 
         // --- scroll the actual slider
@@ -311,30 +302,22 @@
 
         var replaceWithEnd = function(){
             animating = true;
-
             current = total + current;                  // find current in end clone
             alreadyMoved = settings.show + current;     
             scrollSlider({ duration: 0, offset: alreadyMoved * one.totalSize });
             updateShowing(); 
-
             animating = false;
-
-            console.log("* REPLACED w/END current ", current, " moved ", alreadyMoved, " showing ", showing);
         };
 
         // --- replace slider at the end with the start clone (infinite reached end)
 
         var replaceWithStart = function(cloneOffset){
             animating = true;
-
             current = showing[0] - total;           // current is first in view
             alreadyMoved = settings.show + current; // ALREADY SCROLLED is clone count subtract curernt clone
             scrollSlider({ duration: 0, offset: alreadyMoved * one.totalSize });
             updateShowing();
-
             animating = false;
-
-            console.log("* REPLACED w/START current ", current,  " moved ", alreadyMoved, " showing ", showing);
         };
 
         // --- scrolling animation complete from scrollToItem
@@ -609,10 +592,12 @@
                 var relatedItem = z * settings.scroll;
                 if (relatedItem > firstOfEnd) { relatedItem = firstOfEnd; }
                 if (prevItem !== relatedItem) {
+
                     var listItem = $('<li/>', { 'class': settings.dotClass });
                     var dot = $('<button/>', { 'class': settings.dotButtonClass });
                     var dotIcon = $('<span/>', { 'class' : settings.dotIconClass, 'aria-hidden': 'true' });
                     var dotContent = $('<span/>', { 'class' : CLASS_ACCESS_TEXT, 'text': settings.dotText + z });
+
                     dot.data(DATA_ENUM, relatedItem).append(dotIcon).append(dotContent);
                     dot.click(goToDotItem);
                     listItem.append(dot);
@@ -621,22 +606,9 @@
                     prevItem = relatedItem;
                 }
             }
-            dots = $("."+CLASS_DOT_BTN, navi);
-            scope.append(navi);
-            updateShowing(); // toggle on the dots
-            console.log("setItems ", setItems, " dots ", dots);
-        };
-
-        // --- if tabbing thorugh with keyboard scroll appropriately
-
-        var setupFocusTab = function(){
-            var gotFocus = function(e){
-                var itemEnum = $(this).data(DATA_ENUM);
-                if ($.isNumeric(itemEnum) && (itemEnum > 0) && (itemEnum !== current)){
-                    scrollToItem(itemEnum);
-                } 
-            };
-            items.focus(gotFocus);
+            dots = $("." + CLASS_DOT_BTN, navi);
+            scope.prepend(navi);
+            updateShowing(); 
         };
 
         // -- create icon prev and next buttons
@@ -655,14 +627,15 @@
                 }
                 track.subscribeKey(keyArray);
             }
+
             if (settings.useDots){ setupDots(); } 
+
             if (settings.auto) { 
                 if (settings.usePausePlay) { setupPausePlay(); }
                 toggleAuto();
             } 
-            if (!track.touch){ setupHover(); }
 
-            setupFocusTab();
+            if (!track.touch){ setupHover(); }
         };
 
         // --- return attributes on some jquery element
@@ -708,14 +681,6 @@
             };
         };
 
-        // --- 
-
-        var enumItems = function(){
-            items.each(function(i, item){ 
-                $(item).data(DATA_ENUM, i); 
-            }); // add data to item
-        };
-
         // --- set the size of items based on passed in size
 
         var setItemsSize = function(){
@@ -732,7 +697,7 @@
             var sliderItems = total;
 
             if (settings.infinite){
-                clones.css(prop, one.size + "px");
+                clones.css(adjustProperty, one.size + "px");
                 sliderItems += settings.show * 2; // make room for clones
             }
             slider.css(adjustProperty, one.totalSize * sliderItems + "px"); // set length of slider
@@ -807,7 +772,7 @@
                 }
                 
                 items = $("."+CLASS_ITEM, scope); // get all items including new ones items
-                enumItems();
+
                 adjustItemSize(); 
                 calcFromTotal(); // recalculate the sets and what is end slice
 
@@ -846,6 +811,7 @@
         // --- make the html frame depending on if its a list or divs
 
         var makeFrame = function(){ 
+            
             clipPane = $('<div/>', { 'class': CLASS_CLIP });
             setClipSize();
                 
@@ -884,10 +850,11 @@
             if (settings.infinite){ clone(); }  // pad with clones
 
             one = getTrueItemSize($(items[0])); // the size of one item
-            enumItems();
+
             adjustItemSize();   // make the items fit inside the clippane  
 
             // if its infinite, move items out of view
+
             if (settings.infinite){
                 scrollSlider({ duration: 0, offset: settings.show * one.totalSize }); 
             }
