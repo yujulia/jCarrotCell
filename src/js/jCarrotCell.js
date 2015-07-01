@@ -719,30 +719,33 @@
 
         // --- set the size of items based on passed in size
 
-        var setItemSize = function(single, prop){
-            var sliderItems = total;
-            
-            one.totalSize = single;
-            one.size = single - one.offset; // make room for margin/border
+        var setItemsSize = function(){
+            var prop = settings.sideways ? "width" : "height";
+            var size = settings.sideways ? width/settings.show : height/settings.show;
 
+            one.totalSize = size;
+            one.size = size - one.offset; // make room for margin/border
             items.css(prop, one.size + "px");
+        };
+
+        // --- set the size of the slider holding the items 
+
+        var setSliderSize = function(){
+            var sliderItems = total;
+            var prop = settings.sideways ? "width" : "height";
 
             if (settings.infinite){
                 clones.css(prop, one.size + "px");
                 sliderItems += settings.show * 2; // make room for clones
             }
-
             slider.css(prop, one.totalSize * sliderItems + "px"); // set length of slider
-        };
+        }
 
         // --- adjust the size of the items and the slider 
 
         var adjustItemSize = function(){  
-            if (settings.sideways) { 
-                setItemSize(width/settings.show, "width");
-            } else {
-                setItemSize(height/settings.show, "height");
-            }
+            setItemsSize();
+            setSliderSize();
         };
 
         // --- make clones for infinite scroll
