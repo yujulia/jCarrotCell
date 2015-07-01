@@ -864,19 +864,33 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
         // --- remove an item based on index
 
         var removeItem = function(indexStart, indexEnd) {
+
+            // remove one item and update the total count 
+            
+            var removeFromItems = function(i) {
+                items[i].remove();
+                total--;
+            };
+
             if (inRange(indexStart)){
                 if (inRange(indexEnd)) { 
-                    // remove more than 1 item
-                    for (var q = indexStart; q <= indexEnd; q++) {
-                        items[q].remove();
-                        total--;
+                    if (indexEnd === indexStart) {
+                        removeFromItems(indexStart); // just remove 1 item
+                    } else {
+                        if (indexEnd < indexStart) { // passed in indexes in wrong order, swap
+                            var tempIndex = indexEnd;
+                            indexEnd = indexStart;
+                            indexStart = tempIndex;
+                        }
+                        for (var q = indexStart; q <= indexEnd; q++) {
+                            removeFromItems(q);
+                        }
                     }
-
                 } else {
-                    items[indexStart].remove();
-                    total--;
+                    removeFromItems(indexStart);
                 }
                 updateItems();
+                return true;
             } else {
                 return false;
             }
