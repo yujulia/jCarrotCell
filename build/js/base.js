@@ -157,9 +157,8 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             width = 0,              // container width
             height = 0,             // container height
             clipPane = null,        // clipping box
-
             slider = null,          // sliding panel
-
+            adjustProperty = "width",   // animate this property
             clones = null,          // clones for infinite scroll
             items = null,           // all items elements
             total = 0,              // items count
@@ -782,25 +781,23 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
         // --- set the size of items based on passed in size
 
         var setItemsSize = function(){
-            var prop = settings.sideways ? "width" : "height";
             var size = settings.sideways ? width/settings.show : height/settings.show;
 
             one.totalSize = size;
             one.size = size - one.offset; // make room for margin/border
-            items.css(prop, one.size + "px");
+            items.css(adjustProperty, one.size + "px");
         };
 
         // --- set the size of the slider holding the items 
 
         var setSliderSize = function(){
             var sliderItems = total;
-            var prop = settings.sideways ? "width" : "height";
 
             if (settings.infinite){
                 clones.css(prop, one.size + "px");
                 sliderItems += settings.show * 2; // make room for clones
             }
-            slider.css(prop, one.totalSize * sliderItems + "px"); // set length of slider
+            slider.css(adjustProperty, one.totalSize * sliderItems + "px"); // set length of slider
         }
 
         // --- adjust the size of the items and the slider 
@@ -808,6 +805,23 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
         var adjustItemSize = function(){  
             setItemsSize();
             setSliderSize();
+        };
+
+        // --- resize happened, recalculate
+
+        var resizeCarrot = function(){
+            setClipSize();
+            adjustItemSize();
+
+            if (settings.infinite){
+                scrollSlider({ duration: 0, offset: (current + settings.show) * one.totalSize});
+            } else {
+                if (showing[0] === 0) {
+                    return false; // do nothing since at start 
+                } else {
+                    scrollSlider({ duration: 0, offset: current * one.totalSize}); // move slider
+                }
+            }
         };
 
         // --- make clones for infinite scroll
@@ -860,8 +874,9 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
                 calcFromTotal(); // recalculate the sets and what is end slice
 
                 if (settings.useDots) { setupDots(); } // rebuild the dot list
-                if (settings.infinite) {
 
+                if (settings.infinite) {
+                    // reclone
                 }
                 
             } else {
@@ -887,11 +902,7 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             width = parseInt(Math.floor(scope.width()), 10);
             height = parseInt(Math.floor(scope.height()), 10);
 
-            if (settings.sideways){
-                clipPane.css("width", width + "px");
-            } else {
-                clipPane.css("height", height + "px");
-            }
+            clipPane.css(adjustProperty, width + "px");
         };
 
         // --- make the html frame depending on if its a list or divs
@@ -946,14 +957,11 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
 
         // --- update the settings object 
 
-        var fixSettings = function(){
-
+        var updateSettings = function(){
             if (settings.show < settings.scroll){
                 settings.scroll = settings.show;
                 error("sorry, you cant scroll more items than whats actually showing.");
             }
-
-            useVelocity = $(scope).velocity === undefined ? false : true;
 
             if (!useVelocity && ($.easing[settings.easing] === undefined)) {
                 error(settings.easing, " is not supported, please include a jquery easing plugin or velocity");
@@ -962,9 +970,7 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
 
             if (settings.sideways) { axis = "x"; } else { axis = "y"; }
 
-            if (settings.auto) { 
-                settings.infinite = true;             
-            }
+            if (settings.auto) {  settings.infinite = true; }
 
             if (settings.key) {
                 if (settings.sideways) {
@@ -995,40 +1001,27 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
                 settings.dotClass = CLASS_DOT + ' ' + settings.dotClass;
                 settings.dotButtonClass = CLASS_BTN + ' ' + CLASS_DOT_BTN + ' ' + settings.dotButtonClass;
             }
-
-            if (settings.infinite) { atStart = false; }
         };
 
-        // --- resize happened, recalculate
+        // --- get information about this carrotcell
 
-        var resizeCarrot = function(){
-            setClipSize();
-            adjustItemSize();
-
-            if (settings.infinite){
-                scrollSlider({ duration: 0, offset: (current + settings.show) * one.totalSize});
-            } else {
-                if (showing[0] === 0) {
-                    return false; // do nothing since at start 
-                } else {
-                    scrollSlider({ duration: 0, offset: current * one.totalSize}); // move slider
-                }
-            }
+        var getInfo = function(){
+            items = scope.children(); 
+            total = items.length;
+            useVelocity = $(scope).velocity === undefined ? false : true;
+            adjustProperty = settings.sideways ? "width" : "height";
         };
 
         // --- setup the carrot
 
         setup = function(){
-
-            items = scope.children(); 
-            total = items.length;
-
-            fixSettings();      // toggle on relevant settings if any
+            getInfo();          // find information on this carrotcell
+            updateSettings();   // toggle on relevant settings if any
             makeFrame();        // make the markup
             
             if ((total > settings.show) && (total > 1)) {
-                calcFromTotal();
-                createControls();   // make next prev
+                calcFromTotal();    
+                createControls();   
             } 
         };
 
