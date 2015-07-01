@@ -682,12 +682,12 @@ pre {
     z-index: 1; }
   .carrotcell__navi {
     text-align: center;
-    margin: 10px 0 0 0;
     padding: 0;
     width: 100%;
     position: absolute;
-    bottom: 5px;
-    left: 0; }
+    top: 12px;
+    left: 0;
+    z-index: 3; }
   .carrotcell__dot {
     display: inline-block;
     margin: 0; }
@@ -786,6 +786,13 @@ pre {
     overflow: hidden; }
   .carrotcell--invisible, .carrotcell--invisible:disabled {
     opacity: 0; }
+  .carrotcell--vertical .carrotcell__navi {
+    top: 50%;
+    transform: translateY(-50%);
+    left: 12px;
+    width: auto; }
+  .carrotcell--vertical .carrotcell__dot {
+    display: block; }
   .carrotcell--vertical .carrotcell__btn--prev, .carrotcell--vertical .carrotcell__btn--next {
     left: 50%;
     top: 8px;

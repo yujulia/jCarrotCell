@@ -22,11 +22,6 @@ require('./jCarrotCell.js');
 
 
 var demo1 = $('#demo--1').carrotCell({ 
-    // infinite: true,
-    // dotButtonClass : 'dot',
-    // dotIconClass : 'cc-star',
-    // usePrevNext: false,
-    // usePausePlay: false,
     // auto: true,
     useDots: true,
     easing: 'easeOutExpo',
@@ -35,14 +30,17 @@ var demo1 = $('#demo--1').carrotCell({
     scroll: 1,
     stopOnHover: true,
     controlOnHover: true,
+    dotsOnHover: true,
     key: true
 });
 
-// var demo2 = $('#demo--2').carrotCell({ 
-//     infinite: true,
-//     sideways: false,
-//     easing: 'easeOutExpo',
-//     show: 2,
-//     scroll: 1,
-//     key: true
-// });
+var demo2 = $('#demo--2').carrotCell({ 
+    controlOnHover: true,
+    useDots: true,
+    infinite: true,
+    sideways: false,
+    easing: 'easeOutExpo',
+    show: 2,
+    scroll: 1,
+    key: true
+});

@@ -40,12 +40,12 @@
 
     &__navi {
         text-align: center;
-        margin: 10px 0 0 0;
         padding: 0;
         width: 100%;
         position: absolute;
-        bottom: 5px;
+        top: 12px;
         left: 0;
+        z-index: 3;
     }
 
     &__dot {
@@ -198,6 +198,17 @@
     // ------------------------ vertical scroll
 
     &--vertical {
+
+        .carrotcell__navi {
+            top: 50%;
+            transform: translateY(-50%);
+            left: 12px;
+            width: auto;
+        }
+
+        .carrotcell__dot {
+            display: block;
+        }
 
         .carrotcell__btn {
 

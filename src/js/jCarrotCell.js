@@ -152,6 +152,7 @@
 
                 stopOnHover : true,     // stop auto advance on hover
                 controlOnHover : false, // show controls on hover only
+                dotsOnHover: false,     // show dots on hover
 
                 useDots : false,
                 naviClass : '',
@@ -503,11 +504,13 @@
 
             var onTasks = function(){
                 if (settings.controlOnHover) { controls.removeClass(CLASS_INVIS); }
+                if (settings.dotsOnHover) { navi.removeClass(CLASS_INVIS); }
                 paused = true;
             };
 
             var offTasks = function(){
                 if (settings.controlOnHover) { controls.addClass(CLASS_INVIS).blur(); }
+                if (settings.dotsOnHover) { navi.addClass(CLASS_INVIS).blur(); }
                 paused = false;
             };
 

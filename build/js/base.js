@@ -23,11 +23,6 @@ require('./jCarrotCell.js');
 
 
 var demo1 = $('#demo--1').carrotCell({ 
-    // infinite: true,
-    // dotButtonClass : 'dot',
-    // dotIconClass : 'cc-star',
-    // usePrevNext: false,
-    // usePausePlay: false,
     // auto: true,
     useDots: true,
     easing: 'easeOutExpo',
@@ -36,17 +31,20 @@ var demo1 = $('#demo--1').carrotCell({
     scroll: 1,
     stopOnHover: true,
     controlOnHover: true,
+    dotsOnHover: true,
     key: true
 });
 
-// var demo2 = $('#demo--2').carrotCell({ 
-//     infinite: true,
-//     sideways: false,
-//     easing: 'easeOutExpo',
-//     show: 2,
-//     scroll: 1,
-//     key: true
-// });
+var demo2 = $('#demo--2').carrotCell({ 
+    controlOnHover: true,
+    useDots: true,
+    infinite: true,
+    sideways: false,
+    easing: 'easeOutExpo',
+    show: 2,
+    scroll: 1,
+    key: true
+});
 },{"./jCarrotCell.js":3,"./vendor/jquery.easing.1.3.js":4,"./vendor/rainbow-custom.min.js":5,"./vendor/velocity.min.js":6,"jquery":2}],2:[function(require,module,exports){
 (function (global){
 ; var __browserify_shim_require__=require;(function browserifyShim(module, exports, require, define, browserify_shim__define__module__export__) {
@@ -215,6 +213,7 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
 
                 stopOnHover : true,     // stop auto advance on hover
                 controlOnHover : false, // show controls on hover only
+                dotsOnHover: false,     // show dots on hover
 
                 useDots : false,
                 naviClass : '',
@@ -566,11 +565,13 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
 
             var onTasks = function(){
                 if (settings.controlOnHover) { controls.removeClass(CLASS_INVIS); }
+                if (settings.dotsOnHover) { navi.removeClass(CLASS_INVIS); }
                 paused = true;
             };
 
             var offTasks = function(){
                 if (settings.controlOnHover) { controls.addClass(CLASS_INVIS).blur(); }
+                if (settings.dotsOnHover) { navi.addClass(CLASS_INVIS).blur(); }
                 paused = false;
             };
 
