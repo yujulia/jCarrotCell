@@ -27,7 +27,7 @@ var demo1 = $('#demo--1').carrotCell({
     // dotIconClass : 'cc-star',
     // usePrevNext: false,
     // usePausePlay: false,
-    auto: true,
+    // auto: true,
     useDots: true,
     easing: 'easeOutExpo',
     duration: 1000,

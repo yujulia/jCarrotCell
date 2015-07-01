@@ -17,7 +17,7 @@
         KEY_DOWN = 40,          // down arrow
         KEY_TOGGLE = 80,        // p
 
-        DEBOUNCE_RESIZE = 200,
+        DEBOUNCE_RATE = 200,
 
         ROOT = 'carrotcell',
 
@@ -43,6 +43,7 @@
         CLASS_PREV_ICON = CLASS_ICON + '--prev',
         CLASS_PAUSE_ICON = CLASS_ICON + '--pause',
         CLASS_PLAY_ICON = CLASS_ICON + '--play',
+
         CLASS_DOT_ICON = CLASS_ICON + '--dot',
 
         CLASS_BTN = ROOT + '__btn',
@@ -89,7 +90,8 @@
     */
     var carrot = function(){
 
-        var scope = null,           // shorthand for settings.scope
+        var thisCarrot = null,
+            scope = null,           // shorthand for settings.scope
             width = 0,              // container width
             height = 0,             // container height
             clipPane = null,        // clipping box
@@ -122,7 +124,7 @@
             onCloneEnd = false,
 
             navi = null,            // contains dots
-            dots = null,
+            dots = null,            // all the dot buttons
             sets = 0,               // how many clicks before we reach the end
             setItems = [],          // what each dot maps to
 
@@ -130,6 +132,7 @@
             animating = false,      // animation lock
             axis = "x",
 
+            hoverOK = false,
             playing = false,        // playing or paused if auto
             paused = false,
             timer = null,           
@@ -143,7 +146,6 @@
                 sideways: true,         // scroll sideways
                 easing: "swing",        // slide easing method
    
-                force : true,           // force item size to be width/show
                 infinite : false,       // infinite scroll
                 auto : false,           // auto loop if circular
                 autoDuration : 2000,    // how long to pause on an item
@@ -154,6 +156,7 @@
                 useDots : false,
                 naviClass : '',
                 dotClass : '',
+
                 dotIconClass : CLASS_DOT_ICON,
                 dotButtonClass : '',
                 dotText : 'item set ',
@@ -175,12 +178,10 @@
                 nextIconClass : CLASS_NEXT_ICON,
                 nextText : 'previous item set',
 
-                key: false,
-                keys: {
-                    back: '',
-                    forward: '',
-                    toggle: KEY_TOGGLE
-                }
+                key : false,
+                keyBack : '',
+                keyForward : '',
+                keyToggle : KEY_TOGGLE
             };
 
         // --- send error msg to track with this carrotcell name
@@ -489,26 +490,44 @@
         // --- a key event we care about happened
 
         var handleKeyPress = function(keyCode){
-            if (keyCode === settings.keys.back) { moveToPrev(); }
-            if (keyCode === settings.keys.forward) { moveToNext(); }
-            if (keyCode === settings.keys.toggle) { toggleAuto(); }
+            if (keyCode === settings.keyBack) { moveToPrev(); }
+            if (keyCode === settings.keyForward) { moveToNext(); }
+            if (keyCode === settings.keyToggle) { toggleAuto(); }
         };
 
         // --- setup hover triggered actions
 
         var setupHover = function(){
 
-            var onCarrotCell = function(){ 
+            var onTimer = null, offTimer = null;
+
+            var onTasks = function(){
                 if (settings.controlOnHover) { controls.removeClass(CLASS_INVIS); }
                 paused = true;
             };
-            var offCarrotCell = function(){ 
+
+            var offTasks = function(){
                 if (settings.controlOnHover) { controls.addClass(CLASS_INVIS).blur(); }
                 paused = false;
             };
 
-            offCarrotCell();
-            scope.hover(onCarrotCell, offCarrotCell);
+            var cancelHoverTasks = function(){
+                if (onTimer) { clearTimeout(onTimer); }
+                if (offTimer) { clearTimeout(offTimer); }
+            };
+
+            var hoverOn = function(){ 
+                cancelHoverTasks();
+                onTimer = setTimeout(onTasks, DEBOUNCE_RATE);
+            };
+
+            var hoverOff = function(){ 
+                cancelHoverTasks();
+                offTimer = setTimeout(offTasks, DEBOUNCE_RATE);
+            };
+
+            offTasks();
+            scope.hover(hoverOn, hoverOff);
         };
 
 
@@ -617,11 +636,11 @@
             if (settings.key){
                 var keyArray = [ settings.name ];
                 if (settings.usePrevNext) {
-                    keyArray.push(settings.keys.back);
-                    keyArray.push(settings.keys.forward);
+                    keyArray.push(settings.keyBack);
+                    keyArray.push(settings.keyForward);
                 }
                 if (settings.usePausePlay) {
-                    keyArray.push(settings.keys.toggle)
+                    keyArray.push(settings.keyToggle)
                 }
                 track.subscribeKey(keyArray);
             }
@@ -825,11 +844,11 @@
 
             if (settings.key) {
                 if (settings.sideways) {
-                    settings.keys.back = settings.keys.back || KEY_BACK;
-                    settings.keys.forward = settings.keys.forward || KEY_FORWARD;
+                    settings.keyBack = settings.keyBack || KEY_BACK;
+                    settings.keyForward = settings.keyForward || KEY_FORWARD;
                 } else {
-                    settings.keys.back = settings.keys.back || KEY_UP;
-                    settings.keys.forward = settings.key.forward || KEY_DOWN;
+                    settings.keyBack = settings.keyBack || KEY_UP;
+                    settings.keyForward = settings.keyForward || KEY_DOWN;
                 }
             }
 
@@ -876,6 +895,7 @@
         // --- setup the carrot
 
         setup = function(){
+
             items = scope.children(); 
             total = items.length;
 
@@ -1004,7 +1024,7 @@
         
         // --- window reized, trigger resize on all carrotcells
 
-        windowResized : debounce(function(){ track.triggerCarrots("resize"); }, DEBOUNCE_RESIZE),
+        windowResized : debounce(function(){ track.triggerCarrots("resize"); }, DEBOUNCE_RATE),
 
         // --- initialize jcarousel object, note THIS is not track object
 
