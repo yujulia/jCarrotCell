@@ -729,15 +729,22 @@
 
         // --- make clones for infinite scroll
 
-        var clone = function(){
-            var endSlice = items.slice(-settings.show).clone(),
+        var createClones = function(){
+
+            $("." + CLASS_CLONE, slider).remove();
+
+            var endSlice = items.slice(-1*settings.show).clone(),
                 startSlice = items.slice(0, settings.show).clone();
-            endSlice.addClass(CLASS_CLONE).attr("tabindex", -1).removeData(DATA_ENUM);
-            startSlice.addClass(CLASS_CLONE).attr("tabindex", -1).removeData(DATA_ENUM);
+
+            endSlice.addClass(CLASS_CLONE).attr("tabindex", -1);
+            startSlice.addClass(CLASS_CLONE).attr("tabindex", -1);
+
             items.filter(':first').before(endSlice);         
             items.filter(':last').after(startSlice);
+
             items = $("." + CLASS_ITEM + ":not(."+ CLASS_CLONE + ")", scope); 
             clones = $("." + CLASS_CLONE, scope);
+
             alreadyMoved = settings.show;
         };
 
@@ -758,29 +765,27 @@
 
                 if (!inRange(index)){ index = total-1; } // no index add at end
 
-                console.log("insert into ", index);
-
-                var temp  = $('<div/>').append(newItem);   // add this so it becomes a dom node
-                var addedItem = temp.children();        // get the added (might be multi)
-                total += addedItem.length;
+                var temp  = $('<div/>').append(newItem);   
+                var addedItem = temp.children();       
                 addedItem.addClass(CLASS_ITEM).attr("tabindex", 0);
 
                 if (index === total-1) {
-                    addedItem.appendTo(slider);
+                    addedItem.insertAfter(items[total-1]);
+                    index++; // for scroll
                 } else {
                     addedItem.insertBefore(items[index]);
                 }
                 
-                items = $("."+CLASS_ITEM, scope); // get all items including new ones items
+                items = $("." + CLASS_ITEM + ":not(."+ CLASS_CLONE + ")", slider); 
 
+                total += addedItem.length;
                 adjustItemSize(); 
                 calcFromTotal(); // recalculate the sets and what is end slice
 
                 if (settings.useDots) { setupDots(); } // rebuild the dot list
+                if (settings.infinite) { createClones(); } // recreate clones
 
-                if (settings.infinite) {
-                    // reclone
-                }
+                scrollToItem(index); // scroll to items inserted
                 
             } else {
                 error("Unable to insert that kind of item. Please use a string or jquery object");
@@ -811,7 +816,7 @@
         // --- make the html frame depending on if its a list or divs
 
         var makeFrame = function(){ 
-            
+
             clipPane = $('<div/>', { 'class': CLASS_CLIP });
             setClipSize();
                 
@@ -847,7 +852,7 @@
                 scope.addClass(CLASS_VERTICAL);
             }
 
-            if (settings.infinite){ clone(); }  // pad with clones
+            if (settings.infinite){ createClones(); }  // pad with clones
 
             one = getTrueItemSize($(items[0])); // the size of one item
 
