@@ -24,6 +24,7 @@ require('./jCarrotCell.js');
 
 var demo1 = $('#demo--1').carrotCell({ 
     // auto: true,
+    // infinite: true,
     useDots: true,
     easing: 'easeOutExpo',
     duration: 1000,
@@ -158,7 +159,6 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             clipPane = null,        // clipping box
 
             slider = null,          // sliding panel
-            sliderSize = 0,
 
             clones = null,          // clones for infinite scroll
             items = null,           // all items elements
@@ -556,8 +556,6 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
                 }
                 stopAutoPlay(); 
             }
-
-            console.log("auto is now ", playing);
         };
 
         // --- a key event we care about happened
@@ -604,7 +602,6 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             offTasks();
             scope.hover(hoverOn, hoverOff);
         };
-
 
         // --- create the previous and next buttons and attach events
 
@@ -667,14 +664,13 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
         var setupDots = function(){
             var existingNavi = $("." + CLASS_NAVI, scope);
             if (existingNavi.length) { existingNavi.remove(); }
-
+            setItems = []; // empty
             navi = $('<ol/>', { 'class': CLASS_NAVI });
             var prevItem = null;
-
+            
             for (var z=0; z < sets; z++){
                 var relatedItem = z * settings.scroll;
                 if (relatedItem > firstOfEnd) { relatedItem = firstOfEnd; }
-
                 if (prevItem !== relatedItem) {
                     var listItem = $('<li/>', { 'class': settings.dotClass });
                     var dot = $('<button/>', { 'class': settings.dotButtonClass });
@@ -688,7 +684,6 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
                     prevItem = relatedItem;
                 }
             }
-
             dots = $("."+CLASS_DOT_BTN, navi);
             scope.append(navi);
             updateShowing(); // toggle on the dots
@@ -745,9 +740,8 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
 
         // --- calculate the size and offset for one item (jq obj)
 
-        var getItemSize = function(item){
+        var getTrueItemSize = function(item){
             var calcOffset = 0;
-
             if (settings.sideways){
                 var m1 = parseInt(item.css("margin-left"), 10),
                     m2 = parseInt(item.css("margin-right"), 10);
@@ -755,12 +749,10 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             } else {
                 var m3 = parseInt(item.css("margin-top"), 10),
                     m4 = parseInt(item.css("margin-bottom"), 10);
-
                 calcOffset = m3 + m4;
                 // calcOffset = (m3 > m4) ? m3 : m4;                   // take largest margin bc of margin-collapse
                 // scope.css("height", height + calcOffset + "px");    // bc of collapse we need to increase height...
             }
-
             if ($(item).css("box-sizing") === "content-box") {
                 if (settings.sideways){
                     var b1 = parseInt(item.css("border-left-width"), 10),
@@ -772,7 +764,6 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
                     calcOffset += b3 + b4;
                 }
             } 
-
             return {
                 w: item.outerWidth(true),
                 h: item.outerHeight(true),
@@ -780,49 +771,39 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             };
         };
 
-        // --- get individual content item sizes
+        // --- 
 
-        var getAllItemSizes = function(){
-            one = getItemSize($(items[0])); // the size of one item
-            items.each(function(i, item){ $(item).data(DATA_ENUM, i); }); // add data to item
+        var enumItems = function(){
+            items.each(function(i, item){ 
+                $(item).data(DATA_ENUM, i); 
+            }); // add data to item
+        };
 
-            if (settings.sideways){
-                sliderSize = one.w * total;
-            } else {
-                sliderSize = one.h * total;
+        // --- set the size of items based on passed in size
+
+        var setItemSize = function(single, prop){
+            var sliderItems = total;
+            
+            one.totalSize = single;
+            one.size = single - one.offset; // make room for margin/border
+
+            items.css(prop, one.size + "px");
+
+            if (settings.infinite){
+                clones.css(prop, one.size + "px");
+                sliderItems += settings.show * 2; // make room for clones
             }
+
+            slider.css(prop, one.totalSize * sliderItems + "px"); // set length of slider
         };
 
         // --- adjust the size of the items and the slider 
 
-        var adjustItemSize = function(){    
-            getAllItemSizes(); 
-    
-            // --- set the size of items based on passed in size
-
-            var setItemSize = function(single, prop){
-                var sliderItems = total;
-                one.totalSize = single;
-                one.size = single - one.offset; // make room for margin/border
-
-                items.css(prop, one.size + "px");
-
-                if (settings.infinite){
-                    clones.css(prop, one.size + "px");
-                    sliderItems += settings.show * 2; // make room for clones
-                }
-
-                slider.css(prop, one.totalSize * sliderItems + "px"); // set length of slider
-            };
-
+        var adjustItemSize = function(){  
             if (settings.sideways) { 
                 setItemSize(width/settings.show, "width");
             } else {
                 setItemSize(height/settings.show, "height");
-            }
-
-            if (settings.infinite){
-                scrollSlider({ duration: 0, offset: settings.show * one.totalSize }); // move clones
             }
         };
 
@@ -871,6 +852,7 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
                 }
                 
                 items = $("."+CLASS_ITEM, scope); // get all items including new ones items
+                enumItems();
                 adjustItemSize(); 
                 calcFromTotal(); // recalculate the sets and what is end slice
 
@@ -949,7 +931,14 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
 
             if (settings.infinite){ clone(); }  // pad with clones
 
+            one = getTrueItemSize($(items[0])); // the size of one item
+            enumItems();
             adjustItemSize();   // make the items fit inside the clippane  
+
+            // if its infinite, move items out of view
+            if (settings.infinite){
+                scrollSlider({ duration: 0, offset: settings.show * one.totalSize }); 
+            }
         };
 
         // --- update the settings object 
