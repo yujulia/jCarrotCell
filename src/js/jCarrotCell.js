@@ -774,7 +774,7 @@
 
             if ((newItem !== null) && ((typeof newItem === "string") || (typeof newItem === "object"))) {
 
-                if (!inRange(index)){ index = total-1; } // no index add at end
+                if (!inRange(index)){ index = total-1; } // no index insert at end
 
                 var temp  = $('<div/>').append(newItem);   
                 var addedItem = temp.children();       
@@ -806,7 +806,6 @@
                     // remove more than 1 item
 
                 } else {
-                    console.log("removing item at ", indexStart);
                     items[indexStart].remove();
                     total--;
                 }
