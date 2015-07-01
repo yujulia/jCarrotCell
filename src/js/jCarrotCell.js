@@ -757,6 +757,17 @@
             console.log("sets ", sets, " first of end ", firstOfEnd, " total ", total, " show ", settings.show, showing);
         };
 
+        // --- items has changed, update 
+
+        var updateItems = function(){
+            items = $("." + CLASS_ITEM + ":not(."+ CLASS_CLONE + ")", slider);
+            adjustItemSize(); 
+            calcFromTotal(); // recalculate the sets and what is end slice
+
+            if (settings.useDots) { setupDots(); } // rebuild the dot list
+            if (settings.infinite) { createClones(); } // recreate clones
+        };
+
         // --- insert an item
 
         var insertItem = function(newItem, index) {
@@ -776,15 +787,8 @@
                     addedItem.insertBefore(items[index]);
                 }
                 
-                items = $("." + CLASS_ITEM + ":not(."+ CLASS_CLONE + ")", slider); 
-
                 total += addedItem.length;
-                adjustItemSize(); 
-                calcFromTotal(); // recalculate the sets and what is end slice
-
-                if (settings.useDots) { setupDots(); } // rebuild the dot list
-                if (settings.infinite) { createClones(); } // recreate clones
-
+                updateItems();
                 scrollToItem(index); // scroll to items inserted
                 
             } else {
@@ -796,9 +800,17 @@
 
         // --- remove an item based on index
 
-        var removeItem = function(index) {
-            if (inRange(index)){
+        var removeItem = function(indexStart, indexEnd) {
+            if (inRange(indexStart)){
+                if (inRange(indexEnd)) { 
+                    // remove more than 1 item
 
+                } else {
+                    console.log("removing item at ", indexStart);
+                    items[indexStart].remove();
+                    total--;
+                }
+                updateItems();
             } else {
                 return false;
             }
@@ -962,7 +974,7 @@
 
             // --- remove an item
 
-            remove : function(removeIndex) { return removeItem(); },
+            remove : function(removeStart, removeEnd) { return removeItem(removeStart, removeEnd); },
 
             // --- the window has changed sizes
 
