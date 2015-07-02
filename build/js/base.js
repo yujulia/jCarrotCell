@@ -25,8 +25,7 @@ require('./jCarrotCell.js');
 var demo1 = $('#demo--1').carrotCell({ 
     // auto: true,
     // infinite: true,  
-    focusable: false,
-    useDots: true,
+    // useDots: true,
     easing: 'easeOutExpo',
     duration: 1000,
     show: 3,
@@ -728,17 +727,18 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             updateShowing(); 
         };
 
-        // --- nothing to scroll
+        // --- disable all controls
 
         var disableControls = function(){
-            controls.prop("disabled", true);
-            dots.prop("disabled", true);
+            if (settings.usePrevNext || settings.usePausePlay) { controls.prop("disabled", true); }
+            if (settings.useDots) { dots.prop("disabled", true); }
         };
 
-        // --- ok to scroll again
+        // --- enable all controls
 
         var enableControls = function(){
-
+            if (settings.usePrevNext || settings.usePausePlay) { controls.prop("disabled", false); }
+            if (settings.useDots) {  dots.prop("disabled", false); }
         };
 
         // -- create icon prev and next buttons
