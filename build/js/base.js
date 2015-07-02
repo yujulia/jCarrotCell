@@ -874,6 +874,7 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
         // --- adjust the size of the items and the slider 
 
         var adjustItemSize = function(){  
+            if (settings.infinite){ createClones(); }  // pad with clones
             setItemsSize();
             setSliderSize();
         };
@@ -995,8 +996,6 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
                 scope.addClass(CLASS_VERTICAL);
             }
 
-            if (settings.infinite){ createClones(); }  // pad with clones
-
             one = getTrueItemSize($(items[0])); // the size of one item
 
             adjustItemSize();   // make the items fit inside the clippane  
@@ -1063,9 +1062,16 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
 
         var settingsUpdated = function(options){
             destroyControls(); // clear previous controls
+            if (clones) { clones.remove(); }
+            scrollSlider({ duration: 0, offset: 0 });
+            current = 0;
+            scrollBy = 0;
+            alreadyMoved = 0;
 
             $.extend(saveOptions, options);
             $.extend(settings, DEFAULTS, saveOptions);
+
+            console.log(settings);
 
             updateSettings();
             adjustItemSize();
