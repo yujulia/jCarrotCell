@@ -34,9 +34,10 @@ var demo1 = $('#demo--1').carrotCell({
     // controlOnHover: true,
     // dotsOnHover: true,
     breakpoints : [
-        { pixels: 1010, settings: { useDots: false }},
-        { pixels: 900, settings: { scroll: 3, show: 3 }},
-        { pixels: 600, settings: { scroll: 2, show: 2 }}
+        { pixels: 320, settings: { scroll: 1, show: 1 }},
+        { pixels: 480, settings: { scroll: 2, show: 2 }},
+        { pixels: 1010, settings: { scroll: 1, show: 3 }},
+        { pixels: 900, settings: { scroll: 2, show: 2 }}
     ],
     key: true
 });
@@ -495,7 +496,6 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             }
 
             animating = false; // lockdown ends now everything is processed
-            console.log("===========================", showing, " current ", current);
         };
 
         // --- calculate the scroll
@@ -944,8 +944,6 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             firstOfEnd = total - settings.show; // the first item in the ending view
             updateShowing();
             if (sets > 1) { enoughToScroll = true; }
-
-            console.log("sets ", sets, " first of end ", firstOfEnd, " total ", total, " show ", settings.show, showing);
         };
 
         // --- items has changed, update 
@@ -1104,25 +1102,25 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
         var checkBreakpoints = function(){
             var breakpointsTotal = settings.breakpoints.length;
 
+            var comparePixels = function(a,b) {
+                if (a.pixels > b.pixels) { return -1; }
+                if (a.pixels < b.pixels) { return 1; }
+                return 0;
+            };
+
             if (breakpointsTotal > 0) {
                 var currentWidth = $(window).width();
                 var breakParams = {};
                 $.extend(breakParams, beforeBreakOptions);
-
-                // SORT this by biggest to smallest
-
-                console.log("width ", currentWidth, " scope w ", $(scope).width());
-
+                settings.breakpoints.sort(comparePixels);
                 for (var b=0; b < breakpointsTotal; b++){
                     var breakpoint = settings.breakpoints[b];
                     if (breakpoint.pixels >= currentWidth ){
                         $.extend(breakParams, breakpoint.settings);
-                        console.log("apply breakpoint ", breakpoint);
                     }
                 }
                 return breakParams;
             }
-
             return {};
         };
 
@@ -1138,9 +1136,7 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
                 $.extend(beforeBreakOptions, settings); 
 
                 var breakParams = checkBreakpoints();
-                if (!$.isEmptyObject(breakParams)){ 
-                    $.extend(settings, breakParams); 
-                }
+                if (!$.isEmptyObject(breakParams)){  $.extend(settings, breakParams); }
 
                 items = scope.children(); 
                 useVelocity = $(scope).velocity === undefined ? false : true;
@@ -1165,7 +1161,7 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
 
             // --- these public methods are called by track
 
-            init : function(options){ return setup(options); },
+            init : function(options){ return setup(options); }, // called only once
 
             keyPressed : function(keyCode){ return handleKeyPress(keyCode); },
 

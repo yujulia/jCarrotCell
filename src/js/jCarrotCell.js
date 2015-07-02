@@ -428,7 +428,6 @@
             }
 
             animating = false; // lockdown ends now everything is processed
-            console.log("===========================", showing, " current ", current);
         };
 
         // --- calculate the scroll
@@ -877,8 +876,6 @@
             firstOfEnd = total - settings.show; // the first item in the ending view
             updateShowing();
             if (sets > 1) { enoughToScroll = true; }
-
-            console.log("sets ", sets, " first of end ", firstOfEnd, " total ", total, " show ", settings.show, showing);
         };
 
         // --- items has changed, update 
@@ -1037,25 +1034,25 @@
         var checkBreakpoints = function(){
             var breakpointsTotal = settings.breakpoints.length;
 
+            var comparePixels = function(a,b) {
+                if (a.pixels > b.pixels) { return -1; }
+                if (a.pixels < b.pixels) { return 1; }
+                return 0;
+            };
+
             if (breakpointsTotal > 0) {
                 var currentWidth = $(window).width();
                 var breakParams = {};
                 $.extend(breakParams, beforeBreakOptions);
-
-                // SORT this by biggest to smallest
-
-                console.log("width ", currentWidth, " scope w ", $(scope).width());
-
+                settings.breakpoints.sort(comparePixels);
                 for (var b=0; b < breakpointsTotal; b++){
                     var breakpoint = settings.breakpoints[b];
                     if (breakpoint.pixels >= currentWidth ){
                         $.extend(breakParams, breakpoint.settings);
-                        console.log("apply breakpoint ", breakpoint);
                     }
                 }
                 return breakParams;
             }
-
             return {};
         };
 
@@ -1071,9 +1068,7 @@
                 $.extend(beforeBreakOptions, settings); 
 
                 var breakParams = checkBreakpoints();
-                if (!$.isEmptyObject(breakParams)){ 
-                    $.extend(settings, breakParams); 
-                }
+                if (!$.isEmptyObject(breakParams)){  $.extend(settings, breakParams); }
 
                 items = scope.children(); 
                 useVelocity = $(scope).velocity === undefined ? false : true;
@@ -1098,7 +1093,7 @@
 
             // --- these public methods are called by track
 
-            init : function(options){ return setup(options); },
+            init : function(options){ return setup(options); }, // called only once
 
             keyPressed : function(keyCode){ return handleKeyPress(keyCode); },
 

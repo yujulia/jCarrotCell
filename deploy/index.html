@@ -10,114 +10,47 @@
     <link rel="stylesheet" href="css/main.min.css">
   </head>
   <body> 
-    <div class="content">
-      <h1 class="cc-carrot-after"><a href=".">jCarrotCell</a></h1>
-      <nav> 
-        <ol>
-          <li><a href="https://github.com/yujulia/jCarrotCell" target="_blank" class="cc-github">Github </a></li>
-          <li><a href="dist/jcarrotcell.zip" class="cc-download">Download </a></li>
-          <li><a href="demo.html" target="_blank" class="cc-lab">Demos </a></li>
-          <li><a href="doc.html" class="cc-files">Docs </a></li>
-        </ol>
-      </nav>
-      <p class="intro">
-        A flexible, responsive, customizable carousel plugin for jQuery. 
-        
-      </p>
-    </div>
-    <ul id="jcc-home">
-      <li class="jcc-item"><img src="img/j.png" width="100%" alt="j">
-        <div class="jcc-content">
-           
-          <h2>1</h2>
-        </div>
-      </li>
-      <li class="jcc-item"><img src="img/carrot.png" width="100%" alt="carrot">
-        <div class="jcc-content">
-           
-          <h2>2</h2>
-        </div>
-      </li>
-      <li class="jcc-item"><img src="img/cell.png" width="100%" alt="cell">
-        <div class="jcc-content">
-           
-          <h2>3</h2>
-        </div>
-      </li>
-      <li class="jcc-item"><img src="img/j.png" width="100%" alt="j">
-        <div class="jcc-content">
-           
-          <h2>4</h2>
-        </div>
-      </li>
-      <li class="jcc-item"><img src="img/carrot.png" width="100%" alt="carrot">
-        <div class="jcc-content">
-           
-          <h2>5</h2>
-        </div>
-      </li>
-      <li class="jcc-item"><img src="img/cell.png" width="100%" alt="cell">
-        <div class="jcc-content">
-           
-          <h2>6</h2>
-        </div>
-      </li>
-      <li class="jcc-item"><img src="img/carrot.png" width="100%" alt="cell">
-        <div class="jcc-content">
-           
-          <h2>7</h2>
-        </div>
-      </li>
-    </ul>
-    <div id="jcc">
-      <div><img src="img/j.png" width="100%" alt="j"></div>
-      <div><img src="img/carrot.png" width="100%" alt="carrot"></div>
-      <div><img src="img/cell.png" width="100%" alt="cell"></div>
-    </div>
-    <div class="content">
-      <section>
-        <h2>Features</h2>
-        <ul class="list">
-          <li>Use your own markup, event names, classes, selectors etc. </li>
-          <li>Scroll vertically or horizontally, infinitely or finitely.</li>
-          <li>Auto play, pause, stop.</li>
-          <li>Auto generate "dots" or configure your own.</li>
-          <li>Scroll multiple items, or just one.</li>
-          <li>Add and remove items via the API.</li>
-          <li>Auto fill max width of browser, auto scale the height too, or don't.</li>
-          <li>Arrow key navigation. </li>
-          <li>Use touch events when possible, or don't.</li>
-          <li>Supports orientation change in maxwidth mode.</li>
-        </ul>
-      </section>
-      <section>
-        <h2>Setup </h2>
-        <p><a href="dist/jcarrotcell.zip" class="cc-download">Download </a>the jCarrotCell bundle or clone the repo from  <a href="https://github.com/yujulia/jCarrotCell" target="_blank" class="cc-github">Github</a>.</p>
-        <p>You will need to include some version of <a href="https://jquery.com/" target="_blank">jQuery </a>(version 1.7+) before <strong>jCarrotCell.js </strong>and also the styles from  <strong>carrotcell.css</strong>.</p>
-        <p>
-           
-          The markup should look something like this, see the <a href="" class="cc-files">Documentation </a>on how to use whatever markup you want.
-        </p>
-        <pre><code data-language="html"><ol class="my-thing">
-    <li>item 1</li>
-    <li>item 2</li>
-    <li>item 3</li>
-</ol>       
-</code></pre>
-        <p>Invoke the carrotcell with the following:</p>
-        <pre><code data-language="js">$(".my-thing").carrotCell();
-</code></pre>
-      </section>
-    </div>
-    <footer> 
-      <div class="content">
-        <p>
-           
-          jCarrotCell Version 2.0 by <a href="http://yujulia.com" class="cc-link">Julia Yu</a>. First draft November 10, 2011, Last Update Jun 23, 2015 9:20:09 PM PDT
-        </p>
-        <h2><a href="https://github.com/yujulia/jCarrotCell" target="_blank" class="cc-github">Github </a></h2>
+    
+    <div id="demo--1" class="demo">
+      <div class="demo__item">
+        <figcaption>0</figcaption>
+        <figure> 
+          <div class="cc-carrot zero-carrot"></div>
+        </figure>
       </div>
-    </footer>
+      <div class="demo__item">
+        <figcaption>1</figcaption>
+        <figure> 
+          <div class="cc-carrot"></div>
+        </figure>
+      </div>
+      <div class="demo__item">
+        <figcaption>2</figcaption>
+        <figure> 
+          <div class="cc-carrot"></div>
+          <div class="cc-carrot"></div>
+        </figure>
+      </div>
+      <div class="demo__item">
+        <figcaption>3</figcaption>
+        <figure> 
+          <div class="cc-carrot"></div>
+          <div class="cc-carrot"></div>
+          <div class="cc-carrot"></div>
+        </figure>
+      </div>
+      <div class="demo__item">
+        <figcaption>4</figcaption>
+        <figure> 
+          <div class="cc-carrot"></div>
+          <div class="cc-carrot"></div>
+          <div class="cc-carrot"></div>
+          <div class="cc-carrot"></div>
+        </figure>
+      </div>
+    </div>
+    
+    
     <script src="js/base.js" type="text/javascript" charset="utf-8"></script>
   </body>
 </html>
