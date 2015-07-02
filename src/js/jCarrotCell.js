@@ -51,7 +51,53 @@
         CLASS_PREV = CLASS_BTN + '--prev',
         CLASS_PAUSE = CLASS_BTN + '--pause',
         CLASS_PLAY = CLASS_BTN + '--play',
-        CLASS_DOT_BTN = CLASS_BTN + '--dot';
+        CLASS_DOT_BTN = CLASS_BTN + '--dot',
+
+        DEFAULTS = {
+            show: 1,                // show 1 frame at a time
+            scroll: 1,              // scroll 1 frame at a time
+            duration: 500,          // scroll animation duration         
+            sideways: true,         // scroll sideways
+            easing: "swing",        // slide easing method
+
+            infinite : false,       // infinite scroll
+            auto : false,           // auto loop if circular
+            autoDuration : 2000,    // how long to pause on an item
+
+            stopOnHover : true,     // stop auto advance on hover
+            controlOnHover : false, // show controls on hover only
+            dotsOnHover: false,     // show dots on hover
+
+            useDots : false,
+            naviClass : '',
+            dotClass : '',
+
+            dotIconClass : CLASS_DOT_ICON,
+            dotButtonClass : '',
+            dotText : 'item set ',
+            onClass : CLASS_ON,
+
+            usePausePlay : true,
+            pauseClass: '',
+            pauseIconClass : CLASS_PAUSE_ICON,
+            pauseText : 'pause auto scroll',
+            playClass : '',
+            playIconClass : CLASS_PLAY_ICON,
+            playText : 'resume auto scroll',
+
+            usePrevNext : true,
+            prevClass : '',
+            prevIconClass : CLASS_PREV_ICON,
+            prevText : 'next item set',
+            nextClass : '',
+            nextIconClass : CLASS_NEXT_ICON,
+            nextText : 'previous item set',
+
+            key : false,
+            keyBack : '',
+            keyForward : '',
+            keyToggle : KEY_TOGGLE
+        };
 
     // --- debounce helper 
 
@@ -99,6 +145,7 @@
             items = null,               // all items elements
             total = 0,                  // items count
             one = null,                 // 1 item
+            initialized = false,
 
             prev = null,
             next = null,
@@ -133,53 +180,7 @@
             paused = false,
             timer = null,           
 
-            // --- these settings can be over written
-
-            settings = {
-                show: 1,                // show 1 frame at a time
-                scroll: 1,              // scroll 1 frame at a time
-                duration: 500,          // scroll animation duration         
-                sideways: true,         // scroll sideways
-                easing: "swing",        // slide easing method
-   
-                infinite : false,       // infinite scroll
-                auto : false,           // auto loop if circular
-                autoDuration : 2000,    // how long to pause on an item
-
-                stopOnHover : true,     // stop auto advance on hover
-                controlOnHover : false, // show controls on hover only
-                dotsOnHover: false,     // show dots on hover
-  
-                useDots : false,
-                naviClass : '',
-                dotClass : '',
-
-                dotIconClass : CLASS_DOT_ICON,
-                dotButtonClass : '',
-                dotText : 'item set ',
-                onClass : CLASS_ON,
-
-                usePausePlay : true,
-                pauseClass: '',
-                pauseIconClass : CLASS_PAUSE_ICON,
-                pauseText : 'pause auto scroll',
-                playClass : '',
-                playIconClass : CLASS_PLAY_ICON,
-                playText : 'resume auto scroll',
-
-                usePrevNext : true,
-                prevClass : '',
-                prevIconClass : CLASS_PREV_ICON,
-                prevText : 'next item set',
-                nextClass : '',
-                nextIconClass : CLASS_NEXT_ICON,
-                nextText : 'previous item set',
-
-                key : false,
-                keyBack : '',
-                keyForward : '',
-                keyToggle : KEY_TOGGLE
-            };
+            settings = {};              // this carrotcells settings
 
         // --- send error msg to track with this carrotcell name
 
@@ -230,6 +231,8 @@
                 }
                 updateItems();
                 scrollToItem(index); // scroll to items inserted
+
+                return index;
             } else {
                 error("Unable to insert that kind of item. Please use a string or jquery object");
                 return false;
@@ -246,6 +249,7 @@
                     someItems.remove(); 
                     updateItems();
                 };
+
                 if (useVelocity) {
                     $(someItems).velocity("fadeOut", { duration: 250, complete: fadeDone });
                 } else {
@@ -257,6 +261,7 @@
                 if (indexEnd && inRange(indexEnd)) { 
                     if (indexEnd === indexStart) {
                         removeThese($(items[indexStart]));
+                        return indexStart;
                     } else {
                         if (indexEnd < indexStart) { // passed in indexes in wrong order, swap
                             var tempIndex = indexEnd;
@@ -268,12 +273,15 @@
                             removeTheseItems = removeTheseItems.add(items[q]);
                         }
                         removeThese(removeTheseItems);
-
+                        return [indexStart, indexEnd];
                     }
                 } else {
                     removeThese($(items[indexStart]));
+                    return indexStart;
                 }
-            } 
+            } else {
+                return false;
+            }
         };
 
         // --- toggle prev and next controls
@@ -476,7 +484,7 @@
         var validateThenMove = function(itemIndex){
             if (inRange(itemIndex)) {
                 scrollToItem(itemIndex);
-                return true;
+                return itemIndex;
             } else {
                 return false;
             }
@@ -548,9 +556,15 @@
         // --- a key event we care about happened
 
         var handleKeyPress = function(keyCode){
-            if (keyCode === settings.keyBack) { moveToPrev(); }
-            if (keyCode === settings.keyForward) { moveToNext(); }
-            if (keyCode === settings.keyToggle) { toggleAuto(); }
+            if (isInteger(keyCode)){
+                if (keyCode === settings.keyBack) { moveToPrev(); }
+                if (keyCode === settings.keyForward) { moveToNext(); }
+                if (keyCode === settings.keyToggle) { toggleAuto(); }
+                return true;
+            } else {
+                error(keyCode, " is not a valid key. Please use an integer keycode.");
+                return false;
+            }
         };
 
         // --- setup hover triggered actions
@@ -651,15 +665,13 @@
         var setupDots = function(){
             var existingNavi = $("." + CLASS_NAVI, scope);
             if (existingNavi.length) { existingNavi.remove(); }
-            setItems = []; // empty
+            setItems = []; 
             navi = $('<ol/>', { 'class': CLASS_NAVI });
             var prevItem = null;
             
             for (var z=0; z < sets; z++){
                 var relatedItem = z * settings.scroll;
-                if (relatedItem > firstOfEnd) { relatedItem = firstOfEnd; }
                 if (prevItem !== relatedItem) {
-
                     var listItem = $('<li/>', { 'class': settings.dotClass });
                     var dot = $('<button/>', { 'class': settings.dotButtonClass });
                     var dotIcon = $('<span/>', { 'class' : settings.dotIconClass, 'aria-hidden': 'true' });
@@ -717,6 +729,12 @@
             } 
 
             if (!track.touch){ setupHover(); }
+        };
+
+        // --- completely remove the control set
+
+        var removeControls = function(){
+
         };
 
         // --- return attributes on some jquery element
@@ -806,6 +824,8 @@
                     scrollSlider({ duration: 0, offset: current * one.totalSize}); // move slider
                 }
             }
+
+            return true;
         };
 
         // --- make clones for infinite scroll
@@ -846,13 +866,9 @@
             items = $("." + CLASS_ITEM + ":not(."+ CLASS_CLONE + ")", slider);
 
             total = items.length;
-            console.log("now there is ", total, " items ");
-
-
             adjustItemSize(); 
             calcFromTotal(); // recalculate the sets and what is end slice
 
-            console.log("UPDATE ", total, " showing ", settings.show);
             if (total > settings.show) {
                 enableControls();
                 if (settings.useDots) { setupDots(); } // rebuild the dot list
@@ -926,6 +942,9 @@
         // --- update the settings object 
 
         var updateSettings = function(){
+
+            adjustProperty = settings.sideways ? "width" : "height";
+
             if (settings.show < settings.scroll){
                 settings.scroll = settings.show;
                 error("sorry, you cant scroll more items than whats actually showing.");
@@ -971,48 +990,64 @@
             }
         };
 
-        // --- get information about this carrotcell
+        // --- settings object updated, recalculate everything
 
-        var getInfo = function(){
-            items = scope.children(); 
-            total = items.length;
-            useVelocity = $(scope).velocity === undefined ? false : true;
-            adjustProperty = settings.sideways ? "width" : "height";
+        var settingsUpdated = function(options){
+            $.extend(settings, options); 
+            updateSettings();
+            adjustItemSize();
+            calcFromTotal(); 
+            if (enoughToScroll) { createControls(); } 
+
+            return true;
         };
 
         // --- setup the carrot
 
-        setup = function(){
-            getInfo();          // find information on this carrotcell
-            updateSettings();   // toggle on relevant settings if any
-            makeFrame();        // make the markup
-            
-            if ((total > settings.show) && (total > 1)) {
-                calcFromTotal();    
-                createControls();   
-            } 
+        var setup = function(options){
+            if (initialized) {
+                error(settings.name + " has already been initalized, please use update to make changes.");
+                return false;
+            } else {
+                scope = options.scope;
+                $.extend(settings, DEFAULTS, options);
+
+                items = scope.children(); 
+                useVelocity = $(scope).velocity === undefined ? false : true;
+                total = items.length;
+
+                updateSettings();   // toggle on relevant settings if any
+                makeFrame();        // make the markup
+                calcFromTotal(); 
+
+                if (enoughToScroll) { createControls(); } 
+                initialized = true;
+
+                return true;
+            }
         };
 
         /** ---------------------------------------
-            carrot public api
+            carrot public methods
         */
+
         var API_Methods = {
 
-            // --- initialize the carrot
+            // --- these public methods are called by track
 
-            init : function(options){
-                scope = options.scope;
-                $.extend(settings, options); // update settings
-                setup();
-            },
+            init : function(options){ return setup(options); },
+
+            keyPressed : function(keyCode){ return handleKeyPress(keyCode); },
+
+            resize : function(){ return resizeCarrot(); },
+
+            /** ---------------------------------------
+                User API METHODS
+            */
 
             // --- update the carrot with new options
 
-            update : function(options) {
-                $.extend(settings, options);
-                // setup();
-                // remake controls but dont remake the frame
-            },
+            update : function(options) { return settingsUpdated(options); },
 
             // --- insert an item
 
@@ -1022,17 +1057,9 @@
 
             remove : function(removeStart, removeEnd) { return removeItem(removeStart, removeEnd); },
 
-            // --- the window has changed sizes
-
-            resize : function(){ resizeCarrot(); },
-
-            // --- track triggers this
-
-            keyPressed : function(keyCode){ handleKeyPress(keyCode); },
-
             // --- move the carousel to an index
 
-            moveToItem : function(itemIndex) { validateThenMove(itemIndex); },
+            moveToItem : function(itemIndex) { return validateThenMove(itemIndex); },
 
             // --- return STR the name of this carrot
 
@@ -1044,11 +1071,7 @@
 
             // --- return ARRAY of INT, with clone index if TRUE
 
-            getShowing : function(cloneIndex) { return getShowing(cloneIndex); },
-
-            // --- return current INT index
-
-            getFirstShowing : function(cloneIndex){ return getShowing(cloneIndex)[0]; }
+            getShowing : function(cloneIndex) { return getShowing(cloneIndex); }
         };
 
         return API_Methods;
