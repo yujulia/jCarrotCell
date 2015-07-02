@@ -98,11 +98,7 @@
             keyForward : '',
             keyToggle : KEY_TOGGLE,
 
-            noDefaultBreakpoints : false,               // override the default breakpoint
-            breakpoints : [
-                { pixels: 480, scroll: 1, show: 1 }    
-            ]
-
+            breakpoints : []
         };
 
     // --- debounce helper 
@@ -828,16 +824,22 @@
 
         var resizeCarrot = function(){
             setClipSize();
-            adjustItemSize();
 
-            if (settings.infinite){
-                scrollSlider({ duration: 0, offset: (current + settings.show) * one.totalSize});
-            } else {
-                if (showing[0] === 0) {
-                    return false; // do nothing since at start 
+            var breakParams = checkBreakpoints();
+            if ($.isEmptyObject(breakParams)){ 
+                
+                adjustItemSize();
+                if (settings.infinite){
+                    scrollSlider({ duration: 0, offset: (current + settings.show) * one.totalSize});
                 } else {
-                    scrollSlider({ duration: 0, offset: current * one.totalSize}); // move slider
+                    if (showing[0] === 0) {
+                        return false; // do nothing since at start 
+                    } else {
+                        scrollSlider({ duration: 0, offset: current * one.totalSize}); // move slider
+                    }
                 }
+            } else {
+                updateCarrot(breakParams);
             }
 
             return true;
@@ -1007,7 +1009,7 @@
 
         // --- settings object updated, recalculate everything
 
-        var settingsUpdated = function(options){
+        var updateCarrot = function(options){
             destroyControls(); 
             clearScrolled();
             
@@ -1020,6 +1022,29 @@
             if (enoughToScroll) { createControls(); }  
 
             return true;
+        };
+
+        // --- check if there is any breakpoints and apply settings
+
+        var checkBreakpoints = function(){
+            var breakpointsTotal = settings.breakpoints.length;
+
+            if (breakpointsTotal > 0) {
+                var currentWidth = $(window).width();
+                var breakParams = {};
+                console.log("width ", currentWidth);
+
+                for (var b=0; b < breakpointsTotal; b++){
+                    var breakpoint = settings.breakpoints[b];
+                    if (breakpoint.pixels >= currentWidth ){
+                        $.extend(breakParams, breakpoint.settings);
+                        // console.log("apply breakpoint ", breakpoint);
+                    }
+                }
+                return breakParams;
+            }
+
+            return {};
         };
 
         // --- setup the carrot
@@ -1036,6 +1061,9 @@
                 items = scope.children(); 
                 useVelocity = $(scope).velocity === undefined ? false : true;
                 total = items.length;
+
+                var breakParams = checkBreakpoints();
+                if (!$.isEmptyObject(breakParams)){ $.extend(settings, breakParams); }
 
                 updateSettings();   // toggle on relevant settings if any
                 makeFrame();        // make the markup
@@ -1068,7 +1096,7 @@
 
             // --- update the carrot with new options
 
-            update : function(options) { return settingsUpdated(options); },
+            update : function(options) { return updateCarrot(options); },
 
             // --- insert an item
 

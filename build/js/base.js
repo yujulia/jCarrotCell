@@ -28,11 +28,16 @@ var demo1 = $('#demo--1').carrotCell({
     useDots: true,
     easing: 'easeOutExpo',
     duration: 1000,
-    show: 3,
+    show: 4,
     scroll: 1,
     // stopOnHover: true,
     // controlOnHover: true,
     // dotsOnHover: true,
+    breakpoints : [
+        { pixels: 600, settings: { scroll: 2, show: 2 }},
+        { pixels: 1020, settings: { scroll: 3, show: 3 }},
+        { pixels: 1010, settings: { useDots: false }}
+    ],
     key: true
 });
 
@@ -158,7 +163,9 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             key : false,
             keyBack : '',
             keyForward : '',
-            keyToggle : KEY_TOGGLE
+            keyToggle : KEY_TOGGLE,
+
+            breakpoints : []
         };
 
     // --- debounce helper 
@@ -884,16 +891,22 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
 
         var resizeCarrot = function(){
             setClipSize();
-            adjustItemSize();
 
-            if (settings.infinite){
-                scrollSlider({ duration: 0, offset: (current + settings.show) * one.totalSize});
-            } else {
-                if (showing[0] === 0) {
-                    return false; // do nothing since at start 
+            var breakParams = checkBreakpoints();
+            if ($.isEmptyObject(breakParams)){ 
+                
+                adjustItemSize();
+                if (settings.infinite){
+                    scrollSlider({ duration: 0, offset: (current + settings.show) * one.totalSize});
                 } else {
-                    scrollSlider({ duration: 0, offset: current * one.totalSize}); // move slider
+                    if (showing[0] === 0) {
+                        return false; // do nothing since at start 
+                    } else {
+                        scrollSlider({ duration: 0, offset: current * one.totalSize}); // move slider
+                    }
                 }
+            } else {
+                updateCarrot(breakParams);
             }
 
             return true;
@@ -1059,11 +1072,11 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             current = 0;
             scrollBy = 0;
             alreadyMoved = 0;
-        }
+        };
 
         // --- settings object updated, recalculate everything
 
-        var settingsUpdated = function(options){
+        var updateCarrot = function(options){
             destroyControls(); 
             clearScrolled();
             
@@ -1076,6 +1089,29 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             if (enoughToScroll) { createControls(); }  
 
             return true;
+        };
+
+        // --- check if there is any breakpoints and apply settings
+
+        var checkBreakpoints = function(){
+            var breakpointsTotal = settings.breakpoints.length;
+
+            if (breakpointsTotal > 0) {
+                var currentWidth = $(window).width();
+                var breakParams = {};
+                console.log("width ", currentWidth);
+
+                for (var b=0; b < breakpointsTotal; b++){
+                    var breakpoint = settings.breakpoints[b];
+                    if (breakpoint.pixels >= currentWidth ){
+                        $.extend(breakParams, breakpoint.settings);
+                        // console.log("apply breakpoint ", breakpoint);
+                    }
+                }
+                return breakParams;
+            }
+
+            return {};
         };
 
         // --- setup the carrot
@@ -1092,6 +1128,9 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
                 items = scope.children(); 
                 useVelocity = $(scope).velocity === undefined ? false : true;
                 total = items.length;
+
+                var breakParams = checkBreakpoints();
+                if (!$.isEmptyObject(breakParams)){ $.extend(settings, breakParams); }
 
                 updateSettings();   // toggle on relevant settings if any
                 makeFrame();        // make the markup
@@ -1124,7 +1163,7 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
 
             // --- update the carrot with new options
 
-            update : function(options) { return settingsUpdated(options); },
+            update : function(options) { return updateCarrot(options); },
 
             // --- insert an item
 

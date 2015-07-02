@@ -7,7 +7,8 @@
 */
 .carrotcell {
   position: relative;
-  overflow: auto; }
+  overflow: auto;
+  overflow-x: hidden; }
   .carrotcell__clip {
     overflow: hidden;
     margin: 0 auto;

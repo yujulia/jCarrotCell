@@ -27,14 +27,15 @@ var demo1 = $('#demo--1').carrotCell({
     useDots: true,
     easing: 'easeOutExpo',
     duration: 1000,
-    show: 3,
+    show: 4,
     scroll: 1,
     // stopOnHover: true,
     // controlOnHover: true,
     // dotsOnHover: true,
     breakpoints : [
-        { pixels: 600, params: { scroll: 2, show: 2 }},
-        { pixels: 1020, params: { scroll: 4, show: 4 }}
+        { pixels: 600, settings: { scroll: 2, show: 2 }},
+        { pixels: 1020, settings: { scroll: 3, show: 3 }},
+        { pixels: 1010, settings: { useDots: false }}
     ],
     key: true
 });

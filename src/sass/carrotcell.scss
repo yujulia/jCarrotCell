@@ -8,6 +8,7 @@
 .carrotcell {
 	position: relative;
     overflow: auto;
+    overflow-x: hidden;
 
     &__clip {
         overflow: hidden;
