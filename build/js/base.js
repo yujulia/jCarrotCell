@@ -272,6 +272,59 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             }
         };
 
+        // --- insert an item
+
+        var insertItem = function(newItem, index) {
+
+            if ((newItem !== null) && ((typeof newItem === "string") || (typeof newItem === "object"))) {
+
+                if (!inRange(index)){ index = total-1; } // no index insert at end
+
+                var temp  = $('<div/>').append(newItem);   
+                var addedItem = temp.children();       
+                addedItem.addClass(CLASS_ITEM).attr("tabindex", 0);
+
+                if (index === total-1) {
+                    addedItem.insertAfter(items[total-1]);
+                    index++; // for scroll
+                } else {
+                    addedItem.insertBefore(items[index]);
+                }
+                updateItems();
+                scrollToItem(index); // scroll to items inserted
+            } else {
+                error("Unable to insert that kind of item. Please use a string or jquery object");
+                return false;
+            }
+        };
+
+        // --- remove an item based on index
+
+        var removeItem = function(indexStart, indexEnd) {
+            if (inRange(indexStart)){
+                if (inRange(indexEnd)) { 
+                    if (indexEnd === indexStart) {
+                        items[indexStart].remove();
+                    } else {
+                        if (indexEnd < indexStart) { // passed in indexes in wrong order, swap
+                            var tempIndex = indexEnd;
+                            indexEnd = indexStart;
+                            indexStart = tempIndex;
+                        }
+                        for (var q = indexStart; q <= indexEnd; q++) {
+                            items[q].remove();
+                        }
+                    }
+                } else {
+                    items[indexStart].remove();
+                }
+                updateItems();
+                return true;
+            } else {
+                return false;
+            }
+        };
+
         // --- toggle prev and next controls
 
         var setState = function(){   
@@ -824,76 +877,12 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
 
         var updateItems = function(){
             items = $("." + CLASS_ITEM + ":not(."+ CLASS_CLONE + ")", slider);
+            total = items.length;
             adjustItemSize(); 
             calcFromTotal(); // recalculate the sets and what is end slice
 
             if (settings.useDots) { setupDots(); } // rebuild the dot list
             if (settings.infinite) { createClones(); } // recreate clones
-        };
-
-        // --- insert an item
-
-        var insertItem = function(newItem, index) {
-
-            if ((newItem !== null) && ((typeof newItem === "string") || (typeof newItem === "object"))) {
-
-                if (!inRange(index)){ index = total-1; } // no index insert at end
-
-                var temp  = $('<div/>').append(newItem);   
-                var addedItem = temp.children();       
-                addedItem.addClass(CLASS_ITEM).attr("tabindex", 0);
-
-                if (index === total-1) {
-                    addedItem.insertAfter(items[total-1]);
-                    index++; // for scroll
-                } else {
-                    addedItem.insertBefore(items[index]);
-                }
-                
-                total += addedItem.length;
-                updateItems();
-                scrollToItem(index); // scroll to items inserted
-                
-            } else {
-                error("Unable to insert that kind of item. Please use a string or jquery object");
-                return false;
-            }
-
-        };
-
-        // --- remove an item based on index
-
-        var removeItem = function(indexStart, indexEnd) {
-
-            // remove one item and update the total count 
-            
-            var removeFromItems = function(i) {
-                items[i].remove();
-                total--;
-            };
-
-            if (inRange(indexStart)){
-                if (inRange(indexEnd)) { 
-                    if (indexEnd === indexStart) {
-                        removeFromItems(indexStart); // just remove 1 item
-                    } else {
-                        if (indexEnd < indexStart) { // passed in indexes in wrong order, swap
-                            var tempIndex = indexEnd;
-                            indexEnd = indexStart;
-                            indexStart = tempIndex;
-                        }
-                        for (var q = indexStart; q <= indexEnd; q++) {
-                            removeFromItems(q);
-                        }
-                    }
-                } else {
-                    removeFromItems(indexStart);
-                }
-                updateItems();
-                return true;
-            } else {
-                return false;
-            }
         };
 
         // --- set the size of the clipping pane 
