@@ -134,7 +134,8 @@ body {
   color: #aaaaaa;
   font-family: PT;
   font-weight: 300;
-  font-size: 15px; }
+  font-size: 15px;
+  width: 100%; }
 
 a {
   text-decoration: none;
@@ -249,7 +250,8 @@ pre {
   width: 90%;
   background: #f9f9f9;
   margin: 20px auto;
-  padding: 40px; }
+  padding: 40px;
+  box-sizing: border-box; }
   .demo .carrotcell__clone {
     border-color: #bbb; }
   .demo__item {

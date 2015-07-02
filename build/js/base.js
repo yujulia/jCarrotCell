@@ -34,9 +34,9 @@ var demo1 = $('#demo--1').carrotCell({
     // controlOnHover: true,
     // dotsOnHover: true,
     breakpoints : [
-        { pixels: 600, settings: { scroll: 2, show: 2 }},
-        { pixels: 1020, settings: { scroll: 3, show: 3 }},
-        { pixels: 1010, settings: { useDots: false }}
+        { pixels: 1010, settings: { useDots: false }},
+        { pixels: 900, settings: { scroll: 3, show: 3 }},
+        { pixels: 600, settings: { scroll: 2, show: 2 }}
     ],
     key: true
 });
@@ -165,6 +165,7 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             keyForward : '',
             keyToggle : KEY_TOGGLE,
 
+            broke : false,                // we are on some break point
             breakpoints : []
         };
 
@@ -249,6 +250,7 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             paused = false,
             timer = null,           
 
+            beforeBreakOptions = {},    // options before breakpoint application
             saveOptions = {},           // save previous options
             settings = {};              // this carrotcells settings
 
@@ -893,19 +895,30 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             setClipSize();
 
             var breakParams = checkBreakpoints();
+
             if ($.isEmptyObject(breakParams)){ 
-                
-                adjustItemSize();
-                if (settings.infinite){
-                    scrollSlider({ duration: 0, offset: (current + settings.show) * one.totalSize});
+                if (broke) {
+                    console.log("NO break points, but broke before so reset");
+                    broke = false;
+                    console.log(beforeBreakOptions);
+                    updateCarrot(beforeBreakOptions);
                 } else {
-                    if (showing[0] === 0) {
-                        return false; // do nothing since at start 
+                    console.log("FINE");
+                    adjustItemSize();
+                    if (settings.infinite){
+                        scrollSlider({ duration: 0, offset: (current + settings.show) * one.totalSize});
                     } else {
-                        scrollSlider({ duration: 0, offset: current * one.totalSize}); // move slider
+                        if (showing[0] === 0) {
+                            return false; // do nothing since at start 
+                        } else {
+                            scrollSlider({ duration: 0, offset: current * one.totalSize}); // move slider
+                        }
                     }
                 }
+            
             } else {
+                console.log("BREAK points, applying");
+                broke = true;
                 updateCarrot(breakParams);
             }
 
@@ -1099,13 +1112,17 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             if (breakpointsTotal > 0) {
                 var currentWidth = $(window).width();
                 var breakParams = {};
-                console.log("width ", currentWidth);
+                $.extend(breakParams, beforeBreakOptions);
+
+                // SORT this by biggest to smallest
+
+                console.log("width ", currentWidth, " scope w ", $(scope).width());
 
                 for (var b=0; b < breakpointsTotal; b++){
                     var breakpoint = settings.breakpoints[b];
                     if (breakpoint.pixels >= currentWidth ){
                         $.extend(breakParams, breakpoint.settings);
-                        // console.log("apply breakpoint ", breakpoint);
+                        console.log("apply breakpoint ", breakpoint);
                     }
                 }
                 return breakParams;
@@ -1124,13 +1141,16 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
                 scope = options.scope;
                 $.extend(saveOptions, options);
                 $.extend(settings, DEFAULTS, saveOptions);
+                $.extend(beforeBreakOptions, settings); 
+
+                var breakParams = checkBreakpoints();
+                if (!$.isEmptyObject(breakParams)){ 
+                    $.extend(settings, breakParams); 
+                }
 
                 items = scope.children(); 
                 useVelocity = $(scope).velocity === undefined ? false : true;
                 total = items.length;
-
-                var breakParams = checkBreakpoints();
-                if (!$.isEmptyObject(breakParams)){ $.extend(settings, breakParams); }
 
                 updateSettings();   // toggle on relevant settings if any
                 makeFrame();        // make the markup

@@ -33,9 +33,9 @@ var demo1 = $('#demo--1').carrotCell({
     // controlOnHover: true,
     // dotsOnHover: true,
     breakpoints : [
-        { pixels: 600, settings: { scroll: 2, show: 2 }},
-        { pixels: 1020, settings: { scroll: 3, show: 3 }},
-        { pixels: 1010, settings: { useDots: false }}
+        { pixels: 1010, settings: { useDots: false }},
+        { pixels: 900, settings: { scroll: 3, show: 3 }},
+        { pixels: 600, settings: { scroll: 2, show: 2 }}
     ],
     key: true
 });

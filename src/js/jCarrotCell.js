@@ -98,6 +98,7 @@
             keyForward : '',
             keyToggle : KEY_TOGGLE,
 
+            broke : false,                // we are on some break point
             breakpoints : []
         };
 
@@ -182,6 +183,7 @@
             paused = false,
             timer = null,           
 
+            beforeBreakOptions = {},    // options before breakpoint application
             saveOptions = {},           // save previous options
             settings = {};              // this carrotcells settings
 
@@ -826,19 +828,30 @@
             setClipSize();
 
             var breakParams = checkBreakpoints();
+
             if ($.isEmptyObject(breakParams)){ 
-                
-                adjustItemSize();
-                if (settings.infinite){
-                    scrollSlider({ duration: 0, offset: (current + settings.show) * one.totalSize});
+                if (broke) {
+                    console.log("NO break points, but broke before so reset");
+                    broke = false;
+                    console.log(beforeBreakOptions);
+                    updateCarrot(beforeBreakOptions);
                 } else {
-                    if (showing[0] === 0) {
-                        return false; // do nothing since at start 
+                    console.log("FINE");
+                    adjustItemSize();
+                    if (settings.infinite){
+                        scrollSlider({ duration: 0, offset: (current + settings.show) * one.totalSize});
                     } else {
-                        scrollSlider({ duration: 0, offset: current * one.totalSize}); // move slider
+                        if (showing[0] === 0) {
+                            return false; // do nothing since at start 
+                        } else {
+                            scrollSlider({ duration: 0, offset: current * one.totalSize}); // move slider
+                        }
                     }
                 }
+            
             } else {
+                console.log("BREAK points, applying");
+                broke = true;
                 updateCarrot(breakParams);
             }
 
@@ -1032,13 +1045,17 @@
             if (breakpointsTotal > 0) {
                 var currentWidth = $(window).width();
                 var breakParams = {};
-                console.log("width ", currentWidth);
+                $.extend(breakParams, beforeBreakOptions);
+
+                // SORT this by biggest to smallest
+
+                console.log("width ", currentWidth, " scope w ", $(scope).width());
 
                 for (var b=0; b < breakpointsTotal; b++){
                     var breakpoint = settings.breakpoints[b];
                     if (breakpoint.pixels >= currentWidth ){
                         $.extend(breakParams, breakpoint.settings);
-                        // console.log("apply breakpoint ", breakpoint);
+                        console.log("apply breakpoint ", breakpoint);
                     }
                 }
                 return breakParams;
@@ -1057,13 +1074,16 @@
                 scope = options.scope;
                 $.extend(saveOptions, options);
                 $.extend(settings, DEFAULTS, saveOptions);
+                $.extend(beforeBreakOptions, settings); 
+
+                var breakParams = checkBreakpoints();
+                if (!$.isEmptyObject(breakParams)){ 
+                    $.extend(settings, breakParams); 
+                }
 
                 items = scope.children(); 
                 useVelocity = $(scope).velocity === undefined ? false : true;
                 total = items.length;
-
-                var breakParams = checkBreakpoints();
-                if (!$.isEmptyObject(breakParams)){ $.extend(settings, breakParams); }
 
                 updateSettings();   // toggle on relevant settings if any
                 makeFrame();        // make the markup

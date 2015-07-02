@@ -23,6 +23,7 @@ body {
     font-family: PT;
     font-weight: $light;
     font-size: 15px;
+    width: 100%;
 }
 
 
@@ -213,6 +214,8 @@ pre {
     }
 }
 
+
+
 .demo {
     @extend %clearfix;
     // width: $content-w - $pad-button * 2;
@@ -220,7 +223,7 @@ pre {
     background: #f9f9f9;
     margin: 20px auto;
     padding: $pad-button;
-    // box-sizing: border-box;
+    box-sizing: border-box;
 
     .carrotcell__clone {
         border-color: #bbb;
