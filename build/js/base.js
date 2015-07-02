@@ -24,7 +24,7 @@ require('./jCarrotCell.js');
 
 var demo1 = $('#demo--1').carrotCell({ 
     // auto: true,
-    infinite: true,  
+    // infinite: true,  
     focusable: false,
     useDots: true,
     easing: 'easeOutExpo',
@@ -174,6 +174,7 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             alreadyMoved = 0,           // how many items already moved past
             scrollBy = 0,
 
+            enoughToScroll = false,     // is there enough items to scroll
             atStart = true,             // no more in prev
             atEnd = false,              // no more in next
             direction = 1,              // direction we scrolling
@@ -673,7 +674,7 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             play.append(playIcon).append(playContent);
             var toggleSet = $().add(play).add(pause);
 
-            var blurToggleSet = function(){ toggleSet.blur(); }
+            var blurToggleSet = function(){ toggleSet.blur(); };
 
             play.click(toggleAuto);
             pause.click(toggleAuto);
@@ -727,6 +728,19 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             updateShowing(); 
         };
 
+        // --- nothing to scroll
+
+        var disableControls = function(){
+            controls.prop("disabled", true);
+            dots.prop("disabled", true);
+        };
+
+        // --- ok to scroll again
+
+        var enableControls = function(){
+
+        };
+
         // -- create icon prev and next buttons
 
         var createControls = function(){
@@ -739,7 +753,7 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
                     keyArray.push(settings.keyForward);
                 }
                 if (settings.usePausePlay) {
-                    keyArray.push(settings.keyToggle)
+                    keyArray.push(settings.keyToggle);
                 }
                 track.subscribeKey(keyArray);
             }
@@ -817,7 +831,7 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
                 sliderItems += settings.show * 2; // make room for clones
             }
             slider.css(adjustProperty, one.totalSize * sliderItems + "px"); // set length of slider
-        }
+        };
 
         // --- adjust the size of the items and the slider 
 
@@ -870,6 +884,8 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             sets = Math.ceil(total/settings.scroll);
             firstOfEnd = total - settings.show; // the first item in the ending view
             updateShowing();
+            if (sets > 1) { enoughToScroll = true; }
+
             console.log("sets ", sets, " first of end ", firstOfEnd, " total ", total, " show ", settings.show, showing);
         };
 
@@ -881,8 +897,14 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             adjustItemSize(); 
             calcFromTotal(); // recalculate the sets and what is end slice
 
-            if (settings.useDots) { setupDots(); } // rebuild the dot list
-            if (settings.infinite) { createClones(); } // recreate clones
+            console.log("UPDATE ", total, " showing ", settings.show);
+            if (total > settings.show) {
+                enableControls();
+                if (settings.useDots) { setupDots(); } // rebuild the dot list
+                if (settings.infinite) { createClones(); } // recreate clones
+            } else {
+                disableControls();
+            }
         };
 
         // --- set the size of the clipping pane 
