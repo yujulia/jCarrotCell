@@ -193,6 +193,7 @@
             var args = Array.prototype.slice.call(arguments);
             args.unshift(settings.name);
             track.error.apply(null, args);
+            return false;
         };
 
         // --- check if index is in the range of these items
@@ -202,17 +203,14 @@
 
             if (isInteger(index)) {
                 if (index < 0){
-                    error(errString);
-                    return false;
+                    return error(errString); 
                 } else if (index >= total) {
-                    error(errString);
-                    return false;
+                    return error(errString);
                 } else {
                     return true;
                 }
             } else {
-                error(errString);
-                return false;
+                return error(errString); 
             }
         };
 
@@ -239,8 +237,7 @@
 
                 return index;
             } else {
-                error("Unable to insert that kind of item. Please use a string or jquery object");
-                return false;
+                return error("Unable to insert that kind of item. Please use a string or jquery object");
             }
         };
 
@@ -445,8 +442,7 @@
 
                 var firstCurrent = getShowing()[0]; // get first item showing
                 if (firstCurrent === itemIndex) {
-                    error(itemIndex, " is currently shown.");
-                    return false;
+                    return error(itemIndex, " is currently shown.");
                 } else if (firstCurrent > itemIndex){ 
                     direction = -1; 
                     scrollBy = firstCurrent - itemIndex; // scroll backwards
@@ -567,8 +563,7 @@
                 if (keyCode === settings.keyToggle) { toggleAuto(); }
                 return true;
             } else {
-                error(keyCode, " is not a valid key. Please use an integer keycode.");
-                return false;
+                return error(keyCode, " is not a valid key. Please use an integer keycode.");
             }
         };
 
@@ -831,12 +826,9 @@
 
             if ($.isEmptyObject(breakParams)){ 
                 if (broke) {
-                    console.log("NO break points, but broke before so reset");
                     broke = false;
-                    console.log(beforeBreakOptions);
-                    updateCarrot(beforeBreakOptions);
+                    updateCarrot(beforeBreakOptions); // reset breakpoints
                 } else {
-                    console.log("FINE");
                     adjustItemSize();
                     if (settings.infinite){
                         scrollSlider({ duration: 0, offset: (current + settings.show) * one.totalSize});
@@ -850,7 +842,6 @@
                 }
             
             } else {
-                console.log("BREAK points, applying");
                 broke = true;
                 updateCarrot(breakParams);
             }
@@ -1023,6 +1014,10 @@
         // --- settings object updated, recalculate everything
 
         var updateCarrot = function(options){
+            if ($.isEmptyObject(options)){
+                return error("nothing to update carrotcell with...");
+            } 
+
             destroyControls(); 
             clearScrolled();
             
@@ -1068,8 +1063,7 @@
 
         var setup = function(options){
             if (initialized) {
-                error(settings.name + " has already been initalized, please use update to make changes.");
-                return false;
+                return error(settings.name + " has already been initalized, please use update to make changes.");
             } else {
                 scope = options.scope;
                 $.extend(saveOptions, options);
