@@ -32,6 +32,10 @@ var demo1 = $('#demo--1').carrotCell({
     // stopOnHover: true,
     // controlOnHover: true,
     // dotsOnHover: true,
+    breakpoints : [
+        { pixels: 600, params: { scroll: 2, show: 2 }},
+        { pixels: 1020, params: { scroll: 4, show: 4 }}
+    ],
     key: true
 });
 

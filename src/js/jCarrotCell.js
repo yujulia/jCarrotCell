@@ -96,7 +96,13 @@
             key : false,
             keyBack : '',
             keyForward : '',
-            keyToggle : KEY_TOGGLE
+            keyToggle : KEY_TOGGLE,
+
+            noDefaultBreakpoints : false,               // override the default breakpoint
+            breakpoints : [
+                { pixels: 480, scroll: 1, show: 1 }    
+            ]
+
         };
 
     // --- debounce helper 
@@ -997,7 +1003,7 @@
             current = 0;
             scrollBy = 0;
             alreadyMoved = 0;
-        }
+        };
 
         // --- settings object updated, recalculate everything
 
