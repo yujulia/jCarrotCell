@@ -180,6 +180,7 @@
             paused = false,
             timer = null,           
 
+            saveOptions = {},           // save previous options
             settings = {};              // this carrotcells settings
 
         // --- send error msg to track with this carrotcell name
@@ -731,10 +732,16 @@
             if (!track.touch){ setupHover(); }
         };
 
-        // --- completely remove the control set
+        // --- remove the control set
 
-        var removeControls = function(){
-
+        var destroyControls = function(){
+            if (timer) { clearTimeout(timer); timer = null; }
+            if (settings.usePrevNext || settings.usePausePlay) { 
+                controls.remove(); 
+                controls = $();
+            }
+            if (settings.useDots){ navi.remove(); } 
+            if (settings.key) { track.unsubscribeKeys(settings.name); }
         };
 
         // --- return attributes on some jquery element
@@ -993,7 +1000,11 @@
         // --- settings object updated, recalculate everything
 
         var settingsUpdated = function(options){
-            $.extend(settings, options); 
+            destroyControls(); // clear previous controls
+
+            $.extend(saveOptions, options);
+            $.extend(settings, DEFAULTS, saveOptions);
+
             updateSettings();
             adjustItemSize();
             calcFromTotal(); 
@@ -1010,7 +1021,8 @@
                 return false;
             } else {
                 scope = options.scope;
-                $.extend(settings, DEFAULTS, options);
+                $.extend(saveOptions, options);
+                $.extend(settings, DEFAULTS, saveOptions);
 
                 items = scope.children(); 
                 useVelocity = $(scope).velocity === undefined ? false : true;
@@ -1102,6 +1114,17 @@
             for (var i in track.carrots) {
                 if (typeof track.carrots[i][someFunc] === "function"){
                     track.carrots[i][someFunc]();
+                }
+            }
+        },
+
+        // --- remove subscribed key events
+
+        unsubscribeKeys : function(carrotName){
+            for (var keycode in track.keys) {
+                var carrotIndex = track.keys[keycode].indexOf(carrotName);
+                if (carrotIndex > -1) {
+                    track.keys[keycode].splice(carrotIndex, 1);
                 }
             }
         },
