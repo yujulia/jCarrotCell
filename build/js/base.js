@@ -874,9 +874,10 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
         // --- adjust the size of the items and the slider 
 
         var adjustItemSize = function(){  
-            if (settings.infinite){ createClones(); }  // pad with clones
+            if (settings.infinite){ createClones(); }  
             setItemsSize();
             setSliderSize();
+            if (settings.infinite){ scrollSlider({ duration: 0, offset: settings.show * one.totalSize }); }
         };
 
         // --- resize happened, recalculate
@@ -999,12 +1000,6 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             one = getTrueItemSize($(items[0])); // the size of one item
 
             adjustItemSize();   // make the items fit inside the clippane  
-
-            // if its infinite, move items out of view
-
-            if (settings.infinite){
-                scrollSlider({ duration: 0, offset: settings.show * one.totalSize }); 
-            }
         };
 
         // --- update the settings object 
@@ -1058,25 +1053,27 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             }
         };
 
-        // --- settings object updated, recalculate everything
-
-        var settingsUpdated = function(options){
-            destroyControls(); // clear previous controls
+        var clearScrolled = function(){
             if (clones) { clones.remove(); }
             scrollSlider({ duration: 0, offset: 0 });
             current = 0;
             scrollBy = 0;
             alreadyMoved = 0;
+        }
 
+        // --- settings object updated, recalculate everything
+
+        var settingsUpdated = function(options){
+            destroyControls(); 
+            clearScrolled();
+            
             $.extend(saveOptions, options);
             $.extend(settings, DEFAULTS, saveOptions);
-
-            console.log(settings);
 
             updateSettings();
             adjustItemSize();
             calcFromTotal(); 
-            if (enoughToScroll) { createControls(); } 
+            if (enoughToScroll) { createControls(); }  
 
             return true;
         };
