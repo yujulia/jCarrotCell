@@ -239,28 +239,41 @@
         // --- remove an item based on index
 
         var removeItem = function(indexStart, indexEnd) {
+
+            var removeThese = function(someItems){
+
+                var fadeDone = function(){
+                    someItems.remove(); 
+                    updateItems();
+                };
+                if (useVelocity) {
+                    $(someItems).velocity("fadeOut", { duration: 250, complete: fadeDone });
+                } else {
+                    $(someItems).fadeOut( "fast", fadeDone );
+                }
+            };
+
             if (inRange(indexStart)){
-                if (inRange(indexEnd)) { 
+                if (indexEnd && inRange(indexEnd)) { 
                     if (indexEnd === indexStart) {
-                        items[indexStart].remove();
+                        removeThese($(items[indexStart]));
                     } else {
                         if (indexEnd < indexStart) { // passed in indexes in wrong order, swap
                             var tempIndex = indexEnd;
                             indexEnd = indexStart;
                             indexStart = tempIndex;
                         }
+                        var removeTheseItems = $();
                         for (var q = indexStart; q <= indexEnd; q++) {
-                            items[q].remove();
+                            removeTheseItems = removeTheseItems.add(items[q]);
                         }
+                        removeThese(removeTheseItems);
+
                     }
                 } else {
-                    items[indexStart].remove();
+                    removeThese($(items[indexStart]));
                 }
-                updateItems();
-                return true;
-            } else {
-                return false;
-            }
+            } 
         };
 
         // --- toggle prev and next controls
@@ -831,7 +844,11 @@
 
         var updateItems = function(){
             items = $("." + CLASS_ITEM + ":not(."+ CLASS_CLONE + ")", slider);
+
             total = items.length;
+            console.log("now there is ", total, " items ");
+
+
             adjustItemSize(); 
             calcFromTotal(); // recalculate the sets and what is end slice
 

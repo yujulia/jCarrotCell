@@ -4,7 +4,7 @@
 $ = require('jquery');
 
 require('./vendor/rainbow-custom.min.js');
-require('./vendor/velocity.min.js');
+// require('./vendor/velocity.min.js');
 require('./vendor/jquery.easing.1.3.js');
 require('./jCarrotCell.js');
 
@@ -24,7 +24,7 @@ require('./jCarrotCell.js');
 var demo1 = $('#demo--1').carrotCell({ 
     // auto: true,
     // infinite: true,  
-    // useDots: true,
+    useDots: true,
     easing: 'easeOutExpo',
     duration: 1000,
     show: 3,
