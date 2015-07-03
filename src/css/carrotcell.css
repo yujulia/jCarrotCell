@@ -47,11 +47,11 @@
     margin: 0;
     padding: 0;
     z-index: 2; }
-    .carrotcell__btn:focus, .carrotcell__btn:hover:enabled {
+    .carrotcell__btn:focus {
       opacity: 1; }
-      .carrotcell__btn:focus .carrotcell__icon, .carrotcell__btn:hover:enabled .carrotcell__icon {
+      .carrotcell__btn:focus .carrotcell__icon {
         background: #666; }
-      .carrotcell__btn:focus .carrotcell__icon--dot, .carrotcell__btn:hover:enabled .carrotcell__icon--dot {
+      .carrotcell__btn:focus .carrotcell__icon--dot {
         color: #666; }
     .carrotcell__btn:disabled {
       opacity: 0.2;
@@ -67,10 +67,10 @@
     .carrotcell__btn--prev, .carrotcell__btn--next {
       position: absolute;
       top: 50%;
-      transform: translateY(-50%);
       left: 8px;
       transition: opacity .2s ease-in-out;
-      opacity: 1; }
+      opacity: 1;
+      margin-top: -13px; }
     .carrotcell__btn--next {
       left: auto;
       right: 8px; }
@@ -78,7 +78,7 @@
       position: absolute;
       top: 50%;
       left: 50%;
-      transform: translateY(-50%) translateX(-50%);
+      margin: -13px 0 0 -13px;
       transition: opacity .2s ease-in-out;
       opacity: 1; }
       .carrotcell__btn--pause:disabled, .carrotcell__btn--play:disabled {
@@ -149,3 +149,21 @@
   .carrotcell--vertical .carrotcell__btn--next {
     top: auto;
     bottom: 8px; }
+
+@media screen and (max-width: 600px) {
+  .carrotcell__btn--prev, .carrotcell__btn--next {
+    margin-top: -25px; }
+  .carrotcell__btn .carrotcell__icon {
+    width: 50px;
+    height: 50px;
+    font-size: 40px; }
+  .carrotcell__navi {
+    top: 3px; }
+  .carrotcell__btn--pause, .carrotcell__btn--play {
+    margin: -25px 0 0 -25px; }
+  .carrotcell__icon--play:before, .carrotcell__icon--pause:before {
+    font-size: 30px; }
+  .carrotcell__icon--play::before {
+    padding: 5px 0 0 4px; }
+  .carrotcell__icon--dot::before {
+    font-size: 50px; } }

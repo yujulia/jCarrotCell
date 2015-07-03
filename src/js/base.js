@@ -22,18 +22,18 @@ require('./jCarrotCell.js');
 
 
 var demo1 = $('#demo--1').carrotCell({ 
-    // auto: true,
+    auto: true,
     // infinite: true,  
     useDots: true,
     easing: 'easeOutExpo',
     duration: 1000,
     show: 4,
     scroll: 1,
-    // stopOnHover: true,
+    pauseOnHover: true,
     // controlOnHover: true,
     // dotsOnHover: true,
     breakpoints : [
-        { pixels: 320, settings: { scroll: 1, show: 1 }},
+        { pixels: 320, settings: { scroll: 1, show: 1, usePausePlay: false }},
         { pixels: 480, settings: { scroll: 2, show: 2 }},
         { pixels: 1010, settings: { scroll: 1, show: 3 }},
         { pixels: 900, settings: { scroll: 2, show: 2 }}

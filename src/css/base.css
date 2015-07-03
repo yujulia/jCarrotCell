@@ -216,9 +216,7 @@ pre {
   margin-right: 10px; }
 
 #jcc-home {
-  width: 90%;
-  margin: 80px auto 0 auto;
-  border: solid 5px #000; }
+  margin: 80px auto 0 auto; }
   #jcc-home img {
     display: block; }
   #jcc-home .prev, #jcc-home .next {
@@ -230,8 +228,6 @@ pre {
     #jcc-home .prev:hover, #jcc-home .prev:focus, #jcc-home .next:hover, #jcc-home .next:focus {
       color: #99cc33;
       background: transparent; }
-  #jcc-home .carrotcell__clone {
-    border-color: violet; }
 
 .jcc-item {
   border: solid 1px red;
@@ -247,7 +243,7 @@ pre {
     border-color: green; }
 
 .demo {
-  width: 90%;
+  width: 100%;
   background: #f9f9f9;
   margin: 20px auto;
   padding: 40px;

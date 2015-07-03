@@ -23,18 +23,18 @@ require('./jCarrotCell.js');
 
 
 var demo1 = $('#demo--1').carrotCell({ 
-    // auto: true,
+    auto: true,
     // infinite: true,  
     useDots: true,
     easing: 'easeOutExpo',
     duration: 1000,
     show: 4,
     scroll: 1,
-    // stopOnHover: true,
+    pauseOnHover: true,
     // controlOnHover: true,
     // dotsOnHover: true,
     breakpoints : [
-        { pixels: 320, settings: { scroll: 1, show: 1 }},
+        { pixels: 320, settings: { scroll: 1, show: 1, usePausePlay: false }},
         { pixels: 480, settings: { scroll: 2, show: 2 }},
         { pixels: 1010, settings: { scroll: 1, show: 3 }},
         { pixels: 900, settings: { scroll: 2, show: 2 }}
@@ -132,7 +132,7 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             auto : false,           // auto loop if circular
             autoDuration : 2000,    // how long to pause on an item
 
-            stopOnHover : true,     // stop auto advance on hover
+            pauseOnHover : true,     // stop auto advance on hover
             controlOnHover : false, // show controls on hover only
             dotsOnHover: false,     // show dots on hover
 
@@ -604,7 +604,9 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
 
         // --- toggle play or auto
 
-        var toggleAuto = function(){
+        var toggleAuto = function(e){
+            if (e) { e.preventDefault(); }
+
             playing = !playing;
             if (playing) {
                 if (settings.usePausePlay && play) {
@@ -643,13 +645,14 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             var onTasks = function(){
                 if (settings.controlOnHover) { controls.removeClass(CLASS_INVIS); }
                 if (settings.dotsOnHover) { navi.removeClass(CLASS_INVIS); }
-                paused = true;
+                if (settings.pauseOnHover) { paused = true; }
+                
             };
 
             var offTasks = function(){
                 if (settings.controlOnHover) { controls.addClass(CLASS_INVIS).blur(); }
                 if (settings.dotsOnHover) { navi.addClass(CLASS_INVIS).blur(); }
-                paused = false;
+                if (settings.pauseOnHover) { paused = false; }
             };
 
             var cancelHoverTasks = function(){
@@ -684,10 +687,24 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             next.append(nextContent).append(nextIcon);
 
             if (atStart && !settings.infinite) { prev.prop("disabled", true); }
-            
-            prev.click(moveToPrev);
-            next.click(moveToNext);
 
+            var goNext = function(e) {
+                if (e) { e.preventDefault(); }
+                moveToNext();
+            };
+
+            var goPrev = function(e) {
+                if (e) { e.preventDefault(); }
+                moveToPrev();
+            };
+
+            if (track.touch) {
+                prev.on("touchend", goPrev);
+                next.on("touchend", goNext);
+            } else {
+                prev.click(goPrev);
+                next.click(goNext);
+            }
             scope.prepend(next).prepend(prev);
             controls = controls.add(prev).add(next);
         };
@@ -707,11 +724,20 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
 
             var blurToggleSet = function(){ toggleSet.blur(); };
 
-            play.click(toggleAuto);
-            pause.click(toggleAuto);
+            var blurAfterTouch = function(e){
+                if (e) { e.preventDefault(); }
+                toggleAuto();
+                blurToggleSet();   
+            };
 
-            toggleSet.mouseleave(blurToggleSet);
-
+            if (track.touch) {
+                play.on("touchend", blurAfterTouch);
+                pause.on("touchend", blurAfterTouch);
+            } else {
+                play.click(toggleAuto);
+                pause.click(toggleAuto);
+                toggleSet.mouseleave(blurToggleSet);
+            }
             scope.prepend(pause).prepend(play);
             controls = controls.add(play).add(pause);
         };
@@ -757,6 +783,17 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             updateShowing(); 
         };
 
+        // --- recognize swipes 
+
+        var createTouchControls = function(){
+            // if sideways swip left, swipe right
+            // if not, swipe up, swipe down
+
+            if (settings.pauseOnHover){
+                slider.on("touchend", toggleAuto);
+            }
+        };
+
         // --- disable all controls
 
         var disableControls = function(){
@@ -776,7 +813,7 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
         var createControls = function(){
             if (settings.usePrevNext) { setupPreNext(); }
             
-            if (settings.key){
+            if (settings.key && !settings.touch){
                 var keyArray = [ settings.name ];
                 if (settings.usePrevNext) {
                     keyArray.push(settings.keyBack);
@@ -1068,6 +1105,8 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             }
         };
 
+        // --- rset back to beginning
+
         var clearScrolled = function(){
             if (clones) { clones.remove(); }
             scrollSlider({ duration: 0, offset: 0 });
@@ -1092,8 +1131,10 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             updateSettings();
             adjustItemSize();
             calcFromTotal(); 
-            if (enoughToScroll) { createControls(); }  
-
+            if (enoughToScroll) { 
+                createControls(); 
+                if (track.touch) { createTouchControls(); }
+            }  
             return true;
         };
 
@@ -1146,7 +1187,10 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
                 makeFrame();        // make the markup
                 calcFromTotal(); 
 
-                if (enoughToScroll) { createControls(); } 
+                if (enoughToScroll) { 
+                    createControls(); 
+                    if (track.touch) { createTouchControls(); }
+                } 
                 initialized = true;
 
                 return true;
@@ -1313,7 +1357,7 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             return false;
         }
 
-        if (!track.initialize) { track.init(); } // first time carrotcelling
+        if (!track.initialize) { track.init(); } // first time carrotcell
 
         var carrotAPI = $(this).data(DATA_API); // is this already a carrotcell?
         if (carrotAPI) {

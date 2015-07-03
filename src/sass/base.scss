@@ -141,9 +141,7 @@ pre {
 
 #jcc-home {
     @extend .nofrill;
-    width: 90%;
     margin: 80px auto 0 auto;
-    border: solid 5px #000;
 
     img {
         display: block;
@@ -162,33 +160,6 @@ pre {
         }
 
     }
-
-    .carrotcell__clone {
-        border-color: violet;
-    }
-
-
-
-    // .navi {
-    //     margin: 20px 0 0 0;
-
-    //     .naviItem {
-    //         color: transparent;
-    //         margin-right: 10px;
-    //     }
-
-    //     .naviItem:before {
-    //         @extend %beforeCarrotCell;
-    //         content: "\e007";
-    //         color: $color-text;
-    //         font-size: 14px;
-    //     }
-
-    //     .current:before {
-    //         color: $color-carrot;
-    //     }
-    // }
-
 }
 
 .jcc-item {
@@ -214,12 +185,10 @@ pre {
     }
 }
 
-
-
 .demo {
     @extend %clearfix;
     // width: $content-w - $pad-button * 2;
-    width: 90%;
+    width: 100%;
     background: #f9f9f9;
     margin: 20px auto;
     padding: $pad-button;
@@ -297,5 +266,7 @@ pre {
 
 // ------------------------------------  iphone
 @media screen and (max-width: 600px)  {
-
+    .demo {
+        // padding: 0;
+    }
 }
