@@ -30,6 +30,8 @@ var gulp = require("gulp"),
     reload = browserSync.reload,
     browserify = require("browserify"),
     source = require("vinyl-source-stream"),
+    postcss = require("gulp-postcss"),
+    autoprefixer = require("autoprefixer-core"),
     sass = require("gulp-sass"),
     concat = require("gulp-concat"),
     changed = require("gulp-changed"),
@@ -48,10 +50,15 @@ var gulp = require("gulp"),
     compile into css, put it in build, concat, add main file, minify, put in deploy
 **/
 gulp.task("styles", function(){
+
+
+    var processors = [ autoprefixer({browsers: ['last 2 version']}) ];
+
     return gulp.src(['node_modules/normalize.css/normalize.css', SASS_SRC+"*.scss"])
         .pipe(sass({ errLogToConsole: true }))
         .pipe(gulp.dest(CSS_SRC))
         .pipe(concat("main.css"))
+        .pipe(postcss(processors))
         .pipe(gulp.dest(CSS_BUILD))
         .pipe(reload({ stream: true }));
 });

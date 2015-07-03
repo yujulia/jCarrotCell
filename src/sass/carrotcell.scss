@@ -98,10 +98,11 @@
         &--prev, &--next {
             position: absolute;
             top: 50%;
+            transform: translateY(-50%);
             left: 8px;
             transition: opacity .2s ease-in-out;
             opacity: 1;  
-            margin-top: -13px;    
+            // margin-top: -13px;    
         }
 
         &--next {
@@ -236,9 +237,9 @@
 // ------------------------------------  iphone
 @media screen and (max-width: 600px)  {
     .carrotcell__btn {
-        &--prev, &--next {
-            margin-top: -25px;
-        }
+        // &--prev, &--next {
+        //     margin-top: -25px;
+        // }
         .carrotcell__icon {
             width: 50px;
             height: 50px;
@@ -251,9 +252,9 @@
         top: 3px;
     }
 
-    .carrotcell__btn--pause, .carrotcell__btn--play {
-        margin: -25px 0 0 -25px;
-    } 
+    // .carrotcell__btn--pause, .carrotcell__btn--play {
+    //     margin: -25px 0 0 -25px;
+    // } 
     
 
     .carrotcell__icon--play, .carrotcell__icon--pause {

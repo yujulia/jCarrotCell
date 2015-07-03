@@ -512,8 +512,6 @@ footer {
     font-size: 14px; }
 
 pre {
-  -webkit-border-radius: 10px;
-  -moz-border-radius: 10px;
   border-radius: 10px;
   padding: 20px;
   background-color: #f7f7f7; }
@@ -585,7 +583,8 @@ pre {
       margin: 5px 20px;
       text-align: center;
       top: 50%;
-      transform: translateY(-50%); }
+      -webkit-transform: translateY(-50%);
+              transform: translateY(-50%); }
     .demo__item figcaption {
       font-family: code;
       font-weight: 700;
@@ -717,10 +716,11 @@ pre {
     .carrotcell__btn--prev, .carrotcell__btn--next {
       position: absolute;
       top: 50%;
+      -webkit-transform: translateY(-50%);
+              transform: translateY(-50%);
       left: 8px;
       transition: opacity .2s ease-in-out;
-      opacity: 1;
-      margin-top: -13px; }
+      opacity: 1; }
     .carrotcell__btn--next {
       left: auto;
       right: 8px; }
@@ -789,7 +789,8 @@ pre {
     float: none; }
   .carrotcell--vertical .carrotcell__navi {
     top: 50%;
-    transform: translateY(-50%);
+    -webkit-transform: translateY(-50%);
+            transform: translateY(-50%);
     left: 12px;
     width: auto; }
   .carrotcell--vertical .carrotcell__dot {
@@ -797,22 +798,19 @@ pre {
   .carrotcell--vertical .carrotcell__btn--prev, .carrotcell--vertical .carrotcell__btn--next {
     left: 50%;
     top: 8px;
-    transform: translateX(-50%) rotate(90deg); }
+    -webkit-transform: translateX(-50%) rotate(90deg);
+            transform: translateX(-50%) rotate(90deg); }
   .carrotcell--vertical .carrotcell__btn--next {
     top: auto;
     bottom: 8px; }
 
 @media screen and (max-width: 600px) {
-  .carrotcell__btn--prev, .carrotcell__btn--next {
-    margin-top: -25px; }
   .carrotcell__btn .carrotcell__icon {
     width: 50px;
     height: 50px;
     font-size: 40px; }
   .carrotcell__navi {
     top: 3px; }
-  .carrotcell__btn--pause, .carrotcell__btn--play {
-    margin: -25px 0 0 -25px; }
   .carrotcell__icon--play:before, .carrotcell__icon--pause:before {
     font-size: 30px; }
   .carrotcell__icon--play::before {
