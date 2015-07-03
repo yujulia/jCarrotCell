@@ -41,13 +41,12 @@ var demo1 = $('#demo--1').carrotCell({
     key: true
 });
 
-// var demo2 = $('#demo--2').carrotCell({ 
-//     controlOnHover: true,
-//     useDots: true,
-//     infinite: true,
-//     sideways: false,
-//     easing: 'easeOutExpo',
-//     show: 2,
-//     scroll: 1,
-//     key: true
-// });
+var demo2 = $('#demo--2').carrotCell({ 
+    // infinite: true,
+    // usePrevNext: false,
+    sideways: false,
+    easing: 'easeOutExpo',
+    show: 2,
+    scroll: 1,
+    key: true
+});

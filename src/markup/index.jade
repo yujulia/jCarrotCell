@@ -47,15 +47,17 @@ html(lang="en")
 
         //- a(href="#") test link
 
-        -var n = 0
-        div(id="demo--1", class="demo")
-            while n < 5
-                +demoItem(n++)
+        article.example
+            -var n = 0
+            div(id="demo--1", class="demo")
+                while n < 5
+                    +demoItem(n++)
 
-        //- -var j = 0
-        //- div(id="demo--2", class="demo vertical")
-        //-     while j < 5
-        //-         +demoItem(j++)
+        article.example
+            -var j = 0
+            div(id="demo--2", class="demo vertical")
+                while j < 5
+                    +demoItem(j++)
 
     
         //- .content

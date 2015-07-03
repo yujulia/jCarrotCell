@@ -139,6 +139,10 @@ pre {
     }
 }
 
+.example {
+    @extend %clearfix;
+}
+
 #jcc-home {
     @extend .nofrill;
     margin: 80px auto 0 auto;
@@ -248,11 +252,16 @@ pre {
 }
 
 .vertical {
-    width: $item-w + $item-margin * 2 + $item-border * 2;
-    height: $item-h + $item-margin * 2 + $item-border * 2;
-    overflow: hidden;
-    overflow-y: scroll;
+    // width: $item-w + $pad-button * 2 + $item-border * 2;
+    height: 400px;
+    float: left;
+    width: auto;
+
+    .demo__item {
+        float: none;
+    }
 }
+
 
 @import "partials/rainbow";
 

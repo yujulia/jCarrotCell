@@ -200,6 +200,10 @@
 
     &--vertical {
 
+        .carrotcell__item {
+            float: none;
+        }
+
         .carrotcell__navi {
             top: 50%;
             transform: translateY(-50%);

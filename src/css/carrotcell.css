@@ -135,6 +135,8 @@
     overflow: hidden; }
   .carrotcell--invisible, .carrotcell--invisible:disabled {
     opacity: 0; }
+  .carrotcell--vertical .carrotcell__item {
+    float: none; }
   .carrotcell--vertical .carrotcell__navi {
     top: 50%;
     transform: translateY(-50%);

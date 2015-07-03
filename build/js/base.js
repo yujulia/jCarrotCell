@@ -42,16 +42,15 @@ var demo1 = $('#demo--1').carrotCell({
     key: true
 });
 
-// var demo2 = $('#demo--2').carrotCell({ 
-//     controlOnHover: true,
-//     useDots: true,
-//     infinite: true,
-//     sideways: false,
-//     easing: 'easeOutExpo',
-//     show: 2,
-//     scroll: 1,
-//     key: true
-// });
+var demo2 = $('#demo--2').carrotCell({ 
+    // infinite: true,
+    // usePrevNext: false,
+    sideways: false,
+    easing: 'easeOutExpo',
+    show: 2,
+    scroll: 1,
+    key: true
+});
 },{"./jCarrotCell.js":3,"./vendor/jquery.easing.1.3.js":4,"./vendor/rainbow-custom.min.js":5,"jquery":2}],2:[function(require,module,exports){
 (function (global){
 ; var __browserify_shim_require__=require;(function browserifyShim(module, exports, require, define, browserify_shim__define__module__export__) {
@@ -85,7 +84,8 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
         KEY_DOWN = 40,          // down arrow
         KEY_TOGGLE = 80,        // p
 
-        DEBOUNCE_RATE = 200,
+        DEBOUNCE_RATE = 200,    // how long to debounce resize and hover
+        SWIPE_THRESHOLD = 75,   // how many pixels before recognizing a swipe
 
         ROOT = 'carrotcell',
 
@@ -688,22 +688,12 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
 
             if (atStart && !settings.infinite) { prev.prop("disabled", true); }
 
-            var goNext = function(e) {
-                if (e) { e.preventDefault(); }
-                moveToNext();
-            };
-
-            var goPrev = function(e) {
-                if (e) { e.preventDefault(); }
-                moveToPrev();
-            };
-
             if (track.touch) {
-                prev.on("touchend", goPrev);
-                next.on("touchend", goNext);
+                prev.on("touchend", moveToPrev);
+                next.on("touchend", moveToNext);
             } else {
-                prev.click(goPrev);
-                next.click(goNext);
+                prev.click(moveToPrev);
+                next.click(moveToNext);
             }
             scope.prepend(next).prepend(prev);
             controls = controls.add(prev).add(next);
@@ -725,7 +715,6 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             var blurToggleSet = function(){ toggleSet.blur(); };
 
             var blurAfterTouch = function(e){
-                if (e) { e.preventDefault(); }
                 toggleAuto();
                 blurToggleSet();   
             };
@@ -745,8 +734,6 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
         // --- a dot has been clicked, go to that item
 
         var goToDotItem = function(e){
-            if (e) { e.preventDefault(); }
-
             var dotEnum = $(this).data(DATA_ENUM);
             if (current === dotEnum) { return false; }
             scrollToItem(dotEnum);  
@@ -793,11 +780,44 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
         // --- recognize swipes 
 
         var createTouchControls = function(){
-            // if sideways swip left, swipe right
-            // if not, swipe up, swipe down
+
+            var touchStart = 0, 
+                touchEnd = 0;
+
+            var carrotTouchStart = function(e){
+                e.preventDefault();
+                
+                if (settings.sideways) {
+                    touchStart = parseInt(e.changedTouches[0].clientX);
+                } else {
+                    touchStart = parseInt(e.changedTouches[0].clientY);
+                }
+            };
+
+            var carrotTouchEnd = function(e){
+                e.preventDefault();
+
+                if (settings.sideways) {
+                    touchEnd = parseInt(e.changedTouches[0].clientX);
+                } else {
+                    touchEnd = parseInt(e.changedTouches[0].clientY);
+                }
+                var diff = Math.abs(touchEnd - touchStart);
+
+                if (diff > SWIPE_THRESHOLD){
+                    if (touchEnd > touchStart) {
+                        moveToPrev();
+                    } else {
+                        moveToNext();
+                    }
+                }
+            };
+
+            slider[0].addEventListener("touchstart", carrotTouchStart, false);
+            slider[0].addEventListener("touchend", carrotTouchEnd, false);
 
             if (settings.pauseOnHover){
-                slider.on("touchend", toggleAuto);
+                slider[0].addEventListener("touchend", stopAutoPlay, false); // just stop it on swipe
             }
         };
 
@@ -875,10 +895,13 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             } else {
                 var m3 = parseInt(item.css("margin-top"), 10),
                     m4 = parseInt(item.css("margin-bottom"), 10);
-                calcOffset = m3 + m4;
-                // calcOffset = (m3 > m4) ? m3 : m4;                   // take largest margin bc of margin-collapse
-                // scope.css("height", height + calcOffset + "px");    // bc of collapse we need to increase height...
+
+                // calcOffset = m3 + m4;
+                calcOffset = (m3 > m4) ? m3 : m4;  // take largest margin bc of margin-collapse
             }
+
+            // this is already included in border-box
+
             if ($(item).css("box-sizing") === "content-box") {
                 if (settings.sideways){
                     var b1 = parseInt(item.css("border-left-width"), 10),
@@ -890,6 +913,7 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
                     calcOffset += b3 + b4;
                 }
             } 
+
             return {
                 w: item.outerWidth(true),
                 h: item.outerHeight(true),
@@ -901,7 +925,6 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
 
         var setItemsSize = function(){
             var size = settings.sideways ? width/settings.show : height/settings.show;
-
             one.totalSize = size;
             one.size = size - one.offset; // make room for margin/border
             items.css(adjustProperty, one.size + "px");
@@ -1014,7 +1037,11 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             width = parseInt(Math.floor(scope.width()), 10);
             height = parseInt(Math.floor(scope.height()), 10);
 
-            clipPane.css(adjustProperty, width + "px");
+            if (settings.sideways) {
+                clipPane.css(adjustProperty, width + "px");
+            } else {
+                clipPane.css(adjustProperty, height + "px");
+            }     
         };
 
         // --- make the html frame depending on if its a list or divs

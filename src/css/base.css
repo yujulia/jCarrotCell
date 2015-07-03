@@ -1,9 +1,9 @@
-section, nav, footer, .content, .demo, .demo__item {
+section, nav, footer, .content, .example, .demo, .demo__item {
   zoom: 1; }
-  section:before, nav:before, footer:before, .content:before, .demo:before, .demo__item:before, section:after, nav:after, footer:after, .content:after, .demo:after, .demo__item:after {
+  section:before, nav:before, footer:before, .content:before, .example:before, .demo:before, .demo__item:before, section:after, nav:after, footer:after, .content:after, .example:after, .demo:after, .demo__item:after {
     content: "";
     display: table; }
-  section:after, nav:after, footer:after, .content:after, .demo:after, .demo__item:after {
+  section:after, nav:after, footer:after, .content:after, .example:after, .demo:after, .demo__item:after {
     clear: both; }
 
 [data-icon]:before, [class^="cc-"]:before, [class*=" cc-"]:before, [class^="cc-"]:after, [class*=" cc-"]:after, .list li:before {
@@ -17,12 +17,12 @@ section, nav, footer, .content, .demo, .demo__item {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale; }
 
-section, nav, footer, .content, .demo, .demo__item {
+section, nav, footer, .content, .example, .demo, .demo__item {
   zoom: 1; }
-  section:before, nav:before, footer:before, .content:before, .demo:before, .demo__item:before, section:after, nav:after, footer:after, .content:after, .demo:after, .demo__item:after {
+  section:before, nav:before, footer:before, .content:before, .example:before, .demo:before, .demo__item:before, section:after, nav:after, footer:after, .content:after, .example:after, .demo:after, .demo__item:after {
     content: "";
     display: table; }
-  section:after, nav:after, footer:after, .content:after, .demo:after, .demo__item:after {
+  section:after, nav:after, footer:after, .content:after, .example:after, .demo:after, .demo__item:after {
     clear: both; }
 
 [data-icon]:before, [class^="cc-"]:before, [class*=" cc-"]:before, [class^="cc-"]:after, [class*=" cc-"]:after, .list li:before {
@@ -283,10 +283,11 @@ pre {
       opacity: 0.1; }
 
 .vertical {
-  width: 293.33333px;
-  height: 162px;
-  overflow: hidden;
-  overflow-y: scroll; }
+  height: 400px;
+  float: left;
+  width: auto; }
+  .vertical .demo__item {
+    float: none; }
 
 /** RAINBOW related styles
 */
