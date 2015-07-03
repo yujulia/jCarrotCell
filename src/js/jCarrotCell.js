@@ -678,6 +678,7 @@
 
         var goToDotItem = function(e){
             if (e) { e.preventDefault(); }
+
             var dotEnum = $(this).data(DATA_ENUM);
             if (current === dotEnum) { return false; }
             scrollToItem(dotEnum);  
@@ -703,7 +704,13 @@
                     var dotContent = $('<span/>', { 'class' : CLASS_ACCESS_TEXT, 'text': settings.dotText + z });
 
                     dot.data(DATA_ENUM, relatedItem).append(dotIcon).append(dotContent);
-                    dot.click(goToDotItem);
+
+                    if (track.touch){
+                        dot.on("touchend", goToDotItem);
+                    } else {
+                        dot.click(goToDotItem);
+                    }
+                    
                     listItem.append(dot);
                     navi.append(listItem);
                     setItems.push(relatedItem);

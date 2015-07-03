@@ -23,14 +23,14 @@ require('./jCarrotCell.js');
 
 
 var demo1 = $('#demo--1').carrotCell({ 
-    auto: true,
+    // auto: true,
     // infinite: true,  
     useDots: true,
     easing: 'easeOutExpo',
     duration: 1000,
     show: 4,
     scroll: 1,
-    pauseOnHover: true,
+    // pauseOnHover: true,
     // controlOnHover: true,
     // dotsOnHover: true,
     breakpoints : [
@@ -746,6 +746,7 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
 
         var goToDotItem = function(e){
             if (e) { e.preventDefault(); }
+
             var dotEnum = $(this).data(DATA_ENUM);
             if (current === dotEnum) { return false; }
             scrollToItem(dotEnum);  
@@ -771,7 +772,13 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
                     var dotContent = $('<span/>', { 'class' : CLASS_ACCESS_TEXT, 'text': settings.dotText + z });
 
                     dot.data(DATA_ENUM, relatedItem).append(dotIcon).append(dotContent);
-                    dot.click(goToDotItem);
+
+                    if (track.touch){
+                        dot.on("touchend", goToDotItem);
+                    } else {
+                        dot.click(goToDotItem);
+                    }
+                    
                     listItem.append(dot);
                     navi.append(listItem);
                     setItems.push(relatedItem);
