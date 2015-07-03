@@ -41,17 +41,22 @@
     display: inline-block;
     margin: 0; }
   .carrotcell__btn {
+    display: block;
     cursor: pointer;
     background: none;
     border: none;
     margin: 0;
     padding: 0;
     z-index: 2; }
-    .carrotcell__btn:focus {
+    .carrotcell__btn:after {
+      content: ' ';
+      display: table;
+      clear: both; }
+    .carrotcell__btn:focus, .carrotcell__btn:hover:enabled {
       opacity: 1; }
-      .carrotcell__btn:focus .carrotcell__icon {
+      .carrotcell__btn:focus .carrotcell__icon, .carrotcell__btn:hover:enabled .carrotcell__icon {
         background: #666; }
-      .carrotcell__btn:focus .carrotcell__icon--dot {
+      .carrotcell__btn:focus .carrotcell__icon--dot, .carrotcell__btn:hover:enabled .carrotcell__icon--dot {
         color: #666; }
     .carrotcell__btn:disabled {
       opacity: 0.2;
@@ -67,8 +72,8 @@
     .carrotcell__btn--prev, .carrotcell__btn--next {
       position: absolute;
       top: 50%;
-      transform: translateY(-50%);
       left: 8px;
+      transform: translateY(-50%);
       transition: opacity .2s ease-in-out;
       opacity: 1; }
     .carrotcell__btn--next {
@@ -78,14 +83,13 @@
       position: absolute;
       top: 50%;
       left: 50%;
-      margin: -13px 0 0 -13px;
+      transform: translateY(-50%) translateY(-50%);
       transition: opacity .2s ease-in-out;
       opacity: 1; }
       .carrotcell__btn--pause:disabled, .carrotcell__btn--play:disabled {
         opacity: 0; }
   .carrotcell__icon {
     display: block;
-    float: left;
     margin: 0;
     padding: 0;
     line-height: 1em;
@@ -97,8 +101,7 @@
     background: #ff9900;
     color: #fff; }
     .carrotcell__icon::before {
-      display: block;
-      vertical-align: text-top; }
+      display: block; }
     .carrotcell__icon--prev::before {
       content: '\2039';
       padding: 1px 0 0px 0px; }
@@ -146,14 +149,18 @@
     display: block; }
   .carrotcell--vertical .carrotcell__btn--prev, .carrotcell--vertical .carrotcell__btn--next {
     left: 50%;
+    right: auto;
+    bottom: auto;
     top: 8px;
     transform: translateX(-50%) rotate(90deg); }
   .carrotcell--vertical .carrotcell__btn--next {
+    left: 50%;
+    right: auto;
     top: auto;
     bottom: 8px; }
 
 @media screen and (max-width: 600px) {
-  .carrotcell__btn .carrotcell__icon {
+  .carrotcell__icon {
     width: 50px;
     height: 50px;
     font-size: 40px; }

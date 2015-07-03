@@ -54,6 +54,7 @@
     }
 
     &__btn {
+        display: block;
         cursor: pointer;
         background: none;
         border: none;
@@ -61,8 +62,14 @@
         padding: 0;
         z-index: 2;
 
-        // &:focus, &:hover:enabled {
-        &:focus {   
+
+        &:after {
+            content : ' ';
+            display: table;
+            clear: both;
+        }
+
+        &:focus, &:hover:enabled {
             opacity: 1;
 
             .carrotcell__icon {
@@ -98,11 +105,10 @@
         &--prev, &--next {
             position: absolute;
             top: 50%;
-            transform: translateY(-50%);
             left: 8px;
+            transform: translateY(-50%);
             transition: opacity .2s ease-in-out;
-            opacity: 1;  
-            // margin-top: -13px;    
+            opacity: 1;   
         }
 
         &--next {
@@ -114,7 +120,7 @@
             position: absolute;
             top: 50%;
             left: 50%;
-            margin: -13px 0 0 -13px;
+            transform: translateY(-50%) translateY(-50%);
             transition: opacity .2s ease-in-out;
             opacity: 1;      
 
@@ -126,7 +132,6 @@
 
     &__icon {
         display: block;
-        float: left;
         margin: 0;
         padding: 0;
         line-height: 1em;
@@ -138,9 +143,10 @@
         background: #ff9900;
         color: #fff;
 
+
         &::before {
             display: block;
-            vertical-align: text-top;
+            // vertical-align: text-top;
         }
 
         &--prev::before {
@@ -220,14 +226,17 @@
 
             &--prev, &--next {
                 left: 50%;
+                right: auto;
+                bottom: auto;
                 top: 8px;
                 transform: translateX(-50%) rotate(90deg);
             }
 
             &--next {
+                left: 50%;
+                right: auto;
                 top: auto;
                 bottom: 8px;
-
             }
         }
 
@@ -236,26 +245,16 @@
 
 // ------------------------------------  iphone
 @media screen and (max-width: 600px)  {
-    .carrotcell__btn {
-        // &--prev, &--next {
-        //     margin-top: -25px;
-        // }
-        .carrotcell__icon {
-            width: 50px;
-            height: 50px;
-            font-size: 40px;
 
-        }
+    .carrotcell__icon {
+        width: 50px;
+        height: 50px;
+        font-size: 40px;
     }
 
     .carrotcell__navi {
         top: 3px;
     }
-
-    // .carrotcell__btn--pause, .carrotcell__btn--play {
-    //     margin: -25px 0 0 -25px;
-    // } 
-    
 
     .carrotcell__icon--play, .carrotcell__icon--pause {
         &:before {

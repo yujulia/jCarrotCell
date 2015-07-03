@@ -786,7 +786,7 @@ var demo2 = $('#demo--2').carrotCell({
 
             var carrotTouchStart = function(e){
                 e.preventDefault();
-                
+
                 if (settings.sideways) {
                     touchStart = parseInt(e.changedTouches[0].clientX);
                 } else {
@@ -896,8 +896,7 @@ var demo2 = $('#demo--2').carrotCell({
                 var m3 = parseInt(item.css("margin-top"), 10),
                     m4 = parseInt(item.css("margin-bottom"), 10);
 
-                // calcOffset = m3 + m4;
-                calcOffset = (m3 > m4) ? m3 : m4;  // take largest margin bc of margin-collapse
+                calcOffset = (m3 > m4) ? m3 : m4;   // take largest margin bc of margin-collapse
             }
 
             // this is already included in border-box
@@ -974,12 +973,10 @@ var demo2 = $('#demo--2').carrotCell({
                         }
                     }
                 }
-            
             } else {
                 broke = true;
                 updateCarrot(breakParams);
             }
-
             return true;
         };
 
