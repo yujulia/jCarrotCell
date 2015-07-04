@@ -59,7 +59,12 @@ html(lang="en")
                 while j < 5
                     +demoItem(j++)
 
-    
+        article.example
+            -var j = 0
+            div(id="demo--3", class="demo vertical")
+                while j < 5
+                    +demoItem(j++)
+
         //- .content
         //-     section
         //-         h2 Features

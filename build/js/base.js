@@ -64,6 +64,16 @@ var demo2 = $('#demo--2').carrotCell({
     scroll: 1,
     key: true
 });
+
+var demo2 = $('#demo--3').carrotCell({ 
+    // infinite: true,
+    // usePrevNext: false,
+    sideways: false,
+    easing: 'easeOutExpo',
+    show: 1,
+    scroll: 1,
+    key: true
+});
 },{"./jCarrotCell.js":3,"./vendor/jquery.easing.1.3.js":4,"./vendor/rainbow-custom.min.js":5,"jquery":1}],3:[function(require,module,exports){
 /*!
  * jCarrotCell
@@ -236,6 +246,7 @@ var demo2 = $('#demo--2').carrotCell({
             firstOfEnd = 0,             // first item in end view
             onCloneStart = false,       // are we on a starting clone (negative number)
             onCloneEnd = false,
+            propagateTouch = false,     // prevent default on carrotcell touch events
 
             navi = null,                // contains dots
             dots = null,                // all the dot buttons
@@ -785,7 +796,7 @@ var demo2 = $('#demo--2').carrotCell({
                 touchEnd = 0;
 
             var carrotTouchStart = function(e){
-                e.preventDefault();
+                if (!settings.propagateTouch) { e.preventDefault(); }
 
                 if (settings.sideways) {
                     touchStart = parseInt(e.changedTouches[0].clientX);
@@ -795,7 +806,7 @@ var demo2 = $('#demo--2').carrotCell({
             };
 
             var carrotTouchEnd = function(e){
-                e.preventDefault();
+                if (!settings.propagateTouch) { e.preventDefault(); }
 
                 if (settings.sideways) {
                     touchEnd = parseInt(e.changedTouches[0].clientX);
@@ -926,7 +937,14 @@ var demo2 = $('#demo--2').carrotCell({
             var size = settings.sideways ? width/settings.show : height/settings.show;
             one.totalSize = size;
             one.size = size - one.offset; // make room for margin/border
+
             items.css(adjustProperty, one.size + "px");
+
+            // width also needs to be set for vertical since thats just how it is
+
+            if (!settings.sideways) {
+                items.css("width", width - one.offset + "px");
+            }
         };
 
         // --- set the size of the slider holding the items 

@@ -1,9 +1,6 @@
 @charset "UTF-8";
 /*! 
-	CARROT CELL support CSS
-*/
-/** ------------------------------------------------------- 
-	necessary styles
+	CARROTCELL styles
 */
 .carrotcell {
   position: relative;
@@ -29,17 +26,6 @@
     display: block;
     float: left;
     z-index: 1; }
-  .carrotcell__navi {
-    text-align: center;
-    padding: 0;
-    width: 100%;
-    position: absolute;
-    top: 12px;
-    left: 0;
-    z-index: 3; }
-  .carrotcell__dot {
-    display: inline-block;
-    margin: 0; }
   .carrotcell__btn {
     display: block;
     cursor: pointer;
@@ -52,42 +38,70 @@
       content: ' ';
       display: table;
       clear: both; }
-    .carrotcell__btn:focus, .carrotcell__btn:hover:enabled {
-      opacity: 1; }
-      .carrotcell__btn:focus .carrotcell__icon, .carrotcell__btn:hover:enabled .carrotcell__icon {
-        background: #666; }
-      .carrotcell__btn:focus .carrotcell__icon--dot, .carrotcell__btn:hover:enabled .carrotcell__icon--dot {
-        color: #666; }
     .carrotcell__btn:disabled {
-      opacity: 0.2;
       cursor: default; }
-    .carrotcell__btn.carrotcell--on .carrotcell__icon--dot {
-      color: #ff9900; }
-    .carrotcell__btn.carrotcell--on:focus .carrotcell__icon--dot {
-      color: #666; }
     .carrotcell__btn--dot {
       display: block;
       padding: 0;
       margin: 0; }
-    .carrotcell__btn--prev, .carrotcell__btn--next {
-      position: absolute;
-      top: 50%;
-      left: 8px;
-      transform: translateY(-50%);
-      transition: opacity .2s ease-in-out;
-      opacity: 1; }
-    .carrotcell__btn--next {
-      left: auto;
-      right: 8px; }
-    .carrotcell__btn--pause, .carrotcell__btn--play {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translateY(-50%) translateY(-50%);
-      transition: opacity .2s ease-in-out;
-      opacity: 1; }
-      .carrotcell__btn--pause:disabled, .carrotcell__btn--play:disabled {
-        opacity: 0; }
+  .carrotcell__accessText {
+    position: absolute;
+    left: -10000px;
+    top: auto;
+    width: 1px;
+    height: 1px;
+    overflow: hidden; }
+  .carrotcell--invisible, .carrotcell--invisible:disabled {
+    opacity: 0; }
+
+/** ------------------------------------------------------- 
+    modify these styles to suit your needs
+*/
+.carrotcell {
+  width: 100%; }
+  .carrotcell__navi {
+    text-align: center;
+    padding: 0;
+    width: 100%;
+    position: absolute;
+    top: 12px;
+    left: 0;
+    z-index: 3; }
+  .carrotcell__dot {
+    display: inline-block;
+    margin: 0; }
+  .carrotcell__btn:focus, .carrotcell__btn:hover:enabled {
+    opacity: 1; }
+    .carrotcell__btn:focus .carrotcell__icon, .carrotcell__btn:hover:enabled .carrotcell__icon {
+      background: #666; }
+    .carrotcell__btn:focus .carrotcell__icon--dot, .carrotcell__btn:hover:enabled .carrotcell__icon--dot {
+      color: #666; }
+  .carrotcell__btn:disabled {
+    opacity: 0.2;
+    cursor: default; }
+  .carrotcell__btn.carrotcell--on .carrotcell__icon--dot {
+    color: #ff9900; }
+  .carrotcell__btn.carrotcell--on:focus .carrotcell__icon--dot {
+    color: #666; }
+  .carrotcell__btn--prev, .carrotcell__btn--next {
+    position: absolute;
+    top: 50%;
+    left: 8px;
+    transform: translateY(-50%);
+    transition: opacity .2s ease-in-out;
+    opacity: 1; }
+  .carrotcell__btn--next {
+    left: auto;
+    right: 8px; }
+  .carrotcell__btn--pause, .carrotcell__btn--play {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateY(-50%) translateY(-50%);
+    transition: opacity .2s ease-in-out;
+    opacity: 1; }
+    .carrotcell__btn--pause:disabled, .carrotcell__btn--play:disabled {
+      opacity: 0; }
   .carrotcell__icon {
     display: block;
     margin: 0;
@@ -129,15 +143,6 @@
         padding: 0 4px 2px;
         vertical-align: text-top;
         transition: 0.2s ease-in-out; }
-  .carrotcell__accessText {
-    position: absolute;
-    left: -10000px;
-    top: auto;
-    width: 1px;
-    height: 1px;
-    overflow: hidden; }
-  .carrotcell--invisible, .carrotcell--invisible:disabled {
-    opacity: 0; }
   .carrotcell--vertical .carrotcell__item {
     float: none; }
   .carrotcell--vertical .carrotcell__navi {
@@ -159,6 +164,9 @@
     top: auto;
     bottom: 8px; }
 
+/** -------------------------------------------------------
+    media queries
+*/
 @media screen and (max-width: 600px) {
   .carrotcell__icon {
     width: 50px;

@@ -51,11 +51,10 @@ var gulp = require("gulp"),
 **/
 gulp.task("styles", function(){
 
-
     var processors = [ autoprefixer({browsers: ['last 2 version']}) ];
 
     return gulp.src(['node_modules/normalize.css/normalize.css', SASS_SRC+"*.scss"])
-        .pipe(sass({ errLogToConsole: true }))
+        .pipe(sass({ errLogToConsole: true, outputStyle: 'compressed' }))
         .pipe(gulp.dest(CSS_SRC))
         .pipe(concat("main.css"))
         .pipe(postcss(processors))
@@ -96,8 +95,6 @@ gulp.task("build-jade", function(){
         .pipe(gulp.dest(HTML_BUILD));
 });
 
-
-
 // -------------------------------------------------------- init project 
 /**  
     set up sym link in build directory to look up
@@ -126,7 +123,10 @@ gulp.task("images", function(){
     copy css into distribution folder
 **/
 gulp.task("pub-styles", function(){
-    return gulp.src(CSS_SRC+"carrotcell.css")
+    var processors = [ autoprefixer({browsers: ['last 2 version']}) ];
+
+    return gulp.src(CSS_SRC + "carrotcell.css")
+        .pipe(postcss(processors))
         .pipe(gulp.dest(DIST));
 });
 
@@ -177,11 +177,16 @@ gulp.task("pub-jade", function(){
         .pipe(gulp.dest(HTML_DEPLOY));
 });
 
+gulp.task("copy-scss", function(){
+    return gulp.src(SASS_SRC+"carrotcell.scss")
+        .pipe(gulp.dest(DIST));
+});
+
 /** ----------------------------- 
     deploy 
     generate deploy version of site "gulp deploy"
 **/
-gulp.task("deploy", ["images", "min-scripts", "min-styles", "pub-scripts", "pub-styles", "pub-jade"], function(){
+gulp.task("deploy", ["images", "min-scripts", "min-styles", "pub-scripts", "pub-styles", "pub-jade", "copy-scss"], function(){
     // zip everything in DIST thats not a zip
     return gulp.src([DIST+"*", "!"+DIST+"*.zip"])
         .pipe(zip("jcarrotcell.zip"))

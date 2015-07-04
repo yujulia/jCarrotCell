@@ -17,7 +17,8 @@
         KEY_DOWN = 40,          // down arrow
         KEY_TOGGLE = 80,        // p
 
-        DEBOUNCE_RATE = 200,
+        DEBOUNCE_RATE = 200,    // how long to debounce resize and hover
+        SWIPE_THRESHOLD = 75,   // how many pixels before recognizing a swipe
 
         ROOT = 'carrotcell',
 
@@ -64,7 +65,7 @@
             auto : false,           // auto loop if circular
             autoDuration : 2000,    // how long to pause on an item
 
-            stopOnHover : true,     // stop auto advance on hover
+            pauseOnHover : true,     // stop auto advance on hover
             controlOnHover : false, // show controls on hover only
             dotsOnHover: false,     // show dots on hover
 
@@ -168,6 +169,7 @@
             firstOfEnd = 0,             // first item in end view
             onCloneStart = false,       // are we on a starting clone (negative number)
             onCloneEnd = false,
+            propagateTouch = false,     // prevent default on carrotcell touch events
 
             navi = null,                // contains dots
             dots = null,                // all the dot buttons
@@ -428,7 +430,6 @@
             }
 
             animating = false; // lockdown ends now everything is processed
-            console.log("===========================", showing, " current ", current);
         };
 
         // --- calculate the scroll
@@ -537,7 +538,9 @@
 
         // --- toggle play or auto
 
-        var toggleAuto = function(){
+        var toggleAuto = function(e){
+            if (e) { e.preventDefault(); }
+
             playing = !playing;
             if (playing) {
                 if (settings.usePausePlay && play) {
@@ -576,13 +579,14 @@
             var onTasks = function(){
                 if (settings.controlOnHover) { controls.removeClass(CLASS_INVIS); }
                 if (settings.dotsOnHover) { navi.removeClass(CLASS_INVIS); }
-                paused = true;
+                if (settings.pauseOnHover) { paused = true; }
+                
             };
 
             var offTasks = function(){
                 if (settings.controlOnHover) { controls.addClass(CLASS_INVIS).blur(); }
                 if (settings.dotsOnHover) { navi.addClass(CLASS_INVIS).blur(); }
-                paused = false;
+                if (settings.pauseOnHover) { paused = false; }
             };
 
             var cancelHoverTasks = function(){
@@ -617,10 +621,14 @@
             next.append(nextContent).append(nextIcon);
 
             if (atStart && !settings.infinite) { prev.prop("disabled", true); }
-            
-            prev.click(moveToPrev);
-            next.click(moveToNext);
 
+            if (track.touch) {
+                prev.on("touchend", moveToPrev);
+                next.on("touchend", moveToNext);
+            } else {
+                prev.click(moveToPrev);
+                next.click(moveToNext);
+            }
             scope.prepend(next).prepend(prev);
             controls = controls.add(prev).add(next);
         };
@@ -640,11 +648,19 @@
 
             var blurToggleSet = function(){ toggleSet.blur(); };
 
-            play.click(toggleAuto);
-            pause.click(toggleAuto);
+            var blurAfterTouch = function(e){
+                toggleAuto();
+                blurToggleSet();   
+            };
 
-            toggleSet.mouseleave(blurToggleSet);
-
+            if (track.touch) {
+                play.on("touchend", blurAfterTouch);
+                pause.on("touchend", blurAfterTouch);
+            } else {
+                play.click(toggleAuto);
+                pause.click(toggleAuto);
+                toggleSet.mouseleave(blurToggleSet);
+            }
             scope.prepend(pause).prepend(play);
             controls = controls.add(play).add(pause);
         };
@@ -652,7 +668,6 @@
         // --- a dot has been clicked, go to that item
 
         var goToDotItem = function(e){
-            if (e) { e.preventDefault(); }
             var dotEnum = $(this).data(DATA_ENUM);
             if (current === dotEnum) { return false; }
             scrollToItem(dotEnum);  
@@ -678,7 +693,13 @@
                     var dotContent = $('<span/>', { 'class' : CLASS_ACCESS_TEXT, 'text': settings.dotText + z });
 
                     dot.data(DATA_ENUM, relatedItem).append(dotIcon).append(dotContent);
-                    dot.click(goToDotItem);
+
+                    if (track.touch){
+                        dot.on("touchend", goToDotItem);
+                    } else {
+                        dot.click(goToDotItem);
+                    }
+                    
                     listItem.append(dot);
                     navi.append(listItem);
                     setItems.push(relatedItem);
@@ -688,6 +709,50 @@
             dots = $("." + CLASS_DOT_BTN, navi);
             scope.prepend(navi);
             updateShowing(); 
+        };
+
+        // --- recognize swipes 
+
+        var createTouchControls = function(){
+
+            var touchStart = 0, 
+                touchEnd = 0;
+
+            var carrotTouchStart = function(e){
+                if (!settings.propagateTouch) { e.preventDefault(); }
+
+                if (settings.sideways) {
+                    touchStart = parseInt(e.changedTouches[0].clientX);
+                } else {
+                    touchStart = parseInt(e.changedTouches[0].clientY);
+                }
+            };
+
+            var carrotTouchEnd = function(e){
+                if (!settings.propagateTouch) { e.preventDefault(); }
+
+                if (settings.sideways) {
+                    touchEnd = parseInt(e.changedTouches[0].clientX);
+                } else {
+                    touchEnd = parseInt(e.changedTouches[0].clientY);
+                }
+                var diff = Math.abs(touchEnd - touchStart);
+
+                if (diff > SWIPE_THRESHOLD){
+                    if (touchEnd > touchStart) {
+                        moveToPrev();
+                    } else {
+                        moveToNext();
+                    }
+                }
+            };
+
+            slider[0].addEventListener("touchstart", carrotTouchStart, false);
+            slider[0].addEventListener("touchend", carrotTouchEnd, false);
+
+            if (settings.pauseOnHover){
+                slider[0].addEventListener("touchend", stopAutoPlay, false); // just stop it on swipe
+            }
         };
 
         // --- disable all controls
@@ -709,7 +774,7 @@
         var createControls = function(){
             if (settings.usePrevNext) { setupPreNext(); }
             
-            if (settings.key){
+            if (settings.key && !settings.touch){
                 var keyArray = [ settings.name ];
                 if (settings.usePrevNext) {
                     keyArray.push(settings.keyBack);
@@ -764,10 +829,12 @@
             } else {
                 var m3 = parseInt(item.css("margin-top"), 10),
                     m4 = parseInt(item.css("margin-bottom"), 10);
-                calcOffset = m3 + m4;
-                // calcOffset = (m3 > m4) ? m3 : m4;                   // take largest margin bc of margin-collapse
-                // scope.css("height", height + calcOffset + "px");    // bc of collapse we need to increase height...
+
+                calcOffset = (m3 > m4) ? m3 : m4;   // take largest margin bc of margin-collapse
             }
+
+            // this is already included in border-box
+
             if ($(item).css("box-sizing") === "content-box") {
                 if (settings.sideways){
                     var b1 = parseInt(item.css("border-left-width"), 10),
@@ -779,6 +846,7 @@
                     calcOffset += b3 + b4;
                 }
             } 
+
             return {
                 w: item.outerWidth(true),
                 h: item.outerHeight(true),
@@ -790,10 +858,16 @@
 
         var setItemsSize = function(){
             var size = settings.sideways ? width/settings.show : height/settings.show;
-
             one.totalSize = size;
             one.size = size - one.offset; // make room for margin/border
+
             items.css(adjustProperty, one.size + "px");
+
+            // width also needs to be set for vertical since thats just how it is
+
+            if (!settings.sideways) {
+                items.css("width", width - one.offset + "px");
+            }
         };
 
         // --- set the size of the slider holding the items 
@@ -840,12 +914,10 @@
                         }
                     }
                 }
-            
             } else {
                 broke = true;
                 updateCarrot(breakParams);
             }
-
             return true;
         };
 
@@ -877,8 +949,6 @@
             firstOfEnd = total - settings.show; // the first item in the ending view
             updateShowing();
             if (sets > 1) { enoughToScroll = true; }
-
-            console.log("sets ", sets, " first of end ", firstOfEnd, " total ", total, " show ", settings.show, showing);
         };
 
         // --- items has changed, update 
@@ -905,7 +975,11 @@
             width = parseInt(Math.floor(scope.width()), 10);
             height = parseInt(Math.floor(scope.height()), 10);
 
-            clipPane.css(adjustProperty, width + "px");
+            if (settings.sideways) {
+                clipPane.css(adjustProperty, width + "px");
+            } else {
+                clipPane.css(adjustProperty, height + "px");
+            }     
         };
 
         // --- make the html frame depending on if its a list or divs
@@ -1003,6 +1077,8 @@
             }
         };
 
+        // --- rset back to beginning
+
         var clearScrolled = function(){
             if (clones) { clones.remove(); }
             scrollSlider({ duration: 0, offset: 0 });
@@ -1027,8 +1103,10 @@
             updateSettings();
             adjustItemSize();
             calcFromTotal(); 
-            if (enoughToScroll) { createControls(); }  
-
+            if (enoughToScroll) { 
+                createControls(); 
+                if (track.touch) { createTouchControls(); }
+            }  
             return true;
         };
 
@@ -1037,25 +1115,25 @@
         var checkBreakpoints = function(){
             var breakpointsTotal = settings.breakpoints.length;
 
+            var comparePixels = function(a,b) {
+                if (a.pixels > b.pixels) { return -1; }
+                if (a.pixels < b.pixels) { return 1; }
+                return 0;
+            };
+
             if (breakpointsTotal > 0) {
                 var currentWidth = $(window).width();
                 var breakParams = {};
                 $.extend(breakParams, beforeBreakOptions);
-
-                // SORT this by biggest to smallest
-
-                console.log("width ", currentWidth, " scope w ", $(scope).width());
-
+                settings.breakpoints.sort(comparePixels);
                 for (var b=0; b < breakpointsTotal; b++){
                     var breakpoint = settings.breakpoints[b];
                     if (breakpoint.pixels >= currentWidth ){
                         $.extend(breakParams, breakpoint.settings);
-                        console.log("apply breakpoint ", breakpoint);
                     }
                 }
                 return breakParams;
             }
-
             return {};
         };
 
@@ -1071,9 +1149,7 @@
                 $.extend(beforeBreakOptions, settings); 
 
                 var breakParams = checkBreakpoints();
-                if (!$.isEmptyObject(breakParams)){ 
-                    $.extend(settings, breakParams); 
-                }
+                if (!$.isEmptyObject(breakParams)){  $.extend(settings, breakParams); }
 
                 items = scope.children(); 
                 useVelocity = $(scope).velocity === undefined ? false : true;
@@ -1083,7 +1159,10 @@
                 makeFrame();        // make the markup
                 calcFromTotal(); 
 
-                if (enoughToScroll) { createControls(); } 
+                if (enoughToScroll) { 
+                    createControls(); 
+                    if (track.touch) { createTouchControls(); }
+                } 
                 initialized = true;
 
                 return true;
@@ -1250,7 +1329,7 @@
             return false;
         }
 
-        if (!track.initialize) { track.init(); } // first time carrotcelling
+        if (!track.initialize) { track.init(); } // first time carrotcell
 
         var carrotAPI = $(this).data(DATA_API); // is this already a carrotcell?
         if (carrotAPI) {

@@ -50,3 +50,13 @@ var demo2 = $('#demo--2').carrotCell({
     scroll: 1,
     key: true
 });
+
+var demo2 = $('#demo--3').carrotCell({ 
+    // infinite: true,
+    // usePrevNext: false,
+    sideways: false,
+    easing: 'easeOutExpo',
+    show: 1,
+    scroll: 1,
+    key: true
+});
