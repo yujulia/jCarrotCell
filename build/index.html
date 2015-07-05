@@ -10,128 +10,74 @@
     <link rel="stylesheet" href="css/main.css">
   </head>
   <body> 
-    
-    <article class="example">
-      <div id="demo--1" class="demo">
-        <div class="demo__item">
-          <figcaption>0</figcaption>
-          <figure> 
-            <div class="cc-carrot zero-carrot"></div>
-          </figure>
-        </div>
-        <div class="demo__item">
-          <figcaption>1</figcaption>
-          <figure> 
-            <div class="cc-carrot"></div>
-          </figure>
-        </div>
-        <div class="demo__item">
-          <figcaption>2</figcaption>
-          <figure> 
-            <div class="cc-carrot"></div>
-            <div class="cc-carrot"></div>
-          </figure>
-        </div>
-        <div class="demo__item">
-          <figcaption>3</figcaption>
-          <figure> 
-            <div class="cc-carrot"></div>
-            <div class="cc-carrot"></div>
-            <div class="cc-carrot"></div>
-          </figure>
-        </div>
-        <div class="demo__item">
-          <figcaption>4</figcaption>
-          <figure> 
-            <div class="cc-carrot"></div>
-            <div class="cc-carrot"></div>
-            <div class="cc-carrot"></div>
-            <div class="cc-carrot"></div>
-          </figure>
-        </div>
+    <div class="content">
+      <h1 class="cc-carrot-after"><a href=".">jCarrotCell</a></h1>
+      <nav> 
+        <ol>
+          <li><a href="https://github.com/yujulia/jCarrotCell" target="_blank" class="cc-github">Github </a></li>
+          <li><a href="dist/jcarrotcell.zip" class="cc-download">Download </a></li>
+          <li><a href="demo.html" target="_blank" class="cc-lab">Demos </a></li>
+          <li><a href="doc.html" class="cc-files">Docs </a></li>
+        </ol>
+      </nav>
+      <p class="intro">
+        A flexible, responsive, accessible jQuery carousel plugin. 
+        
+      </p>
+    </div>
+    <ul id="jcc-home">
+      <li class="jcc-item i1"><img src="img/j.png" width="100%" alt="j"></li>
+      <li class="jcc-item i2"><img src="img/carrot.png" width="100%" alt="carrot"></li>
+      <li class="jcc-item i3"><img src="img/cell.png" width="100%" alt="cell"></li>
+    </ul>
+    <div class="content">
+      <section>
+        <h2>Features</h2>
+        <ul class="list">
+          <li>Horizontal, vertical, infinite, auto, scroll by n scrolling.</li>
+          <li>All controls and slides are accessible via keyboard and touch/swipe.</li>
+          <li>Insert and remove items, update carousel config, move to item via the API.</li>
+          <li>Responsive to window resize, set width breakpoints for different configs. </li>
+          <li>Customize with CSS styles, or pass in CSS classnames to over ride defaults.</li>
+        </ul>
+      </section>
+      <section>
+        <h2>Setup </h2>
+        <p><a href="dist/jcarrotcell.zip" class="cc-download">Download </a>the jCarrotCell bundle or clone the repo from  <a href="https://github.com/yujulia/jCarrotCell" target="_blank" class="cc-github">Github</a>.</p>
+        <h3>Include CSS:</h3>
+        <pre><code data-language="html">&lt;link rel="stylesheet" type="text/css" href="carrotcell.css"&gt;
+</code></pre>
+        <h3>Make Markup:</h3>
+        <pre><code data-language="html"><ol id="my-carousel">
+    <li>item 1</li>
+    <li>item 2</li>
+    <li>item 3</li>
+</ol>  
+</code></pre>
+        <h3>Include Javascripts: </h3>
+        <pre><code data-language="html">&lt;script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js" type="text/javascript" charset="utf-8"&gt;&lt;/script&gt;
+&lt;script src="jcarrotcell.min.js" charset="utf-8"&gt;&lt;/script&gt;
+</code></pre>
+        <h3>Call jCarrotCell:</h3>
+        <pre><code data-language="js">$("#my-carousel").carrotCell();
+</code></pre>
+      </section>
+      <section>
+        <p>
+           
+          Checkout the <a href="doc.html" class="cc-files">documentation </a>for more information, API docs, and possible settings. Or look at the <a href="doc.html" class="cc-lab">demos. </a>
+        </p>
+      </section>
+    </div>
+    <footer> 
+      <div class="content">
+        <p>
+           
+          jCarrotCell Version 2.0 by <a href="http://yujulia.com" class="cc-link">Julia Yu</a>. First draft November 10, 2011, Last Update Jul 5, 2015 3:15:09 PM PDT
+        </p>
+        <h2><a href="https://github.com/yujulia/jCarrotCell" target="_blank" class="cc-github">Github </a></h2>
       </div>
-    </article>
-    <article class="example">
-      <div id="demo--2" class="demo vertical">
-        <div class="demo__item">
-          <figcaption>0</figcaption>
-          <figure> 
-            <div class="cc-carrot zero-carrot"></div>
-          </figure>
-        </div>
-        <div class="demo__item">
-          <figcaption>1</figcaption>
-          <figure> 
-            <div class="cc-carrot"></div>
-          </figure>
-        </div>
-        <div class="demo__item">
-          <figcaption>2</figcaption>
-          <figure> 
-            <div class="cc-carrot"></div>
-            <div class="cc-carrot"></div>
-          </figure>
-        </div>
-        <div class="demo__item">
-          <figcaption>3</figcaption>
-          <figure> 
-            <div class="cc-carrot"></div>
-            <div class="cc-carrot"></div>
-            <div class="cc-carrot"></div>
-          </figure>
-        </div>
-        <div class="demo__item">
-          <figcaption>4</figcaption>
-          <figure> 
-            <div class="cc-carrot"></div>
-            <div class="cc-carrot"></div>
-            <div class="cc-carrot"></div>
-            <div class="cc-carrot"></div>
-          </figure>
-        </div>
-      </div>
-    </article>
-    <article class="example">
-      <div id="demo--3" class="demo vertical">
-        <div class="demo__item">
-          <figcaption>0</figcaption>
-          <figure> 
-            <div class="cc-carrot zero-carrot"></div>
-          </figure>
-        </div>
-        <div class="demo__item">
-          <figcaption>1</figcaption>
-          <figure> 
-            <div class="cc-carrot"></div>
-          </figure>
-        </div>
-        <div class="demo__item">
-          <figcaption>2</figcaption>
-          <figure> 
-            <div class="cc-carrot"></div>
-            <div class="cc-carrot"></div>
-          </figure>
-        </div>
-        <div class="demo__item">
-          <figcaption>3</figcaption>
-          <figure> 
-            <div class="cc-carrot"></div>
-            <div class="cc-carrot"></div>
-            <div class="cc-carrot"></div>
-          </figure>
-        </div>
-        <div class="demo__item">
-          <figcaption>4</figcaption>
-          <figure> 
-            <div class="cc-carrot"></div>
-            <div class="cc-carrot"></div>
-            <div class="cc-carrot"></div>
-            <div class="cc-carrot"></div>
-          </figure>
-        </div>
-      </div>
-    </article>
-    
+    </footer>
     <script src="js/base.js" type="text/javascript" charset="utf-8"></script>
   </body>
 </html>

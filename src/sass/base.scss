@@ -14,6 +14,7 @@
 ul, ol, li {
     list-style: none;
     margin: 0;
+    padding: 0;
 }
 
 // --------------------------------
@@ -59,10 +60,19 @@ h1 {
 }
 
 h2 {
-    font-family: raleway;
+    font-family: code;
     font-weight: $light;
     color: $color-header;
     font-size: 30px;
+    letter-spacing: 0.06em;
+}
+
+h3 {
+    font-family: raleway;
+    font-weight: $regular;
+    color: $color-header;
+    font-size: 20px;
+    letter-spacing: 0.06em;
 }
 
 p {
@@ -124,6 +134,7 @@ pre {
     @extend h2;
     font-size: 20px;
     line-height: 1.4em;
+    letter-spacing: 0.06em;
 }
 
 .list {
@@ -145,7 +156,7 @@ pre {
 
 #jcc-home {
     @extend .nofrill;
-    margin: 80px auto 0 auto;
+    margin: 40px auto 0 auto;
 
     img {
         display: block;
@@ -157,21 +168,23 @@ pre {
         color: $color-carrot;
         font-size: 38px;
         background: none;
+    }
+
+    .cc-left, .cc-right {
+        background: none;
+        color: $color-carrot;
+        font-size: 30px;
 
         &:hover, &:focus {
             color: $color-leaf;
             background: transparent;
         }
-
     }
 }
 
 .jcc-item {
-    // width: 1644px;
-    border: solid 1px red;
-    margin: 5px;
+    width: 100%;
     position: relative;
-    // box-sizing: border-box;
 
     .jcc-content {
         position: absolute;

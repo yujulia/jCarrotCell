@@ -23,106 +23,71 @@ html(lang="en")
         link(rel="stylesheet", href="css/main"+ addMin +".css")
 
     body 
-        //- .content
-        //-     h1(class="cc-carrot-after"): a(href=".") jCarrotCell
+        .content
+            h1(class="cc-carrot-after"): a(href=".") jCarrotCell
 
-        //-     nav 
-        //-         ol
-        //-             li: a(href="https://github.com/yujulia/jCarrotCell", class="cc-github", target="_blank") Github 
-        //-             li: a(href="dist/jcarrotcell.zip", class="cc-download") Download 
-        //-             li: a(href="demo.html", class="cc-lab", target="_blank") Demos 
-        //-             li: a(href="doc.html", class="cc-files") Docs 
+            include includes/nav.jade
 
-        //-     p.intro.
-        //-         A flexible, responsive, customizable carousel plugin for jQuery. 
+            p.intro.
+                A flexible, responsive, accessible jQuery carousel plugin. 
 
-        //- ul(id="jcc-home")
-        //-     li.jcc-item.i1
-        //-         img(src="img/j.png", width="100%", alt="j") 
-        //-     li.jcc-item.i2
-        //-         img(src="img/carrot.png", width="100%", alt="carrot")
-        //-     li.jcc-item.i3
-        //-         img(src="img/cell.png", width="100%", alt="cell")
+        ul(id="jcc-home")
+            li.jcc-item.i1
+                img(src="img/j.png", width="100%", alt="j") 
+            li.jcc-item.i2
+                img(src="img/carrot.png", width="100%", alt="carrot")
+            li.jcc-item.i3
+                img(src="img/cell.png", width="100%", alt="cell")
+
+        .content
+            section
+                h2 Features
+                ul.list
+                    li Horizontal, vertical, infinite, auto, scroll by n scrolling.
+                    li All controls and slides are accessible via keyboard and touch/swipe.
+                    li Insert and remove items, update carousel config, move to item via the API.
+                    li Responsive to window resize, set width breakpoints for different configs. 
+                    li Customize with CSS styles, or pass in CSS classnames to over ride defaults.
+
+            section
+                h2 Setup 
+
+                p
+                    a(href="dist/jcarrotcell.zip", class="cc-download") Download 
+                    | the jCarrotCell bundle or clone the repo from  
+                    a(href="https://github.com/yujulia/jCarrotCell", class="cc-github", target="_blank") Github
+                    |.
+
+                h3 Include CSS:
+                pre: code(data-language="html").
+                    &lt;link rel="stylesheet" type="text/css" href="carrotcell.css"&gt;
+
+                h3 Make Markup:
+                pre: code(data-language="html").
+                    <ol id="my-carousel">
+                        <li>item 1</li>
+                        <li>item 2</li>
+                        <li>item 3</li>
+                    </ol>  
+
+                h3 Include Javascripts: 
+                pre: code(data-language="html").
+                    &lt;script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js" type="text/javascript" charset="utf-8"&gt;&lt;/script&gt;
+                    &lt;script src="jcarrotcell.min.js" charset="utf-8"&gt;&lt;/script&gt;
+
+                h3 Call jCarrotCell:
+
+                pre: code(data-language="js").
+                    $("#my-carousel").carrotCell();
+
+            section
+                p 
+                    | Checkout the 
+                    a(href="doc.html" class="cc-files") documentation 
+                    | for more information, API docs, and possible settings. Or look at the 
+                    a(href="doc.html" class="cc-lab") demos. 
 
 
-        //- a(href="#") test link
+        include includes/footer.jade
 
-        article.example
-            -var n = 0
-            div(id="demo--1", class="demo")
-                while n < 5
-                    +demoItem(n++)
-
-        article.example
-            -var j = 0
-            div(id="demo--2", class="demo vertical")
-                while j < 5
-                    +demoItem(j++)
-
-        article.example
-            -var j = 0
-            div(id="demo--3", class="demo vertical")
-                while j < 5
-                    +demoItem(j++)
-
-        //- .content
-        //-     section
-        //-         h2 Features
-        //-         ul.list
-        //-             li Use your own markup, event names, classes, selectors etc. 
-        //-             li Scroll vertically or horizontally, infinitely or finitely.
-        //-             li Auto play, pause, stop.
-        //-             li Auto generate "dots" or configure your own.
-        //-             li Scroll multiple items, or just one.
-        //-             li Add and remove items via the API.
-        //-             li Auto fill max width of browser, auto scale the height too, or don't.
-        //-             li Arrow key navigation. 
-        //-             li Use touch events when possible, or don't.
-        //-             li Supports orientation change in maxwidth mode.
-
-        //-     section
-        //-         h2 Setup 
-
-        //-         p
-        //-             a(href="dist/jcarrotcell.zip", class="cc-download") Download 
-        //-             | the jCarrotCell bundle or clone the repo from  
-        //-             a(href="https://github.com/yujulia/jCarrotCell", class="cc-github", target="_blank") Github
-        //-             |.
-        //-         p
-        //-             | You will need to include some version of 
-        //-             a(href="https://jquery.com/" target="_blank") jQuery 
-        //-             | (version 1.7+) before 
-        //-             strong jCarrotCell.js 
-        //-             | and also the styles from  
-        //-             strong carrotcell.css
-        //-             | .
-
-        //-         p 
-        //-             | The markup should look something like this, see the 
-        //-             a(href="", class="cc-files") Documentation 
-        //-             | on how to use whatever markup you want.
-
-        //-         pre: code(data-language="html").
-        //-             <ol class="my-thing">
-        //-                 <li>item 1</li>
-        //-                 <li>item 2</li>
-        //-                 <li>item 3</li>
-        //-             </ol>       
-
-        //-         p Invoke the carrotcell with the following:
-
-        //-         pre: code(data-language="js").
-        //-             $(".my-thing").carrotCell();
-
-        //- footer 
-        //-     .content
-        //-         p 
-        //-             | jCarrotCell Version 2.0 by 
-        //-             a(href="http://yujulia.com", class="cc-link") Julia Yu
-        //-             | . First draft November 10, 2011, Last Update #{timestamp}
-
-        //-         h2: a(href="https://github.com/yujulia/jCarrotCell", class="cc-github", target="_blank") Github 
-
-     
         script(src='js/base.js', type="text/javascript", charset="utf-8")
-

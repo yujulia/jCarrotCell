@@ -59,7 +59,7 @@
             scroll: 1,              // scroll 1 frame at a time
             duration: 500,          // scroll animation duration         
             sideways: true,         // scroll sideways
-            easing: "swing",        // slide easing method
+            easing: "easeOutExpo",        // slide easing method
 
             infinite : false,       // infinite scroll
             auto : false,           // auto loop if circular
