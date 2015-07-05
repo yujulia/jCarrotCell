@@ -11,8 +11,8 @@ require('./jCarrotCell.js');
 $('#jcc-home').carrotCell({ 
     prevClass : "prev",
     nextClass : "next",
-    prevIconClass : 'cc-left',
-    nextIconClass: 'cc-right',
+    prevIconClass : 'prev-icon cc-left',
+    nextIconClass: 'next-icon cc-right',
     infinite: true,
     show: 1,
     scroll: 1,
@@ -20,7 +20,7 @@ $('#jcc-home').carrotCell({
     useDots: true,
     auto: true,
     pauseOnHover: true,
-    controlOnHover: true
+    // controlOnHover: true
 });
 
 
