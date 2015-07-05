@@ -31,8 +31,10 @@ $('#jcc-home').carrotCell({
     show: 1,
     scroll: 1,
     key: true,
-    useDots: true
-    // controlOnHover: true
+    useDots: true,
+    auto: true,
+    pauseOnHover: true,
+    controlOnHover: true
 });
 
 
@@ -141,7 +143,7 @@ $('#jcc-home').carrotCell({
 
             infinite : false,       // infinite scroll
             auto : false,           // auto loop if circular
-            autoDuration : 2000,    // how long to pause on an item
+            autoDuration : 5000,    // how long to pause on an item
 
             pauseOnHover : true,     // stop auto advance on hover
             controlOnHover : false, // show controls on hover only
@@ -652,13 +654,13 @@ $('#jcc-home').carrotCell({
 
         var setupHover = function(){
 
+
             var onTimer = null, offTimer = null;
 
             var onTasks = function(){
                 if (settings.controlOnHover) { controls.removeClass(CLASS_INVIS); }
                 if (settings.dotsOnHover) { navi.removeClass(CLASS_INVIS); }
-                if (settings.pauseOnHover) { paused = true; }
-                
+                if (settings.pauseOnHover) { paused = true; }  
             };
 
             var offTasks = function(){

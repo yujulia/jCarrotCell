@@ -63,7 +63,7 @@
 
             infinite : false,       // infinite scroll
             auto : false,           // auto loop if circular
-            autoDuration : 2000,    // how long to pause on an item
+            autoDuration : 5000,    // how long to pause on an item
 
             pauseOnHover : true,     // stop auto advance on hover
             controlOnHover : false, // show controls on hover only
@@ -574,13 +574,13 @@
 
         var setupHover = function(){
 
+
             var onTimer = null, offTimer = null;
 
             var onTasks = function(){
                 if (settings.controlOnHover) { controls.removeClass(CLASS_INVIS); }
                 if (settings.dotsOnHover) { navi.removeClass(CLASS_INVIS); }
-                if (settings.pauseOnHover) { paused = true; }
-                
+                if (settings.pauseOnHover) { paused = true; }  
             };
 
             var offTasks = function(){

@@ -17,8 +17,10 @@ $('#jcc-home').carrotCell({
     show: 1,
     scroll: 1,
     key: true,
-    useDots: true
-    // controlOnHover: true
+    useDots: true,
+    auto: true,
+    pauseOnHover: true,
+    controlOnHover: true
 });
 
 
