@@ -105,9 +105,9 @@
         &:focus, &:hover:enabled {
             opacity: 1;
 
-            .carrotcell__icon {
-                background: #666;
-            }
+            // .carrotcell__icon {
+            //     background: #666;
+            // }
 
             .carrotcell__icon--dot {
                 color: #666;
@@ -164,13 +164,15 @@
         margin: 0;
         padding: 0;
         line-height: 1em;
-        height: 26px;
-        width: 26px;
         text-align: center;
-        font-size: 20px;
-        border-radius: 100%;
-        background: #ff9900;
-        color: #fff;
+        // font-size: 40px;
+
+        // font-size: 20px;
+        // border-radius: 100%;
+        // background: #ff9900;
+        // color: #fff;
+        // height: 26px;
+        // width: 26px;
 
         &::before {
             display: block;
@@ -178,24 +180,26 @@
 
         &--prev::before {
             content: '\2039';
-            padding: 1px 0 0px 0px;
+            font-size: 2em;
+            // padding: 2px 2px 0px 0px;
         }
 
         &--next::before {
             content: '\203A';
-            padding: 1px 0 0px 1px;
+            font-size: 2em;
+            // padding: 2px 0 0px 2px;
         }
 
         &--pause::before {
             content: '| |';
-            font-size: 11px;
-            padding: 3px 0 0;
+            // font-size: 11px;
+            // padding: 3px 0 0;
         }
 
         &--play::before {
             content: '▷';
-            font-size: 13px;
-            padding: 3px 0 0 2px;
+            // font-size: 13px;
+            // padding: 3px 0 0 2px;
         }
 
         &--dot {

@@ -1069,7 +1069,7 @@
                 settings.pauseIconClass = CLASS_ICON + ' ' + settings.pauseIconClass;
                 settings.playIconClass = CLASS_ICON + ' ' + settings.playIconClass;
             }
-            
+        
             if (settings.useDots) {
                 settings.naviClass = CLASS_NAVI + ' ' + settings.naviClass;
                 settings.dotClass = CLASS_DOT + ' ' + settings.dotClass;

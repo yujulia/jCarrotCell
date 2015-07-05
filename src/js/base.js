@@ -13,6 +13,8 @@ $('#jcc-home').carrotCell({
     nextClass : "next",
     prevIconClass : 'prev-icon cc-left',
     nextIconClass: 'next-icon cc-right',
+    pauseIconClass : 'pause-icon cc-pause',
+    playIconClass : 'play-icon cc-play',
     infinite: true,
     show: 1,
     scroll: 1,

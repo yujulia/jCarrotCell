@@ -27,6 +27,8 @@ $('#jcc-home').carrotCell({
     nextClass : "next",
     prevIconClass : 'prev-icon cc-left',
     nextIconClass: 'next-icon cc-right',
+    pauseIconClass : 'pause-icon cc-pause',
+    playIconClass : 'play-icon cc-play',
     infinite: true,
     show: 1,
     scroll: 1,
@@ -1149,7 +1151,7 @@ $('#jcc-home').carrotCell({
                 settings.pauseIconClass = CLASS_ICON + ' ' + settings.pauseIconClass;
                 settings.playIconClass = CLASS_ICON + ' ' + settings.playIconClass;
             }
-            
+        
             if (settings.useDots) {
                 settings.naviClass = CLASS_NAVI + ' ' + settings.naviClass;
                 settings.dotClass = CLASS_DOT + ' ' + settings.dotClass;
