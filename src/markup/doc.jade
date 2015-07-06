@@ -73,7 +73,6 @@ html(lang="en")
                         &lt;li&gt;item 2&lt;/li&gt;
                         &lt;li&gt;item 3&lt;/li&gt;
                     &lt;/ol&gt;  
-
                 h2 OR Markup (using divs)
                 pre: code(data-language="html").
                     &lt;div class="my-thing"&gt;
@@ -81,7 +80,6 @@ html(lang="en")
                         &lt;div&gt;item 2&lt;/div&gt;
                         &lt;div&gt;item 3&lt;/div&gt;
                     &lt;/div&gt;   
-
                 p 
                     | You can use whatever tags you like as long as they follow the basic structure
                     | of a parent element including some children elements.
@@ -89,7 +87,6 @@ html(lang="en")
 
             article#javascript
                 h1 Include Javascript 
-
                 p 
                     | jCarrotCell uses 
                     a(href="http://julian.com/research/velocity/" target="_external") Velocity.js 
@@ -103,44 +100,164 @@ html(lang="en")
                 pre: code(data-language="html").
                     &lt;script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js" type="text/javascript" charset="utf-8"&gt;&lt;/script&gt;
                     &lt;script src="jcarrotcell.min.js" charset="utf-8"&gt;&lt;/script&gt;
-                
-
                 h2 OR Javascript includes with Velocity (recommended):
                 pre: code(data-language="html").
                     &lt;script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js" type="text/javascript" charset="utf-8"&gt;&lt;/script&gt;
                     &lt;script src="https://cdnjs.cloudflare.com/ajax/libs/velocity/1.2.2/velocity.min.js" type="text/javascript" charset="utf-8"&gt;&lt;/script&gt;
                     &lt;script src="jcarrotcell.min.js" charset="utf-8"&gt;&lt;/script&gt;
-
                 h2 OR Javascript includes with Jquery Easing:
                 pre: code(data-language="html").
                     &lt;script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js" type="text/javascript" charset="utf-8"&gt;&lt;/script&gt;
                     &lt;script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js" type="text/javascript" charset="utf-8"&gt;&lt;/script&gt;
-                    &lt;script src="jcarrotcell.min.js" charset="utf-8"&gt;&lt;/script&gt;          
-
+                    &lt;script src="jcarrotcell.min.js" charset="utf-8"&gt;&lt;/script&gt;      
             article#create
-                h1 Create Carrotcell
+                h1 Create CarrotCell
 
                 p 
                     | Create a carrotcell by calling the function .carrotCell on a jQuery selector. 
                     | You can check the console for any errors. 
 
-                pre: code(data-language="js").
-                    $(".my-thing").carrotCell();
-
-
-
+                pre: code(data-language="js") $(".my-thing").carrotCell();
         .content 
             article#settings
                 h1 Settings
 
-                p Change the settings of the carrotcell by passing in a settings object.
+                p Change the settings of the carrotcell by passing in a settings object in the carrotcell creation.
 
-                h3 Settings Object
+                h2 Using Settings
                 pre: code(data-language="js").
                     $(".my-thing").carrotCell({
                         show: 3,
                         scroll: 3
                     });
+                h2 Settings Values
+                    h3 show (integer, default 1)
+                    p How many items to show on screen
+
+                    h3 scroll (integer, default 1)
+                    p How many items to scroll 
+
+                    h3 duration (integer millisecs, default 500)
+                    p Length of scroll animation duration
+
+                    h3 sideways (boolean, default true)
+                    p True indicates sideways or horizontal scrolling, false indicates vertical scrolling
+
+                    h3 easing (string, default "easeOutExpo" or "swing")
+                    p The tween animation for scrolling, "easeOutExpo" is used if Velocity or Easing is included, "swing" if only jQuery Animate.
+
+                    h3 infinite (boolean, default false)
+                    p Indicates this will scroll infinitely in both directions. If using auto: true this will be triggered to true.
+
+
+
+                    h3 useDots (boolean, default false)
+                    p Generate the dots used for navigation. This is calculated per scroll event.
+
+                    h3 dotsClass (string)
+                    p Pass in a class name for the dots container. Please use "someclass someother-class" and not ".someclass"
+
+                    h3 dotClass (string)
+                    p Class name for the individual dots, this is inside dotsClass.
+
+                    h3 dotButtonClass (string)
+                    p Class name for the dot button, this is inside dotClass.
+
+                    h3 dotIconClass (string)
+                    p Class name for the dot icon, this is inside dotButtonClass.
+
+                    h3 dotText (string, default "item set " + n)
+                    p This is the access text for dots, ths is inside dotButtonClass. It will read "item set 0", "item set 1" and so on.
+
+                    h3 onClass (string, default "carrotcell--on")
+                    p This is the class used when the dot is highlighted when the item it is associated with is in view.
+
+                    h3 dotsOnHover (boolean, default false)
+                    p Hide the dots navigation unless carrotcell is being hovered over. This is disabled on touch devices.
+
+
+
+                    h3 usePrevNext (boolean, default true)
+                    p Generate previous and next buttons
+
+                    h3 prevClass
+                    p Class name for previous button
+
+                    h3 prevIconClass
+                    p Class name for prevous icon, inside previous button
+
+                    h3 prevText (string, "next item set")
+                    p Accessible text for previous, inside previous button
+
+                    h3 nextClass
+                    p Class name for next button
+
+                    h3 nextIconClass
+                    p Class name for next icon, inside next button 
+
+                    h3 nextText (string, default "previous item set")
+                    p Accessible text for next, inside next button
+                    
+
+
+                    h3 auto (boolean, default false)
+                    p Indicate this slide show will auto play
+
+                    h3 autoDuration (integer millisecs, default 10000)
+                    p How long to pause if auto scrolling on each item
+
+                    h3 pauseOnHover (boolean, default true)
+                    p Hovering over the carrotcell will pause the auto animation
+
+                    h3 usePausePlay (boolean, default true)
+                    p Generate pause and play buttons if using auto
+
+                    h3 pauseClass (string)
+                    p Class name for pause button
+
+                    h3 pauseIconClass (string)
+                    p Class name for pause icon, inside pause button.
+
+                    h3 pauseText (string, default "pause auto scroll")
+                    p Accessible text for pause button.
+
+                    h3 playClass (string)
+                    p Class name for play button
+
+                    h3 playIconClass (string)
+                    p Class name for play icon, inside play button.
+
+                    h3 playText (string, default "resume auto scroll")
+                    p Accessible text for play button.
+
+
+                    h3 controlOnHover (boolean, default false)
+                    p Hide the previous, next, play, pause controls unless carrotcell is being hovered over. This is disabled on touch devices.
+
+
+                    h3 key (boolean, default false)
+                    p Use keys to navigate controls
+
+                    h3 keyBack (integer, default 37 left arrow or 38 up arrow)
+                    p The keycode used to navigate previous
+
+                    h3 keyForward (integer, default 39 right arrow or 40 down arrow)
+                    p The keycode used to navigate next
+
+                    h3 keyToggle (integer, default 80 letter p)
+                    p The keycode used to toggle pause or play
+
+
+                    h3 breakpoints (array of objects)
+                    p Pass in additional parameters on pixel breakpoints for window width
+
+                    pre: code(data-language="js").
+                        breakpoints : [
+                            { pixels: 320, settings: { scroll: 1, show: 1, usePausePlay: false }},
+                            { pixels: 480, settings: { scroll: 2, show: 2 }},
+                            { pixels: 1010, settings: { scroll: 1, show: 3 }},
+                            { pixels: 900, settings: { scroll: 2, show: 2 }}
+                        ],
 
 
 

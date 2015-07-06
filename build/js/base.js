@@ -53,7 +53,7 @@ var demo1 = $('#demo--1').carrotCell({
     // dotsOnHover: true,
     breakpoints : [
         { pixels: 320, settings: { scroll: 1, show: 1, usePausePlay: false }},
-        { pixels: 480, settings: { scroll: 2, show: 2 }},
+        { pixels: 480, settings: { scroll: 1, show: 1 }},
         { pixels: 1010, settings: { scroll: 1, show: 3 }},
         { pixels: 900, settings: { scroll: 2, show: 2 }}
     ],
@@ -154,7 +154,7 @@ var demo2 = $('#demo--3').carrotCell({
             dotsOnHover: false,     // show dots on hover
 
             useDots : false,
-            naviClass : '',
+            dotsClass : '',
             dotClass : '',
 
             dotIconClass : CLASS_DOT_ICON,
@@ -183,7 +183,6 @@ var demo2 = $('#demo--3').carrotCell({
             keyForward : '',
             keyToggle : KEY_TOGGLE,
 
-            broke : false,                // we are on some break point
             breakpoints : []
         };
 
@@ -269,6 +268,7 @@ var demo2 = $('#demo--3').carrotCell({
             paused = false,
             timer = null,           
 
+            broke = false,                // we are on some break point
             beforeBreakOptions = {},    // options before breakpoint application
             saveOptions = {},           // save previous options
             settings = {};              // this carrotcells settings
@@ -658,7 +658,6 @@ var demo2 = $('#demo--3').carrotCell({
 
         var setupHover = function(){
 
-
             var onTimer = null, offTimer = null;
 
             var onTasks = function(){
@@ -864,7 +863,7 @@ var demo2 = $('#demo--3').carrotCell({
                     keyArray.push(settings.keyBack);
                     keyArray.push(settings.keyForward);
                 }
-                if (settings.usePausePlay) {
+                if (settings.auto && settings.usePausePlay) {
                     keyArray.push(settings.keyToggle);
                 }
                 track.subscribeKey(keyArray);
@@ -1155,7 +1154,7 @@ var demo2 = $('#demo--3').carrotCell({
             }
         
             if (settings.useDots) {
-                settings.naviClass = CLASS_NAVI + ' ' + settings.naviClass;
+                settings.dotsClass = CLASS_NAVI + ' ' + settings.dotsClass;
                 settings.dotClass = CLASS_DOT + ' ' + settings.dotClass;
                 settings.dotButtonClass = CLASS_BTN + ' ' + CLASS_DOT_BTN + ' ' + settings.dotButtonClass;
             }
@@ -1382,11 +1381,7 @@ var demo2 = $('#demo--3').carrotCell({
             track.count++;
             if (!options) { options = {}; }     // passed in carrotcell options
             options.userOptions = JSON.stringify(options);      // save user passed options
-
             options.scope = $(this);            // save this element as the scope
-
-            console.log("in make ", options);
-
             options.name = "carrot-" + track.count + "-" + options.scope.attr("id"); 
             var newCarrot = new carrot();
             track.carrots[options.name] = newCarrot; 
@@ -1412,7 +1407,7 @@ var demo2 = $('#demo--3').carrotCell({
     $.fn.carrotCell = function() {
 
         if (this.length === 0) {
-            track.error("Nothing to call CarrotCell on, check your jquery selector.");
+            track.error("Nothing to call CarrotCell on. Please check your jquery selector.");
             return false;
         }
         if (!track.initialize) { track.init(); } // first time carrotcell
