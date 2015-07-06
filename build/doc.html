@@ -12,7 +12,6 @@
   <body> 
     <div class="content">
       <h1 class="cc-carrot-after"><a href=".">jCarrotCell </a></h1>
-      <h2>Documentation</h2>
       <nav> 
         <ol>
           <li><a href="https://github.com/yujulia/jCarrotCell" target="_blank" class="cc-github">Github </a></li>
@@ -23,61 +22,119 @@
       </nav>
     </div>
     <div class="content"> 
-      <section> 
-        <h3>In-depth Setup</h3>
-        <p><a href="dist/jcarrotcell.zip" class="cc-download">Download </a>the jCarrotCell bundle or clone the repo from  <a href="https://github.com/yujulia/jCarrotCell" target="_blank" class="cc-github">Github</a>.</p>
-        <p>You will need to include some version of <a href="https://jquery.com/" target="_blank">jQuery </a>(version 1.7+) before <strong>jCarrotCell.js </strong>and also the styles from  <strong>carrotcell.css</strong>. </p>
-        <h3>CSS includes:</h3>
-        <pre><code data-language="html"><link rel="stylesheet" type="text/css" href="carrotcell.css">
+      <article> 
+        <h1>Documentation</h1>
+        <ul class="list">
+          <li><a href="#setup">Setup</a></li>
+          <li><a href="#css">Include CSS</a></li>
+          <li><a href="#markup">Create Markup</a></li>
+          <li><a href="#javascript">Include Javascripts</a></li>
+          <li><a href="#create">Create CarrotCell</a></li>
+          <li><a href="#settings">Custom Settings </a></li>
+          <li><a href="#api">API Methods</a></li>
+        </ul>
+      </article>
+    </div>
+    <div class="content"> 
+      <article id="setup">
+        <h1>Setup</h1>
+        <p><a href="dist/jcarrotcell.zip" class="cc-download">Download </a>the jCarrotCell bundle or clone the repo from  <a href="https://github.com/yujulia/jCarrotCell" target="_blank" class="cc-github">Github</a>.
+          You will need to include some version of <a href="https://jquery.com/" target="_blank">jQuery </a>(version 1.7+) before <strong>jCarrotCell.js </strong>and also the styles from  <strong>carrotcell.css</strong>. 
+        </p>
+      </article>
+      <article id="css">
+        <h1>Include CSS </h1>
+        <p>Include the <strong>carrotcell.css </strong>, or  <strong>carrotcell.scss </strong>to set the default styles of carrotcell. 
+          You can manually edit the css file to change the styles, or over ride them by pass in
+          additional CSS classes through the <a href="#settings">settings object.</a>
+        </p>
+        <h2>CSS includes:</h2>
+        <pre><code data-language="html">&lt;link rel="stylesheet" type="text/css" href="carrotcell.css"&gt;
+
 </code></pre>
-        <h3>Markup (using list)</h3>
-        <pre><code data-language="html"><ol class="my-thing">
-    <li>item 1</li>
-    <li>item 2</li>
-    <li>item 3</li>
-</ol>  
+      </article>
+      <article id="markup">
+        <h1>Create Markup </h1>
+        <h2>Markup (using list)</h2>
+        <pre><code data-language="html">&lt;ol class="my-thing"&gt;
+    &lt;li&gt;item 1&lt;/li&gt;
+    &lt;li&gt;item 2&lt;/li&gt;
+    &lt;li&gt;item 3&lt;/li&gt;
+&lt;/ol&gt;  
 </code></pre>
-        <h3>OR Markup (using divs)</h3>
-        <pre><code data-language="html"><div class="my-thing">
-    <div>item 1</div>
-    <div>item 2</div>
-    <div>item 3</div>
-</div>   
+        <h2>OR Markup (using divs)</h2>
+        <pre><code data-language="html">&lt;div class="my-thing"&gt;
+    &lt;div&gt;item 1&lt;/div&gt;
+    &lt;div&gt;item 2&lt;/div&gt;
+    &lt;div&gt;item 3&lt;/div&gt;
+&lt;/div&gt;   
 </code></pre>
-        <h3>Javascript includes (minimal): </h3>
-        <pre><code data-language="html"><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js" type="text/javascript" charset="utf-8"></script>
-<script src="jcarrotcell.min.js" charset="utf-8"></script></code></pre>
         <p>
-          NOTE: 
+           
+          You can use whatever tags you like as long as they follow the basic structure
+          of a parent element including some children elements.
+        </p>
+      </article>
+      <article id="javascript">
+        <h1>Include Javascript </h1>
+        <p>
+           
           jCarrotCell uses <a href="http://julian.com/research/velocity/" target="_external">Velocity.js </a>for animations and fall back on jQuery animate. 
           If you want to use something other than the default tweens with animate and NOT velocity, please include <a href="http://gsgd.co.uk/sandbox/jquery/easing/" target="_external">jQuery Easing </a>, otherwise, jCarrotCell will use the default tween "swing". 
         </p>
-        <h3>OR Javascript includes with Velocity (recommended):</h3>
-        <pre><code data-language="html"><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js" type="text/javascript" charset="utf-8"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/velocity/1.2.2/velocity.min.js" type="text/javascript" charset="utf-8"></script>
-<script src="jcarrotcell.min.js" charset="utf-8"></script>
-</code></pre>
-        <h3>OR Javascript includes with Jquery Easing:</h3>
-        <pre><code data-language="html"><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js" type="text/javascript" charset="utf-8"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js" type="text/javascript" charset="utf-8"></script>
-<script src="jcarrotcell.min.js" charset="utf-8"></script>
+        <h2>Javascript includes (the minimal): </h2>
+        <pre><code data-language="html">&lt;script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js" type="text/javascript" charset="utf-8"&gt;&lt;/script&gt;
+&lt;script src="jcarrotcell.min.js" charset="utf-8"&gt;&lt;/script&gt;
 
- 
 </code></pre>
-        <p>Invoke the carrotcell with the following:</p>
+        <h2>OR Javascript includes with Velocity (recommended):</h2>
+        <pre><code data-language="html">&lt;script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js" type="text/javascript" charset="utf-8"&gt;&lt;/script&gt;
+&lt;script src="https://cdnjs.cloudflare.com/ajax/libs/velocity/1.2.2/velocity.min.js" type="text/javascript" charset="utf-8"&gt;&lt;/script&gt;
+&lt;script src="jcarrotcell.min.js" charset="utf-8"&gt;&lt;/script&gt;
+</code></pre>
+        <h2>OR Javascript includes with Jquery Easing:</h2>
+        <pre><code data-language="html">&lt;script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js" type="text/javascript" charset="utf-8"&gt;&lt;/script&gt;
+&lt;script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js" type="text/javascript" charset="utf-8"&gt;&lt;/script&gt;
+&lt;script src="jcarrotcell.min.js" charset="utf-8"&gt;&lt;/script&gt;          
+</code></pre>
+      </article>
+      <article id="create">
+        <h1>Create Carrotcell</h1>
+        <p>
+           
+          Create a carrotcell by calling the function .carrotCell on a jQuery selector. 
+          You can check the console for any errors. 
+        </p>
         <pre><code data-language="js">$(".my-thing").carrotCell();
 
+
 </code></pre>
-      </section>
+      </article>
+    </div>
+    <div class="content"> 
+      <article id="settings">
+        <h1>Settings</h1>
+        <p>Change the settings of the carrotcell by passing in a settings object.</p>
+        <h3>Settings Object</h3>
+        <pre><code data-language="js">$(".my-thing").carrotCell({
+    show: 3,
+    scroll: 3
+});
+
+
+
+</code></pre>
+      </article>
     </div>
     <footer> 
       <div class="content">
         <p>
            
-          jCarrotCell Version 2.0 by <a href="http://yujulia.com" class="cc-link">Julia Yu</a>. First draft November 10, 2011, Last Update Jul 5, 2015 3:17:21 PM PDT
+          jCarrotCell Version 2.0 by <a href="http://yujulia.com" class="cc-link">Julia Yu</a>. First draft November 10, 2011, Last Update Jul 5, 2015 5:57:10 PM PDT
         </p>
         <h2><a href="https://github.com/yujulia/jCarrotCell" target="_blank" class="cc-github">Github </a></h2>
       </div>
     </footer>
+    <script src="js/base.js" type="text/javascript" charset="utf-8"></script>
   </body>
 </html>

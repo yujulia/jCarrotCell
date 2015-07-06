@@ -14,20 +14,29 @@ html(lang="en")
     body 
         .content
             h1(class="cc-carrot-after"): a(href=".") jCarrotCell 
-            h2 Documentation
-
             include includes/nav.jade
 
         .content 
-            section 
-                h3 In-depth Setup
+            article 
+                h1 Documentation
+                ul.list
+                    li: a(href="#setup") Setup
+                    li: a(href="#css") Include CSS
+                    li: a(href="#markup") Create Markup
+                    li: a(href="#javascript") Include Javascripts
+                    li: a(href="#create") Create CarrotCell
+                    li: a(href="#settings") Custom Settings 
+                    li: a(href="#api") API Methods
+
+        .content 
+            article#setup
+                h1 Setup
 
                 p
                     a(href="dist/jcarrotcell.zip", class="cc-download") Download 
                     | the jCarrotCell bundle or clone the repo from  
                     a(href="https://github.com/yujulia/jCarrotCell", class="cc-github", target="_blank") Github
                     |.
-                p
                     | You will need to include some version of 
                     a(href="https://jquery.com/" target="_blank") jQuery 
                     | (version 1.7+) before 
@@ -36,31 +45,52 @@ html(lang="en")
                     strong carrotcell.css
                     | . 
 
-                h3 CSS includes:
-                pre: code(data-language="html").
-                    <link rel="stylesheet" type="text/css" href="carrotcell.css">
+            article#css
+                h1 Include CSS 
 
-                h3 Markup (using list)
-                pre: code(data-language="html").
-                    <ol class="my-thing">
-                        <li>item 1</li>
-                        <li>item 2</li>
-                        <li>item 3</li>
-                    </ol>  
+                p
+                    | Include the 
+                    strong carrotcell.css 
+                    |, or  
+                    strong carrotcell.scss 
+                    | to set the default styles of carrotcell. 
+                    | You can manually edit the css file to change the styles, or over ride them by pass in
+                    | additional CSS classes through the 
+                    a(href="#settings") settings object.
 
-                h3 OR Markup (using divs)
+                h2 CSS includes:
                 pre: code(data-language="html").
-                    <div class="my-thing">
-                        <div>item 1</div>
-                        <div>item 2</div>
-                        <div>item 3</div>
-                    </div>   
+                    &lt;link rel="stylesheet" type="text/css" href="carrotcell.css"&gt;
 
-                h3 Javascript includes (minimal): 
+
+            article#markup
+                h1 Create Markup 
+
+                h2 Markup (using list)
                 pre: code(data-language="html").
-                    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js" type="text/javascript" charset="utf-8"></script>
-                    <script src="jcarrotcell.min.js" charset="utf-8"></script>
-                p NOTE: 
+                    &lt;ol class="my-thing"&gt;
+                        &lt;li&gt;item 1&lt;/li&gt;
+                        &lt;li&gt;item 2&lt;/li&gt;
+                        &lt;li&gt;item 3&lt;/li&gt;
+                    &lt;/ol&gt;  
+
+                h2 OR Markup (using divs)
+                pre: code(data-language="html").
+                    &lt;div class="my-thing"&gt;
+                        &lt;div&gt;item 1&lt;/div&gt;
+                        &lt;div&gt;item 2&lt;/div&gt;
+                        &lt;div&gt;item 3&lt;/div&gt;
+                    &lt;/div&gt;   
+
+                p 
+                    | You can use whatever tags you like as long as they follow the basic structure
+                    | of a parent element including some children elements.
+
+
+            article#javascript
+                h1 Include Javascript 
+
+                p 
                     | jCarrotCell uses 
                     a(href="http://julian.com/research/velocity/" target="_external") Velocity.js 
                     | for animations and fall back on jQuery animate. 
@@ -69,73 +99,52 @@ html(lang="en")
                     a(href="http://gsgd.co.uk/sandbox/jquery/easing/" target="_external") jQuery Easing 
                     | , otherwise, jCarrotCell will use the default tween "swing". 
 
-                h3 OR Javascript includes with Velocity (recommended):
+                h2 Javascript includes (the minimal): 
                 pre: code(data-language="html").
-                    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js" type="text/javascript" charset="utf-8"></script>
-                    <script src="https://cdnjs.cloudflare.com/ajax/libs/velocity/1.2.2/velocity.min.js" type="text/javascript" charset="utf-8"></script>
-                    <script src="jcarrotcell.min.js" charset="utf-8"></script>
+                    &lt;script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js" type="text/javascript" charset="utf-8"&gt;&lt;/script&gt;
+                    &lt;script src="jcarrotcell.min.js" charset="utf-8"&gt;&lt;/script&gt;
+                
 
-                h3 OR Javascript includes with Jquery Easing:
+                h2 OR Javascript includes with Velocity (recommended):
                 pre: code(data-language="html").
-                    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js" type="text/javascript" charset="utf-8"></script>
-                    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js" type="text/javascript" charset="utf-8"></script>
-                    <script src="jcarrotcell.min.js" charset="utf-8"></script>
+                    &lt;script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js" type="text/javascript" charset="utf-8"&gt;&lt;/script&gt;
+                    &lt;script src="https://cdnjs.cloudflare.com/ajax/libs/velocity/1.2.2/velocity.min.js" type="text/javascript" charset="utf-8"&gt;&lt;/script&gt;
+                    &lt;script src="jcarrotcell.min.js" charset="utf-8"&gt;&lt;/script&gt;
 
-                     
+                h2 OR Javascript includes with Jquery Easing:
+                pre: code(data-language="html").
+                    &lt;script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js" type="text/javascript" charset="utf-8"&gt;&lt;/script&gt;
+                    &lt;script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js" type="text/javascript" charset="utf-8"&gt;&lt;/script&gt;
+                    &lt;script src="jcarrotcell.min.js" charset="utf-8"&gt;&lt;/script&gt;          
 
-                p Invoke the carrotcell with the following:
+            article#create
+                h1 Create Carrotcell
+
+                p 
+                    | Create a carrotcell by calling the function .carrotCell on a jQuery selector. 
+                    | You can check the console for any errors. 
 
                 pre: code(data-language="js").
                     $(".my-thing").carrotCell();
 
-            
-        //- .content
-        //-     section
-        //-         h2 Features
-        //-         ul.list
-        //-             li Use your own markup, event names, classes, selectors etc. 
-        //-             li Scroll vertically or horizontally, infinitely or finitely.
-        //-             li Auto play, pause, stop.
-        //-             li Auto generate "dots" or configure your own.
-        //-             li Scroll multiple items, or just one.
-        //-             li Add and remove items via the API.
-        //-             li Auto fill max width of browser, auto scale the height too, or don't.
-        //-             li Arrow key navigation. 
-        //-             li Use touch events when possible, or don't.
-        //-             li Supports orientation change in maxwidth mode.
 
-        //-     section
-        //-         h2 Setup 
 
-        //-         p
-        //-             a(href="dist/jcarrotcell.zip", class="cc-download") Download 
-        //-             | the jCarrotCell bundle or clone the repo from  
-        //-             a(href="https://github.com/yujulia/jCarrotCell", class="cc-github", target="_blank") Github
-        //-             |.
-        //-         p
-        //-             | You will need to include some version of 
-        //-             a(href="https://jquery.com/" target="_blank") jQuery 
-        //-             | (version 1.7+) before 
-        //-             strong jCarrotCell.js 
-        //-             | and also the styles from  
-        //-             strong carrotcell.css
-        //-             | .
+        .content 
+            article#settings
+                h1 Settings
 
-        //-         p 
-        //-             | The markup should look something like this, see the 
-        //-             a(href="", class="cc-files") Documentation 
-        //-             | on how to use whatever markup you want.
+                p Change the settings of the carrotcell by passing in a settings object.
 
-        //-         pre: code(data-language="html").
-        //-             <ol class="my-thing">
-        //-                 <li>item 1</li>
-        //-                 <li>item 2</li>
-        //-                 <li>item 3</li>
-        //-             </ol>       
+                h3 Settings Object
+                pre: code(data-language="js").
+                    $(".my-thing").carrotCell({
+                        show: 3,
+                        scroll: 3
+                    });
 
-        //-         p Invoke the carrotcell with the following:
 
-        //-         pre: code(data-language="js").
-        //-             $(".my-thing").carrotCell();
+
 
         include includes/footer.jade
+
+        script(src='js/base.js', type="text/javascript", charset="utf-8")

@@ -29,6 +29,17 @@ html(lang="en")
 
             include includes/nav.jade
 
+        article.example 
+            -var n = 0
+            div(class="test demo")
+                while n < 5
+                    +demoItem(n++)
+
+            -var n = 0
+            div(class="test demo")
+                while n < 5
+                    +demoItem(n++)
+
 
         article.example
             -var n = 0
@@ -48,54 +59,7 @@ html(lang="en")
                 while j < 5
                     +demoItem(j++)
 
-        //- .content
-        //-     section
-        //-         h2 Features
-        //-         ul.list
-        //-             li Use your own markup, event names, classes, selectors etc. 
-        //-             li Scroll vertically or horizontally, infinitely or finitely.
-        //-             li Auto play, pause, stop.
-        //-             li Auto generate "dots" or configure your own.
-        //-             li Scroll multiple items, or just one.
-        //-             li Add and remove items via the API.
-        //-             li Auto fill max width of browser, auto scale the height too, or don't.
-        //-             li Arrow key navigation. 
-        //-             li Use touch events when possible, or don't.
-        //-             li Supports orientation change in maxwidth mode.
 
-        //-     section
-        //-         h2 Setup 
-
-        //-         p
-        //-             a(href="dist/jcarrotcell.zip", class="cc-download") Download 
-        //-             | the jCarrotCell bundle or clone the repo from  
-        //-             a(href="https://github.com/yujulia/jCarrotCell", class="cc-github", target="_blank") Github
-        //-             |.
-        //-         p
-        //-             | You will need to include some version of 
-        //-             a(href="https://jquery.com/" target="_blank") jQuery 
-        //-             | (version 1.7+) before 
-        //-             strong jCarrotCell.js 
-        //-             | and also the styles from  
-        //-             strong carrotcell.css
-        //-             | .
-
-        //-         p 
-        //-             | The markup should look something like this, see the 
-        //-             a(href="", class="cc-files") Documentation 
-        //-             | on how to use whatever markup you want.
-
-        //-         pre: code(data-language="html").
-        //-             <ol class="my-thing">
-        //-                 <li>item 1</li>
-        //-                 <li>item 2</li>
-        //-                 <li>item 3</li>
-        //-             </ol>       
-
-        //-         p Invoke the carrotcell with the following:
-
-        //-         pre: code(data-language="js").
-        //-             $(".my-thing").carrotCell();
 
         include includes/footer.jade
      

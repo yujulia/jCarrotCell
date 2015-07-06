@@ -63,7 +63,7 @@
 
             infinite : false,       // infinite scroll
             auto : false,           // auto loop if circular
-            autoDuration : 5000,    // how long to pause on an item
+            autoDuration : 10000,    // how long to pause on an item
 
             pauseOnHover : true,     // stop auto advance on hover
             controlOnHover : false, // show controls on hover only
@@ -1300,6 +1300,9 @@
             options.userOptions = JSON.stringify(options);      // save user passed options
 
             options.scope = $(this);            // save this element as the scope
+
+            console.log("in make ", options);
+
             options.name = "carrot-" + track.count + "-" + options.scope.attr("id"); 
             var newCarrot = new carrot();
             track.carrots[options.name] = newCarrot; 
@@ -1328,19 +1331,25 @@
             track.error("Nothing to call CarrotCell on, check your jquery selector.");
             return false;
         }
-
         if (!track.initialize) { track.init(); } // first time carrotcell
+        var ccArgs = Array.prototype.slice.call(arguments);
 
-        var carrotAPI = $(this).data(DATA_API); // is this already a carrotcell?
-        if (carrotAPI) {
-            carrotAPI.update.apply(this, arguments); // update with new params
-            return carrotAPI;
-        } else {
-            var newCarrot = track.makeCarrot.apply(this, arguments);
-            var newCarrotName = newCarrot.getName();
-            track.carrots[newCarrotName] = newCarrot;
-            $(this).data(DATA_API, newCarrot); // save the api on this element...
-            return newCarrot;
-        }      
+        var checkCreate = function(scope) {
+            var carrotAPI = $(scope).data(DATA_API); // is this already a carrotcell?
+            if (carrotAPI) {
+                carrotAPI.update.apply(scope, ccArgs); // update with new params
+                return carrotAPI;
+            } else {
+                var newCarrot = track.makeCarrot.apply(scope, ccArgs);
+                var newCarrotName = newCarrot.getName();
+                track.carrots[newCarrotName] = newCarrot;
+                $(scope).data(DATA_API, newCarrot); // save the api on this element...
+                return newCarrot;
+            }   
+        };
+
+        var returnAPI = [];
+        this.each(function(i, el){ returnAPI.push(checkCreate(el)); });
+        return returnAPI;    
     };
 })(jQuery);

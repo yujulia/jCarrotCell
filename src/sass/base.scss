@@ -85,6 +85,17 @@ section {
     padding: 80px 0 0 0;
 }
 
+article {
+    h1 {
+        font-size: 30px;
+        letter-spacing: 0.06em;
+    }
+
+    h2 {
+        font-size: 20px;
+    }
+}
+
 nav {
     @extend %clearfix;
     position: absolute;
