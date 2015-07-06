@@ -17,7 +17,7 @@ html(lang="en")
             include includes/nav.jade
 
         .content 
-            ul
+            ul.list--star
                 li
                     a(href="#setup") Setup
                     ul.list--dot
@@ -26,73 +26,79 @@ html(lang="en")
                         li: a(href="#javascript") Include Javascripts
                         li: a(href="#create") Create CarrotCell
                 li
-                    p: a(href="#settings") Settings 
-                    p: a(href="usingsettings") Using Settings
-                    p: a(href="#settingsvalues") Settings Values
+                    a(href="#settings") Settings 
                     ul.list--dot
-                        li: a(href="#show") show
-                        li: a(href="#scroll") scroll
-                        li: a(href="#duration") duration 
-                        li: a(href="#sideways") sideways
-                        li: a(href="#easing") easing
-                        li: a(href="#infinite") infinite
+                        li: a(href="usingsettings") Using Settings
+                        li
+                            p: a(href="#settingsvalues") Settings Values
+                            ul.list--carrot
+                                li: a(href="#show") show
+                                li: a(href="#scroll") scroll
+                                li: a(href="#duration") duration 
+                                li: a(href="#sideways") sideways
+                                li: a(href="#easing") easing
+                                li: a(href="#infinite") infinite
 
-                        li: a(href="#useprevnext") usePrevNext
-                        li: a(href="#prevclass") prevClass
-                        li: a(href="#previconclass") prevIconClass
-                        li: a(href="#prevtext") prevText
-                        li: a(href="#nextclass") nextClass
-                        li: a(href="#nexticonclass") nextIconClass
-                        li: a(href="#nexttext") nextText
+                                li: a(href="#useprevnext") usePrevNext
+                                li: a(href="#prevclass") prevClass
+                                li: a(href="#previconclass") prevIconClass
+                                li: a(href="#prevtext") prevText
+                                li: a(href="#nextclass") nextClass
+                                li: a(href="#nexticonclass") nextIconClass
+                                li: a(href="#nexttext") nextText
 
-                        li: a(href="#auto") auto
-                        li: a(href="#autoduration") autoDuration
-                        li: a(href="#pauseonhover") pauseOnHover
-                        li: a(href="#usepauseplay") usePausePlay
-                        li: a(href="#pauseclass") pauseClass
-                        li: a(href="#pauseiconclass") pauseIconClass
-                        li: a(href="#pausetext") pauseText
-                        li: a(href="#playclass") playClass
-                        li: a(href="#playiconclass") playIconClass
-                        li: a(href="#playtext") playText 
-                        li: a(href="#controlonhover") controlOnHover 
+                                li: a(href="#auto") auto
+                                li: a(href="#autoduration") autoDuration
+                                li: a(href="#pauseonhover") pauseOnHover
+                                li: a(href="#usepauseplay") usePausePlay
+                                li: a(href="#pauseclass") pauseClass
+                                li: a(href="#pauseiconclass") pauseIconClass
+                                li: a(href="#pausetext") pauseText
+                                li: a(href="#playclass") playClass
+                                li: a(href="#playiconclass") playIconClass
+                                li: a(href="#playtext") playText 
+                                li: a(href="#controlonhover") controlOnHover 
 
-                        li: a(href="#usedots") useDots
-                        li: a(href="#dotsclass") dotsClass
-                        li: a(href="#dotclass") dotClass
-                        li: a(href="#dotbuttonclass") dotButtonClass
-                        li: a(href="#doticonclass") dotIconClass
-                        li: a(href="#dottext") dotText
-                        li: a(href="#onclass") onClass
-                        li: a(href="#dotsonhover") dotsOnHover 
+                                li: a(href="#usedots") useDots
+                                li: a(href="#dotsclass") dotsClass
+                                li: a(href="#dotclass") dotClass
+                                li: a(href="#dotbuttonclass") dotButtonClass
+                                li: a(href="#doticonclass") dotIconClass
+                                li: a(href="#dottext") dotText
+                                li: a(href="#onclass") onClass
+                                li: a(href="#dotsonhover") dotsOnHover 
 
-                        li: a(href="#key") key
-                        li: a(href="#keyback") keyBack
-                        li: a(href="#keyforward") keyForward 
-                        li: a(href="#keytoggle") keyToggle
+                                li: a(href="#key") key
+                                li: a(href="#keyback") keyBack
+                                li: a(href="#keyforward") keyForward 
+                                li: a(href="#keytoggle") keyToggle
 
-                        li: a(href="#breakpoints") breakpoints
+                                li: a(href="#breakpoints") breakpoints
 
                 li
-                    p: a(href="#api") API 
-                    p: a(href="#getapi") Getting the API 
+                    a(href="#api") API 
 
-                    p: a(href="#apimethods") API Methods
-                    ul.list--carrot
-                        li: a(href="#apigetname") getName
-                        li: a(href="#apigetcount") getCount
-                        li: a(href="#apigetshowing") getShowing
+                    ul.list--dot
 
-                        li: a(href="#apiprevious") previous
-                        li: a(href="#apinext") next
-                        li: a(href="#apipause") pause
-                        li: a(href="#apiplay") play
-                        li: a(href="#apimovetoitem") moveToItem
+                        li: a(href="#getapi") Getting the API 
 
-                        li: a(href="#apiudpate") update
-                        li: a(href="#apiinsert") insert
-                        li: a(href="#apiremove") remove
-                        
+                        li
+                            a(href="#apimethods") API Methods
+                            ul.list--carrot
+                                li: a(href="#apigetname") getName
+                                li: a(href="#apigetcount") getCount
+                                li: a(href="#apigetshowing") getShowing
+
+                                li: a(href="#apiprevious") previous
+                                li: a(href="#apinext") next
+                                li: a(href="#apipause") pause
+                                li: a(href="#apiplay") play
+                                li: a(href="#apimovetoitem") moveToItem
+
+                                li: a(href="#apiudpate") update
+                                li: a(href="#apiinsert") insert
+                                li: a(href="#apiremove") remove
+                            
         .content 
             article#setup
                 h1 Setup

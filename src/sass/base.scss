@@ -166,6 +166,8 @@ pre {
       @extend %beforeCarrotCell;
       content: "\e010";
       margin-right: 10px;
+      display: block;
+      float: left;
     }
 }
 
@@ -178,7 +180,9 @@ pre {
     > li:before {
       @extend %beforeCarrotCell;
       content: "○";
-      margin-right: 10px;
+      margin: 0 10px 0 0;
+      display: block;
+      float: left;
     }
 }
 
