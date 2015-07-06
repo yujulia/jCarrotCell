@@ -88,8 +88,8 @@ section {
 article {
     width: 100%;
     @extend %clearfix;
-    padding-bottom: 60px;
-    border-bottom: solid 1px #ccc;
+    margin-top: 40px;
+    border-top: solid 1px #ccc;
 
     h1 {
         font-size: 30px;
@@ -236,25 +236,7 @@ pre {
     }
 }
 
-.jcc-item {
-    width: 100%;
-    position: relative;
 
-    .jcc-content {
-        position: absolute;
-        top: 0;
-        left: 50px;
-
-        h2 {
-            color: $color-carrot;
-        }
-        
-    }
-
-    &:focus {
-        border-color: green;
-    }
-}
 
 .demo {
     @extend %clearfix;
