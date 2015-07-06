@@ -321,7 +321,7 @@ $('#jcc-home').carrotCell({
                 updateItems();
                 scrollToItem(index); // scroll to items inserted
 
-                return index;
+                return total;
             } else {
                 return error("Unable to insert that kind of item. Please use a string or jquery object");
             }
@@ -349,7 +349,6 @@ $('#jcc-home').carrotCell({
                 if (indexEnd && inRange(indexEnd)) { 
                     if (indexEnd === indexStart) {
                         removeThese($(items[indexStart]));
-                        return indexStart;
                     } else {
                         if (indexEnd < indexStart) { // passed in indexes in wrong order, swap
                             var tempIndex = indexEnd;
@@ -361,11 +360,11 @@ $('#jcc-home').carrotCell({
                             removeTheseItems = removeTheseItems.add(items[q]);
                         }
                         removeThese(removeTheseItems);
-                        return [indexStart, indexEnd];
                     }
+                    return total;
                 } else {
                     removeThese($(items[indexStart]));
-                    return indexStart;
+                    return total;
                 }
             } else {
                 return false;
