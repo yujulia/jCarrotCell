@@ -86,13 +86,20 @@ section {
 }
 
 article {
+    padding-bottom: 60px;
+    border-bottom: solid 1px #ccc;
+
     h1 {
         font-size: 30px;
         letter-spacing: 0.06em;
     }
 
     h2 {
-        font-size: 20px;
+        font-size: 24px;
+    }
+
+    h3 {
+        font-size: 18px;
     }
 }
 
@@ -148,18 +155,46 @@ pre {
     letter-spacing: 0.06em;
 }
 
-.list {
+.list--star {
 
-    li {
+    > li {
         margin: 10px 0
     }
 
-    li:before {
+    > li:before {
       @extend %beforeCarrotCell;
       content: "\e010";
       margin-right: 10px;
     }
 }
+
+.list--dot {
+
+    > li {
+        margin: 10px 0 10px 50px;
+    }
+
+    > li:before {
+      @extend %beforeCarrotCell;
+      content: "○";
+      margin-right: 10px;
+    }
+}
+
+.list--carrot {
+    @extend .list--dot;
+
+    > li:before {
+      content: "\e001";
+    }
+}
+
+.list-settings {
+    > li {
+        margin: 40px 0 40px 50px;
+    }
+}
+
 
 .example {
     @extend %clearfix;

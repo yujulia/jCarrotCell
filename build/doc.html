@@ -11,7 +11,7 @@
   </head>
   <body> 
     <div class="content">
-      <h1 class="cc-carrot-after"><a href=".">jCarrotCell </a></h1>
+      <h1 class="cc-carrot-after"><a href=".">jCarrotCell Documentation</a></h1>
       <nav> 
         <ol>
           <li><a href="https://github.com/yujulia/jCarrotCell" target="_blank" class="cc-github">Github </a></li>
@@ -22,47 +22,94 @@
       </nav>
     </div>
     <div class="content"> 
-      <article> 
-        <h1>Documentation</h1>
-        <ul class="list">
-          <li><a href="#setup">Setup</a></li>
-          <li><a href="#css">Include CSS</a></li>
-          <li><a href="#markup">Create Markup</a></li>
-          <li><a href="#javascript">Include Javascripts</a></li>
-          <li><a href="#create">Create CarrotCell</a></li>
-          <li><a href="#settings">Custom Settings </a></li>
-          <li><a href="#api">API Methods</a></li>
-        </ul>
-      </article>
+      <ul class="list--star">
+        <li><a href="#setup">Setup</a>
+          <ul class="list--dot">
+            <li><a href="#css">Include CSS</a></li>
+            <li><a href="#markup">Create Markup</a></li>
+            <li><a href="#javascript">Include Javascripts</a></li>
+            <li><a href="#create">Create CarrotCell</a></li>
+          </ul>
+        </li>
+        <li><a href="#settings">Settings </a>
+          <ul class="list--dot">
+            <li><a href="#">show</a></li>
+            <li><a href="#">scroll</a></li>
+            <li><a href="#">duration </a></li>
+            <li><a href="#">sideways</a></li>
+            <li><a href="#">easing</a></li>
+            <li><a href="#">infinite</a></li>
+            <li><a href="#">usePrevNext</a></li>
+            <li><a href="#">prevClass</a></li>
+            <li><a href="#">prevIconClass</a></li>
+            <li><a href="#">prevText</a></li>
+            <li><a href="#">nextClass</a></li>
+            <li><a href="#">nextIconClass</a></li>
+            <li><a href="#">nextText</a></li>
+            <li><a href="#">auto</a></li>
+            <li><a href="#">autoDuration</a></li>
+            <li><a href="#">pauseOnHover</a></li>
+            <li><a href="#">usePausePlay</a></li>
+            <li><a href="#">pauseClass</a></li>
+            <li><a href="#">pauseIconClass</a></li>
+            <li><a href="#">pauseText</a></li>
+            <li><a href="#">playClass</a></li>
+            <li><a href="#">playIconClass</a></li>
+            <li><a href="#">playText </a></li>
+            <li><a href="#">controlOnHover </a></li>
+            <li><a href="#">useDots</a></li>
+            <li><a href="#">dotsClass</a></li>
+            <li><a href="#">dotClass</a></li>
+            <li><a href="#">dotButtonClass</a></li>
+            <li><a href="#">dotIconClass</a></li>
+            <li><a href="#">dotText</a></li>
+            <li><a href="#">onClass</a></li>
+            <li><a href="#">dotsOnHover </a></li>
+            <li><a href="#">key</a></li>
+            <li><a href="#">keyBack</a></li>
+            <li><a href="#">keyForward </a></li>
+            <li><a href="#">keyToggle</a></li>
+            <li><a href="#">breakpoints</a></li>
+          </ul>
+        </li>
+        <li><a href="#api">API Methods</a>
+          <ul class="list--carrot">
+            <li><a href="#">getName</a></li>
+            <li><a href="#">getCount</a></li>
+            <li><a href="#">getShowing</a></li>
+            <li><a href="#">previous</a></li>
+            <li><a href="#">next</a></li>
+            <li><a href="#">pause</a></li>
+            <li><a href="#">play</a></li>
+            <li><a href="#">moveToItem</a></li>
+            <li><a href="#">update</a></li>
+            <li><a href="#">insert</a></li>
+            <li><a href="#">remove</a></li>
+          </ul>
+        </li>
+      </ul>
     </div>
     <div class="content"> 
       <article id="setup">
         <h1>Setup</h1>
         <p><a href="dist/jcarrotcell.zip" class="cc-download">Download </a>the jCarrotCell bundle or clone the repo from  <a href="https://github.com/yujulia/jCarrotCell" target="_blank" class="cc-github">Github</a>.
-          You will need to include some version of <a href="https://jquery.com/" target="_blank">jQuery </a>(version 1.7+) before <strong>jCarrotCell.js </strong>and also the styles from  <strong>carrotcell.css</strong>. 
-        </p>
-      </article>
-      <article id="css">
-        <h1>Include CSS </h1>
+          You will need to include some version of <a href="https://jquery.com/" target="_blank">jQuery </a>(version 1.7+) before <strong>jCarrotCell.js </strong>and also the styles from  <strong>carrotcell.css. </strong>
+        </p><br>
+        <h2 id="css">Include CSS </h2>
         <p>Include the <strong>carrotcell.css </strong>, or  <strong>carrotcell.scss </strong>to set the default styles of carrotcell. 
           You can manually edit the css file to change the styles, or over ride them by pass in
           additional CSS classes through the <a href="#settings">settings object.</a>
         </p>
-        <h2>CSS includes:</h2>
-        <pre><code data-language="html">&lt;link rel="stylesheet" type="text/css" href="carrotcell.css"&gt;
-
-</code></pre>
-      </article>
-      <article id="markup">
-        <h1>Create Markup </h1>
-        <h2>Markup (using list)</h2>
-        <pre><code data-language="html">&lt;ol class="my-thing"&gt;
+        <pre><code data-language="html">&lt;link rel="stylesheet" type="text/css" href="carrotcell.css"&gt;</code></pre><br>
+        <h2 id="markup">Create Markup </h2>
+        <h3>Markup (using list)</h3>
+        <pre><code data-language="html">&lt;ol class="my-carrotcell"&gt;
     &lt;li&gt;item 1&lt;/li&gt;
     &lt;li&gt;item 2&lt;/li&gt;
     &lt;li&gt;item 3&lt;/li&gt;
 &lt;/ol&gt;  </code></pre>
-        <h2>OR Markup (using divs)</h2>
-        <pre><code data-language="html">&lt;div class="my-thing"&gt;
+        <h3>OR Markup (using divs)</h3>
+        <pre><code data-language="html">&lt;div class="my-carrotcell"&gt;
     &lt;div&gt;item 1&lt;/div&gt;
     &lt;div&gt;item 2&lt;/div&gt;
     &lt;div&gt;item 3&lt;/div&gt;
@@ -71,35 +118,31 @@
            
           You can use whatever tags you like as long as they follow the basic structure
           of a parent element including some children elements.
-        </p>
-      </article>
-      <article id="javascript">
-        <h1>Include Javascript </h1>
+        </p><br>
+        <h2 id="javascript">Include Javascript </h2>
         <p>
            
           jCarrotCell uses <a href="http://julian.com/research/velocity/" target="_external">Velocity.js </a>for animations and fall back on jQuery animate. 
           If you want to use something other than the default tweens with animate and NOT velocity, please include <a href="http://gsgd.co.uk/sandbox/jquery/easing/" target="_external">jQuery Easing </a>, otherwise, jCarrotCell will use the default tween "swing". 
         </p>
-        <h2>Javascript includes (the minimal): </h2>
+        <h3>Javascript includes (the minimal): </h3>
         <pre><code data-language="html">&lt;script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js" type="text/javascript" charset="utf-8"&gt;&lt;/script&gt;
 &lt;script src="jcarrotcell.min.js" charset="utf-8"&gt;&lt;/script&gt;</code></pre>
-        <h2>OR Javascript includes with Velocity (recommended):</h2>
+        <h3>OR Javascript includes with Velocity (recommended):</h3>
         <pre><code data-language="html">&lt;script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js" type="text/javascript" charset="utf-8"&gt;&lt;/script&gt;
 &lt;script src="https://cdnjs.cloudflare.com/ajax/libs/velocity/1.2.2/velocity.min.js" type="text/javascript" charset="utf-8"&gt;&lt;/script&gt;
 &lt;script src="jcarrotcell.min.js" charset="utf-8"&gt;&lt;/script&gt;</code></pre>
-        <h2>OR Javascript includes with Jquery Easing:</h2>
+        <h3>OR Javascript includes with Jquery Easing:</h3>
         <pre><code data-language="html">&lt;script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js" type="text/javascript" charset="utf-8"&gt;&lt;/script&gt;
 &lt;script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js" type="text/javascript" charset="utf-8"&gt;&lt;/script&gt;
-&lt;script src="jcarrotcell.min.js" charset="utf-8"&gt;&lt;/script&gt;      </code></pre>
-      </article>
-      <article id="create">
-        <h1>Create CarrotCell</h1>
+&lt;script src="jcarrotcell.min.js" charset="utf-8"&gt;&lt;/script&gt;      </code></pre><br>
+        <h2 id="create">Create CarrotCell</h2>
         <p>
            
           Create a carrotcell by calling the function .carrotCell on a jQuery selector. 
           You can check the console for any errors. 
         </p>
-        <pre><code data-language="js">$(".my-thing").carrotCell();</code></pre>
+        <pre><code data-language="js">$(".my-carrotcell").carrotCell();</code></pre><br>
       </article>
     </div>
     <div class="content"> 
@@ -107,103 +150,175 @@
         <h1>Settings</h1>
         <p>Change the settings of the carrotcell by passing in a settings object in the carrotcell creation.</p>
         <h2>Using Settings</h2>
-        <pre><code data-language="js">$(".my-thing").carrotCell({
+        <pre><code data-language="js">$(".my-carrotcell").carrotCell({
     show: 3,
     scroll: 3
-});</code></pre>
-        <h2>Settings Values
-          <h3>show (integer, default 1)</h3>
-          <p>How many items to show on screen</p>
-          <h3>scroll (integer, default 1)</h3>
-          <p>How many items to scroll </p>
-          <h3>duration (integer millisecs, default 500)</h3>
-          <p>Length of scroll animation duration</p>
-          <h3>sideways (boolean, default true)</h3>
-          <p>True indicates sideways or horizontal scrolling, false indicates vertical scrolling</p>
-          <h3>easing (string, default "easeOutExpo" or "swing")</h3>
-          <p>The tween animation for scrolling, "easeOutExpo" is used if Velocity or Easing is included, "swing" if only jQuery Animate.</p>
-          <h3>infinite (boolean, default false)</h3>
-          <p>Indicates this will scroll infinitely in both directions. If using auto: true this will be triggered to true.</p>
-          <h3>useDots (boolean, default false)</h3>
-          <p>Generate the dots used for navigation. This is calculated per scroll event.</p>
-          <h3>dotsClass (string)</h3>
-          <p>Pass in a class name for the dots container. Please use "someclass someother-class" and not ".someclass"</p>
-          <h3>dotClass (string)</h3>
-          <p>Class name for the individual dots, this is inside dotsClass.</p>
-          <h3>dotButtonClass (string)</h3>
-          <p>Class name for the dot button, this is inside dotClass.</p>
-          <h3>dotIconClass (string)</h3>
-          <p>Class name for the dot icon, this is inside dotButtonClass.</p>
-          <h3>dotText (string, default "item set " + n)</h3>
-          <p>This is the access text for dots, ths is inside dotButtonClass. It will read "item set 0", "item set 1" and so on.</p>
-          <h3>onClass (string, default "carrotcell--on")</h3>
-          <p>This is the class used when the dot is highlighted when the item it is associated with is in view.</p>
-          <h3>dotsOnHover (boolean, default false)</h3>
-          <p>Hide the dots navigation unless carrotcell is being hovered over. This is disabled on touch devices.</p>
-          <h3>usePrevNext (boolean, default true)</h3>
-          <p>Generate previous and next buttons</p>
-          <h3>prevClass</h3>
-          <p>Class name for previous button</p>
-          <h3>prevIconClass</h3>
-          <p>Class name for prevous icon, inside previous button</p>
-          <h3>prevText (string, "next item set")</h3>
-          <p>Accessible text for previous, inside previous button</p>
-          <h3>nextClass</h3>
-          <p>Class name for next button</p>
-          <h3>nextIconClass</h3>
-          <p>Class name for next icon, inside next button </p>
-          <h3>nextText (string, default "previous item set")</h3>
-          <p>Accessible text for next, inside next button</p>
-          <h3>auto (boolean, default false)</h3>
-          <p>Indicate this slide show will auto play</p>
-          <h3>autoDuration (integer millisecs, default 10000)</h3>
-          <p>How long to pause if auto scrolling on each item</p>
-          <h3>pauseOnHover (boolean, default true)</h3>
-          <p>Hovering over the carrotcell will pause the auto animation</p>
-          <h3>usePausePlay (boolean, default true)</h3>
-          <p>Generate pause and play buttons if using auto</p>
-          <h3>pauseClass (string)</h3>
-          <p>Class name for pause button</p>
-          <h3>pauseIconClass (string)</h3>
-          <p>Class name for pause icon, inside pause button.</p>
-          <h3>pauseText (string, default "pause auto scroll")</h3>
-          <p>Accessible text for pause button.</p>
-          <h3>playClass (string)</h3>
-          <p>Class name for play button</p>
-          <h3>playIconClass (string)</h3>
-          <p>Class name for play icon, inside play button.</p>
-          <h3>playText (string, default "resume auto scroll")</h3>
-          <p>Accessible text for play button.</p>
-          <h3>controlOnHover (boolean, default false)</h3>
-          <p>Hide the previous, next, play, pause controls unless carrotcell is being hovered over. This is disabled on touch devices.</p>
-          <h3>key (boolean, default false)</h3>
-          <p>Use keys to navigate controls</p>
-          <h3>keyBack (integer, default 37 left arrow or 38 up arrow)</h3>
-          <p>The keycode used to navigate previous</p>
-          <h3>keyForward (integer, default 39 right arrow or 40 down arrow)</h3>
-          <p>The keycode used to navigate next</p>
-          <h3>keyToggle (integer, default 80 letter p)</h3>
-          <p>The keycode used to toggle pause or play</p>
-          <h3>breakpoints (array of objects)</h3>
-          <p>Pass in additional parameters on pixel breakpoints for window width</p>
-          <pre><code data-language="js">breakpoints : [
-    { pixels: 320, settings: { scroll: 1, show: 1, usePausePlay: false }},
-    { pixels: 480, settings: { scroll: 2, show: 2 }},
-    { pixels: 1010, settings: { scroll: 1, show: 3 }},
-    { pixels: 900, settings: { scroll: 2, show: 2 }}
-],
-
-
-
-</code></pre>
-        </h2>
+});</code></pre><br>
+        <h2>Settings Values</h2>
+        <ul class="list-settings">
+          <li> 
+            <h3>show (integer, default 1)</h3>
+            <p>How many items to show on screen</p>
+          </li>
+          <li>
+            <h3>scroll (integer, default 1)</h3>
+            <p>How many items to scroll </p>
+          </li>
+          <li>
+            <h3>duration (integer millisecs, default 500)</h3>
+            <p>Length of scroll animation duration</p>
+          </li>
+          <li>
+            <h3>sideways (boolean, default true)</h3>
+            <p>True indicates sideways or horizontal scrolling, false indicates vertical scrolling</p>
+          </li>
+          <li>
+            <h3>easing (string, default "easeOutExpo" or "swing")</h3>
+            <p>The tween animation for scrolling, "easeOutExpo" is used if Velocity or Easing is included, "swing" if only jQuery Animate.</p>
+          </li>
+          <li>
+            <h3>infinite (boolean, default false)</h3>
+            <p>Indicates this will scroll infinitely in both directions. If using auto: true this will be triggered to true.</p>
+          </li>
+          <li>
+            <h3>usePrevNext (boolean, default true)</h3>
+            <p>Generate previous and next buttons</p>
+          </li>
+          <li>
+            <h3>prevClass</h3>
+            <p>Class name for previous button</p>
+          </li>
+          <li>
+            <h3>prevIconClass</h3>
+            <p>Class name for prevous icon, inside previous button</p>
+          </li>
+          <li>
+            <h3>prevText (string, "next item set")</h3>
+            <p>Accessible text for previous, inside previous button</p>
+          </li>
+          <li>
+            <h3>nextClass</h3>
+            <p>Class name for next button</p>
+          </li>
+          <li>
+            <h3>nextIconClass</h3>
+            <p>Class name for next icon, inside next button </p>
+          </li>
+          <li>
+            <h3>nextText (string, default "previous item set")</h3>
+            <p>Accessible text for next, inside next button</p>
+          </li>
+          <li>
+            <h3>auto (boolean, default false)</h3>
+            <p>Indicate this slide show will auto play</p>
+          </li>
+          <li>
+            <h3>autoDuration (integer millisecs, default 10000)</h3>
+            <p>How long to pause if auto scrolling on each item</p>
+          </li>
+          <li>
+            <h3>pauseOnHover (boolean, default true)</h3>
+            <p>Hovering over the carrotcell will pause the auto animation</p>
+          </li>
+          <li>
+            <h3>usePausePlay (boolean, default true)</h3>
+            <p>Generate pause and play buttons if using auto</p>
+          </li>
+          <li>
+            <h3>pauseClass (string)</h3>
+            <p>Class name for pause button</p>
+          </li>
+          <li>
+            <h3>pauseIconClass (string)</h3>
+            <p>Class name for pause icon, inside pause button.</p>
+          </li>
+          <li>
+            <h3>pauseText (string, default "pause auto scroll")</h3>
+            <p>Accessible text for pause button.</p>
+          </li>
+          <li>
+            <h3>playClass (string)</h3>
+            <p>Class name for play button</p>
+          </li>
+          <li>
+            <h3>playIconClass (string)</h3>
+            <p>Class name for play icon, inside play button.</p>
+          </li>
+          <li>
+            <h3>playText (string, default "resume auto scroll")</h3>
+            <p>Accessible text for play button.</p>
+          </li>
+          <li>
+            <h3>controlOnHover (boolean, default false)</h3>
+            <p>Hide the previous, next, play, pause controls unless carrotcell is being hovered over. This is disabled on touch devices.</p>
+          </li>
+          <li>
+            <h3>useDots (boolean, default false)</h3>
+            <p>Generate the dots used for navigation. This is calculated per scroll event.</p>
+          </li>
+          <li>
+            <h3>dotsClass (string)</h3>
+            <p>Pass in a class name for the dots container. Please use "someclass someother-class" and not ".someclass"</p>
+          </li>
+          <li>
+            <h3>dotClass (string)</h3>
+            <p>Class name for the individual dots, this is inside dotsClass.</p>
+          </li>
+          <li>
+            <h3>dotButtonClass (string)</h3>
+            <p>Class name for the dot button, this is inside dotClass.</p>
+          </li>
+          <li>
+            <h3>dotIconClass (string)</h3>
+            <p>Class name for the dot icon, this is inside dotButtonClass.</p>
+          </li>
+          <li>
+            <h3>dotText (string, default "item set " + n)</h3>
+            <p>This is the access text for dots, ths is inside dotButtonClass. It will read "item set 0", "item set 1" and so on.</p>
+          </li>
+          <li>
+            <h3>onClass (string, default "carrotcell--on")</h3>
+            <p>This is the class used when the dot is highlighted when the item it is associated with is in view.</p>
+          </li>
+          <li>
+            <h3>dotsOnHover (boolean, default false)</h3>
+            <p>Hide the dots navigation unless carrotcell is being hovered over. This is disabled on touch devices.</p>
+          </li>
+          <li>
+            <h3>key (boolean, default false)</h3>
+            <p>Use keys to navigate controls</p>
+          </li>
+          <li>
+            <h3>keyBack (integer, default 37 left arrow or 38 up arrow)</h3>
+            <p>The keycode used to navigate previous</p>
+          </li>
+          <li>
+            <h3>keyForward (integer, default 39 right arrow or 40 down arrow)</h3>
+            <p>The keycode used to navigate next</p>
+          </li>
+          <li>
+            <h3>keyToggle (integer, default 80 letter p)</h3>
+            <p>The keycode used to toggle pause or play</p>
+          </li>
+          <li>
+            <h3>breakpoints (array of objects)</h3>
+            <p>Pass in additional parameters on pixel breakpoints for window width</p>
+            <pre><code data-language="js">$(".my-carrotcell").carrotCell({
+    breakpoints : [
+        { pixels: 320, settings: { scroll: 1, show: 1 },
+        { pixels: 900, settings: { scroll: 2, show: 2 }},
+        { pixels: 1010, settings: { scroll: 3, show: 3 }}
+    ]
+});</code></pre><br>
+          </li>
+        </ul>
       </article>
     </div>
     <footer> 
       <div class="content">
         <p>
            
-          jCarrotCell Version 2.0 by <a href="http://yujulia.com" class="cc-link">Julia Yu</a>. First draft November 10, 2011, Last Update Jul 5, 2015 6:46:02 PM PDT
+          jCarrotCell Version 2.0 by <a href="http://yujulia.com" class="cc-link">Julia Yu</a>. First draft November 10, 2011, Last Update Jul 5, 2015 10:45:41 PM PDT
         </p>
         <h2><a href="https://github.com/yujulia/jCarrotCell" target="_blank" class="cc-github">Github </a></h2>
       </div>

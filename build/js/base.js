@@ -1270,31 +1270,25 @@ var demo2 = $('#demo--3').carrotCell({
                 User API METHODS
             */
 
-            // --- update the carrot with new options
-
             update : function(options) { return updateCarrot(options); },
-
-            // --- insert an item
 
             insert : function(newItem, insertIndex) { return insertItem(newItem, insertIndex); },
 
-            // --- remove an item
-
             remove : function(removeStart, removeEnd) { return removeItem(removeStart, removeEnd); },
-
-            // --- move the carousel to an index
 
             moveToItem : function(itemIndex) { return validateThenMove(itemIndex); },
 
-            // --- return STR the name of this carrot
+            previous : function() {},
+
+            next : function() {},
+
+            pause : function() {},
+
+            play : function() {},
 
             getName : function(){ return settings.name; },
 
-            // --- return INT how many items are in the carrotcell
-
             getCount : function() { return total; },
-
-            // --- return ARRAY of INT, with clone index if TRUE
 
             getShowing : function(cloneIndex) { return getShowing(cloneIndex); }
         };
