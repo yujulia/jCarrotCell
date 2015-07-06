@@ -86,6 +86,7 @@ section {
 }
 
 article {
+    width: 100%;
     @extend %clearfix;
     padding-bottom: 60px;
     border-bottom: solid 1px #ccc;
@@ -258,7 +259,7 @@ pre {
 .demo {
     @extend %clearfix;
     // width: $content-w - $pad-button * 2;
-    width: 100%;
+    width: 90%;
     background: #f9f9f9;
     margin: 20px auto;
     padding: $pad-button;
@@ -318,8 +319,8 @@ pre {
 }
 
 .vertical {
-    float: left;
     width: auto;
+    overflow-y: scroll;
 
     .demo__item {
         float: none;
@@ -328,11 +329,12 @@ pre {
 
 #demo--2 {
     height: 400px;
+    float: left;
 }
 
 #demo--3 {
     box-sizing: border-box;
-    width: 100%;
+    width: 90%;
     height: 300px;
 
     .demo__item {
