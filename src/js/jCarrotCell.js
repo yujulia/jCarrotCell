@@ -501,6 +501,8 @@
             direction = -1;
             if (onCloneStart){ replaceWithEnd(); } 
             scrollToItem();
+
+            return true;
         };
 
         // --- move to next scroll
@@ -514,6 +516,8 @@
                 replaceWithStart(); // cant go prev as we are on a clone, replace
             } 
             scrollToItem();
+
+            return true;
         };
 
         // --- start auto play
@@ -1194,9 +1198,9 @@
 
             moveToItem : function(itemIndex) { return validateThenMove(itemIndex); },
 
-            previous : function() {},
+            previous : function() { return moveToPrev(); },
 
-            next : function() {},
+            next : function() { return moveToNext(); },
 
             pause : function() {},
 
@@ -1339,6 +1343,11 @@
 
         var returnAPI = [];
         this.each(function(i, el){ returnAPI.push(checkCreate(el)); });
-        return returnAPI;    
+        if (returnAPI.length > 1 ) {
+            return returnAPI;       // return api array
+        } else {
+            return returnAPI[0];    // just return 1 api
+        }
+           
     };
 })(jQuery);

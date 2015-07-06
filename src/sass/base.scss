@@ -86,6 +86,7 @@ section {
 }
 
 article {
+    @extend %clearfix;
     padding-bottom: 60px;
     border-bottom: solid 1px #ccc;
 
@@ -189,7 +190,13 @@ pre {
     }
 }
 
-.list-settings {
+.list--setup {
+    > li {
+        margin: 40px 0 40px 50px;
+    }
+}
+
+.list--settings, .list--api {
     > li {
         margin: 40px 0 40px 50px;
     }
